@@ -1316,6 +1316,24 @@ begin
 
 end show_customer_event_tickets;
 
+procedure show_customer_event_tickets_by_email
+(
+   p_customer_email in varchar2,
+   p_event_id in number,
+   p_tickets out sys_refcursor
+)
+is
+   v_customer_id number;
+begin
+
+   v_customer_id := get_customer_id(p_customer_email);
+   
+   show_customer_event_tickets(v_customer_id, p_event_id, p_tickets);
+
+
+end show_customer_event_tickets_by_email;
+
+
 
 --package initialization
 begin

@@ -200,4 +200,12 @@ procedure show_customer_event_tickets
    p_tickets out sys_refcursor
 );
 
+procedure show_customer_event_tickets_by_email
+(
+   p_customer_email in varchar2,
+   p_event_id in number,
+   p_tickets out sys_refcursor
+);
+
+
 end events_api;

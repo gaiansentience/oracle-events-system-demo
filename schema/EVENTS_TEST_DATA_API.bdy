@@ -7,7 +7,7 @@ is
    is
      v_ddl varchar2(100);
    begin
-      v_ddl := 'truncate table toptal.' || p_table || ' drop storage'; 
+      v_ddl := 'truncate table event_system.' || p_table || ' drop storage'; 
       execute immediate v_ddl;
    end truncate_table;
 begin
