@@ -7,13 +7,13 @@
 set serveroutput on;
 
 declare
-  v_name varchar2(100) := 'New Ticket Source';
-  v_email varchar2(100) := 'ticket.sales@NewTicketSource.com';
+  v_name varchar2(100) := 'New Ticket Source2';
+  v_email varchar2(100) := 'ticket.sales@NewTicketSource2.com';
   v_commission number := 0.11;
   v_reseller_id number;
 begin
 
-  events_api.create_reseller(
+  event_system.events_api.create_reseller(
        p_reseller_name => v_name,
        p_reseller_email => v_email,
        p_commission_percent => v_commission,

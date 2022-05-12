@@ -14,7 +14,7 @@ is
   pragma autonomous_transaction;
 begin
 
-   insert into error_log(
+   insert into event_system.error_log(
       db_user_name,
       db_session_id,
       error_locale,
@@ -48,7 +48,7 @@ procedure create_venue
 is
 begin
 
-  insert into venues(
+  insert into event_system.venues(
       venue_name, 
       organizer_name, 
       organizer_email, 
@@ -87,7 +87,7 @@ begin
    max(e.event_date) as last_event_date,
    min(e.tickets_available) min_event_tickets,
    max(e.tickets_available) max_event_tickets
-   from venues v left outer join events e on v.venue_id = e.venue_id
+   from event_system.venues v left outer join event_system.events e on v.venue_id = e.venue_id
    group by 
    v.venue_id, 
    v.venue_name, 
@@ -107,7 +107,7 @@ procedure create_reseller
 is
 begin
 
-  insert into resellers(
+  insert into event_system.resellers(
      reseller_name,
      reseller_email,
      commission_percent)
@@ -139,7 +139,7 @@ begin
   r.reseller_name,
   r.reseller_email,
   r.commission_percent
-  from resellers r
+  from event_system.resellers r
   order by r.reseller_name;
 
 end show_resellers;
@@ -154,7 +154,7 @@ begin
 
    select customer_id
    into v_customer_id
-   from customers c
+   from event_system.customers c
    where upper(c.customer_email) = upper(p_customer_email);
    
    return v_customer_id;
@@ -182,7 +182,7 @@ begin
    
    if v_customer_id = 0 then
    
-      insert into customers(
+      insert into event_system.customers(
          customer_name,
          customer_email)
       values(
@@ -213,7 +213,7 @@ begin
 
    select max_event_capacity
    into v_capacity
-   from venues
+   from event_system.venues
    where venue_id = p_venue_id;
 
    if p_tickets > v_capacity then
@@ -232,7 +232,7 @@ is
 begin
 
    select count(*) into v_count
-   from events e where e.venue_id = p_venue_id 
+   from event_system.events e where e.venue_id = p_venue_id 
    and trunc(e.event_date) = trunc(p_event_date);
    
    if v_count > 0 then
@@ -257,7 +257,7 @@ begin
   --check that the event does not conflict with an existing event
   verify_event_date_free(p_venue_id, p_event_date);
   
-  insert into events(
+  insert into event_system.events(
     venue_id,
     event_name,
     event_date,
@@ -361,12 +361,12 @@ begin
   e.tickets_available -
   nvl(
      (select sum(ts.ticket_quantity) 
-     from ticket_sales ts join ticket_groups tg 
+     from event_system.ticket_sales ts join event_system.ticket_groups tg 
      on ts.ticket_group_id = tg.ticket_group_id
      where tg.event_id = e.event_id)
   ,0) as tickets_remaining
   from
-  venues v join events e on v.venue_id = e.venue_id
+  event_system.venues v join event_system.events e on v.venue_id = e.venue_id
   where v.venue_id = p_venue_id and e.event_date > sysdate;
 
 end show_venue_upcoming_events;
@@ -391,8 +391,8 @@ begin
   sum(ts.ticket_quantity) total_ticket_quantity,
   sum(ts.extended_price) total_ticket_sales  
   from
-  events e join ticket_groups tg on e.event_id = tg.event_id
-  join ticket_sales ts on tg.ticket_group_id = ts.ticket_group_id 
+  event_system.events e join event_system.ticket_groups tg on e.event_id = tg.event_id
+  join event_system.ticket_sales ts on tg.ticket_group_id = ts.ticket_group_id 
   where e.venue_id = p_venue_id
   group by
   e.venue_id,
@@ -406,7 +406,7 @@ begin
   dense_rank() over (order by nvl(vs.total_ticket_sales,0) desc) rank_by_sales,
   dense_rank() over (order by nvl(vs.total_ticket_sales,0) desc) rank_by_quantity
   from
-  resellers r left outer join venue_sales vs on r.reseller_id = vs.reseller_id --and vs.venue_id = p_venue_id
+  event_system.resellers r left outer join venue_sales vs on r.reseller_id = vs.reseller_id --and vs.venue_id = p_venue_id
   order by nvl(vs.total_ticket_sales,0) desc, r.reseller_name;
 
 end show_venue_reseller_performance;
@@ -439,10 +439,10 @@ begin
    r.commission_percent,
    sum(ts.reseller_commission) as total_commission
    from
-   venues v join events e on v.venue_id = e.venue_id
-   join ticket_groups tg on e.event_id = tg.event_id
-   join ticket_sales ts on tg.ticket_group_id = ts.ticket_group_id
-   join resellers r on ts.reseller_id = p_reseller_id
+   event_system.venues v join event_system.events e on v.venue_id = e.venue_id
+   join event_system.ticket_groups tg on e.event_id = tg.event_id
+   join event_system.ticket_sales ts on tg.ticket_group_id = ts.ticket_group_id
+   join event_system.resellers r on ts.reseller_id = p_reseller_id
    where
    v.venue_id = p_venue_id and r.reseller_id = p_reseller_id
    group by 
@@ -477,13 +477,13 @@ begin
    tg.price,
    tg.tickets_available,
    nvl(
-   (select sum(ta.tickets_assigned) from ticket_assignments ta where ta.ticket_group_id = tg.ticket_group_id)
+   (select sum(ta.tickets_assigned) from event_system.ticket_assignments ta where ta.ticket_group_id = tg.ticket_group_id)
    ,0) currently_assigned,
    nvl(
-   (select sum(ts.ticket_quantity) from ticket_sales ts where ts.ticket_group_id = tg.ticket_group_id and ts.reseller_id is null)
+   (select sum(ts.ticket_quantity) from event_system.ticket_sales ts where ts.ticket_group_id = tg.ticket_group_id and ts.reseller_id is null)
    ,0) sold_by_venue
    from
-   events e join ticket_groups tg on e.event_id = tg.event_id
+   event_system.events e join event_system.ticket_groups tg on e.event_id = tg.event_id
    where e.event_id = p_event_id
    union all
    select
@@ -495,12 +495,12 @@ begin
    e.tickets_available -
    nvl(
       (select sum(tg.tickets_available) 
-      from ticket_groups tg 
+      from event_system.ticket_groups tg 
       where tg.event_id = p_event_id)
    ,0) as tickets_available,
    0 as currently_assigned,
    0 as sold_by_venue
-   from events e where e.event_id = p_event_id;
+   from event_system.events e where e.event_id = p_event_id;
 
 end show_ticket_groups;
 
@@ -520,25 +520,25 @@ is
   v_message varchar2(1000);
 begin
 
-   select tickets_available
+   select e.tickets_available
    into v_event_tickets
-   from events
-   where event_id = p_event_id;
+   from event_system.events e
+   where e.event_id = p_event_id;
    
    select nvl(sum(tg.tickets_available),0)
    into v_other_groups_tickets
-   from ticket_groups tg
+   from event_system.ticket_groups tg
    where tg.event_id = p_event_id
    and upper(tg.price_category) <> upper(p_price_category);
    
    select nvl(sum(ta.tickets_assigned),0) into v_reseller_assignments
-   from ticket_groups tg join ticket_assignments ta
+   from event_system.ticket_groups tg join event_system.ticket_assignments ta
    on tg.ticket_group_id = ta.ticket_group_id
    where tg.event_id = p_event_id 
    and upper(tg.price_category) = upper(p_price_category);
    
    select nvl(sum(ts.ticket_quantity),0) into v_direct_venue_sales
-   from ticket_groups tg join ticket_sales ts 
+   from event_system.ticket_groups tg join event_system.ticket_sales ts 
    on tg.ticket_group_id = ts.ticket_group_id
    where tg.event_id = p_event_id 
    and upper(tg.price_category) = upper(p_price_category) 
@@ -567,7 +567,7 @@ is
 begin
 
   select count(*) into v_count
-  from ticket_groups tg
+  from event_system.ticket_groups tg
   where tg.event_id = p_event_id
   and tg.price_category = upper(p_price_category);
   
@@ -594,7 +594,7 @@ begin
    --TODO: Change this to use a merge statement   
    if not ticket_group_exists(p_event_id, p_price_category) then
    
-      insert into ticket_groups(
+      insert into event_system.ticket_groups(
          event_id,
          price_category,
          price,
@@ -608,7 +608,7 @@ begin
 
    else
    
-      update ticket_groups
+      update event_system.ticket_groups
       set 
       price = p_price,
       tickets_available = p_tickets
@@ -653,7 +653,7 @@ begin
       nvl(
          (
          select sum(ta.tickets_assigned) 
-         from ticket_assignments ta
+         from event_system.ticket_assignments ta
          where ta.ticket_group_id = tg.ticket_group_id 
          and ta.reseller_id <> p_reseller_id
          )
@@ -661,7 +661,7 @@ begin
       nvl(
          (
          select ta.tickets_assigned 
-         from ticket_assignments ta
+         from event_system.ticket_assignments ta
          where ta.ticket_group_id = tg.ticket_group_id 
          and ta.reseller_id = p_reseller_id
          )
@@ -669,7 +669,7 @@ begin
       nvl(
          (
          select sum(ts.ticket_quantity)
-         from ticket_sales ts
+         from event_system.ticket_sales ts
          where ts.ticket_group_id = tg.ticket_group_id
          and ts.reseller_id = p_reseller_id
          )
@@ -677,13 +677,13 @@ begin
       nvl(
          (
          select sum(ts.ticket_quantity)
-         from ticket_sales ts
+         from event_system.ticket_sales ts
          where ts.ticket_group_id = tg.ticket_group_id
          and ts.reseller_id is null
          )
       ,0) as sold_by_venue
       from
-      events e join ticket_groups tg on e.event_id = tg.event_id
+      event_system.events e join event_system.ticket_groups tg on e.event_id = tg.event_id
    where e.event_id = p_event_id
    )
    select
@@ -699,7 +699,7 @@ begin
    b.sold_by_reseller as min_assignment,
    b.sold_by_reseller,
    b.sold_by_venue
-   from base b cross join resellers r
+   from base b cross join event_system.resellers r
    where r.reseller_id = p_reseller_id;
 
 
@@ -724,24 +724,24 @@ begin
 
   select tg.tickets_available, tg.price_category
   into v_total_group_tickets, v_price_category
-  from ticket_groups tg 
+  from event_system.ticket_groups tg 
   where tg.ticket_group_id = p_ticket_group_id;
   
   select nvl(sum(ta.tickets_assigned),0) 
   into v_assigned_others
-  from ticket_assignments ta 
+  from event_system.ticket_assignments ta 
   where ta.ticket_group_id = p_ticket_group_id 
   and ta.reseller_id <> p_reseller_id;
 
   select nvl(sum(ts.ticket_quantity),0) 
   into v_venue_direct_sales
-  from ticket_sales ts 
+  from event_system.ticket_sales ts 
   where ts.ticket_group_id = p_ticket_group_id 
   and ts.reseller_id is null;
 
   select nvl(sum(ts.ticket_quantity),0) 
   into v_reseller_sales
-  from ticket_sales ts 
+  from event_system.ticket_sales ts 
   where ts.ticket_group_id = p_ticket_group_id 
   and ts.reseller_id = p_reseller_id;
   
@@ -768,7 +768,7 @@ begin
 
   select count(*) into v_count
   from
-  ticket_assignments ta
+  event_system.ticket_assignments ta
   where ta.reseller_id = p_reseller_id
   and ta.ticket_group_id = p_ticket_group_id;
   
@@ -795,13 +795,23 @@ begin
   --TODO:  convert this to use merge statement
   if not ticket_group_assignment_exists(p_reseller_id, p_ticket_group_id) then
     
-    insert into ticket_assignments(ticket_group_id, reseller_id, tickets_assigned)
-    values (p_ticket_group_id, p_reseller_id, p_number_tickets)
+    insert into event_system.ticket_assignments
+       (
+          ticket_group_id, 
+          reseller_id, 
+          tickets_assigned
+       )
+    values 
+       (
+          p_ticket_group_id, 
+          p_reseller_id, 
+          p_number_tickets
+       )
     returning ticket_assignment_id into p_ticket_assignment_id;
     
   else
   
-    update ticket_assignments
+    update event_system.ticket_assignments
     set tickets_assigned = p_number_tickets
     where ticket_group_id = p_ticket_group_id
     and reseller_id = p_reseller_id
@@ -846,14 +856,14 @@ begin
    ta.tickets_assigned,
    nvl(
       (select sum(ts.ticket_quantity) 
-      from ticket_sales ts
+      from event_system.ticket_sales ts
       where ts.ticket_group_id = tg.ticket_group_id
       and ts.reseller_id = ta.reseller_id)
    ,0) as tickets_sold
    from
-   ticket_groups tg join ticket_assignments ta 
+   event_system.ticket_groups tg join event_system.ticket_assignments ta 
    on tg.ticket_group_id = ta.ticket_group_id
-   join resellers r on ta.reseller_id = r.reseller_id
+   join event_system.resellers r on ta.reseller_id = r.reseller_id
    where
    tg.event_id = p_event_id
    union all
@@ -867,17 +877,17 @@ begin
    'VENUE DIRECT SALES' reseller_name,
    tg.tickets_available - nvl(
       (select sum(ta.tickets_assigned) 
-      from ticket_assignments ta 
+      from event_system.ticket_assignments ta 
       where ta.ticket_group_id = tg.ticket_group_id)
    ,0) as tickets_assigned,
    nvl(
        (select sum(ts.ticket_quantity) 
-       from ticket_sales ts 
+       from event_system.ticket_sales ts 
        where ts.ticket_group_id = tg.ticket_group_id 
        and ts.reseller_id is null)
    ,0) as tickets_sold
    from
-   ticket_groups tg
+   event_system.ticket_groups tg
    where
    tg.event_id = p_event_id
    )   
@@ -895,7 +905,7 @@ begin
      when (base.tickets_assigned - base.tickets_sold) <= 0 then 'SOLD OUT'
      else (base.tickets_assigned - base.tickets_sold) || ' AVAILABLE'
    end as ticket_status
-   from base join events e on base.event_id = e.event_id;
+   from base join event_system.events e on base.event_id = e.event_id;
 
 
 end show_all_event_tickets_available;
@@ -929,14 +939,14 @@ begin
    ta.tickets_assigned,
    nvl(
    (select sum(ticket_quantity) 
-   from ticket_sales ts
+   from event_system.ticket_sales ts
    where ts.ticket_group_id = tg.ticket_group_id
    and ts.reseller_id = ta.reseller_id)
    ,0) as tickets_sold
    from
-   ticket_groups tg join ticket_assignments ta 
+   event_system.ticket_groups tg join event_system.ticket_assignments ta 
    on tg.ticket_group_id = ta.ticket_group_id
-   join resellers r on ta.reseller_id = r.reseller_id
+   join event_system.resellers r on ta.reseller_id = r.reseller_id
    where
    tg.event_id = p_event_id
    and ta.reseller_id = p_reseller_id
@@ -955,7 +965,7 @@ begin
      when (base.tickets_assigned - base.tickets_sold) <= 0 then 'SOLD OUT'
      else (base.tickets_assigned - base.tickets_sold) || ' AVAILABLE'
    end as ticket_status
-   from base join events e on base.event_id = e.event_id;
+   from base join event_system.events e on base.event_id = e.event_id;
    
 end show_reseller_tickets_available;
 
@@ -984,17 +994,17 @@ begin
    tg.tickets_available as group_total_tickets,
    nvl(
       (select sum(ta.tickets_assigned)
-      from ticket_assignments ta
+      from event_system.ticket_assignments ta
       where ta.ticket_group_id = tg.ticket_group_id)
    ,0) as reseller_tickets_assigned,
    nvl(
       (select sum(ticket_quantity) 
-      from ticket_sales ts
+      from event_system.ticket_sales ts
       where ts.ticket_group_id = tg.ticket_group_id
       and ts.reseller_id is null)
    ,0) as venue_tickets_sold
    from
-   ticket_groups tg
+   event_system.ticket_groups tg
    where tg.event_id = p_event_id
    )   
    select
@@ -1011,7 +1021,7 @@ begin
      when (base.group_total_tickets - (base.reseller_tickets_assigned + base.venue_tickets_sold)) <= 0 then 'SOLD OUT'
      else (base.group_total_tickets - (base.reseller_tickets_assigned + base.venue_tickets_sold)) || ' AVAILABLE'
    end as ticket_status
-   from base join events e on base.event_id = e.event_id;
+   from base join event_system.events e on base.event_id = e.event_id;
    
 end show_venue_tickets_available;
 
@@ -1024,7 +1034,7 @@ is
 begin
 
    select tg.price into v_price
-   from ticket_groups tg
+   from event_system.ticket_groups tg
    where tg.ticket_group_id = p_ticket_group_id;
    
    return v_price;
@@ -1053,30 +1063,30 @@ begin
      ta.tickets_assigned,
      nvl(
         (select sum(ta_others.tickets_assigned)
-        from ticket_assignments ta_others
+        from event_system.ticket_assignments ta_others
         where ta_others.ticket_group_id = tg.ticket_group_id
         and ta_others.reseller_id <> ta.reseller_id)
      ,0) as tickets_assigned_others,
      tg.price_category,
      nvl(
         (select sum(ts.ticket_quantity)
-        from ticket_sales ts
+        from event_system.ticket_sales ts
         where ts.ticket_group_id = tg.ticket_group_id
         and ts.reseller_id = ta.reseller_id)
      ,0) as tickets_sold_by_reseller,
      nvl(
         (select sum(ts.ticket_quantity)
-        from ticket_sales ts
+        from event_system.ticket_sales ts
         where ts.ticket_group_id = tg.ticket_group_id
         and ts.reseller_id is not null and ts.reseller_id <> ta.reseller_id)
      ,0) as tickets_sold_by_other_resellers,
      nvl(
         (select sum(ts.ticket_quantity)
-        from ticket_sales ts
+        from event_system.ticket_sales ts
         where ts.ticket_group_id = tg.ticket_group_id
         and ts.reseller_id is null)
      ,0) as tickets_sold_by_venue
-     from ticket_groups tg join ticket_assignments ta 
+     from event_system.ticket_groups tg join event_system.ticket_assignments ta 
      on tg.ticket_group_id = ta.ticket_group_id
      where tg.ticket_group_id = p_ticket_group_id 
      and ta.reseller_id = p_reseller_id
@@ -1119,7 +1129,7 @@ begin
 
    select r.commission_percent
    into v_commission_pct
-   from resellers r
+   from event_system.resellers r
    where r.reseller_id = p_reseller_id;
    
    return v_commission_pct;
@@ -1151,7 +1161,7 @@ begin
    v_commission_pct := get_reseller_commission_percent(p_reseller_id);
    v_commission := round(v_extended_price * v_commission_pct);
    
-   insert into ticket_sales(
+   insert into event_system.ticket_sales(
         ticket_group_id, 
         customer_id, 
         reseller_id, 
@@ -1196,22 +1206,22 @@ begin
      tg.price_category,
      nvl(
         (select sum(ta.tickets_assigned)
-        from ticket_assignments ta
+        from event_system.ticket_assignments ta
         where ta.ticket_group_id = tg.ticket_group_id)
      ,0) as reseller_tickets_assigned,
      nvl(
         (select sum(ts.ticket_quantity)
-        from ticket_sales ts
+        from event_system.ticket_sales ts
         where ts.ticket_group_id = tg.ticket_group_id
         and ts.reseller_id is null)
      ,0) as venue_tickets_sold,
      nvl(
        (select sum(ts.ticket_quantity)
-        from ticket_sales ts
+        from event_system.ticket_sales ts
         where ts.ticket_group_id = tg.ticket_group_id
         and ts.reseller_id is not null)
      ,0) as reseller_tickets_sold
-     from ticket_groups tg
+     from event_system.ticket_groups tg
      where tg.ticket_group_id = p_ticket_group_id 
    )
    select 
@@ -1256,7 +1266,7 @@ begin
    v_price := get_current_ticket_price(p_ticket_group_id);
    v_extended_price := v_price * p_number_tickets;
    
-   insert into ticket_sales(
+   insert into event_system.ticket_sales(
         ticket_group_id, 
         customer_id, 
         reseller_id, 
@@ -1310,7 +1320,7 @@ begin
    ct.sales_date,
    ct.reseller_id,
    ct.reseller_name
-   from customer_event_tickets_v ct
+   from event_system.customer_event_tickets_v ct
    where ct.event_id = p_event_id and ct.customer_id = p_customer_id
    order by ct.price_category;
 
