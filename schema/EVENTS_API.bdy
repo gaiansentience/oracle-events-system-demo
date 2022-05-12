@@ -834,140 +834,66 @@ end assign_reseller_ticket_group;
 --show [number] AVAILABLE or SOLD OUT as status for each group/source
 --include ticket price for each group
 --used by venue application to show overall ticket availability
-procedure show_all_event_tickets_available
-(
-   p_event_id in number,
-   p_ticket_groups out sys_refcursor
-)
-is
-begin
-
-   open p_ticket_groups for
-   with base as
+   procedure show_all_event_tickets_available
    (
-   --reseller tickets
-   select
-   tg.event_id,
-   tg.price_category,
-   tg.ticket_group_id,
-   tg.price,
-   r.reseller_id,
-   r.reseller_name,
-   ta.tickets_assigned,
-   nvl(
-      (select sum(ts.ticket_quantity) 
-      from event_system.ticket_sales ts
-      where ts.ticket_group_id = tg.ticket_group_id
-      and ts.reseller_id = ta.reseller_id)
-   ,0) as tickets_sold
-   from
-   event_system.ticket_groups tg join event_system.ticket_assignments ta 
-   on tg.ticket_group_id = ta.ticket_group_id
-   join event_system.resellers r on ta.reseller_id = r.reseller_id
-   where
-   tg.event_id = p_event_id
-   union all
-   --venue direct tickets
-   select
-   tg.event_id,
-   tg.price_category,
-   tg.ticket_group_id,
-   tg.price,
-   null reseller_id,
-   'VENUE DIRECT SALES' reseller_name,
-   tg.tickets_available - nvl(
-      (select sum(ta.tickets_assigned) 
-      from event_system.ticket_assignments ta 
-      where ta.ticket_group_id = tg.ticket_group_id)
-   ,0) as tickets_assigned,
-   nvl(
-       (select sum(ts.ticket_quantity) 
-       from event_system.ticket_sales ts 
-       where ts.ticket_group_id = tg.ticket_group_id 
-       and ts.reseller_id is null)
-   ,0) as tickets_sold
-   from
-   event_system.ticket_groups tg
-   where
-   tg.event_id = p_event_id
-   )   
-   select
-   e.event_id,
-   e.event_name,
-   e.event_date,
-   base.price_category,
-   base.ticket_group_id,
-   base.price,
-   base.reseller_id,
-   base.reseller_name,
-   base.tickets_assigned - base.tickets_sold as tickets_available,
-   case 
-     when (base.tickets_assigned - base.tickets_sold) <= 0 then 'SOLD OUT'
-     else (base.tickets_assigned - base.tickets_sold) || ' AVAILABLE'
-   end as ticket_status
-   from base join event_system.events e on base.event_id = e.event_id;
+      p_event_id in number,
+      p_ticket_groups out sys_refcursor
+   )
+   is
+   begin
 
+      open p_ticket_groups for
+      select
+         event_id,
+         event_name,
+         event_date,
+         price_category,
+         ticket_group_id,
+         price,
+         reseller_id,
+         reseller_name,
+         tickets_available,
+         ticket_status
+      from
+         event_system.tickets_available_all_v
+      where 
+         event_id = p_event_id;
 
-end show_all_event_tickets_available;
-
-
+   end show_all_event_tickets_available;
 
 --show ticket groups assigned to reseller for this event
 --include tickets available in each group
 --show [number] AVAILABLE or SOLD OUT as status for each group
 --include ticket price for each group
 --used by reseller application to show available ticket groups to customers
-procedure show_reseller_tickets_available
-(
-   p_event_id in number,
-   p_reseller_id in number,
-   p_ticket_groups out sys_refcursor
-)
-is
-begin
-
-   open p_ticket_groups for
-   with base as
+   procedure show_reseller_tickets_available
    (
-   select
-   tg.event_id,
-   tg.price_category,
-   tg.ticket_group_id,
-   tg.price,
-   ta.reseller_id,
-   r.reseller_name,
-   ta.tickets_assigned,
-   nvl(
-   (select sum(ticket_quantity) 
-   from event_system.ticket_sales ts
-   where ts.ticket_group_id = tg.ticket_group_id
-   and ts.reseller_id = ta.reseller_id)
-   ,0) as tickets_sold
-   from
-   event_system.ticket_groups tg join event_system.ticket_assignments ta 
-   on tg.ticket_group_id = ta.ticket_group_id
-   join event_system.resellers r on ta.reseller_id = r.reseller_id
-   where
-   tg.event_id = p_event_id
-   and ta.reseller_id = p_reseller_id
-   )   
-   select
-   e.event_id,
-   e.event_name,
-   e.event_date,
-   base.price_category,
-   base.ticket_group_id,
-   base.price,
-   base.reseller_id,
-   base.reseller_name,
-   base.tickets_assigned - base.tickets_sold as tickets_available,
-   case 
-     when (base.tickets_assigned - base.tickets_sold) <= 0 then 'SOLD OUT'
-     else (base.tickets_assigned - base.tickets_sold) || ' AVAILABLE'
-   end as ticket_status
-   from base join event_system.events e on base.event_id = e.event_id;
-   
-end show_reseller_tickets_available;
+      p_event_id in number,
+      p_reseller_id in number,
+      p_ticket_groups out sys_refcursor
+   )
+   is
+   begin
+
+      open p_ticket_groups for
+      select
+         event_id,
+         event_name,
+         event_date,
+         price_category,
+         ticket_group_id,
+         price,
+         reseller_id,
+         reseller_name,
+         tickets_available,
+         ticket_status
+      from
+         event_system.tickets_available_reseller_v
+      where 
+         event_id = p_event_id
+         and reseller_id = p_reseller_id;
+
+   end show_reseller_tickets_available;
 
 
 --show ticket groups not assigned to any reseller for this event
@@ -975,71 +901,51 @@ end show_reseller_tickets_available;
 --show [number] AVAILABLE or SOLD OUT as status for each group
 --include ticket price for each group
 --used by venue organizer application to show tickets available for direct purchase to customers
-procedure show_venue_tickets_available
-(
-   p_event_id in number,
-   p_ticket_groups out sys_refcursor
-)
-is
-begin
-
-   open p_ticket_groups for
-   with base as
+   procedure show_venue_tickets_available
    (
-   select
-   tg.event_id,
-   tg.price_category,
-   tg.ticket_group_id,
-   tg.price,
-   tg.tickets_available as group_total_tickets,
-   nvl(
-      (select sum(ta.tickets_assigned)
-      from event_system.ticket_assignments ta
-      where ta.ticket_group_id = tg.ticket_group_id)
-   ,0) as reseller_tickets_assigned,
-   nvl(
-      (select sum(ticket_quantity) 
-      from event_system.ticket_sales ts
-      where ts.ticket_group_id = tg.ticket_group_id
-      and ts.reseller_id is null)
-   ,0) as venue_tickets_sold
-   from
-   event_system.ticket_groups tg
-   where tg.event_id = p_event_id
-   )   
-   select
-   e.event_id,
-   e.event_name,
-   e.event_date,
-   base.price_category,
-   base.ticket_group_id,
-   base.price,
-   null reseller_id,
-   'VENUE DIRECT SALES' reseller_name,
-   base.group_total_tickets - (base.reseller_tickets_assigned + base.venue_tickets_sold) as tickets_available,
-   case 
-     when (base.group_total_tickets - (base.reseller_tickets_assigned + base.venue_tickets_sold)) <= 0 then 'SOLD OUT'
-     else (base.group_total_tickets - (base.reseller_tickets_assigned + base.venue_tickets_sold)) || ' AVAILABLE'
-   end as ticket_status
-   from base join event_system.events e on base.event_id = e.event_id;
-   
-end show_venue_tickets_available;
+      p_event_id in number,
+      p_ticket_groups out sys_refcursor
+   )
+   is
+   begin
 
-function get_current_ticket_price
-(
-   p_ticket_group_id in number
-) return number
-is
-   v_price number;
-begin
+      open p_ticket_groups for
+      select
+         event_id,
+         event_name,
+         event_date,
+         price_category,
+         ticket_group_id,
+         price,
+         reseller_id,
+         reseller_name,
+         tickets_available,
+         ticket_status
+      from
+        event_system.tickets_available_venue_v
+      where 
+         event_id = p_event_id;
 
-   select tg.price into v_price
-   from event_system.ticket_groups tg
-   where tg.ticket_group_id = p_ticket_group_id;
+   end show_venue_tickets_available;
+
+   function get_current_ticket_price
+   (
+      p_ticket_group_id in number
+   ) return number
+   is
+      v_price number;
+   begin
+
+      select 
+         tg.price into v_price
+      from 
+         event_system.ticket_groups tg
+      where 
+         tg.ticket_group_id = p_ticket_group_id;
    
-   return v_price;
+      return v_price;
    
-end get_current_ticket_price;
+   end get_current_ticket_price;
 
 
 procedure verify_tickets_available_reseller
