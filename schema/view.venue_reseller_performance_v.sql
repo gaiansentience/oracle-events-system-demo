@@ -9,6 +9,7 @@ with venue_sales as
    from
       event_system.events e join event_system.ticket_groups tg on e.event_id = tg.event_id
       join event_system.ticket_sales ts on tg.ticket_group_id = ts.ticket_group_id 
+      where ts.reseller_id is not null
    group by
       e.venue_id,
       ts.reseller_id

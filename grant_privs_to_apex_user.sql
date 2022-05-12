@@ -1,7 +1,7 @@
 set serveroutput on;
 --grant table, view and package privileges to the apex user
 declare
-   l_execute boolean := false;
+   l_execute boolean := true;
    l_user varchar2(30) := 'OBE';
    cursor c_tables is
       select table_name
