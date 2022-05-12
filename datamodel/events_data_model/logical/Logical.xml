@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<LogicalDesign class="oracle.dbtools.crest.model.design.logical.LogicalDesign" name="Logical" id="ABAA5081-3317-3F50-FC03-EAB0ACDE5B4C" mainViewID="CBE1E574-508D-F69E-AF26-394F59392DED">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-29 01:26:09 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+</LogicalDesign>

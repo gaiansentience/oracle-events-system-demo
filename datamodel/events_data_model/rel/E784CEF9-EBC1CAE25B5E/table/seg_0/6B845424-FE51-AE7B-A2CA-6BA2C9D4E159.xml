@@ -1,0 +1,212 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="6B845424-FE51-AE7B-A2CA-6BA2C9D4E159" schemaObject="6189DD2B-F20C-BA86-80C0-8984DB908081" name="TICKET_SALES">
+<sourceConnName>orcl toptal at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TOPTAL</sourceObjSchema>
+<sourceObjName>TICKET_SALES</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="TICKET_SALES_ID" id="13FB9763-9039-C009-8AEF-A73F89CAE966">
+<sourceConnName>orcl toptal at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TICKET_SALES</sourceObjSchema>
+<sourceObjName>TICKET_SALES_ID</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<autoIncrementGenerateAlways>true</autoIncrementGenerateAlways>
+<autoIncrementCycle>false</autoIncrementCycle>
+<autoIncrementDisableCache>false</autoIncrementDisableCache>
+<autoIncrementCache>20</autoIncrementCache>
+<autoIncrementOrder>false</autoIncrementOrder>
+<notNullConstraintName>TICKET_SALES_NN_ID</notNullConstraintName>
+</Column>
+<Column name="TICKET_GROUP_ID" id="99F26452-14B2-7137-A31C-748A2E78B212">
+<sourceConnName>orcl toptal at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TICKET_SALES</sourceObjSchema>
+<sourceObjName>TICKET_GROUP_ID</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<notNullConstraintName>TICKET_SALES_NN_TICKET_GROUP_ID</notNullConstraintName>
+<associations>
+<colAssociation fkAssociation="59969433-D4FB-A47F-039E-72ADB4EAAE82" referredColumn="4EFE5BF7-F951-CABE-BC6C-8C94FEEBA861"/>
+</associations>
+</Column>
+<Column name="CUSTOMER_ID" id="79FAA110-48F0-8A0B-5205-A7377C3853F0">
+<sourceConnName>orcl toptal at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TICKET_SALES</sourceObjSchema>
+<sourceObjName>CUSTOMER_ID</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<notNullConstraintName>TICKET_SALES_NN_CUSTOMER_ID</notNullConstraintName>
+<associations>
+<colAssociation fkAssociation="F95BED10-C9F7-B1E9-547E-2DC9602D521A" referredColumn="EB5BB87C-24AB-916C-897C-C26048A1B7D9"/>
+</associations>
+</Column>
+<Column name="RESELLER_ID" id="6C3AAFAD-F2A2-4809-B6C7-B367F1234029">
+<sourceConnName>orcl toptal at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TICKET_SALES</sourceObjSchema>
+<sourceObjName>RESELLER_ID</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="E563FF50-D2E7-5905-3F64-5E5325B09A8E" referredColumn="0A03A82B-ED94-D4DC-15EF-2D4992CA69D9"/>
+</associations>
+</Column>
+<Column name="TICKET_QUANTITY" id="BEF6FE7E-C7AD-F81F-C19D-F3CA0CC8BAED">
+<sourceConnName>orcl toptal at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TICKET_SALES</sourceObjSchema>
+<sourceObjName>TICKET_QUANTITY</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<constraintName>TICKET_SALES_CHK_TICKET_QTY_GT_0</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<checkConstraint>
+<implementationDef dbType="Generic Constraint" definition="ticket_quantity &gt; 0"/>
+<implementationDef dbType="Oracle Database 12cR2" definition="ticket_quantity &gt; 0"/>
+</checkConstraint>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<notNullConstraintName>TICKET_SALES_NN_TICKET_QUANTITY</notNullConstraintName>
+</Column>
+<Column name="EXTENDED_PRICE" id="97902674-ACCA-68E2-34B1-2C6680CD197A">
+<sourceConnName>orcl toptal at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TICKET_SALES</sourceObjSchema>
+<sourceObjName>EXTENDED_PRICE</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>7</dataTypePrecision>
+<dataTypeScale>2</dataTypeScale>
+<ownDataTypeParameters>,7,2</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="RESELLER_COMMISSION" id="E085233D-0E5E-49F4-5EE8-7E108DA100CA">
+<sourceConnName>orcl toptal at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TICKET_SALES</sourceObjSchema>
+<sourceObjName>RESELLER_COMMISSION</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>6</dataTypePrecision>
+<dataTypeScale>2</dataTypeScale>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,6,2</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="SALES_DATE" id="2392BB49-BF98-8ACF-9414-AF54F7187122">
+<sourceConnName>orcl toptal at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TICKET_SALES</sourceObjSchema>
+<sourceObjName>SALES_DATE</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+<defaultValue>sysdate</defaultValue>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<notNullConstraintName>TICKET_SALES_NN_SALES_DATE</notNullConstraintName>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="6A677C74-3644-8382-5467-756261C0D2E6" name="TICKET_SALES_PK">
+<sourceConnName>orcl toptal at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TOPTAL</sourceObjSchema>
+<sourceObjName>TICKET_SALES_PK</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="13FB9763-9039-C009-8AEF-A73F89CAE966"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="11C4FF0B-F74A-C145-6CE9-5442C2ED4A1A" schemaObject="6189DD2B-F20C-BA86-80C0-8984DB908081" name="TICKET_SALES_PK">
+<sourceConnName>orcl toptal at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TOPTAL</sourceObjSchema>
+<sourceObjName>TICKET_SALES_PK</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="13FB9763-9039-C009-8AEF-A73F89CAE966"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="3A0F7761-0564-DA23-C8C1-779E8F877075" name="TICKET_SALES_FK_CUSTOMERS">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="79FAA110-48F0-8A0B-5205-A7377C3853F0"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="5C43FC71-4387-6EC0-E0AE-3196C67B5915" name="TICKET_SALES_FK_RESELLERS">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="6C3AAFAD-F2A2-4809-B6C7-B367F1234029"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="6E7B8D71-1B28-717F-FB6E-A0D6F083DE32" name="TICKET_SALES_FK_TICKET_GROUPS">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="99F26452-14B2-7137-A31C-748A2E78B212"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

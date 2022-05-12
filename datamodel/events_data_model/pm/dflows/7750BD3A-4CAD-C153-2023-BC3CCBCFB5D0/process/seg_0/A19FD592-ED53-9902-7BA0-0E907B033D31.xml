@@ -1,0 +1,23 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Process class="oracle.dbtools.crest.model.design.process.Process" name="Reseller Commissions and Performance" directorySegmentName="seg_0" id="A19FD592-ED53-9902-7BA0-0E907B033D31">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-01 17:45:44 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<primary>false</primary>
+<batchMinimumTransactions>1000</batchMinimumTransactions>
+<batchTimeUnit>Second</batchTimeUnit>
+<footNote>Reseller commissions can be paid by adding the calculated commission amount on all ticket sales that went through a given reseller for each month.
+---
+Reseller performance can be evaluated by looking at total sales amount and quantity of ticket sales for all events that the reseller participated in.</footNote>
+<frequencyTimeUnit>Day</frequencyTimeUnit>
+<frequencyTimes>0</frequencyTimes>
+<interactiveLongestResponseTime>5</interactiveLongestResponseTime>
+<interactiveResponseTimeUnit>Second</interactiveResponseTimeUnit>
+<mode>Unknown</mode>
+<priority>Low</priority>
+<peakPeriodsString>000000000000000000000000</peakPeriodsString>
+<responsibleParties>
+<party>9F53421A-9485-9103-1C5F-AD4BC71E642E</party>
+<party>8A33EAD3-65A1-67BE-CB30-FD39084CCCDF</party>
+</responsibleParties>
+</Process>

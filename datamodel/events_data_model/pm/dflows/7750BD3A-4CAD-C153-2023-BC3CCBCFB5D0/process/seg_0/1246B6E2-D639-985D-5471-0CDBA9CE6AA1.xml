@@ -1,0 +1,24 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Process class="oracle.dbtools.crest.model.design.process.Process" name="event ticket groups defined" directorySegmentName="seg_0" id="1246B6E2-D639-985D-5471-0CDBA9CE6AA1">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-01 16:57:00 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<primary>false</primary>
+<batchMinimumTransactions>1000</batchMinimumTransactions>
+<batchTimeUnit>Second</batchTimeUnit>
+<footNote>Venue Organizer creates Ticket Groups for the event with differing Price Categories, Prices and Available Quantities.  
+---
+All tickets are sold using these groups to identify the type of ticket (price category) and ticket price.
+---
+The total Available Quantities for all ticket groups created for an event cannot exceed the tickets available for the event.</footNote>
+<frequencyTimeUnit>Day</frequencyTimeUnit>
+<frequencyTimes>0</frequencyTimes>
+<interactiveLongestResponseTime>5</interactiveLongestResponseTime>
+<interactiveResponseTimeUnit>Second</interactiveResponseTimeUnit>
+<mode>Unknown</mode>
+<priority>Low</priority>
+<peakPeriodsString>000000000000000000000000</peakPeriodsString>
+<responsibleParties>
+<party>8A33EAD3-65A1-67BE-CB30-FD39084CCCDF</party>
+</responsibleParties>
+</Process>

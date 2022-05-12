@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="59969433-D4FB-A47F-039E-72ADB4EAAE82" containerWithKeyObject="6B845424-FE51-AE7B-A2CA-6BA2C9D4E159" localFKIndex="6E7B8D71-1B28-717F-FB6E-A0D6F083DE32" name="TICKET_SALES_FK_TICKET_GROUPS">
+<sourceConnName>orcl toptal at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TOPTAL</sourceObjSchema>
+<sourceObjName>TICKET_SALES_FK_TICKET_GROUPS</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<referredTableLongName>TOPTAL.TICKET_GROUPS</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>607D96BD-C4D5-E945-88E7-9F68551EC174</referredTableID>
+<keyObject>8D63DCFE-CEA8-FD33-9A03-A5099CF44F40</keyObject>
+<referredKeyID>8D63DCFE-CEA8-FD33-9A03-A5099CF44F40</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>TICKET_GROUP_ID</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

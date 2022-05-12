@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="F95BED10-C9F7-B1E9-547E-2DC9602D521A" containerWithKeyObject="6B845424-FE51-AE7B-A2CA-6BA2C9D4E159" localFKIndex="3A0F7761-0564-DA23-C8C1-779E8F877075" name="TICKET_SALES_FK_CUSTOMERS">
+<sourceConnName>orcl toptal at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TOPTAL</sourceObjSchema>
+<sourceObjName>TICKET_SALES_FK_CUSTOMERS</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<referredTableLongName>TOPTAL.CUSTOMERS</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>664BF34F-107B-B339-13D6-4D6B57F1EA6C</referredTableID>
+<keyObject>D0F0BFC6-0C65-F465-2804-84A75E9520D4</keyObject>
+<referredKeyID>D0F0BFC6-0C65-F465-2804-84A75E9520D4</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>CUSTOMER_ID</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

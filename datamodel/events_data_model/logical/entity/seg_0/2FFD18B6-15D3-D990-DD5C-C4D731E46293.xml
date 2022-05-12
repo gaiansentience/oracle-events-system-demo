@@ -1,0 +1,104 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="2FFD18B6-15D3-D990-DD5C-C4D731E46293" name="TICKET GROUPS">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:09:10 UTC</createdTime>
+<generatorID>607D96BD-C4D5-E945-88E7-9F68551EC174</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="E784CEF9-4F0E-D568-41F7-EBC1CAE25B5E" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="TICKET GROUP ID" id="47E9C51C-C4B2-FC08-4741-31EA23DB48A0">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:09:10 UTC</createdTime>
+<generatorID>4EFE5BF7-F951-CABE-BC6C-8C94FEEBA861</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="E784CEF9-4F0E-D568-41F7-EBC1CAE25B5E" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="EVENT ID" id="FE716FB4-75A1-9E3E-FABA-6955E6500C98">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:09:10 UTC</createdTime>
+<generatorID>8012307B-A88B-5ED1-FB30-83D202F19515</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="E784CEF9-4F0E-D568-41F7-EBC1CAE25B5E" value="true"/>
+</engineerTo>
+<referedAttribute>100C3C17-7586-4721-FC7D-AE945B4839A8</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="PRICE CATEGORY" id="3EFCDBFA-2ED2-ADFE-7102-B2F0ECC1644B">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:09:10 UTC</createdTime>
+<generatorID>ACC6B601-5E61-5A8B-EC2A-AE042D15E576</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="E784CEF9-4F0E-D568-41F7-EBC1CAE25B5E" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50 BYTE</dataTypeSize>
+<ownDataTypeParameters>50 BYTE,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="PRICE" id="9515BDA4-AF14-2EDC-6B55-51A07E41BB01">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:09:10 UTC</createdTime>
+<generatorID>62F655EF-78C8-DED3-CE31-6E7161F6095B</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="E784CEF9-4F0E-D568-41F7-EBC1CAE25B5E" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>6</dataTypePrecision>
+<dataTypeScale>2</dataTypeScale>
+<ownDataTypeParameters>,6,2</ownDataTypeParameters>
+</Attribute>
+<Attribute name="TICKETS AVAILABLE" id="5A0A5926-8DDB-C9DF-6821-8488BFBC1BE3">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:09:10 UTC</createdTime>
+<generatorID>A047F7A9-D1A3-B562-E29B-DBB7FF86C888</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="E784CEF9-4F0E-D568-41F7-EBC1CAE25B5E" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="D6CA503C-C5A5-57D9-56A1-48EEAA5303B4" name="TICKET GROUPS PK">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:09:10 UTC</createdTime>
+<generatorID>8D63DCFE-CEA8-FD33-9A03-A5099CF44F40</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="E784CEF9-4F0E-D568-41F7-EBC1CAE25B5E" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>47E9C51C-C4B2-FC08-4741-31EA23DB48A0</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

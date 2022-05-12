@@ -1,0 +1,13 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="events_data_model" id="C2391CEF-B5F0-D3D0-F3F7-B1A8D147E800" version="3.5">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-29 01:26:09 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>C2391CEF-B5F0-D3D0-F3F7-B1A8D147E800</designId>
+<usedDesignStorageDescriptors>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="EA52F002-DCBC-F867-F41D-CDBE0385051E">
+<designStoragePath>C:\VirtualBox\$fileshare\scripts\toptal\datamodel</designStoragePath>
+</designDescr>
+</usedDesignStorageDescriptors>
+</OSDM_Design>

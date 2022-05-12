@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Flow class="oracle.dbtools.crest.model.design.process.Flow" name="Flow_3" directorySegmentName="seg_0" id="0184CDC8-7311-2D1F-B86E-82314D0CCCE1">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-01 17:30:39 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<destination>40F28566-93F9-CFF6-6B11-ED38FC10090C</destination>
+<logging>false</logging>
+<opCreate>false</opCreate>
+<opDelete>false</opDelete>
+<opRead>false</opRead>
+<opUpdate>false</opUpdate>
+<sourceProcessObject>76BDB74C-E950-D6EF-11B6-4EEA125B48F5</sourceProcessObject>
+<targetProcessObject>40F28566-93F9-CFF6-6B11-ED38FC10090C</targetProcessObject>
+</Flow>

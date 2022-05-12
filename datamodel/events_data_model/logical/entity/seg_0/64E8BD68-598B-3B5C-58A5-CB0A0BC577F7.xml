@@ -1,0 +1,89 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="64E8BD68-598B-3B5C-58A5-CB0A0BC577F7" name="TICKET ASSIGNMENTS">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:09:10 UTC</createdTime>
+<generatorID>820F204D-1DBC-3485-AB66-8CE2272E9E08</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="E784CEF9-4F0E-D568-41F7-EBC1CAE25B5E" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="TICKET ASSIGNMENT ID" id="188D5B19-C190-5D3C-9751-95EFCCCC45AD">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:09:10 UTC</createdTime>
+<generatorID>4CC0B02B-8CBB-0C19-F50D-C60F03830A43</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="E784CEF9-4F0E-D568-41F7-EBC1CAE25B5E" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="TICKET GROUP ID" id="25E2619D-7061-8C22-5388-1B2D044B86B3">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:09:10 UTC</createdTime>
+<generatorID>EC863018-B36E-39F1-39A6-B0D7C5206C14</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="E784CEF9-4F0E-D568-41F7-EBC1CAE25B5E" value="true"/>
+</engineerTo>
+<referedAttribute>47E9C51C-C4B2-FC08-4741-31EA23DB48A0</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="RESELLER ID" id="3C3E98BD-0BA3-67F3-9D15-46B4C1B573B2">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:09:10 UTC</createdTime>
+<generatorID>9D815506-2FD6-1C7D-1E47-0F060BC4043E</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="E784CEF9-4F0E-D568-41F7-EBC1CAE25B5E" value="true"/>
+</engineerTo>
+<referedAttribute>E8EFDC12-B0B4-AD28-F7C5-C923D750589F</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="TICKETS ASSIGNED" id="60435876-834D-C00C-51C0-6EDB57C2AD93">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:09:10 UTC</createdTime>
+<generatorID>E17ADB46-93D7-35F2-F951-70E46AEBC2EF</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="E784CEF9-4F0E-D568-41F7-EBC1CAE25B5E" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="47F58DD8-390A-BEBD-3DEC-9B3975DCEB28" name="TICKET ASSIGNMENTS PK">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:09:10 UTC</createdTime>
+<generatorID>0969F7CA-5F5F-BF08-097E-166C2BA38255</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="E784CEF9-4F0E-D568-41F7-EBC1CAE25B5E" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>188D5B19-C190-5D3C-9751-95EFCCCC45AD</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

@@ -1,0 +1,26 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Process class="oracle.dbtools.crest.model.design.process.Process" name="event creation" directorySegmentName="seg_0" id="3857B9F0-A0FD-AB5D-5FA2-71A5988D4F15">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-01 16:52:34 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<primary>false</primary>
+<batchMinimumTransactions>1000</batchMinimumTransactions>
+<batchTimeUnit>Second</batchTimeUnit>
+<footNote>The Venue Organizer creates an event for the venue on a specific date.
+----
+The event can have as many tickets available as the venue maximum capacity.  It is also possible to create an event that is smaller than the venue capacity.
+----
+Two events cannot be created on the same date.
+----
+Weekly events can be created on a specified day of the week.  These events have a starting date and an ending date and are scheduled for the specified day for all weeks in this date range.  If there is a conflict with an existing event for a week, that weeks repeating event is not created.</footNote>
+<frequencyTimeUnit>Day</frequencyTimeUnit>
+<frequencyTimes>0</frequencyTimes>
+<interactiveLongestResponseTime>5</interactiveLongestResponseTime>
+<interactiveResponseTimeUnit>Second</interactiveResponseTimeUnit>
+<mode>Manual</mode>
+<priority>Low</priority>
+<peakPeriodsString>000000000000000000000000</peakPeriodsString>
+<responsibleParties>
+<party>8A33EAD3-65A1-67BE-CB30-FD39084CCCDF</party>
+</responsibleParties>
+</Process>

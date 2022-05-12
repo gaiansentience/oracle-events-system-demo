@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<ProcessModel class="oracle.dbtools.crest.model.design.process.ProcessModel" name="Process Model" id="D9259283-8D27-E4C0-AEA9-165965504AF4">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-29 01:26:10 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+</ProcessModel>

@@ -1,0 +1,87 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev12c class="oracle.dbtools.crest.model.design.storage.oracle.v12c.TableProxyOraclev12c" name="VENUES" directorySegmentName="seg_0" id="A3BC90E7-673C-7E17-AD53-B535E8CA9488">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<schemaObject>6189DD2B-F20C-BA86-80C0-8984DB908081</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>10CEF8AA-8EA1-D74C-C7AF-1130373D09AD</segment>
+<tableSpace>8C38BDED-E557-FFA4-63DF-10EDEDF7D554</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<inMemory>NO</inMemory>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="ORGANIZER_EMAIL" id="206A11FB-DE29-FC1B-8703-D34F18E39859">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="MAX_EVENT_CAPACITY" id="837BC231-58F4-3264-24B9-6D9C67D31B32">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ORGANIZER_NAME" id="86B7B30F-C9A1-36B8-3A30-B034241268AF">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="VENUE_ID" id="94D60CF9-3050-3997-07A6-4AAFBF561619">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<autoIncrementDDL>IDENTITY_CLAUSE</autoIncrementDDL>
+</ColumnProxy>
+<ColumnProxy name="VENUE_NAME" id="A8ADE8FD-51CB-60FD-57D9-3CC3FA4358B1">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="VENUES_PK" id="EFF24BA0-8596-244E-A947-7AC3AF6EB790">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<schemaObject>6189DD2B-F20C-BA86-80C0-8984DB908081</schemaObject>
+<segment>D2B31CB2-A5E2-7C00-2C25-F2F950A28905</segment>
+<tableSpace>8C38BDED-E557-FFA4-63DF-10EDEDF7D554</tableSpace>
+</IndexProxy>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="VENUES_U_NAME" id="FCD2FC41-542B-82A5-F694-424762E9DA60">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<schemaObject>6189DD2B-F20C-BA86-80C0-8984DB908081</schemaObject>
+<segment>D2B31CB2-A5E2-7C00-2C25-F2F950A28905</segment>
+<tableSpace>8C38BDED-E557-FFA4-63DF-10EDEDF7D554</tableSpace>
+</IndexProxy>
+</indexProxies>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="VENUES_PK" id="BC0D1DEF-0874-5259-81D3-1623CE69E35E">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<segment>D2B31CB2-A5E2-7C00-2C25-F2F950A28905</segment>
+<tableSpace>8C38BDED-E557-FFA4-63DF-10EDEDF7D554</tableSpace>
+<existingIndex>EFF24BA0-8596-244E-A947-7AC3AF6EB790</existingIndex>
+<indexSegment>D2B31CB2-A5E2-7C00-2C25-F2F950A28905</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+<uniqueKeys>
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="VENUES_U_NAME" id="E56E8548-C096-9E9F-4E1F-FEF21B29BEC9">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<segment>D2B31CB2-A5E2-7C00-2C25-F2F950A28905</segment>
+<tableSpace>8C38BDED-E557-FFA4-63DF-10EDEDF7D554</tableSpace>
+<existingIndex>FCD2FC41-542B-82A5-F694-424762E9DA60</existingIndex>
+<indexSegment>D2B31CB2-A5E2-7C00-2C25-F2F950A28905</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</UniqueKey>
+</uniqueKeys>
+</TableProxyOraclev12c>

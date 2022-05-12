@@ -1,0 +1,103 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="8884B81A-25F9-D67E-A5C1-DB979DFEDA3F" name="EVENTS">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:09:10 UTC</createdTime>
+<generatorID>48973F84-30FF-3850-A203-AD2922D90002</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="E784CEF9-4F0E-D568-41F7-EBC1CAE25B5E" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="EVENT ID" id="100C3C17-7586-4721-FC7D-AE945B4839A8">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:09:10 UTC</createdTime>
+<generatorID>C3B15799-1A2B-4E24-D278-87247EB1EAFD</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="E784CEF9-4F0E-D568-41F7-EBC1CAE25B5E" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="VENUE ID" id="ADC034F1-10F8-215C-AA9F-FE86BE01DF0B">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:09:10 UTC</createdTime>
+<generatorID>688F217E-6049-8293-D8A0-E2A4D5997C45</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="E784CEF9-4F0E-D568-41F7-EBC1CAE25B5E" value="true"/>
+</engineerTo>
+<referedAttribute>462147BF-4FB0-A9B1-07BB-B1BAEB883EEE</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="EVENT NAME" id="832765AE-9421-46E8-EC6F-09C855C883C4">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:09:10 UTC</createdTime>
+<generatorID>96E30534-6916-7FB0-A006-DCE14847DED0</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="E784CEF9-4F0E-D568-41F7-EBC1CAE25B5E" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100 BYTE</dataTypeSize>
+<ownDataTypeParameters>100 BYTE,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="EVENT DATE" id="ABBD9420-0656-528C-232E-8B701C235E2D">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:09:10 UTC</createdTime>
+<generatorID>2890D1DA-0092-8025-11DB-0E1DE9F22180</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="E784CEF9-4F0E-D568-41F7-EBC1CAE25B5E" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="TICKETS AVAILABLE" id="04E6B449-FFCC-0F4E-83BA-97D2490B969E">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:09:10 UTC</createdTime>
+<generatorID>216A519E-C108-CEA1-3CDC-FC29570DB715</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="E784CEF9-4F0E-D568-41F7-EBC1CAE25B5E" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="D2B98501-1F91-30F8-8341-5874150AB373" name="EVENTS PK">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:09:10 UTC</createdTime>
+<generatorID>68158700-3A52-B675-BA6E-A560273FEA57</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="E784CEF9-4F0E-D568-41F7-EBC1CAE25B5E" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>100C3C17-7586-4721-FC7D-AE945B4839A8</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

@@ -1,0 +1,6 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<StorageDesignOraclev12cR2 class="oracle.dbtools.crest.model.design.storage.oracle.v12cr2.StorageDesignOraclev12cR2" name="Oracle Database 12cR2" id="1D9EF95B-4979-B4BB-8333-413471633F2F" siteID="79C73AAF-E1A7-E669-7DF0-025EE81A2AFC" siteName="Oracle Database 12cR2" siteType="14">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:31 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+</StorageDesignOraclev12cR2>

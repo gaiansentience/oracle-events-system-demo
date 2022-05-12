@@ -1,0 +1,119 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="664BF34F-107B-B339-13D6-4D6B57F1EA6C" schemaObject="6189DD2B-F20C-BA86-80C0-8984DB908081" name="CUSTOMERS">
+<sourceConnName>orcl toptal at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TOPTAL</sourceObjSchema>
+<sourceObjName>CUSTOMERS</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="CUSTOMER_ID" id="EB5BB87C-24AB-916C-897C-C26048A1B7D9">
+<sourceConnName>orcl toptal at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>CUSTOMERS</sourceObjSchema>
+<sourceObjName>CUSTOMER_ID</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<autoIncrementGenerateAlways>true</autoIncrementGenerateAlways>
+<autoIncrementCycle>false</autoIncrementCycle>
+<autoIncrementDisableCache>false</autoIncrementDisableCache>
+<autoIncrementCache>20</autoIncrementCache>
+<autoIncrementOrder>false</autoIncrementOrder>
+<notNullConstraintName>CUSTOMERS_NN_ID</notNullConstraintName>
+</Column>
+<Column name="CUSTOMER_NAME" id="78B18170-E521-2C87-9D15-03303B3053B3">
+<sourceConnName>orcl toptal at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>CUSTOMERS</sourceObjSchema>
+<sourceObjName>CUSTOMER_NAME</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50 BYTE</dataTypeSize>
+<ownDataTypeParameters>50 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<notNullConstraintName>CUSTOMERS_NN_CUSTOMER_NAME</notNullConstraintName>
+</Column>
+<Column name="CUSTOMER_EMAIL" id="BB76B1EE-8051-BD8C-887C-D6A320788F49">
+<sourceConnName>orcl toptal at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>CUSTOMERS</sourceObjSchema>
+<sourceObjName>CUSTOMER_EMAIL</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50 BYTE</dataTypeSize>
+<ownDataTypeParameters>50 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<notNullConstraintName>CUSTOMERS_NN_CUSTOMER_EMAIL</notNullConstraintName>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="D0F0BFC6-0C65-F465-2804-84A75E9520D4" name="CUSTOMERS_PK">
+<sourceConnName>orcl toptal at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TOPTAL</sourceObjSchema>
+<sourceObjName>CUSTOMERS_PK</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="EB5BB87C-24AB-916C-897C-C26048A1B7D9"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="EFAAB4FB-751A-C901-A159-45AF7EFE67C3" name="CUSTOMERS_U_CUSTOMER_EMAIL">
+<sourceConnName>orcl toptal at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TOPTAL</sourceObjSchema>
+<sourceObjName>CUSTOMERS_U_CUSTOMER_EMAIL</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="BB76B1EE-8051-BD8C-887C-D6A320788F49"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="83737CA2-8A1F-7BDD-26E9-65891BC535DE" schemaObject="6189DD2B-F20C-BA86-80C0-8984DB908081" name="CUSTOMERS_PK">
+<sourceConnName>orcl toptal at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TOPTAL</sourceObjSchema>
+<sourceObjName>CUSTOMERS_PK</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="EB5BB87C-24AB-916C-897C-C26048A1B7D9"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="5FED1E10-7835-C0F2-9C3C-922B2F25B020" schemaObject="6189DD2B-F20C-BA86-80C0-8984DB908081" name="CUSTOMERS_U_CUSTOMER_EMAIL">
+<sourceConnName>orcl toptal at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TOPTAL</sourceObjSchema>
+<sourceObjName>CUSTOMERS_U_CUSTOMER_EMAIL</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="BB76B1EE-8051-BD8C-887C-D6A320788F49"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

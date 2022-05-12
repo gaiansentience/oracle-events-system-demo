@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<oracle.dbtools.crest.model.businessinfo.BusinessInfoDesign>
+   <object objectType="ResponsibleParty" objectID="6A8FDD1A-AA20-1A61-E194-15364BCBCD8A" name="ResParty_4" seqName="seg_0" propertyClassName="oracle.dbtools.crest.model.businessinfo.BIResponsibleParty" propertyParentId="35F18DD1-9BE8-CB87-00B6-003A9E41BB5C" propertySourceId="" propertyTargetId=""/>
+   <object objectType="ResponsibleParty" objectID="8A33EAD3-65A1-67BE-CB30-FD39084CCCDF" name="venue organizer" seqName="seg_0" propertyClassName="oracle.dbtools.crest.model.businessinfo.BIResponsibleParty" propertyParentId="35F18DD1-9BE8-CB87-00B6-003A9E41BB5C" propertySourceId="" propertyTargetId=""/>
+   <object objectType="ResponsibleParty" objectID="9F53421A-9485-9103-1C5F-AD4BC71E642E" name="Reseller" seqName="seg_0" propertyClassName="oracle.dbtools.crest.model.businessinfo.BIResponsibleParty" propertyParentId="35F18DD1-9BE8-CB87-00B6-003A9E41BB5C" propertySourceId="" propertyTargetId=""/>
+   <object objectType="ResponsibleParty" objectID="FAF46F45-6ACA-E7D4-39BE-5A2F6EA35D96" name="Customers" seqName="seg_0" propertyClassName="oracle.dbtools.crest.model.businessinfo.BIResponsibleParty" propertyParentId="35F18DD1-9BE8-CB87-00B6-003A9E41BB5C" propertySourceId="" propertyTargetId=""/>
+</oracle.dbtools.crest.model.businessinfo.BusinessInfoDesign>

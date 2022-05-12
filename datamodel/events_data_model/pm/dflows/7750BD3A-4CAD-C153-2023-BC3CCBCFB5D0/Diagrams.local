@@ -1,0 +1,4 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<oracle.dbtools.crest.model.design.process.DataFlowDesign>
+   <object objectType="main_view" objectID="7E868301-44DD-E949-D8FE-0F2F6FDAB29A" name="events_process_flow" visible="true"/>
+</oracle.dbtools.crest.model.design.process.DataFlowDesign>

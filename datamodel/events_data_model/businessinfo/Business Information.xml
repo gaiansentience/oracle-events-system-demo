@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<BusinessInfoDesign class="oracle.dbtools.crest.model.businessinfo.BusinessInfoDesign" name="Business Information" id="35F18DD1-9BE8-CB87-00B6-003A9E41BB5C">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-29 01:26:10 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+</BusinessInfoDesign>

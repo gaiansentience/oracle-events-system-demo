@@ -1,0 +1,30 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Process class="oracle.dbtools.crest.model.design.process.Process" name="event ticket groups assigned to resellers" directorySegmentName="seg_0" id="76BDB74C-E950-D6EF-11B6-4EEA125B48F5">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-01 17:05:02 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<primary>false</primary>
+<batchMinimumTransactions>1000</batchMinimumTransactions>
+<batchTimeUnit>Second</batchTimeUnit>
+<footNote>The defined ticket groups for the event are allocated by assigning blocks of tickets to resellers.  Resellers can then sell these tickets to customers.
+---
+Any unassigned tickets in a ticket group are available for direct purchase from the venue.  
+---
+The total number of tickets assigned to all resellers cannot exceed the number of tickets available in the ticket group.
+---
+Assignments to each reseller can be increased or decreased.
+---
+If a reseller has already sold tickets in the group, their assignment cannot be changed to less than those sales.
+---
+If the venue makes direct sales for a ticket group, those tickets are not available for assignment to resellers.</footNote>
+<frequencyTimeUnit>Day</frequencyTimeUnit>
+<frequencyTimes>0</frequencyTimes>
+<interactiveLongestResponseTime>5</interactiveLongestResponseTime>
+<interactiveResponseTimeUnit>Second</interactiveResponseTimeUnit>
+<mode>Unknown</mode>
+<priority>Low</priority>
+<peakPeriodsString>000000000000000000000000</peakPeriodsString>
+<responsibleParties>
+<party>8A33EAD3-65A1-67BE-CB30-FD39084CCCDF</party>
+</responsibleParties>
+</Process>

@@ -1,0 +1,8 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<DataFlowDesign class="oracle.dbtools.crest.model.design.process.DataFlowDesign" name="events_process_flow" id="7750BD3A-4CAD-C153-2023-BC3CCBCFB5D0" mainViewID="7E868301-44DD-E949-D8FE-0F2F6FDAB29A" topLevel="true">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-01 16:51:28 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<shouldBeOpen>true</shouldBeOpen>
+<processOrderString>3857B9F0-A0FD-AB5D-5FA2-71A5988D4F15,1246B6E2-D639-985D-5471-0CDBA9CE6AA1,76BDB74C-E950-D6EF-11B6-4EEA125B48F5,40F28566-93F9-CFF6-6B11-ED38FC10090C,8B0F7FDA-3830-A223-95B2-8D50C5ED184E,A19FD592-ED53-9902-7BA0-0E907B033D31</processOrderString>
+</DataFlowDesign>

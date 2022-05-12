@@ -1,0 +1,32 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Process class="oracle.dbtools.crest.model.design.process.Process" name="Customers Purchase Tickets" directorySegmentName="seg_0" id="8B0F7FDA-3830-A223-95B2-8D50C5ED184E">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-01 17:35:05 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<primary>false</primary>
+<batchMinimumTransactions>1000</batchMinimumTransactions>
+<batchTimeUnit>Second</batchTimeUnit>
+<footNote>Customers can purchase available tickets from Resellers or Directly from the venue.  
+---
+Customers can purchase any quantity of tickets for a ticket group and source up to the number of tickets currently available for that group and source.
+---
+Customers are added to the system by name and email to record purchases.  This is required to accept a sales transaction.
+---
+Ticket prices paid were set by the venue organizer when the event ticket groups were created.  The total transaction amount is calculated by multiplying ticket quantity and ticket group price.
+---
+If the ticket purchase was through a reseller, the commision is calculated at time of sale and recorded with the ticket sales transaction.  Each reseller has a standard commission used for all transactions.
+---
+Customers cannot purchase more tickets from a source than are currently available from that source.  If there are limited tickets in a group available from a source and two customers try to purchase them only the first customer purchase will succeed.</footNote>
+<frequencyTimeUnit>Day</frequencyTimeUnit>
+<frequencyTimes>0</frequencyTimes>
+<interactiveLongestResponseTime>5</interactiveLongestResponseTime>
+<interactiveResponseTimeUnit>Second</interactiveResponseTimeUnit>
+<mode>Unknown</mode>
+<priority>Low</priority>
+<peakPeriodsString>000000000000000000000000</peakPeriodsString>
+<responsibleParties>
+<party>FAF46F45-6ACA-E7D4-39BE-5A2F6EA35D96</party>
+<party>9F53421A-9485-9103-1C5F-AD4BC71E642E</party>
+<party>8A33EAD3-65A1-67BE-CB30-FD39084CCCDF</party>
+</responsibleParties>
+</Process>

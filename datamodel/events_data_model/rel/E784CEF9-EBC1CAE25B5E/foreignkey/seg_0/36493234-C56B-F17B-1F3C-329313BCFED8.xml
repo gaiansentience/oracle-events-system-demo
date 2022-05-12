@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="36493234-C56B-F17B-1F3C-329313BCFED8" containerWithKeyObject="48973F84-30FF-3850-A203-AD2922D90002" localFKIndex="5D19F951-B67C-6571-A8D6-F28E1573B3BA" name="EVENTS_FK_VENUES">
+<sourceConnName>orcl toptal at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TOPTAL</sourceObjSchema>
+<sourceObjName>EVENTS_FK_VENUES</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<referredTableLongName>TOPTAL.VENUES</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>A3BC90E7-673C-7E17-AD53-B535E8CA9488</referredTableID>
+<keyObject>BC0D1DEF-0874-5259-81D3-1623CE69E35E</keyObject>
+<referredKeyID>BC0D1DEF-0874-5259-81D3-1623CE69E35E</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>VENUE_ID</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

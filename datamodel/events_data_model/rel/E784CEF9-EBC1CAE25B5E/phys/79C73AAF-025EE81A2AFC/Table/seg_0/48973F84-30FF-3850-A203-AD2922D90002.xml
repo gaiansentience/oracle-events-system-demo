@@ -1,0 +1,73 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev12c class="oracle.dbtools.crest.model.design.storage.oracle.v12c.TableProxyOraclev12c" name="EVENTS" directorySegmentName="seg_0" id="48973F84-30FF-3850-A203-AD2922D90002">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<schemaObject>6189DD2B-F20C-BA86-80C0-8984DB908081</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>10CEF8AA-8EA1-D74C-C7AF-1130373D09AD</segment>
+<tableSpace>8C38BDED-E557-FFA4-63DF-10EDEDF7D554</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<inMemory>NO</inMemory>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="TICKETS_AVAILABLE" id="216A519E-C108-CEA1-3CDC-FC29570DB715">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="EVENT_DATE" id="2890D1DA-0092-8025-11DB-0E1DE9F22180">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="VENUE_ID" id="5BA8431E-2C6D-C4DE-B427-60FC4C7AC8F9">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="EVENT_NAME" id="96E30534-6916-7FB0-A006-DCE14847DED0">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="EVENT_ID" id="C3B15799-1A2B-4E24-D278-87247EB1EAFD">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<autoIncrementDDL>IDENTITY_CLAUSE</autoIncrementDDL>
+</ColumnProxy>
+</columnProxies>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="EVENTS_PK" id="2D48CF5C-92C6-C04A-A0E9-68609667D71A">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<schemaObject>6189DD2B-F20C-BA86-80C0-8984DB908081</schemaObject>
+<segment>D2B31CB2-A5E2-7C00-2C25-F2F950A28905</segment>
+<tableSpace>8C38BDED-E557-FFA4-63DF-10EDEDF7D554</tableSpace>
+</IndexProxy>
+</indexProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="EVENTS_FK_VENUES" id="5D19F951-B67C-6571-A8D6-F28E1573B3BA">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="EVENTS_PK" id="68158700-3A52-B675-BA6E-A560273FEA57">
+<createdBy>gaian</createdBy>
+<createdTime>2022-04-30 23:05:48 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<segment>D2B31CB2-A5E2-7C00-2C25-F2F950A28905</segment>
+<tableSpace>8C38BDED-E557-FFA4-63DF-10EDEDF7D554</tableSpace>
+<existingIndex>2D48CF5C-92C6-C04A-A0E9-68609667D71A</existingIndex>
+<indexSegment>D2B31CB2-A5E2-7C00-2C25-F2F950A28905</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev12c>
