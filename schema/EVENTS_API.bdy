@@ -1,8 +1,8 @@
 create or replace package body events_api
 as
 
-g_user varchar2(30);
-g_sid number;
+   g_user varchar2(30);
+   g_sid number;
 
 procedure log_error
 (
@@ -68,34 +68,31 @@ exception
     raise;
 end create_venue;
 
-procedure show_venues_summary
-(
-   p_venues out sys_refcursor
-)
-is
-begin
+   procedure show_venues_summary
+   (
+      p_venues out sys_refcursor
+   )
+   is
+   begin
 
-   open p_venues for
-   select 
-   v.venue_id, 
-   v.venue_name, 
-   v.organizer_name,
-   v.organizer_email,
-   v.max_event_capacity, 
-   count(e.event_id) as events_scheduled, 
-   min(e.event_date) as first_event_date, 
-   max(e.event_date) as last_event_date,
-   min(e.tickets_available) min_event_tickets,
-   max(e.tickets_available) max_event_tickets
-   from event_system.venues v left outer join event_system.events e on v.venue_id = e.venue_id
-   group by 
-   v.venue_id, 
-   v.venue_name, 
-   v.organizer_name,
-   v.organizer_email,
-   v.max_event_capacity;   
+      open p_venues for
+      select
+         vs.venue_id,
+         vs.venue_name,
+         vs.organizer_name,
+         vs.organizer_email,
+         vs.max_event_capacity,
+         vs.events_scheduled,
+         vs.first_event_date,
+         vs.last_event_date,
+         vs.min_event_tickets,
+         vs.max_event_tickets
+      from  
+         venues_summary_v vs
+      order by 
+         vs.venue_name;
    
-end show_venues_summary;
+   end show_venues_summary;
    
 procedure create_reseller
 (
@@ -232,7 +229,8 @@ is
 begin
 
    select count(*) into v_count
-   from event_system.events e where e.venue_id = p_venue_id 
+   from event_system.events e 
+   where e.venue_id = p_venue_id 
    and trunc(e.event_date) = trunc(p_event_date);
    
    if v_count > 0 then
@@ -294,12 +292,13 @@ with date_range as
 (
 select
 (p_event_start_date) + level - 1 as the_date
-from dual connect by level <= (p_event_end_date) - (p_event_start_date)
+from dual connect by level <= (p_event_end_date - p_event_start_date)
 )
 select
 the_date
 from date_range
-where to_char(the_date,'fmDAY', 'NLS_DATE_LANGUAGE=American') = upper(p_event_day)
+where 
+to_char(the_date,'fmDAY', 'NLS_DATE_LANGUAGE=American') = upper(p_event_day)
 order by the_date;
 
 v_event_id number;
@@ -342,74 +341,61 @@ end create_weekly_event;
 
 --show all planned events for the venue
 --include total ticket sales to date
-procedure show_venue_upcoming_events
-(
-   p_venue_id in number,
-   p_events out sys_refcursor
-)
-is
-begin
+   procedure show_venue_upcoming_events
+   (
+      p_venue_id in number,
+      p_events out sys_refcursor
+   )
+   is
+   begin
 
-  open p_events for
-  select
-  v.venue_id,
-  v.venue_name,
-  e.event_id,
-  e.event_name,
-  e.event_date,
-  e.tickets_available,
-  e.tickets_available -
-  nvl(
-     (select sum(ts.ticket_quantity) 
-     from event_system.ticket_sales ts join event_system.ticket_groups tg 
-     on ts.ticket_group_id = tg.ticket_group_id
-     where tg.event_id = e.event_id)
-  ,0) as tickets_remaining
-  from
-  event_system.venues v join event_system.events e on v.venue_id = e.venue_id
-  where v.venue_id = p_venue_id and e.event_date > sysdate;
-
-end show_venue_upcoming_events;
+      open p_events for
+      select
+         ve.venue_id,
+         ve.venue_name,
+         ve.event_id,
+         ve.event_name,
+         ve.event_date,
+         ve.tickets_available,
+         ve.tickets_remaining
+      from
+         venue_events_v ve
+      where 
+         ve.venue_id = p_venue_id
+      order by
+         ve.event_date;
+  
+   end show_venue_upcoming_events;
 
 
 --show ticket sales and ticket quantity for each reseller
 --rank resellers by total sales amount
-procedure show_venue_reseller_performance
-(
-   p_venue_id in number,
-   p_reseller_sales out sys_refcursor
-)
-is
-begin
+   procedure show_venue_reseller_performance
+   (
+      p_venue_id in number,
+      p_reseller_sales out sys_refcursor
+   )
+   is
+   begin
 
-  open p_reseller_sales for
-  with venue_sales as
-  (
-  select
-  e.venue_id,
-  ts.reseller_id,
-  sum(ts.ticket_quantity) total_ticket_quantity,
-  sum(ts.extended_price) total_ticket_sales  
-  from
-  event_system.events e join event_system.ticket_groups tg on e.event_id = tg.event_id
-  join event_system.ticket_sales ts on tg.ticket_group_id = ts.ticket_group_id 
-  where e.venue_id = p_venue_id
-  group by
-  e.venue_id,
-  ts.reseller_id
-  )
-  select
-  r.reseller_id,
-  r.reseller_name,
-  nvl(vs.total_ticket_quantity,0) as total_ticket_quantity,
-  nvl(vs.total_ticket_sales,0) as total_ticket_sales,
-  dense_rank() over (order by nvl(vs.total_ticket_sales,0) desc) rank_by_sales,
-  dense_rank() over (order by nvl(vs.total_ticket_sales,0) desc) rank_by_quantity
-  from
-  event_system.resellers r left outer join venue_sales vs on r.reseller_id = vs.reseller_id --and vs.venue_id = p_venue_id
-  order by nvl(vs.total_ticket_sales,0) desc, r.reseller_name;
+      open p_reseller_sales for
+      select
+         rp.venue_id,
+         rp.reseller_id,
+         rp.reseller_name,
+         rp.total_ticket_quantity,
+         rp.total_ticket_sales,
+         rp.rank_by_sales,
+         rp.rank_by_quantity
+      from
+         venue_reseller_performance_v rp
+      where 
+         rp.venue_id = p_venue_id
+      order by
+         rp.rank_by_sales, 
+         rp.reseller_name;
 
-end show_venue_reseller_performance;
+   end show_venue_reseller_performance;
 
 
 

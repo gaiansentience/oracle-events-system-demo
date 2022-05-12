@@ -1,5 +1,8 @@
 --drop schema objects before redeploy
 prompt dropping views
+drop view venue_events_v;
+drop view venues_summary_v; 
+drop view venue_reseller_performance_v;
 drop view tickets_available_all_v;
 drop view tickets_available_reseller_v;
 drop view tickets_available_venue_v;
