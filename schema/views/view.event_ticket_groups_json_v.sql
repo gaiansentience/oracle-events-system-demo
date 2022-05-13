@@ -7,8 +7,6 @@ e.event_id,
 json_object(
    'venue_id' : v.venue_id,
    'venue_name' : v.venue_name,
-   'organizer_email' : v.organizer_email,
-   'organizer_name' : v.organizer_name,
    'event_id' : e.event_id, 
    'event_name' : e.event_name,
    'event_date' : e.event_date,

@@ -12,8 +12,6 @@ select
 b.venue_id,
 j.venue_id as json_venue_id,
 j.venue_name,
-j.organizer_name,
-j.organizer_email,
 b.event_id,
 j.event_id as json_event_id,
 j.event_name,
@@ -29,8 +27,6 @@ json_table(b.json_doc
    (
       venue_id number path '$.venue_id',
       venue_name varchar2(50) path '$.venue_name',
-      organizer_name varchar2(50) path '$.organizer_name',
-      organizer_email varchar2(50) path '$.organizer_email',
       event_id number path '$.event_id',
       event_name varchar2(50) path '$.event_name', 
       event_date date path '$.event_date',

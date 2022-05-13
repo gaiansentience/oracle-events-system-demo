@@ -11,11 +11,14 @@ json_object(
    'max_event_capacity' : v.max_event_capacity,
    'venue_scheduled_events' : 
       (
-         select count(*) from events e where e.venue_id = v.venue_id and e.event_date > sysdate
+         select count(*) 
+         from event_system.events e 
+         where 
+            e.venue_id = v.venue_id 
+            and e.event_date > trunc(sysdate)
       )
-   
 ) as json_doc
-from venues v
+from event_system.venues v
 )
 select
 b.venue_id,

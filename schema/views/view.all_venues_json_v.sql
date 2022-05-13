@@ -11,7 +11,11 @@ json_arrayagg(
       'max_event_capacity' : v.max_event_capacity,
       'venue_scheduled_events' : 
       (
-         select count(*) from events e where e.venue_id = v.venue_id and e.event_date > sysdate
+         select count(*) 
+         from events e 
+         where 
+            e.venue_id = v.venue_id 
+            and e.event_date > trunc(sysdate)
       )
    )
 returning clob) as json_doc
