@@ -1,10 +1,12 @@
 --create views for the events system
 prompt creating views for events api
+@@view.resellers_v.sql;
 @@view.venues_v.sql;
 @@view.venue_events_v.sql;
 @@view.venues_summary_v.sql;
 @@view.venue_reseller_performance_v.sql;
 @@view.venue_reseller_commission_v.sql;
+@@view.events_v.sql;
 @@view.event_ticket_groups_v.sql;
 @@view.event_ticket_prices_v.sql;
 @@view.reseller_ticket_group_availability_v.sql;

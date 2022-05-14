@@ -13,8 +13,10 @@ prompt creating views for json web services
 @@view.customer_event_tickets_from_json_v.sql;
 
 @@view.all_resellers_json_v.sql;
+@@view.all_resellers_from_json_v.sql;
 
 @@view.resellers_json_v.sql;
+@@view.resellers_from_json_v.sql;
 
 @@view.all_venues_json_v.sql;
 @@view.all_venues_from_json_v.sql;
@@ -26,8 +28,10 @@ prompt creating views for json web services
 @@view.venues_summary_from_json_v.sql;
 
 @@view.venue_events_json_v.sql;
+@@view.venue_events_from_json_v.sql;
 
 @@view.events_json_v.sql;
+@@view.events_from_json_v.sql;
 
 prompt events system json api views created
 
