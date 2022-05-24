@@ -1,0 +1,66 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<RoleOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.RoleOraclev10g" name="OBE" directorySegmentName="seg_0" id="C77798C2-8A3D-8032-1BD5-3B6B70F2D6CE">
+<sourceConnName>orcl event_system at DeveloperDays APEX</sourceConnName>
+<sourceObjName>OBE</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:36 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<permissions>
+<Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions1" id="4FEC1D49-85C9-68CC-35C5-04898072564E">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:36 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<privileges>DELETE, INSERT, SELECT, UPDATE</privileges>
+<table>3AEAF3D8-D466-1827-6C76-7636C83A79D6</table>
+</Permission>
+<Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions2" id="4E08F07D-5007-CB87-33AF-7C7646BC0378">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:36 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<privileges>DELETE, INSERT, SELECT, UPDATE</privileges>
+<table>305BF074-0203-1DFF-D9CC-516C15F9A93D</table>
+</Permission>
+<Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions3" id="7FDFC921-BF50-9BE6-4102-703AF730E5B7">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:36 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<privileges>DELETE, INSERT, SELECT, UPDATE</privileges>
+<table>F1E35B2C-4991-FA07-D017-B0753FB631D4</table>
+</Permission>
+<Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions4" id="5F186E44-F70C-AC07-2AF7-83D3D8A62C26">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:36 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<privileges>DELETE, INSERT, SELECT, UPDATE</privileges>
+<table>B40B7095-8048-03DA-EA4E-4C7F0B847AD8</table>
+</Permission>
+<Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions5" id="FC5D9562-6366-3D2E-30F4-5E6C2FF81BBB">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:36 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<privileges>DELETE, INSERT, SELECT, UPDATE</privileges>
+<table>E43D899C-407A-A729-42B6-5B76299FDF47</table>
+</Permission>
+<Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions6" id="73E61930-66FF-382C-FF57-939D6BE0C4C4">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:36 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<privileges>DELETE, INSERT, SELECT, UPDATE</privileges>
+<table>41A1F4B8-C3F6-7FE6-5A0D-2D3A042C6908</table>
+</Permission>
+<Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions7" id="9E2E50E9-7CA8-62EC-84A4-CD16C128858E">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:36 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<privileges>DELETE, INSERT, SELECT, UPDATE</privileges>
+<table>D5FE5218-5971-C271-9E7D-D0B887F8DD34</table>
+</Permission>
+<Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions8" id="38D991D7-81D6-2C37-75EE-CB2C7881A4C5">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:36 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<privileges>DELETE, INSERT, SELECT, UPDATE</privileges>
+<table>40E35E0C-6131-BCE2-59B0-5F1735600AD8</table>
+</Permission>
+</permissions>
+</RoleOraclev10g>

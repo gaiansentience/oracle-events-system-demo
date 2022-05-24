@@ -1,4 +1,0 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
-<oracle.dbtools.crest.model.design.relational.RelationalDesign>
-   <object objectType="main_view" objectID="B25E8990-4CDB-1D2D-6B92-2244D3DB27B0" name="Events_Relational_Model" visible="true"/>
-</oracle.dbtools.crest.model.design.relational.RelationalDesign>
