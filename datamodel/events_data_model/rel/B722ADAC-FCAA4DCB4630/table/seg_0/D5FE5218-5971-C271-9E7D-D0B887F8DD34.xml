@@ -1,0 +1,212 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="D5FE5218-5971-C271-9E7D-D0B887F8DD34" schemaObject="3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431" name="TICKET_SALES">
+<sourceConnName>orcl event_system at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>EVENT_SYSTEM</sourceObjSchema>
+<sourceObjName>TICKET_SALES</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:32 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="TICKET_SALES_ID" id="66A8B73D-2790-EF5B-1B71-BC4708EEDA83">
+<sourceConnName>orcl event_system at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TICKET_SALES</sourceObjSchema>
+<sourceObjName>TICKET_SALES_ID</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:32 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<autoIncrementGenerateAlways>true</autoIncrementGenerateAlways>
+<autoIncrementCycle>false</autoIncrementCycle>
+<autoIncrementDisableCache>false</autoIncrementDisableCache>
+<autoIncrementCache>20</autoIncrementCache>
+<autoIncrementOrder>false</autoIncrementOrder>
+<notNullConstraintName>TICKET_SALES_NN_ID</notNullConstraintName>
+</Column>
+<Column name="TICKET_GROUP_ID" id="F766C2FE-1818-C52B-A910-C21BC943725A">
+<sourceConnName>orcl event_system at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TICKET_SALES</sourceObjSchema>
+<sourceObjName>TICKET_GROUP_ID</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:32 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<notNullConstraintName>TICKET_SALES_NN_TICKET_GROUP_ID</notNullConstraintName>
+<associations>
+<colAssociation fkAssociation="2698743D-5033-842C-BB11-4F3860726EBD" referredColumn="F2C1E5A7-9E47-D5F3-64D9-0C6E1B52D64F"/>
+</associations>
+</Column>
+<Column name="CUSTOMER_ID" id="DED8635E-65A6-E4B9-06E4-7D1B6563AEB2">
+<sourceConnName>orcl event_system at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TICKET_SALES</sourceObjSchema>
+<sourceObjName>CUSTOMER_ID</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:32 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<notNullConstraintName>TICKET_SALES_NN_CUSTOMER_ID</notNullConstraintName>
+<associations>
+<colAssociation fkAssociation="3919535A-47C1-7D32-66C0-0A2FD4ED1CE8" referredColumn="A4D3E54F-1B88-8A35-E1E4-0B5221138144"/>
+</associations>
+</Column>
+<Column name="RESELLER_ID" id="F22C1D31-575A-9829-290F-0EC2711FBF6A">
+<sourceConnName>orcl event_system at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TICKET_SALES</sourceObjSchema>
+<sourceObjName>RESELLER_ID</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:32 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="07921E00-2E7B-6F6F-6BBE-40ECCA1A36BD" referredColumn="8735CED1-22D2-E81E-452E-67986D427B10"/>
+</associations>
+</Column>
+<Column name="TICKET_QUANTITY" id="64ECF1B9-B67E-C12A-DCA5-8B5315EC8BBD">
+<sourceConnName>orcl event_system at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TICKET_SALES</sourceObjSchema>
+<sourceObjName>TICKET_QUANTITY</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:32 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<constraintName>TICKET_SALES_CHK_TICKET_QTY_GT_0</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<checkConstraint>
+<implementationDef dbType="Generic Constraint" definition="ticket_quantity &gt; 0"/>
+<implementationDef dbType="Oracle Database 12cR2" definition="ticket_quantity &gt; 0"/>
+</checkConstraint>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<notNullConstraintName>TICKET_SALES_NN_TICKET_QUANTITY</notNullConstraintName>
+</Column>
+<Column name="EXTENDED_PRICE" id="D98B2F40-9311-48F5-49A9-AD7A0C33439C">
+<sourceConnName>orcl event_system at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TICKET_SALES</sourceObjSchema>
+<sourceObjName>EXTENDED_PRICE</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:32 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>9</dataTypePrecision>
+<dataTypeScale>2</dataTypeScale>
+<ownDataTypeParameters>,9,2</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="RESELLER_COMMISSION" id="C26728AF-25F5-1825-5683-EB1F26BD23C0">
+<sourceConnName>orcl event_system at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TICKET_SALES</sourceObjSchema>
+<sourceObjName>RESELLER_COMMISSION</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:32 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>7</dataTypePrecision>
+<dataTypeScale>2</dataTypeScale>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,7,2</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="SALES_DATE" id="9B04B101-ACCE-0F5D-42C5-2E51DB68ACA7">
+<sourceConnName>orcl event_system at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>TICKET_SALES</sourceObjSchema>
+<sourceObjName>SALES_DATE</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:32 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+<defaultValue>sysdate</defaultValue>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<notNullConstraintName>TICKET_SALES_NN_SALES_DATE</notNullConstraintName>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="F1E48460-A772-5BE6-417D-CA0FC91720E0" name="TICKET_SALES_PK">
+<sourceConnName>orcl event_system at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>EVENT_SYSTEM</sourceObjSchema>
+<sourceObjName>TICKET_SALES_PK</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:34 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="66A8B73D-2790-EF5B-1B71-BC4708EEDA83"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="E62D8533-1FC3-C673-D0AF-FAC3B3DC8291" schemaObject="3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431" name="TICKET_SALES_PK">
+<sourceConnName>orcl event_system at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>EVENT_SYSTEM</sourceObjSchema>
+<sourceObjName>TICKET_SALES_PK</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:33 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="66A8B73D-2790-EF5B-1B71-BC4708EEDA83"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="124DF410-97E3-6D4B-C2F1-5A5E6B5749B8" name="TICKET_SALES_FK_CUSTOMERS">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:35 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="DED8635E-65A6-E4B9-06E4-7D1B6563AEB2"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="47ACD2CE-17F5-CD0A-17CD-070D937923DC" name="TICKET_SALES_FK_RESELLERS">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:35 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="F22C1D31-575A-9829-290F-0EC2711FBF6A"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="CAF72F18-7413-3101-F639-407D371CA38E" name="TICKET_SALES_FK_TICKET_GROUPS">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:35 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="F766C2FE-1818-C52B-A910-C21BC943725A"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

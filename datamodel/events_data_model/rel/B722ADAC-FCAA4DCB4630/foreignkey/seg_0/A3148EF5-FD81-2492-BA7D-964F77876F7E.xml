@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="A3148EF5-FD81-2492-BA7D-964F77876F7E" containerWithKeyObject="E43D899C-407A-A729-42B6-5B76299FDF47" localFKIndex="CC02C93B-6733-08C5-D5FE-2D839FA7D67B" name="TICKET_ASSIGNMENTS_FK_RESELLERS">
+<sourceConnName>orcl event_system at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>EVENT_SYSTEM</sourceObjSchema>
+<sourceObjName>TICKET_ASSIGNMENTS_FK_RESELLERS</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:35 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<referredTableLongName>EVENT_SYSTEM.RESELLERS</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>B40B7095-8048-03DA-EA4E-4C7F0B847AD8</referredTableID>
+<keyObject>59CFC067-7DFD-7380-5001-0FF13117726D</keyObject>
+<referredKeyID>59CFC067-7DFD-7380-5001-0FF13117726D</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>RESELLER_ID</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

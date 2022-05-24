@@ -1,0 +1,15 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<relationalModel class="oracle.dbtools.crest.model.design.relational.RelationalDesign" name="Events_Relational_Model" id="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" mainViewID="164C734B-FC72-1DC8-322A-A08AA289A9B3">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:32 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+<selectedRDBMSSite>79C73AAF-E1A7-E669-7DF0-025EE81A2AFC</selectedRDBMSSite>
+<importConnectionStamps>
+<importConnectionStamp class="oracle.dbtools.crest.imports.DBConnectionStamp">
+<connName>orcl event_system at DeveloperDays APEX</connName>
+<connUser>event_system</connUser>
+<connType>1</connType>
+</importConnectionStamp>
+</importConnectionStamps>
+</relationalModel>

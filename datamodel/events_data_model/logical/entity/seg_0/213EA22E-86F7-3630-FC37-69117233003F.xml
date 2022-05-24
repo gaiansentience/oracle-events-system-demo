@@ -1,0 +1,88 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="213EA22E-86F7-3630-FC37-69117233003F" name="CUSTOMERS">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 16:01:18 UTC</createdTime>
+<generatorID>3AEAF3D8-D466-1827-6C76-7636C83A79D6</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="CUSTOMER ID" id="98DA625B-A475-647F-092D-3A74E983DB46">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 16:01:18 UTC</createdTime>
+<generatorID>A4D3E54F-1B88-8A35-E1E4-0B5221138144</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="CUSTOMER NAME" id="D152CA93-6420-352F-C896-D0ED54E78548">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 16:01:18 UTC</createdTime>
+<generatorID>EAD441A3-4154-599F-DB55-FA736A8BEB4E</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50 BYTE</dataTypeSize>
+<ownDataTypeParameters>50 BYTE,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="CUSTOMER EMAIL" id="A9D6B505-B051-3EA2-BDCB-19DEF2EF0E08">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 16:01:18 UTC</createdTime>
+<generatorID>357CC7E5-E6B2-84BA-31A8-3F22A62EE82A</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50 BYTE</dataTypeSize>
+<ownDataTypeParameters>50 BYTE,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="2C09F225-7443-9B10-8E4F-CC195F59875E" name="CUSTOMERS PK">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 16:01:18 UTC</createdTime>
+<generatorID>44F1B9B4-F513-8651-0B4F-BCB35C060109</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>98DA625B-A475-647F-092D-3A74E983DB46</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="05FB51EE-6730-A84D-BBF8-D9A392471908" name="CUSTOMERS U CUSTOMER EMAIL">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 16:01:18 UTC</createdTime>
+<generatorID>E81AECF9-63DB-32B9-7EE7-9941E7C9DD25</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<usedAttributes>
+<attributeRef>A9D6B505-B051-3EA2-BDCB-19DEF2EF0E08</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

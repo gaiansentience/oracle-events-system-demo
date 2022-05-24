@@ -1,0 +1,134 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="F1E35B2C-4991-FA07-D017-B0753FB631D4" schemaObject="3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431" name="EVENTS">
+<sourceConnName>orcl event_system at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>EVENT_SYSTEM</sourceObjSchema>
+<sourceObjName>EVENTS</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:32 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="EVENT_ID" id="3939EAD3-FCE6-2FB3-41B3-FA96DBFDE566">
+<sourceConnName>orcl event_system at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>EVENTS</sourceObjSchema>
+<sourceObjName>EVENT_ID</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:32 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<autoIncrementGenerateAlways>true</autoIncrementGenerateAlways>
+<autoIncrementCycle>false</autoIncrementCycle>
+<autoIncrementDisableCache>false</autoIncrementDisableCache>
+<autoIncrementCache>20</autoIncrementCache>
+<autoIncrementOrder>false</autoIncrementOrder>
+<notNullConstraintName>EVENTS_NN_ID</notNullConstraintName>
+</Column>
+<Column name="VENUE_ID" id="65E6A48C-3805-0C48-3C8C-C71A0B02201A">
+<sourceConnName>orcl event_system at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>EVENTS</sourceObjSchema>
+<sourceObjName>VENUE_ID</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:32 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<notNullConstraintName>EVENTS_NN_VENUE_ID</notNullConstraintName>
+<associations>
+<colAssociation fkAssociation="486CE789-37FD-7ACB-92DF-633ED8B5A90F" referredColumn="042CD707-C515-EE99-24BB-B9FDBDAB08D8"/>
+</associations>
+</Column>
+<Column name="EVENT_NAME" id="E5A3C229-0922-6613-7482-6261EC4DB9F4">
+<sourceConnName>orcl event_system at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>EVENTS</sourceObjSchema>
+<sourceObjName>EVENT_NAME</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:32 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100 BYTE</dataTypeSize>
+<ownDataTypeParameters>100 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<notNullConstraintName>EVENTS_NN_EVENT_NAME</notNullConstraintName>
+</Column>
+<Column name="EVENT_DATE" id="30BA8517-5DE0-E2C4-3838-BD9D27181647">
+<sourceConnName>orcl event_system at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>EVENTS</sourceObjSchema>
+<sourceObjName>EVENT_DATE</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:32 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<notNullConstraintName>EVENTS_NN_EVENT_DATE</notNullConstraintName>
+</Column>
+<Column name="TICKETS_AVAILABLE" id="89B939B9-D855-316A-95DC-3B2CC4DC5A10">
+<sourceConnName>orcl event_system at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>EVENTS</sourceObjSchema>
+<sourceObjName>TICKETS_AVAILABLE</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:32 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<notNullConstraintName>EVENTS_NN_TICKETS</notNullConstraintName>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="4C618C59-9679-0925-8567-2A1841382C80" name="EVENTS_PK">
+<sourceConnName>orcl event_system at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>EVENT_SYSTEM</sourceObjSchema>
+<sourceObjName>EVENTS_PK</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:34 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="3939EAD3-FCE6-2FB3-41B3-FA96DBFDE566"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="2EB0422C-982D-2666-5764-F89086C8A559" schemaObject="3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431" name="EVENTS_PK">
+<sourceConnName>orcl event_system at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>EVENT_SYSTEM</sourceObjSchema>
+<sourceObjName>EVENTS_PK</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:33 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="3939EAD3-FCE6-2FB3-41B3-FA96DBFDE566"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="FE99AD71-1DCE-5736-AE10-3CD241DE0E34" name="EVENTS_FK_VENUES">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:35 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="65E6A48C-3805-0C48-3C8C-C71A0B02201A"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

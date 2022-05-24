@@ -1,0 +1,121 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="474C9770-A821-5354-0852-658F528D4719" name="RESELLERS">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 16:01:18 UTC</createdTime>
+<generatorID>B40B7095-8048-03DA-EA4E-4C7F0B847AD8</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="RESELLER ID" id="0FEB5FF4-AC76-EB7F-A2C9-0BF343260D54">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 16:01:18 UTC</createdTime>
+<generatorID>8735CED1-22D2-E81E-452E-67986D427B10</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="RESELLER NAME" id="DC4A41EB-C502-4EE4-2A8F-B7DEC7C9D6A4">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 16:01:18 UTC</createdTime>
+<generatorID>510D3A06-0AA1-16E3-CD9B-96D5DBFF9413</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50 BYTE</dataTypeSize>
+<ownDataTypeParameters>50 BYTE,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="RESELLER EMAIL" id="81C9E456-EB83-0BCE-A4BB-6E76290DB278">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 16:01:18 UTC</createdTime>
+<generatorID>0E4C73C9-1575-C1D7-F27E-4D53255332E3</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50 BYTE</dataTypeSize>
+<ownDataTypeParameters>50 BYTE,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="COMMISSION PERCENT" id="5B5CC474-E9DF-FB46-D2E0-54145C60ADA8">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 16:01:18 UTC</createdTime>
+<generatorID>4612643A-F745-B448-1CFB-CD44773DCC62</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<constraintName>RESELLERS_CHK_COMMISSION_PCT_GT_0</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>6</dataTypePrecision>
+<dataTypeScale>4</dataTypeScale>
+<checkConstraint>
+<implementationDef dbType="Generic Constraint" definition="commission_percent &gt; 0"/>
+<implementationDef dbType="Oracle Database 12cR2" definition="commission_percent &gt; 0"/>
+</checkConstraint>
+<defaultValue>0.10</defaultValue>
+<ownDataTypeParameters>,6,4</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="ECEF8A90-CA66-828C-FC16-92CFCCE4AF45" name="RESELLERS PK">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 16:01:18 UTC</createdTime>
+<generatorID>59CFC067-7DFD-7380-5001-0FF13117726D</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>0FEB5FF4-AC76-EB7F-A2C9-0BF343260D54</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="3A707A7C-DAB5-60ED-49E3-C77F5D1542F3" name="RESELLERS U RESELLER EMAIL">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 16:01:18 UTC</createdTime>
+<generatorID>79A48212-5BE6-61C1-F780-AC3E14CD5551</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<usedAttributes>
+<attributeRef>81C9E456-EB83-0BCE-A4BB-6E76290DB278</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="0C76F5C9-A624-5E93-3EA4-F2967A840A45" name="RESELLERS U RESELLER NAME">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 16:01:18 UTC</createdTime>
+<generatorID>F92C257D-7CDC-D447-234A-A31D5EBBB236</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<usedAttributes>
+<attributeRef>DC4A41EB-C502-4EE4-2A8F-B7DEC7C9D6A4</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

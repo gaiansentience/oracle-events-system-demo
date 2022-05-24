@@ -1,0 +1,122 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="41CCC598-CF40-6ABF-3698-CA9E79181721" name="ERROR LOG">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:57:57 UTC</createdTime>
+<generatorID>305BF074-0203-1DFF-D9CC-516C15F9A93D</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="ERROR ID" id="C3ADC17D-C589-7C0A-77C0-747BE480B968">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:57:57 UTC</createdTime>
+<generatorID>B7122473-ADF4-3AC3-DCC5-6CEB254A9B2F</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="DB USER NAME" id="9158831D-9B73-7E54-25C5-92A23927C1AD">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:57:57 UTC</createdTime>
+<generatorID>ECAA57DE-93D5-9FF5-957E-D8C07A275B8F</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>30 BYTE</dataTypeSize>
+<ownDataTypeParameters>30 BYTE,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="DB SESSION ID" id="3DE9AF8E-C7E7-609C-818F-6D284833D594">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:57:57 UTC</createdTime>
+<generatorID>EB34A4F3-6A3B-067E-D56B-1E075A8DF813</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ERROR LOCALE" id="F30D3689-58A0-5AAA-ACC9-1889286FEB53">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:57:57 UTC</createdTime>
+<generatorID>F32CB338-4DFF-8919-6B1B-7485BCF3A0A4</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50 BYTE</dataTypeSize>
+<ownDataTypeParameters>50 BYTE,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ERROR CODE" id="A55A88AB-50E0-766F-4052-3229A66F32CD">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:57:57 UTC</createdTime>
+<generatorID>D7A2F6CA-D037-B3BC-4650-4801E3A60006</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ERROR MESSAGE" id="D3BDEC19-8F6D-2770-CAE4-668C95247CAA">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:57:57 UTC</createdTime>
+<generatorID>E3A5E62E-6252-5440-235F-7855A2E3FE59</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>4000 BYTE</dataTypeSize>
+<ownDataTypeParameters>4000 BYTE,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ERROR DATE" id="A86B51A9-2554-BB98-02E3-98E3F6E6CCE7">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:57:57 UTC</createdTime>
+<generatorID>743F9DA8-0B9E-5B4F-612E-9CA4024C3A0F</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+<defaultValue>sysdate</defaultValue>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+</Entity>

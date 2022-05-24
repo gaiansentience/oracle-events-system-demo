@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="EVENTS_FK_VENUESv1" directorySegmentName="seg_0" id="39FFAACC-3FD0-14D2-4FF3-1037FB815D12">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 16:01:18 UTC</createdTime>
+<generatorID>486CE789-37FD-7ACB-92DF-633ED8B5A90F</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<sourcePk>BD737694-B6C3-B821-84B3-9E0528467029</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>E9C77AF6-E0DF-22A9-5ADD-D99B786D5A33</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>1B0F22D1-0330-B0A5-41AC-B11D50E5258F</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

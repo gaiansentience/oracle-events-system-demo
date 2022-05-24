@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="TICKET_SALES_FK_RESELLERSv1" directorySegmentName="seg_0" id="B084AB88-63AB-5B64-0885-99046DAA6270">
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 16:01:18 UTC</createdTime>
+<generatorID>07921E00-2E7B-6F6F-6BBE-40ECCA1A36BD</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<sourcePk>ECEF8A90-CA66-828C-FC16-92CFCCE4AF45</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>true</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>474C9770-A821-5354-0852-658F528D4719</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>1FF70C84-89C0-C7BB-CC10-26D15E1295A3</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

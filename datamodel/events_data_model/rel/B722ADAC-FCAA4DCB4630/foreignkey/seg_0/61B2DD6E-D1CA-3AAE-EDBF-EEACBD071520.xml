@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="61B2DD6E-D1CA-3AAE-EDBF-EEACBD071520" containerWithKeyObject="41A1F4B8-C3F6-7FE6-5A0D-2D3A042C6908" localFKIndex="31D0F031-9D06-A0EB-3F50-68E89F69D626" name="TICKET_GROUPS_FK_EVENTS">
+<sourceConnName>orcl event_system at DeveloperDays APEX</sourceConnName>
+<sourceObjSchema>EVENT_SYSTEM</sourceObjSchema>
+<sourceObjName>TICKET_GROUPS_FK_EVENTS</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-05-24 15:54:35 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<referredTableLongName>EVENT_SYSTEM.EVENTS</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>F1E35B2C-4991-FA07-D017-B0753FB631D4</referredTableID>
+<keyObject>4C618C59-9679-0925-8567-2A1841382C80</keyObject>
+<referredKeyID>4C618C59-9679-0925-8567-2A1841382C80</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>EVENT_ID</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>
