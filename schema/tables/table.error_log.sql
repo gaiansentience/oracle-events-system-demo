@@ -1,5 +1,7 @@
-create table error_log(
+create table error_log
+    (
    error_id number generated always as identity,
+   os_user_name varchar2(100),
    db_user_name varchar2(30),
    db_session_id number,
    error_locale varchar2(50),
