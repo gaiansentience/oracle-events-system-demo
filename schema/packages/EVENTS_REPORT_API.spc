@@ -150,6 +150,30 @@ function show_reseller_ticket_group_availability
    p_reseller_id in number 
 ) return t_ticket_assignments pipelined;
 
+
+type r_ticket_prices is record(
+            venue_id venues.venue_id%type,
+            venue_name venues.venue_name%type,
+            event_id events.event_id%type,
+            event_name events.event_name%type,
+            event_date events.event_date%type,
+            event_tickets_available number,
+            ticket_group_id ticket_groups.ticket_group_id%type,
+            price_category ticket_groups.price_category%type,
+            price ticket_groups.price%type,
+            tickets_available number,
+            tickets_sold number,
+            tickets_remaining number
+);
+
+type t_ticket_prices is table of r_ticket_prices;
+
+--show pricing and availability for tickets created for the event
+function show_event_ticket_prices
+(
+    p_event_id in number
+) return t_ticket_prices pipelined;
+
 type r_event_tickets is record(
    event_id events.event_id%type,
    event_name events.event_name%type,

@@ -112,6 +112,12 @@ procedure create_ticket_group
    p_ticket_group_id out number
 );
 
+    function get_ticket_group_category
+    (
+        p_ticket_group_id in number
+    ) return varchar2;
+
+
 --show ticket groups and availability for this event and reseller
 --     tickets_in_group    tickets in group, 
 --     assigned_to_others  tickets assigned to other resellers, 
@@ -134,6 +140,13 @@ procedure assign_reseller_ticket_group
    p_number_tickets in number,
    p_ticket_assignment_id out number
 );
+
+    --show pricing and availability for tickets created for the event
+    procedure show_event_ticket_prices
+    (
+        p_event_id in number,
+        p_ticket_prices out sys_refcursor
+    );
 
 --show all tickets available for event (reseller or venue direct)
 --show each ticket group with availability by source (each reseller or venue)
@@ -169,6 +182,12 @@ procedure show_venue_tickets_available
    p_event_id in number,
    p_ticket_groups out sys_refcursor
 );
+
+
+   function get_current_ticket_price
+   (
+      p_ticket_group_id in number
+   ) return number;
 
 --record ticket purchased through reseller application
 --raise error if ticket group quantity available is less than number of tickets requested

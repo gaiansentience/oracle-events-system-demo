@@ -656,5 +656,5 @@ begin
 end create_test_data;
 
 begin
-  null;
+    dbms_random.seed('Albert Einstein');
 end events_test_data_api;

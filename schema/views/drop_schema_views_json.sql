@@ -6,6 +6,10 @@ drop view event_ticket_groups_json_v;
 drop view reseller_ticket_group_assignment_json_v;
 drop view reseller_ticket_group_assignment_from_json_v;
 
+drop view tickets_available_all_json_v;
+drop view tickets_available_reseller_json_v;
+drop view tickets_available_venue_json_v;
+
 drop view event_ticket_prices_from_json_v;
 drop view event_ticket_prices_json_v;
 

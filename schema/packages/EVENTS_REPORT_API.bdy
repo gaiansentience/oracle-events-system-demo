@@ -141,6 +141,28 @@ begin
 
 end show_reseller_ticket_group_availability;
 
+--show pricing and availability for tickets created for the event
+function show_event_ticket_prices
+(
+    p_event_id in number
+) return t_ticket_prices pipelined
+is
+    t_rows t_ticket_prices;
+    rc sys_refcursor;
+begin
+
+    events_api.show_event_ticket_prices(p_event_id, rc);
+    fetch rc bulk collect into t_rows;
+    close rc;
+    
+    for i in 1..t_rows.count loop
+        pipe row (t_rows(i));
+    end loop;
+    return;
+    
+end show_event_ticket_prices;
+
+
 function show_all_event_tickets_available
 (
    p_event_id in number 

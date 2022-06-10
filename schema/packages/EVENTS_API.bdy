@@ -583,28 +583,46 @@ as
 
    end verify_ticket_group_availability;
 
-   function ticket_group_exists
-   (
-      p_event_id in number,
-      p_price_category in varchar2
-   ) return boolean
-   is
-      v_count number;
-   begin
+    function ticket_group_exists
+    (
+        p_event_id in number,
+        p_price_category in varchar2
+    ) return boolean
+    is
+        v_count number;
+    begin
 
-      select 
-         count(*) 
-         into v_count
-      from 
-         event_system.ticket_groups tg
-      where 
-         tg.event_id = p_event_id
-         and tg.price_category = upper(p_price_category);
+        select count(*) 
+        into v_count
+        from event_system.ticket_groups tg
+        where 
+            tg.event_id = p_event_id
+            and tg.price_category = upper(p_price_category);
   
-      return (v_count > 0);
+        return (v_count > 0);
 
-   end ticket_group_exists;
+    end ticket_group_exists;
+   
+    function get_ticket_group_category
+    (
+        p_ticket_group_id in number
+    ) return varchar2
+    is
+        v_price_category ticket_groups.price_category%type;
+    begin
 
+      select tg.price_category
+      into v_price_category
+      from event_system.ticket_groups tg
+      where tg.ticket_group_id = p_ticket_group_id;
+  
+      return v_price_category;
+    
+    exception
+        when no_data_found then
+            return 'Ticket category not found';
+    end get_ticket_group_category;
+    
 --create a price category ticket group for the event
 --if the group already exists, update the number of tickets available
 --raise an error if ticket group would exceed event total tickets
@@ -845,6 +863,36 @@ as
          raise;
    end assign_reseller_ticket_group;
 
+    procedure show_event_ticket_prices
+    (
+        p_event_id in number,
+        p_ticket_prices out sys_refcursor
+    )
+    is
+    begin
+    
+        open p_ticket_prices for
+        select
+            tp.venue_id,
+            tp.venue_name,
+            tp.event_id,
+            tp.event_name,
+            tp.event_date,
+            tp.event_tickets_available,
+            tp.ticket_group_id,
+            tp.price_category,
+            tp.price,
+            tp.tickets_available,
+            tp.tickets_sold,
+            tp.tickets_remaining
+        from event_ticket_prices_v tp
+        where tp.event_id = p_event_id;
+    
+    exception
+        when others then
+            log_error(sqlerrm, sqlcode, 'show_event_ticket_prices');
+            raise;
+    end show_event_ticket_prices;
 
 --show all tickets available for event (reseller or venue direct)
 --show each ticket group with availability by source (each reseller or venue)
@@ -946,25 +994,27 @@ as
 
    end show_venue_tickets_available;
 
-   function get_current_ticket_price
-   (
-      p_ticket_group_id in number
-   ) return number
-   is
-      v_price number;
-   begin
+    function get_current_ticket_price
+    (
+        p_ticket_group_id in number
+    ) return number
+    is
+        v_price number;
+    begin
 
-      select 
-         tg.price 
-      into v_price
-      from 
-         event_system.ticket_groups tg
-      where 
-         tg.ticket_group_id = p_ticket_group_id;
+        select tg.price 
+        into v_price
+        from event_system.ticket_groups tg
+        where tg.ticket_group_id = p_ticket_group_id;
    
-      return v_price;
-   
-   end get_current_ticket_price;
+        return v_price;
+
+    exception
+        when no_data_found then
+            raise_application_error(-20100, 'Ticket Category Not Found, Cannot Verify Pricing');
+        when others then
+            raise;
+    end get_current_ticket_price;
 
 
    procedure verify_tickets_available_reseller
@@ -1068,7 +1118,12 @@ as
          raise_application_error(-20100,v_message);
       end if;
 
-   end verify_tickets_available_reseller;
+    exception
+        when no_data_found then
+            raise_application_error(-20100, 'Tickets in this category are not available from this reseller');
+        when others then
+            raise;
+    end verify_tickets_available_reseller;
 
    function get_reseller_commission_percent
    (
@@ -1228,7 +1283,12 @@ as
          raise_application_error(-20100,v_message);
       end if;
 
-   end verify_tickets_available_venue;
+    exception
+        when no_data_found then
+            raise_application_error(-20100, 'Tickets in this category are not available from the venue');
+        when others then
+            raise;
+    end verify_tickets_available_venue;
 
 
 
