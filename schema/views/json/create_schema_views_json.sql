@@ -10,8 +10,13 @@ prompt creating views for json web services
 @@view.event_ticket_prices_from_json_v.sql;
 
 @@view.tickets_available_all_json_v.sql;
+@@view.tickets_available_all_from_json_v.sql;
+
 @@view.tickets_available_venue_json_v.sql;
+@@view.tickets_available_venue_from_json_v.sql;
+
 @@view.tickets_available_reseller_json_v.sql;
+@@view.tickets_available_reseller_from_json_v.sql;
 
 @@view.customer_event_tickets_json_v.sql;
 @@view.customer_event_tickets_from_json_v.sql;

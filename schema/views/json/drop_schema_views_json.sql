@@ -1,13 +1,18 @@
 --drop schema objects before redeploy
-prompt dropping views
+prompt dropping json views
 drop view event_ticket_groups_from_json_v;
 drop view event_ticket_groups_json_v;
 
-drop view reseller_ticket_group_assignment_json_v;
 drop view reseller_ticket_group_assignment_from_json_v;
+drop view reseller_ticket_group_assignment_json_v;
 
+drop view tickets_available_all_from_json_v;
 drop view tickets_available_all_json_v;
+
+drop view tickets_available_reseller_from_json_v;
 drop view tickets_available_reseller_json_v;
+
+drop view tickets_available_venue_from_json_v;
 drop view tickets_available_venue_json_v;
 
 drop view event_ticket_prices_from_json_v;
@@ -36,4 +41,4 @@ drop view venue_events_json_v;
 
 drop view events_from_json_v;
 drop view events_json_v;
-prompt views dropped
+prompt json views dropped

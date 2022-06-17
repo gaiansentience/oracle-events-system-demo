@@ -174,57 +174,62 @@ function show_event_ticket_prices
     p_event_id in number
 ) return t_ticket_prices pipelined;
 
-type r_event_tickets is record(
-   event_id events.event_id%type,
-   event_name events.event_name%type,
-   event_date events.event_date%type,
-   price_category ticket_groups.price_category%type,
-   ticket_group_id ticket_groups.ticket_group_id%type,
-   price ticket_groups.price%type,
-   reseller_id resellers.reseller_id%type,
-   reseller_name resellers.reseller_name%type,
-   tickets_available number,
-   ticket_status varchar2(20)
-);
-
-type t_event_tickets is table of r_event_tickets;
-
+    type r_event_tickets is record(
+        venue_id                 venues.venue_id%type
+        ,venue_name              venues.venue_name%type
+        ,event_id                events.event_id%type
+        ,event_name              events.event_name%type
+        ,event_date              events.event_date%type
+        ,event_tickets_available number
+        ,price_category          ticket_groups.price_category%type
+        ,ticket_group_id         ticket_groups.ticket_group_id%type
+        ,price                   ticket_groups.price%type
+        ,group_tickets_available number
+        ,group_tickets_sold      number
+        ,group_tickets_remaining number
+        ,reseller_id             resellers.reseller_id%type
+        ,reseller_name           resellers.reseller_name%type
+        ,tickets_available       number
+        ,ticket_status           varchar2(50)
+    );
+    
 --show all tickets available for event (reseller or venue direct)
 --show each ticket group with availability by source (each reseller or venue)
 --include tickets available in each group by source
 --show [number] AVAILABLE or SOLD OUT as status for each group/source
 --include ticket price for each group
 --used by venue application to show overall ticket availability
-function show_all_event_tickets_available
-(
-   p_event_id in number 
-) return t_event_tickets pipelined;
+    type t_event_tickets is table of r_event_tickets;
 
-
-type t_reseller_event_tickets is table of r_event_tickets;
-
+    function show_all_event_tickets_available
+    (
+        p_event_id in number 
+    ) return t_event_tickets pipelined;
+    
 --show ticket groups assigned to reseller for this event
 --include tickets available in each group
 --show [number] AVAILABLE or SOLD OUT as status for each group
 --include ticket price for each group
 --used by reseller application to show available ticket groups to customers
-function show_reseller_tickets_available
-(
-   p_event_id in number,
-   p_reseller_id in number
-) return t_reseller_event_tickets pipelined;
+    type t_reseller_event_tickets is table of r_event_tickets;
 
-type t_venue_event_tickets is table of r_event_tickets;
-
+    function show_reseller_tickets_available
+    (
+        p_event_id in number,
+        p_reseller_id in number
+    ) return t_reseller_event_tickets pipelined;
+    
 --show ticket groups not assigned to any reseller for this event
 --include tickets available in each group
 --show [number] AVAILABLE or SOLD OUT as status for each group
 --include ticket price for each group
 --used by venue organizer application to show tickets available for direct purchase to customers
-function show_venue_tickets_available
-(
-   p_event_id in number
-) return t_venue_event_tickets pipelined;
+    type t_venue_event_tickets is table of r_event_tickets;
+
+    function show_venue_tickets_available
+    (
+        p_event_id in number
+    ) return t_venue_event_tickets pipelined;
 
 type r_customer_event_tickets is record(
    customer_id customers.customer_id%type,

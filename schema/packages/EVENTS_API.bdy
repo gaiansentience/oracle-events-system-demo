@@ -900,66 +900,78 @@ as
 --show [number] AVAILABLE or SOLD OUT as status for each group/source
 --include ticket price for each group
 --used by venue application to show overall ticket availability
-   procedure show_all_event_tickets_available
-   (
-      p_event_id in number,
-      p_ticket_groups out sys_refcursor
-   )
-   is
-   begin
+    procedure show_all_event_tickets_available
+    (
+        p_event_id in number,
+        p_ticket_groups out sys_refcursor
+    )
+    is
+    begin
 
-      open p_ticket_groups for
-      select
-         event_id,
-         event_name,
-         event_date,
-         price_category,
-         ticket_group_id,
-         price,
-         reseller_id,
-         reseller_name,
-         tickets_available,
-         ticket_status
-      from
-         event_system.tickets_available_all_v
-      where 
-         event_id = p_event_id;
+        open p_ticket_groups for
+        select
+             venue_id
+             ,venue_name
+             ,event_id
+             ,event_name
+             ,event_date
+             ,event_tickets_available
+             ,price_category
+             ,ticket_group_id
+             ,price
+             ,group_tickets_available
+             ,group_tickets_sold
+             ,group_tickets_remaining
+             ,reseller_id
+             ,reseller_name
+             ,tickets_available
+             ,ticket_status
+        from
+             event_system.tickets_available_all_v
+        where 
+             event_id = p_event_id;
 
-   end show_all_event_tickets_available;
+    end show_all_event_tickets_available;
 
 --show ticket groups assigned to reseller for this event
 --include tickets available in each group
 --show [number] AVAILABLE or SOLD OUT as status for each group
 --include ticket price for each group
 --used by reseller application to show available ticket groups to customers
-   procedure show_reseller_tickets_available
-   (
-      p_event_id in number,
-      p_reseller_id in number,
-      p_ticket_groups out sys_refcursor
-   )
-   is
-   begin
+    procedure show_reseller_tickets_available
+    (
+        p_event_id in number,
+        p_reseller_id in number,
+        p_ticket_groups out sys_refcursor
+    )
+    is
+    begin
 
-      open p_ticket_groups for
-      select
-         event_id,
-         event_name,
-         event_date,
-         price_category,
-         ticket_group_id,
-         price,
-         reseller_id,
-         reseller_name,
-         tickets_available,
-         ticket_status
-      from
-         event_system.tickets_available_reseller_v
-      where 
-         event_id = p_event_id
-         and reseller_id = p_reseller_id;
+        open p_ticket_groups for
+        select
+             venue_id
+             ,venue_name
+             ,event_id
+             ,event_name
+             ,event_date
+             ,event_tickets_available
+             ,price_category
+             ,ticket_group_id
+             ,price
+             ,group_tickets_available
+             ,group_tickets_sold
+             ,group_tickets_remaining
+             ,reseller_id
+             ,reseller_name
+             ,tickets_available
+             ,ticket_status
+        from
+            event_system.tickets_available_reseller_v
+        where 
+            event_id = p_event_id
+            and reseller_id = p_reseller_id;
 
-   end show_reseller_tickets_available;
+    end show_reseller_tickets_available;
 
 
 --show ticket groups not assigned to any reseller for this event
@@ -967,32 +979,38 @@ as
 --show [number] AVAILABLE or SOLD OUT as status for each group
 --include ticket price for each group
 --used by venue organizer application to show tickets available for direct purchase to customers
-   procedure show_venue_tickets_available
-   (
-      p_event_id in number,
-      p_ticket_groups out sys_refcursor
-   )
-   is
-   begin
+    procedure show_venue_tickets_available
+    (
+        p_event_id in number,
+        p_ticket_groups out sys_refcursor
+    )
+    is
+    begin
 
-      open p_ticket_groups for
-      select
-         event_id,
-         event_name,
-         event_date,
-         price_category,
-         ticket_group_id,
-         price,
-         reseller_id,
-         reseller_name,
-         tickets_available,
-         ticket_status
-      from
-        event_system.tickets_available_venue_v
-      where 
-         event_id = p_event_id;
+        open p_ticket_groups for
+        select
+             venue_id
+             ,venue_name
+             ,event_id
+             ,event_name
+             ,event_date
+             ,event_tickets_available
+             ,price_category
+             ,ticket_group_id
+             ,price
+             ,group_tickets_available
+             ,group_tickets_sold
+             ,group_tickets_remaining
+             ,reseller_id
+             ,reseller_name
+             ,tickets_available
+             ,ticket_status
+        from
+            event_system.tickets_available_venue_v
+        where 
+            event_id = p_event_id;
 
-   end show_venue_tickets_available;
+    end show_venue_tickets_available;
 
     function get_current_ticket_price
     (
