@@ -518,7 +518,7 @@ begin
      for r in 1..v_resellers.count loop
         factor_tickets(etg.tickets_available, v_tickets, v_tickets_remaining);
         if v_tickets > 0 then
-           events_api.assign_reseller_ticket_group(v_resellers(r),etg.ticket_group_id, v_tickets, v_assignment_id); 
+           events_api.create_ticket_assignment(v_resellers(r),etg.ticket_group_id, v_tickets, v_assignment_id); 
            i := i + 1;
         end if;     
      end loop;
@@ -541,7 +541,7 @@ is
    reseller_id,
    trunc((trunc(dbms_random.value(30,100))/100 * tickets_available)) tickets_available
    from
-   events_report_api.show_all_event_tickets_available(p_event_id) 
+   events_report_api.show_event_tickets_available_all(p_event_id) 
    where tickets_available > 0;
 
    type r_customer is record(customer_id number, number_tickets number);

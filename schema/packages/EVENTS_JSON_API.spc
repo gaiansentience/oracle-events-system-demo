@@ -69,7 +69,7 @@ procedure create_customer
 );
 
 --return ticket groups for event as json document
-function get_event_ticket_groups
+function get_ticket_groups
 (
    p_event_id in number,
    p_formatted in boolean default false
@@ -80,14 +80,14 @@ function get_event_ticket_groups
 --do not create/update group if price category is missing
 --update request document for each ticket group with status_code of SUCCESS or ERROR and a status_message
 --update entire request with a request_status of SUCCESS or ERRORS and request_errors (0 or N)
-procedure update_event_ticket_groups
+procedure update_ticket_groups
 (
    p_json_doc in out varchar2
 );
 
 --return possible reseller ticket assignments for event as json document
 --returns array of all resellers with ticket groups as nested array
-function get_event_reseller_ticket_assignments
+function get_ticket_assignments
 (
    p_event_id in number,
    p_formatted in boolean default false
@@ -101,7 +101,7 @@ function get_event_reseller_ticket_assignments
 --IT IS RECOMMENDED TO SUBMIT ASSIGNMENTS FOR ONE RESELLER AT A TIME AND REFRESH THE ASSIGNMENTS DOCUMENT TO SEE CHANGED LIMITS
 --additional informational fields from get_event_reseller_ticket_assignments may be present
 --if additional informational fields are present they will not be processed
-procedure update_event_ticket_assignments
+procedure update_ticket_assignments
 (
    p_json_doc in out nocopy clob
 );

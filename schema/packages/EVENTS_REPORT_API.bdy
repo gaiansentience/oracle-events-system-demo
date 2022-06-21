@@ -120,7 +120,7 @@ begin
 end show_ticket_groups;
 
 
-function show_reseller_ticket_group_availability
+function show_ticket_assignments
 (
    p_event_id in number,
    p_reseller_id in number
@@ -130,7 +130,7 @@ is
   rc sys_refcursor;
 begin
 
-   events_api.show_reseller_ticket_group_availability(p_event_id, p_reseller_id, rc);
+   events_api.show_ticket_assignments(p_event_id, p_reseller_id, rc);
    fetch rc bulk collect into t_rows;
    close rc;
    
@@ -139,7 +139,7 @@ begin
    end loop;
    return;
 
-end show_reseller_ticket_group_availability;
+end show_ticket_assignments;
 
 --show pricing and availability for tickets created for the event
 function show_event_ticket_prices
@@ -163,7 +163,7 @@ begin
 end show_event_ticket_prices;
 
 
-function show_all_event_tickets_available
+function show_event_tickets_available_all
 (
    p_event_id in number 
 ) return t_event_tickets pipelined
@@ -172,7 +172,7 @@ is
   rc sys_refcursor;
 begin
 
-   events_api.show_all_event_tickets_available(p_event_id, rc);
+   events_api.show_event_tickets_available_all(p_event_id, rc);
    fetch rc bulk collect into t_rows;
    close rc;
    
@@ -181,19 +181,19 @@ begin
    end loop;
    return;
    
-end show_all_event_tickets_available;
+end show_event_tickets_available_all;
 
-function show_reseller_tickets_available
+function show_event_tickets_available_reseller
 (
    p_event_id in number,
    p_reseller_id in number  
-) return t_reseller_event_tickets pipelined
+) return t_event_tickets pipelined
 is
-  t_rows t_reseller_event_tickets;
+  t_rows t_event_tickets;
   rc sys_refcursor;
 begin
 
-   events_api.show_reseller_tickets_available(p_event_id, p_reseller_id, rc);
+   events_api.show_event_tickets_available_reseller(p_event_id, p_reseller_id, rc);
    fetch rc bulk collect into t_rows;
    close rc;
    
@@ -202,18 +202,18 @@ begin
    end loop;
    return;
    
-end show_reseller_tickets_available;
+end show_event_tickets_available_reseller;
 
-function show_venue_tickets_available
+function show_event_tickets_available_venue
 (
    p_event_id in number
-) return t_venue_event_tickets pipelined
+) return t_event_tickets pipelined
 is
-  t_rows t_venue_event_tickets;
+  t_rows t_event_tickets;
   rc sys_refcursor;
 begin
 
-   events_api.show_venue_tickets_available(p_event_id, rc);
+   events_api.show_event_tickets_available_venue(p_event_id, rc);
    fetch rc bulk collect into t_rows;
    close rc;
    
@@ -222,7 +222,7 @@ begin
    end loop;
    return;
    
-end show_venue_tickets_available;
+end show_event_tickets_available_venue;
 
 function show_customer_event_tickets
 (

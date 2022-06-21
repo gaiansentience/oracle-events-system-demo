@@ -144,7 +144,7 @@ type t_ticket_assignments is table of r_ticket_assignment;
 --     assigned_to_others  tickets assigned to other resellers, 
 --     currently_assigned  tickets currently assigned to reseller, 
 --     max_available       maximum tickets available for reseller (includes currently assigned)
-function show_reseller_ticket_group_availability
+function show_ticket_assignments
 (
    p_event_id in number,
    p_reseller_id in number 
@@ -201,7 +201,7 @@ function show_event_ticket_prices
 --used by venue application to show overall ticket availability
     type t_event_tickets is table of r_event_tickets;
 
-    function show_all_event_tickets_available
+    function show_event_tickets_available_all
     (
         p_event_id in number 
     ) return t_event_tickets pipelined;
@@ -211,25 +211,21 @@ function show_event_ticket_prices
 --show [number] AVAILABLE or SOLD OUT as status for each group
 --include ticket price for each group
 --used by reseller application to show available ticket groups to customers
-    type t_reseller_event_tickets is table of r_event_tickets;
-
-    function show_reseller_tickets_available
+    function show_event_tickets_available_reseller
     (
         p_event_id in number,
         p_reseller_id in number
-    ) return t_reseller_event_tickets pipelined;
+    ) return t_event_tickets pipelined;
     
 --show ticket groups not assigned to any reseller for this event
 --include tickets available in each group
 --show [number] AVAILABLE or SOLD OUT as status for each group
 --include ticket price for each group
 --used by venue organizer application to show tickets available for direct purchase to customers
-    type t_venue_event_tickets is table of r_event_tickets;
-
-    function show_venue_tickets_available
+    function show_event_tickets_available_venue
     (
         p_event_id in number
-    ) return t_venue_event_tickets pipelined;
+    ) return t_event_tickets pipelined;
 
 type r_customer_event_tickets is record(
    customer_id customers.customer_id%type,

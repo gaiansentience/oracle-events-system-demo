@@ -448,7 +448,7 @@ exception
 end create_customer;
 
 --return ticket groups for event as json document
-function get_event_ticket_groups
+function get_ticket_groups
 (
    p_event_id in number,
    p_formatted in boolean default false   
@@ -470,15 +470,15 @@ begin
 
 exception
    when others then
-      return get_json_error_doc(sqlcode, sqlerrm, 'get_event_ticket_groups');
-end get_event_ticket_groups;
+      return get_json_error_doc(sqlcode, sqlerrm, 'get_ticket_groups');
+end get_ticket_groups;
 
 --update ticket groups using a json document in the same format as get_event_ticket_groups
 --do not create/update group for UNDEFINED price category
 --do not create/update group if price category is missing
 --update request document for each ticket group with status_code of SUCCESS or ERROR and a status_message
 --update entire request with a request_status of SUCCESS or ERRORS and request_errors (0 or N)
-procedure update_event_ticket_groups
+procedure update_ticket_groups
 (
    p_json_doc in out varchar2
 )
@@ -540,12 +540,12 @@ begin
    
 exception
    when others then
-      p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'update_event_ticket_groups');
-end update_event_ticket_groups;
+      p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'update_ticket_groups');
+end update_ticket_groups;
 
 --return possible reseller ticket assignments for event as json document
 --returns array of all resellers with ticket groups as nested array
-function get_event_reseller_ticket_assignments
+function get_ticket_assignments
 (
    p_event_id in number,
    p_formatted in boolean default false   
@@ -557,7 +557,7 @@ begin
    select 
    b.json_doc
    into v_json_doc
-   from reseller_ticket_group_assignment_json_v b
+   from reseller_ticket_assignment_json_v b
    where b.event_id = p_event_id;
 
    if p_formatted then
@@ -567,8 +567,8 @@ begin
 
 exception
    when others then
-      return get_json_error_doc(sqlcode, sqlerrm, 'get_event_reseller_ticket_assignments');
-end get_event_reseller_ticket_assignments;
+      return get_json_error_doc(sqlcode, sqlerrm, 'get_ticket_assignments');
+end get_ticket_assignments;
 
 --update ticket assignments for a reseller using a json document in the same format as get_event_reseller_ticket_assignments
 --update request document for each ticket group with status_code of SUCCESS or ERROR and a status_message
@@ -578,7 +578,7 @@ end get_event_reseller_ticket_assignments;
 --IT IS RECOMMENDED TO SUBMIT ASSIGNMENTS FOR ONE RESELLER AT A TIME AND REFRESH THE ASSIGNMENTS DOCUMENT TO SEE CHANGED LIMITS
 --additional informational fields from get_event_reseller_ticket_assignments may be present
 --if additional informational fields are present they will not be processed
-procedure update_event_ticket_assignments
+procedure update_ticket_assignments
 (
    p_json_doc in out nocopy clob
 )
@@ -623,7 +623,7 @@ begin
         
         begin
         
-            events_api.assign_reseller_ticket_group(
+            events_api.create_ticket_assignment(
                 p_reseller_id => v_reseller_id,
                 p_ticket_group_id => v_ticket_group_id,
                 p_number_tickets => v_tickets_assigned,
@@ -659,8 +659,8 @@ begin
 
 exception
    when others then
-      p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'update_event_ticket_assignments');
-end update_event_ticket_assignments;
+      p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'update_ticket_assignments');
+end update_ticket_assignments;
 
 --get pricing and availability for tickets created for the event
 function get_event_ticket_prices

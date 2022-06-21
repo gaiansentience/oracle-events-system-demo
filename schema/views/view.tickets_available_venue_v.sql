@@ -15,28 +15,25 @@ with available_venue as
         ,tg.tickets_available
             - nvl(
                 (
-                    select 
-                        sum(ta.tickets_assigned) 
-                    from ticket_assignments ta 
-                    where 
-                        ta.ticket_group_id = tg.ticket_group_id
+                    select sum(ta.tickets_assigned) 
+                    from event_system.ticket_assignments ta 
+                    where ta.ticket_group_id = tg.ticket_group_id
                 )
             ,0)
             - nvl(
                 (
-                    select 
-                        sum(ts.ticket_quantity) 
-                    from ticket_sales ts 
+                    select sum(ts.ticket_quantity) 
+                    from event_system.ticket_sales ts 
                     where 
                         ts.ticket_group_id = tg.ticket_group_id 
                         and ts.reseller_id is null
                 )
             ,0) as tickets_available
-    from event_ticket_prices_v tg
+    from event_system.event_ticket_prices_v tg
 )
 select 
-    v.venue_id
-    ,v.venue_name
+    e.venue_id
+    ,e.venue_name
     ,e.event_id
     ,e.event_name
     ,e.event_date
@@ -55,5 +52,6 @@ select
         else a.tickets_available || ' AVAILABLE' 
     end as ticket_status
 from 
-    venues v join events e on v.venue_id = e.venue_id
-    join available_venue a on e.event_id = a.event_id
+    venue_event_base_v e
+    join available_venue a 
+        on e.event_id = a.event_id;

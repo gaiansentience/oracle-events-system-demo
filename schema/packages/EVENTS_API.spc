@@ -123,7 +123,7 @@ procedure create_ticket_group
 --     assigned_to_others  tickets assigned to other resellers, 
 --     currently_assigned  tickets currently assigned to reseller, 
 --     max_available       maximum tickets available for reseller (includes currently assigned)
-procedure show_reseller_ticket_group_availability
+procedure show_ticket_assignments
 (
    p_event_id in number,
    p_reseller_id in number,
@@ -133,7 +133,7 @@ procedure show_reseller_ticket_group_availability
 --assign a group of tickets in a price category to a reseller
 --if the reseller already has that category assigned, update the number of tickets
 --raise an error if the ticket group doesnt have that many tickets available
-procedure assign_reseller_ticket_group
+procedure create_ticket_assignment
 (
    p_reseller_id in number,
    p_ticket_group_id in number,
@@ -154,7 +154,7 @@ procedure assign_reseller_ticket_group
 --show [number] AVAILABLE or SOLD OUT as status for each group/source
 --include ticket price for each group
 --used by venue application to show overall ticket availability
-procedure show_all_event_tickets_available
+procedure show_event_tickets_available_all
 (
    p_event_id in number,
    p_ticket_groups out sys_refcursor
@@ -165,7 +165,7 @@ procedure show_all_event_tickets_available
 --show [number] AVAILABLE or SOLD OUT as status for each group
 --include ticket price for each group
 --used by reseller application to show available ticket groups to customers
-procedure show_reseller_tickets_available
+procedure show_event_tickets_available_reseller
 (
    p_event_id in number,
    p_reseller_id in number,
@@ -177,7 +177,7 @@ procedure show_reseller_tickets_available
 --show [number] AVAILABLE or SOLD OUT as status for each group
 --include ticket price for each group
 --used by venue organizer application to show tickets available for direct purchase to customers
-procedure show_venue_tickets_available
+procedure show_event_tickets_available_venue
 (
    p_event_id in number,
    p_ticket_groups out sys_refcursor

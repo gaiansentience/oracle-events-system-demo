@@ -254,28 +254,27 @@ as
    
    end verify_event_capacity;
   
-   procedure verify_event_date_free
-   (
-      p_venue_id in number,
-      p_event_date in date
-   )
-   is
-      v_count number;
-   begin
+    procedure verify_event_date_free
+    (
+        p_venue_id in number,
+        p_event_date in date
+    )
+    is
+        v_count number;
+    begin
 
-      select count(*) 
-         into v_count
-      from 
-         event_system.events e 
-      where 
-         e.venue_id = p_venue_id 
-         and trunc(e.event_date) = trunc(p_event_date);
+        select count(*) 
+        into v_count
+        from event_system.events e 
+        where 
+            e.venue_id = p_venue_id 
+            and trunc(e.event_date) = trunc(p_event_date);
    
-      if v_count > 0 then
-         raise_application_error(-20100, 'Cannot schedule event.  Venue already has event for ' || to_char(p_event_date,'MM/DD/YYYY'));
-      end if;
+        if v_count > 0 then
+            raise_application_error(-20100, 'Cannot schedule event.  Venue already has event for ' || to_char(p_event_date,'MM/DD/YYYY'));
+        end if;
 
-   end verify_event_date_free;
+    end verify_event_date_free;
 
    procedure create_event
    (
@@ -687,7 +686,7 @@ as
 --     assigned_to_others  tickets assigned to other resellers, 
 --     currently_assigned  tickets currently assigned to reseller, 
 --     max_available       maximum tickets available for reseller (includes currently assigned)
-   procedure show_reseller_ticket_group_availability
+   procedure show_ticket_assignments
    (
       p_event_id in number,
       p_reseller_id in number,
@@ -711,15 +710,15 @@ as
          ra.sold_by_reseller,
          ra.sold_by_venue
       from 
-         event_system.reseller_ticket_group_availability_v ra
+         event_system.reseller_ticket_assignment_v ra
       where 
          ra.event_id = p_event_id 
          and ra.reseller_id = p_reseller_id;
 
 
-   end show_reseller_ticket_group_availability;
+   end show_ticket_assignments;
 
-   procedure verify_ticket_group_assignment
+   procedure verify_ticket_assignment
    (
       p_reseller_id in number,
       p_ticket_group_id in number,
@@ -785,9 +784,9 @@ as
          raise_application_error(-20100, v_message);
       end if;
 
-   end verify_ticket_group_assignment;
+   end verify_ticket_assignment;
 
-   function ticket_group_assignment_exists
+   function ticket_assignment_exists
    (
       p_reseller_id in number,
       p_ticket_group_id in number
@@ -807,13 +806,13 @@ as
   
       return (v_count > 0);
 
-   end ticket_group_assignment_exists;
+   end ticket_assignment_exists;
 
 
 --assign a group of tickets in a price category to a reseller
 --if the reseller already has that category assigned, update the number of tickets
 --raise an error if the ticket group doesnt have that many tickets available
-   procedure assign_reseller_ticket_group
+   procedure create_ticket_assignment
    (
       p_reseller_id in number,
       p_ticket_group_id in number,
@@ -823,10 +822,9 @@ as
    is
    begin
 
-      verify_ticket_group_assignment(p_reseller_id, p_ticket_group_id, p_number_tickets);
+      verify_ticket_assignment(p_reseller_id, p_ticket_group_id, p_number_tickets);
 
-      --TODO:  convert this to use merge statement
-      if not ticket_group_assignment_exists(p_reseller_id, p_ticket_group_id) then
+      if not ticket_assignment_exists(p_reseller_id, p_ticket_group_id) then
     
          insert into event_system.ticket_assignments
             (
@@ -859,9 +857,9 @@ as
   
    exception
       when others then
-         log_error(sqlerrm, sqlcode, 'assign_reseller_ticket_group');
+         log_error(sqlerrm, sqlcode, 'create_ticket_assignment');
          raise;
-   end assign_reseller_ticket_group;
+   end create_ticket_assignment;
 
     procedure show_event_ticket_prices
     (
@@ -900,7 +898,7 @@ as
 --show [number] AVAILABLE or SOLD OUT as status for each group/source
 --include ticket price for each group
 --used by venue application to show overall ticket availability
-    procedure show_all_event_tickets_available
+    procedure show_event_tickets_available_all
     (
         p_event_id in number,
         p_ticket_groups out sys_refcursor
@@ -931,14 +929,14 @@ as
         where 
              event_id = p_event_id;
 
-    end show_all_event_tickets_available;
+    end show_event_tickets_available_all;
 
 --show ticket groups assigned to reseller for this event
 --include tickets available in each group
 --show [number] AVAILABLE or SOLD OUT as status for each group
 --include ticket price for each group
 --used by reseller application to show available ticket groups to customers
-    procedure show_reseller_tickets_available
+    procedure show_event_tickets_available_reseller
     (
         p_event_id in number,
         p_reseller_id in number,
@@ -971,7 +969,7 @@ as
             event_id = p_event_id
             and reseller_id = p_reseller_id;
 
-    end show_reseller_tickets_available;
+    end show_event_tickets_available_reseller;
 
 
 --show ticket groups not assigned to any reseller for this event
@@ -979,7 +977,7 @@ as
 --show [number] AVAILABLE or SOLD OUT as status for each group
 --include ticket price for each group
 --used by venue organizer application to show tickets available for direct purchase to customers
-    procedure show_venue_tickets_available
+    procedure show_event_tickets_available_venue
     (
         p_event_id in number,
         p_ticket_groups out sys_refcursor
@@ -1010,7 +1008,7 @@ as
         where 
             event_id = p_event_id;
 
-    end show_venue_tickets_available;
+    end show_event_tickets_available_venue;
 
     function get_current_ticket_price
     (

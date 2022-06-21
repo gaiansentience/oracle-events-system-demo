@@ -1,4 +1,4 @@
-create or replace view reseller_ticket_group_assignment_from_json_v as
+create or replace view reseller_ticket_assignment_from_json_v as
 --use to validate the json view
 with base as
 (
@@ -6,7 +6,7 @@ select
 venue_id,
 event_id,
 json_doc
-from reseller_ticket_group_assignment_json_v
+from reseller_ticket_assignment_json_v
 )
 select
 b.venue_id,
