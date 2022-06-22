@@ -8,8 +8,8 @@ begin
 '{
   "venue_id" : 1,
   "event_name" : "New Years Mischief",
-  "event_date" : "2022-12-31T20:00:00",
-  "event_capacity" : 2023
+  "event_date" : "2023-12-31T20:00:00",
+  "tickets_available" : 2024
 }';
 
    events_json_api.create_event(p_json_doc => v_json_doc);
@@ -22,9 +22,9 @@ begin
 {
   "venue_id" : 1,
   "event_name" : "New Years Mischief",
-  "event_date" : "2022-12-31T20:00:00",
-  "event_capacity" : 2023,
-  "event_id" : 301,
+  "event_date" : "2023-12-31T20:00:00",
+  "tickets_available" : 2024,
+  "event_id" : 285,
   "status_code" : "SUCCESS",
   "status_message" : "Created event"
 }
@@ -35,7 +35,7 @@ begin
   "venue_id" : 1,
   "event_name" : "New Years Mischief",
   "event_date" : "2022-12-31T20:00:00",
-  "event_capacity" : 2023,
+  "tickets_available" : 2023,
   "event_id" : 0,
   "status_code" : "ERROR",
   "status_message" : "ORA-20100: Cannot schedule event.  Venue already has event for 12/31/2022"

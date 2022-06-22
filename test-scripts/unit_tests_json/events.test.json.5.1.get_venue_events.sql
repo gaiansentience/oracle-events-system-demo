@@ -18,57 +18,64 @@ begin
   "organizer_email" : "Erin.Johanson@CityStadium.com",
   "organizer_name" : "Erin Johanson",
   "max_event_capacity" : 20000,
-  "venue_scheduled_events" : 7,
+  "venue_scheduled_events" : 8,
   "venue_event_listing" :
   [
     {
-      "event_id" : 1,
-      "event_name" : "Rudy and the Trees",
-      "event_date" : "2022-05-13T16:01:51",
-      "event_capacity" : 20000,
-      "tickets_remaining" : 20000
+      "event_id" : 9,
+      "event_name" : "Miles Morgan and the Undergound Jazz Trio",
+      "event_date" : "2022-06-24T16:07:19",
+      "tickets_available" : 20000,
+      "tickets_remaining" : 14751
     },
     {
-      "event_id" : 2,
-      "event_name" : "A Night of Polka",
-      "event_date" : "2022-05-20T16:01:51",
-      "event_capacity" : 20000,
-      "tickets_remaining" : 8354
-    },
-    {
-      "event_id" : 4,
-      "event_name" : "Molly Jones and Associates",
-      "event_date" : "2022-05-27T16:01:51",
-      "event_capacity" : 20000,
-      "tickets_remaining" : 8081
-    },
-    {
-      "event_id" : 7,
-      "event_name" : "Rolling Thunder",
-      "event_date" : "2022-06-03T16:01:51",
-      "event_capacity" : 20000,
-      "tickets_remaining" : 20000
-    },
-    {
-      "event_id" : 10,
-      "event_name" : "The Specials",
-      "event_date" : "2022-06-10T16:01:51",
-      "event_capacity" : 20000,
-      "tickets_remaining" : 20000
-    },
-    {
-      "event_id" : 14,
-      "event_name" : "Synthtones and Company",
-      "event_date" : "2022-06-17T16:01:51",
-      "event_capacity" : 20000,
-      "tickets_remaining" : 20000
+      "event_id" : 13,
+      "event_name" : "Purple Parrots",
+      "event_date" : "2022-07-01T16:07:19",
+      "tickets_available" : 20000,
+      "tickets_remaining" : 15383
     },
     {
       "event_id" : 16,
+      "event_name" : "The Specials",
+      "event_date" : "2022-07-08T16:07:19",
+      "tickets_available" : 20000,
+      "tickets_remaining" : 10809
+    },
+    {
+      "event_id" : 20,
+      "event_name" : "Synthtones and Company",
+      "event_date" : "2022-07-15T16:07:19",
+      "tickets_available" : 20000,
+      "tickets_remaining" : 14925
+    },
+    {
+      "event_id" : 22,
       "event_name" : "The Electric Blues Garage Band",
-      "event_date" : "2022-06-24T16:01:51",
-      "event_capacity" : 20000,
-      "tickets_remaining" : 8200
+      "event_date" : "2022-07-22T16:07:19",
+      "tickets_available" : 20000,
+      "tickets_remaining" : 13753
+    },
+    {
+      "event_id" : 283,
+      "event_name" : "Rudy and the Trees",
+      "event_date" : "2023-05-27T19:00:00",
+      "tickets_available" : 11000,
+      "tickets_remaining" : 11000
+    },
+    {
+      "event_id" : 284,
+      "event_name" : "Rudy and the Trees",
+      "event_date" : "2023-05-03T19:00:00",
+      "tickets_available" : 11000,
+      "tickets_remaining" : 11000
+    },
+    {
+      "event_id" : 285,
+      "event_name" : "New Years Mischief",
+      "event_date" : "2023-12-31T20:00:00",
+      "tickets_available" : 2024,
+      "tickets_remaining" : 2024
     }
   ]
 }

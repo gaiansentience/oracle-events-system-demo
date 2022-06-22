@@ -59,7 +59,7 @@ begin
    select 
    b.json_doc
    into v_json_doc
-   from all_resellers_json_v b;
+   from all_resellers_v_json b;
 
    if p_formatted then
       v_json_doc := format_json_clob(v_json_doc);
@@ -84,7 +84,7 @@ begin
    select 
    b.json_doc
    into v_json_doc
-   from resellers_json_v b
+   from resellers_v_json b
    where b.reseller_id = p_reseller_id;
 
    if p_formatted then
@@ -162,7 +162,7 @@ begin
    select 
    b.json_doc
    into v_json_doc
-   from all_venues_json_v b;
+   from all_venues_v_json b;
 
    if p_formatted then
       v_json_doc := format_json_clob(v_json_doc);
@@ -174,175 +174,163 @@ exception
       return get_json_error_doc(sqlcode, sqlerrm, 'get_all_venues');
 end get_all_venues;
 
-function get_venue
-(
-   p_venue_id in number,
-   p_formatted in boolean default false   
-) return varchar2
-is
-   v_json_doc varchar2(4000);
-begin
+    function get_venue
+    (
+        p_venue_id in number,
+        p_formatted in boolean default false   
+    ) return varchar2
+    is
+        l_json varchar2(4000);
+    begin
 
-   select 
-   b.json_doc
-   into v_json_doc
-   from venues_json_v b
-   where b.venue_id = p_venue_id;
+        select b.json_doc
+        into l_json
+        from venues_v_json b
+        where b.venue_id = p_venue_id;
 
-   if p_formatted then
-      v_json_doc := format_json_string(v_json_doc);
-   end if;
-   return v_json_doc;
+        if p_formatted then
+            l_json := format_json_string(l_json);
+        end if;
+        return l_json;
    
-exception
-   when others then
-      return get_json_error_doc(sqlcode, sqlerrm, 'get_venue');
-end get_venue;
+    exception
+        when others then
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_venue');
+    end get_venue;
 
-procedure create_venue
-(
-   p_json_doc in out varchar2
-)
-is
-   v_venue_id number := 0;
-   v_venue_name venues.venue_name%type;
-   v_organizer_name venues.organizer_name%type;   
-   v_organizer_email venues.organizer_email%type;
-   v_max_event_capacity venues.max_event_capacity%type;
-   
-   v_commission_percent number;
-   
-   v_request_o json_object_t;
-   v_status_code varchar2(10);
-   v_status_message varchar2(4000);
-begin
+    procedure create_venue
+    (
+        p_json_doc in out varchar2
+    )
+    is
+        r_venue event_system.venues%rowtype;
+        o_request json_object_t;
+        v_status_code varchar2(10);
+        v_status_message varchar2(4000);
+    begin
 
-   v_request_o := json_object_t.parse(p_json_doc);
-   v_venue_name := v_request_o.get_string('venue_name');   
-   v_organizer_name := v_request_o.get_string('organizer_name');
-   v_organizer_email := v_request_o.get_string('organizer_email');
-   v_max_event_capacity := v_request_o.get_number('max_event_capacity');
+        o_request := json_object_t.parse(p_json_doc);
+        r_venue.venue_name := o_request.get_string('venue_name');   
+        r_venue.organizer_name := o_request.get_string('organizer_name');
+        r_venue.organizer_email := o_request.get_string('organizer_email');
+        r_venue.max_event_capacity := o_request.get_number('max_event_capacity');
+        r_venue.venue_id := 0;
+    
+        case
+            when r_venue.venue_name is null then
+                v_status_code := 'ERROR';
+                v_status_message := 'Missing venue name, cannot create venue';
+            when r_venue.organizer_name is null then
+                v_status_code := 'ERROR';
+                v_status_message := 'Missing organizer name, cannot create venue';         
+            when r_venue.organizer_email is null then
+                v_status_code := 'ERROR';
+                v_status_message := 'Missing organizer email, cannot create venue';
+            when r_venue.max_event_capacity is null then
+                v_status_code := 'ERROR';
+                v_status_message := 'Missing event capacity, cannot create venue';      
+            else
+                begin         
+                    events_api.create_venue(r_venue.venue_name, r_venue.organizer_name, r_venue.organizer_email, r_venue.max_event_capacity, r_venue.venue_id);
+                        v_status_code := 'SUCCESS';
+                        v_status_message := 'Created venue';
+                exception
+                    when others then
+                        v_status_code := 'ERROR';
+                        v_status_message := sqlerrm;
+                end;
+        end case;
 
-      case
-      when v_venue_name is null then
-         v_status_code := 'ERROR';
-         v_status_message := 'Missing venue name, cannot create venue';
-      when v_organizer_name is null then
-         v_status_code := 'ERROR';
-         v_status_message := 'Missing organizer name, cannot create venue';         
-      when v_organizer_email is null then
-         v_status_code := 'ERROR';
-         v_status_message := 'Missing organizer email, cannot create venue';
-      when v_max_event_capacity is null then
-         v_status_code := 'ERROR';
-         v_status_message := 'Missing event capacity, cannot create venue';      
-      else
-         begin         
-            events_api.create_venue(v_venue_name, v_organizer_name, v_organizer_email, v_max_event_capacity, v_venue_id);
-            v_status_code := 'SUCCESS';
-            v_status_message := 'Created venue';
-         exception
-            when others then
-               v_status_code := 'ERROR';
-               v_status_message := sqlerrm;
-         end;
-      end case;
+        o_request.put('venue_id', r_venue.venue_id);
+        o_request.put('status_code',v_status_code);
+        o_request.put('status_message', v_status_message);
 
-   v_request_o.put('venue_id', v_venue_id);
-   v_request_o.put('status_code',v_status_code);
-   v_request_o.put('status_message', v_status_message);
-
-   p_json_doc := v_request_o.to_string; 
+        p_json_doc := o_request.to_string; 
 
 
-exception
-   when others then
-      p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'create_venue');
-end create_venue;
+    exception
+        when others then
+            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'create_venue');
+    end create_venue;
 
-function get_venue_events
-(
-   p_venue_id in number,
-   p_formatted in boolean default false   
-) return clob
-is
-   v_json_doc clob;
-begin
+    function get_venue_events
+    (
+        p_venue_id in number,
+        p_formatted in boolean default false   
+    ) return clob
+    is
+        l_json clob;
+    begin
+    
+        select b.json_doc
+        into l_json
+        from venue_events_v_json b
+        where b.venue_id = p_venue_id;
+    
+        if p_formatted then
+            l_json := format_json_clob(l_json);
+        end if;
+        return l_json;
+    
+    exception
+        when others then
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_venue_events');
+    end get_venue_events;
 
-   select 
-   b.json_doc
-   into v_json_doc
-   from venue_events_json_v b
-   where b.venue_id = p_venue_id;
-
-   if p_formatted then
-      v_json_doc := format_json_clob(v_json_doc);
-   end if;
-   return v_json_doc;
-
-exception
-   when others then
-      return get_json_error_doc(sqlcode, sqlerrm, 'get_venue_events');
-end get_venue_events;
-
-procedure create_event
-(
-   p_json_doc in out varchar2
-)
-is
-   v_event_id number := 0;
-   v_venue_id events.venue_id%type;
-   v_event_name events.event_name%type;
-   v_event_date events.event_date%type;   
-   v_event_capacity events.tickets_available%type;
-   
-   v_request_o json_object_t;
-   v_status_code varchar2(10);
-   v_status_message varchar2(4000);
-begin
-
-   v_request_o := json_object_t.parse(p_json_doc);
-
-   v_venue_id := v_request_o.get_string('venue_id');   
-   v_event_name := v_request_o.get_string('event_name');
-   v_event_date := v_request_o.get_date('event_date');
-   v_event_capacity := v_request_o.get_number('event_capacity');
-
-      case
-      when v_venue_id is null then
-         v_status_code := 'ERROR';
-         v_status_message := 'Missing venue, cannot create event';
-      when v_event_name is null then
-         v_status_code := 'ERROR';
-         v_status_message := 'Missing event name, cannot create event';         
-      when v_event_date is null then
-         v_status_code := 'ERROR';
-         v_status_message := 'Missing event date, cannot create event';
-      when v_event_capacity is null then
-         v_status_code := 'ERROR';
-         v_status_message := 'Missing event capacity, cannot create event';      
-      else
-         begin                  
-            events_api.create_event(v_venue_id, v_event_name, v_event_date, v_event_capacity, v_event_id);
-            v_status_code := 'SUCCESS';
-            v_status_message := 'Created event';
-         exception
-            when others then
-               v_status_code := 'ERROR';
-               v_status_message := sqlerrm;
-         end;
-      end case;
-
-   v_request_o.put('event_id', v_event_id);
-   v_request_o.put('status_code',v_status_code);
-   v_request_o.put('status_message', v_status_message);
-
-   p_json_doc := v_request_o.to_string; 
-
-exception
-   when others then
-      p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'create_event');
-end create_event;
+    procedure create_event
+    (
+        p_json_doc in out varchar2
+    )
+    is
+        r_event event_system.events%rowtype;
+        o_request json_object_t;
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
+    begin
+    
+        o_request := json_object_t.parse(p_json_doc);
+    
+        r_event.venue_id := o_request.get_string('venue_id');   
+        r_event.event_name := o_request.get_string('event_name');
+        r_event.event_date := o_request.get_date('event_date');
+        r_event.tickets_available := o_request.get_number('tickets_available');
+        r_event.event_id := 0;
+    
+        case
+            when r_event.venue_id is null then
+                l_status_code := 'ERROR';
+                l_status_message := 'Missing venue, cannot create event';
+            when r_event.event_name is null then
+                l_status_code := 'ERROR';
+                l_status_message := 'Missing event name, cannot create event';         
+            when r_event.event_date is null then
+                l_status_code := 'ERROR';
+                l_status_message := 'Missing event date, cannot create event';
+            when r_event.tickets_available is null then
+                l_status_code := 'ERROR';
+                l_status_message := 'Missing event capacity, cannot create event';      
+            else
+                begin
+                    events_api.create_event(r_event.venue_id, r_event.event_name, r_event.event_date, r_event.tickets_available, r_event.event_id);
+                    l_status_code := 'SUCCESS';
+                    l_status_message := 'Created event';
+                exception
+                    when others then
+                        l_status_code := 'ERROR';
+                        l_status_message := sqlerrm;
+                end;
+        end case;
+        
+        o_request.put('event_id', r_event.event_id);
+        o_request.put('status_code',l_status_code);
+        o_request.put('status_message', l_status_message);
+        
+        p_json_doc := o_request.to_string; 
+    
+    exception
+        when others then
+            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'create_event');
+    end create_event;
 
 --todo:  create recurring weekly event
 procedure create_event_weekly
@@ -385,7 +373,7 @@ begin
    select 
    b.json_doc
    into v_json_doc
-   from events_json_v b
+   from events_v_json b
    where b.event_id = p_event_id;
 
    if p_formatted then
@@ -460,7 +448,7 @@ begin
    select 
    b.json_doc
    into v_json_doc
-   from event_ticket_groups_json_v b
+   from event_ticket_groups_v_json b
    where b.event_id = p_event_id;
 
    if p_formatted then
@@ -557,7 +545,7 @@ begin
    select 
    b.json_doc
    into v_json_doc
-   from reseller_ticket_assignment_json_v b
+   from reseller_ticket_assignment_v_json b
    where b.event_id = p_event_id;
 
    if p_formatted then
@@ -675,7 +663,7 @@ begin
     select
     b.json_doc
     into v_json_doc
-    from event_ticket_prices_json_v b
+    from event_ticket_prices_v_json b
     where b.event_id = p_event_id;
 
     if p_formatted then
@@ -699,7 +687,7 @@ begin
     select
     b.json_doc
     into v_json_doc
-    from tickets_available_all_json_v b
+    from tickets_available_all_v_json b
     where b.event_id = p_event_id;
 
     if p_formatted then
@@ -723,7 +711,7 @@ begin
     select
     b.json_doc
     into v_json_doc
-    from tickets_available_venue_json_v b
+    from tickets_available_venue_v_json b
     where b.event_id = p_event_id;
 
     if p_formatted then
@@ -748,7 +736,7 @@ begin
     select
     b.json_doc
     into v_json_doc
-    from tickets_available_reseller_json_v b
+    from tickets_available_reseller_v_json b
     where 
         b.event_id = p_event_id
         and b.reseller_id = p_reseller_id;
@@ -1146,63 +1134,65 @@ end get_event_tickets_available_reseller;
 
 --get customer tickets purchased for event
 --used to verify customer purchases
-function get_customer_event_tickets
-(
-   p_customer_id in number,
-   p_event_id in number,
-   p_formatted in boolean default false
-) return varchar2
-is
-   v_json_doc varchar2(4000);
-begin
-
-   select 
-   b.json_doc
-   into v_json_doc
-   from customer_event_tickets_json_v b
-   where b.event_id = p_event_id and b.customer_id = p_customer_id;
-
-   if p_formatted then
-      v_json_doc := format_json_string(v_json_doc);
-   end if;
-   return v_json_doc;
-
-exception
-   when others then
-      return get_json_error_doc(sqlcode, sqlerrm, 'get_customer_event_tickets');
-end get_customer_event_tickets;
+    function get_customer_event_tickets
+    (
+        p_customer_id in number,
+        p_event_id in number,
+        p_formatted in boolean default false
+    ) return varchar2
+    is
+        l_json varchar2(4000);
+    begin
+    
+        select b.json_doc
+        into l_json
+        from customer_event_tickets_v_json b
+        where 
+            b.event_id = p_event_id 
+            and b.customer_id = p_customer_id;
+    
+        if p_formatted then
+            l_json := format_json_string(l_json);
+        end if;
+        return l_json;
+    
+    exception
+        when others then
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_customer_event_tickets');
+    end get_customer_event_tickets;
 
 
 --get customer tickets purchased for event
 --use email to get customer_id
-function get_customer_event_tickets_by_email
-(
-   p_customer_email in customers.customer_email%type,
-   p_event_id in number,
-   p_formatted in boolean default false
-) return varchar2
-is
-   v_customer_id number;
-   v_json_doc varchar2(4000);   
-begin
-   
-   v_customer_id := events_api.get_customer_id(p_customer_email);
-   
-   select 
-   b.json_doc
-   into v_json_doc
-   from customer_event_tickets_json_v b
-   where b.event_id = p_event_id and b.customer_id = v_customer_id;
-
-   if p_formatted then
-      v_json_doc := format_json_string(v_json_doc);
-   end if;
-   return v_json_doc;
-   
-exception
-   when others then
-      return get_json_error_doc(sqlcode, sqlerrm, 'get_customer_event_tickets_by_email');
-end get_customer_event_tickets_by_email;
+    function get_customer_event_tickets_by_email
+    (
+        p_customer_email in customers.customer_email%type,
+        p_event_id in number,
+        p_formatted in boolean default false
+    ) return varchar2
+    is
+        l_customer_id number;
+        l_json varchar2(4000);   
+    begin
+       
+        l_customer_id := events_api.get_customer_id(p_customer_email);
+       
+        select b.json_doc
+        into l_json
+        from customer_event_tickets_v_json b
+        where 
+            b.event_id = p_event_id 
+            and b.customer_id = l_customer_id;
+    
+        if p_formatted then
+            l_json := format_json_string(l_json);
+        end if;
+        return l_json;
+       
+    exception
+        when others then
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_customer_event_tickets_by_email');
+    end get_customer_event_tickets_by_email;
 
 
 

@@ -1,30 +1,33 @@
 --drop schema objects before redeploy
 prompt dropping xml views
-drop view event_ticket_groups_xml_v;
 
-drop view reseller_ticket_assignment_xml_v;
+--@verify_views\drop_views_xml_verify.sql;
 
-drop view tickets_available_all_xml_v;
+drop view event_ticket_groups_v_xml;
 
-drop view tickets_available_reseller_xml_v;
+drop view reseller_ticket_assignment_v_xml;
 
-drop view tickets_available_venue_xml_v;
+drop view tickets_available_all_v_xml;
 
-drop view event_ticket_prices_xml_v;
+drop view tickets_available_reseller_v_xml;
 
-drop view customer_event_tickets_xml_v;
+drop view tickets_available_venue_v_xml;
 
-drop view all_resellers_xml_v;
+drop view event_ticket_prices_v_xml;
 
-drop view resellers_xml_v;
+drop view customer_event_tickets_v_xml;
 
-drop view all_venues_xml_v;
+drop view all_resellers_v_xml;
 
-drop view venues_xml_v;
+drop view resellers_v_xml;
 
-drop view venues_summary_xml_v;
+drop view all_venues_v_xml;
 
-drop view venue_events_xml_v;
+drop view venues_v_xml;
 
-drop view events_xml_v;
+drop view venues_summary_v_xml;
+
+drop view venue_events_v_xml;
+
+drop view events_v_xml;
 prompt xml views dropped

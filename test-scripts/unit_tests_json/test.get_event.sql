@@ -1,16 +1,20 @@
---get venue information as a json document
 set serveroutput on;
-declare
-  v_json_doc varchar2(4000);
-  v_event_id number := 1;
-begin
+DECLARE
+  P_EVENT_ID NUMBER;
+  P_FORMATTED BOOLEAN;
+  v_Return VARCHAR2(4000);
+BEGIN
+  P_EVENT_ID := 1;
+  P_FORMATTED := true;
 
-   v_json_doc := events_json_api.get_event(p_event_id => v_event_id, p_formatted => true);
-   
-   dbms_output.put_line(v_json_doc);
+  v_Return := EVENTS_JSON_API.GET_EVENT(
+    P_EVENT_ID => P_EVENT_ID,
+    P_FORMATTED => P_FORMATTED
+  );
 
- end;
+DBMS_OUTPUT.PUT_LINE(v_Return);
 
+END;
 /*
 {
   "venue_id" : 1,

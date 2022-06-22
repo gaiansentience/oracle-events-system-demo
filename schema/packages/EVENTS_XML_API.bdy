@@ -64,7 +64,7 @@ as
     
         select b.xml_doc
         into l_xml
-        from all_resellers_xml_v b;
+        from all_resellers_v_xml b;
     
         if p_formatted then
             l_xml := format_xml_clob(l_xml);
@@ -88,7 +88,7 @@ as
     
         select b.xml_doc
         into l_xml
-        from resellers_xml_v b
+        from resellers_v_xml b
         where b.reseller_id = p_reseller_id;
     
         if p_formatted then
@@ -164,7 +164,7 @@ as
     
         select b.xml_doc
         into l_xml
-        from all_venues_xml_v b;
+        from all_venues_v_xml b;
     
         if p_formatted then
             l_xml := format_xml_clob(l_xml);
@@ -187,7 +187,7 @@ as
     
         select b.xml_doc 
         into l_xml
-        from venues_xml_v b
+        from venues_v_xml b
         where b.venue_id = p_venue_id;
     
         if p_formatted then
@@ -268,7 +268,7 @@ as
     
         select b.xml_doc
         into l_xml
-        from venue_events_xml_v b
+        from venue_events_v_xml b
         where b.venue_id = p_venue_id;
     
         if p_formatted then
@@ -382,7 +382,7 @@ end create_event_weekly;
     
         select b.xml_doc
         into l_xml
-        from events_xml_v b
+        from events_v_xml b
         where b.event_id = p_event_id;
     
         if p_formatted then
@@ -457,7 +457,7 @@ end create_customer;
     
         select b.xml_doc 
         into l_xml
-        from event_ticket_groups_xml_v b
+        from event_ticket_groups_v_xml b
         where b.event_id = p_event_id;
     
         if p_formatted then
@@ -554,7 +554,7 @@ end update_ticket_groups;
     
         select b.xml_doc
         into l_xml
-        from reseller_ticket_assignment_xml_v b
+        from reseller_ticket_assignment_v_xml b
         where b.event_id = p_event_id;
     
         if p_formatted then
@@ -672,7 +672,7 @@ end update_ticket_assignments;
         
         select b.xml_doc
         into l_xml
-        from event_ticket_prices_xml_v b
+        from event_ticket_prices_v_xml b
         where b.event_id = p_event_id;
     
         if p_formatted then
@@ -696,7 +696,7 @@ end update_ticket_assignments;
     
         select b.xml_doc
         into l_xml
-        from tickets_available_all_xml_v b
+        from tickets_available_all_v_xml b
         where b.event_id = p_event_id;
     
         if p_formatted then
@@ -720,7 +720,7 @@ end update_ticket_assignments;
     
         select b.xml_doc
         into l_xml
-        from tickets_available_venue_xml_v b
+        from tickets_available_venue_v_xml b
         where b.event_id = p_event_id;
     
         if p_formatted then
@@ -745,7 +745,7 @@ end update_ticket_assignments;
     
         select b.xml_doc
         into l_xml
-        from tickets_available_reseller_xml_v b
+        from tickets_available_reseller_v_xml b
         where 
             b.event_id = p_event_id
             and b.reseller_id = p_reseller_id;
@@ -1158,7 +1158,7 @@ null;
     
         select b.xml_doc
         into l_xml
-        from customer_event_tickets_xml_v b
+        from customer_event_tickets_v_xml b
         where 
             b.event_id = p_event_id 
             and b.customer_id = p_customer_id;
@@ -1190,7 +1190,7 @@ null;
         v_customer_id := events_api.get_customer_id(p_customer_email);
        
         select b.xml_doc into l_xml
-        from customer_event_tickets_xml_v b
+        from customer_event_tickets_v_xml b
         where 
             b.event_id = p_event_id 
             and b.customer_id = v_customer_id;
