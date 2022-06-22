@@ -7,6 +7,7 @@ with json_base as
                 'reseller_id' : r.reseller_id
                 ,'reseller_name' : r.reseller_name
                 ,'reseller_email' : r.reseller_email
+                ,'commission_percent' : r.commission_percent
             )
         returning clob) as json_doc
     from event_system.resellers r

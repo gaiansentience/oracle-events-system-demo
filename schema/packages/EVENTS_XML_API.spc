@@ -21,11 +21,10 @@ as
         p_formatted in boolean default false   
     ) return xmltype;
 
-
-procedure create_reseller
-(
-    p_xml_doc in out xmltype
-);
+    procedure create_reseller
+    (
+        p_xml_doc in out xmltype
+    );
 
     function get_all_venues
     (
@@ -38,10 +37,10 @@ procedure create_reseller
         p_formatted in boolean default false   
     ) return xmltype;
 
-procedure create_venue
-(
-    p_xml_doc in out xmltype
-);
+    procedure create_venue
+    (
+        p_xml_doc in out xmltype
+    );
 
     function get_venue_events
     (
@@ -49,10 +48,10 @@ procedure create_venue
         p_formatted in boolean default false   
     ) return xmltype;
 
-procedure create_event
-(
-    p_xml_doc in out xmltype
-);
+    procedure create_event
+    (
+        p_xml_doc in out xmltype
+    );
 
 --todo:  create recurring weekly event
 procedure create_event_weekly

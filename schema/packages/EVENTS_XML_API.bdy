@@ -101,60 +101,58 @@ as
             return get_xml_error_doc(sqlcode, sqlerrm, 'get_reseller');
     end get_reseller;
 
-
-procedure create_reseller
-(
-   p_xml_doc in out xmltype
-)
-is
-   v_reseller_id number := 0;
-   v_reseller_name resellers.reseller_name%type;
-   v_reseller_email resellers.reseller_email%type;
-   v_commission_percent resellers.commission_percent%type;
-   
-   v_request_o json_object_t;
-   v_status_code varchar2(10);
-   v_status_message varchar2(4000);
-begin
-/*
-   v_request_o := json_object_t.parse(p_xml_doc);
-   v_reseller_name := v_request_o.get_string('reseller_name');
-   v_reseller_email := v_request_o.get_string('reseller_email');
-   v_commission_percent := v_request_o.get_number('commission_percent');
-
-      case
-      when v_reseller_name is null then
-         v_status_code := 'ERROR';
-         v_status_message := 'Missing reseller name, cannot create reseller';
-      when v_reseller_email is null then
-         v_status_code := 'ERROR';
-         v_status_message := 'Missing reseller email, cannot create reseller';
-      when v_commission_percent is null then
-         v_status_code := 'ERROR';
-         v_status_message := 'Missing reseller commission, cannot create reseller';      
-      else
-         begin         
-            events_api.create_reseller(v_reseller_name, v_reseller_email, v_commission_percent, v_reseller_id);
-            v_status_code := 'SUCCESS';
-            v_status_message := 'Created reseller';
-         exception
-            when others then
-               v_status_code := 'ERROR';
-               v_status_message := sqlerrm;
-         end;
-      end case;
-
-   v_request_o.put('reseller_id', v_reseller_id);
-   v_request_o.put('status_code',v_status_code);
-   v_request_o.put('status_message', v_status_message);
-
-   p_xml_doc := v_request_o.to_string; 
-*/
-null;
-exception
-   when others then
-      p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'create_reseller');
-end create_reseller;
+    procedure create_reseller
+    (
+       p_xml_doc in out xmltype
+    )
+    is
+       r_reseller event_system.resellers%rowtype;
+       doc dbms_xmldom.DOMdocument;
+       nRoot dbms_xmldom.DOMnode;
+       l_status_code varchar2(10);
+       l_status_message varchar2(4000);
+    begin
+        doc := dbms_xmldom.newDomDocument(p_xml_doc);
+        nRoot := dbms_xmldom.makeNode(elem => dbms_xmldom.getDocumentElement(doc));
+        
+        dbms_xslprocessor.valueof(nRoot, 'reseller_name/text()', r_reseller.reseller_name);
+        dbms_xslprocessor.valueof(nRoot, 'reseller_email/text()', r_reseller.reseller_email);
+        dbms_xslprocessor.valueof(nRoot, 'commission_percent/text()', r_reseller.commission_percent);        
+        r_reseller.reseller_id := 0;
+        
+        case
+            when r_reseller.reseller_name is null then
+                l_status_code := 'ERROR';
+                l_status_message := 'Missing reseller name, cannot create reseller';
+            when r_reseller.reseller_email is null then
+                l_status_code := 'ERROR';
+                l_status_message := 'Missing reseller email, cannot create reseller';
+            when r_reseller.commission_percent is null then
+                l_status_code := 'ERROR';
+                l_status_message := 'Missing reseller commission, cannot create reseller';      
+            else
+                begin         
+                    events_api.create_reseller(r_reseller.reseller_name, r_reseller.reseller_email, r_reseller.commission_percent, r_reseller.reseller_id);
+                    l_status_code := 'SUCCESS';
+                    l_status_message := 'Created reseller';
+                exception
+                    when others then
+                        l_status_code := 'ERROR';
+                        l_status_message := sqlerrm;
+                end;
+        end case;
+        
+        util_xmldom_helper.setDoc(doc);
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'reseller_id', p_data => r_reseller.reseller_id);
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_code', p_data => l_status_code);
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_message', p_data => l_status_message);
+        p_xml_doc := util_xmldom_helper.to_XMLtype;
+        util_xmldom_helper.freeDoc;
+        
+    exception
+        when others then
+            p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'create_reseller');
+    end create_reseller;
 
     function get_all_venues
     (
@@ -202,67 +200,62 @@ end create_reseller;
             return get_xml_error_doc(sqlcode, sqlerrm, 'get_venue');
     end get_venue;
 
-procedure create_venue
-(
-   p_xml_doc in out xmltype
-)
-is
-   v_venue_id number := 0;
-   v_venue_name venues.venue_name%type;
-   v_organizer_name venues.organizer_name%type;   
-   v_organizer_email venues.organizer_email%type;
-   v_max_event_capacity venues.max_event_capacity%type;
-   
-   v_commission_percent number;
-   
-   v_request_o json_object_t;
-   v_status_code varchar2(10);
-   v_status_message varchar2(4000);
-begin
-/*
-   v_request_o := json_object_t.parse(p_xml_doc);
-   v_venue_name := v_request_o.get_string('venue_name');   
-   v_organizer_name := v_request_o.get_string('organizer_name');
-   v_organizer_email := v_request_o.get_string('organizer_email');
-   v_max_event_capacity := v_request_o.get_number('max_event_capacity');
+    procedure create_venue
+    (
+       p_xml_doc in out xmltype
+    )
+    is
+        r_venue event_system.venues%rowtype;
+        doc dbms_xmldom.DOMdocument;
+        nRoot dbms_xmldom.DOMnode;
+       l_status_code varchar2(10);
+       l_status_message varchar2(4000);
+    begin
+        doc := dbms_xmldom.newDomDocument(p_xml_doc);
+        nRoot := dbms_xmldom.makeNode(elem => dbms_xmldom.getDocumentElement(doc));
+        
+        dbms_xslprocessor.valueof(nRoot, 'venue_name/text()', r_venue.venue_name);
+        dbms_xslprocessor.valueof(nRoot, 'organizer_name/text()', r_venue.organizer_name);
+        dbms_xslprocessor.valueof(nRoot, 'organizer_email/text()', r_venue.organizer_email);  
+        dbms_xslprocessor.valueof(nRoot, 'max_event_capacity/text()', r_venue.max_event_capacity);  
+        r_venue.venue_id := 0;
 
-      case
-      when v_venue_name is null then
-         v_status_code := 'ERROR';
-         v_status_message := 'Missing venue name, cannot create venue';
-      when v_organizer_name is null then
-         v_status_code := 'ERROR';
-         v_status_message := 'Missing organizer name, cannot create venue';         
-      when v_organizer_email is null then
-         v_status_code := 'ERROR';
-         v_status_message := 'Missing organizer email, cannot create venue';
-      when v_max_event_capacity is null then
-         v_status_code := 'ERROR';
-         v_status_message := 'Missing event capacity, cannot create venue';      
-      else
-         begin         
-            events_api.create_venue(v_venue_name, v_organizer_name, v_organizer_email, v_max_event_capacity, v_venue_id);
-            v_status_code := 'SUCCESS';
-            v_status_message := 'Created venue';
-         exception
-            when others then
-               v_status_code := 'ERROR';
-               v_status_message := sqlerrm;
-         end;
-      end case;
-
-   v_request_o.put('venue_id', v_venue_id);
-   v_request_o.put('status_code',v_status_code);
-   v_request_o.put('status_message', v_status_message);
-
-   p_xml_doc := v_request_o.to_string; 
-
-*/
-null;
-exception
-   when others then
-      p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'create_venue');
-end create_venue;
+        case
+            when r_venue.venue_name is null then
+                l_status_code := 'ERROR';
+                l_status_message := 'Missing venue name, cannot create venue';
+            when r_venue.organizer_name is null then
+                l_status_code := 'ERROR';
+                l_status_message := 'Missing organizer name, cannot create venue';         
+            when r_venue.organizer_email is null then
+                l_status_code := 'ERROR';
+                l_status_message := 'Missing organizer email, cannot create venue';
+            when r_venue.max_event_capacity is null then
+                l_status_code := 'ERROR';
+                l_status_message := 'Missing event capacity, cannot create venue';      
+        else
+            begin         
+                events_api.create_venue(r_venue.venue_name, r_venue.organizer_name, r_venue.organizer_email, r_venue.max_event_capacity, r_venue.venue_id);
+                l_status_code := 'SUCCESS';
+                l_status_message := 'Created venue';
+            exception
+                when others then
+                    l_status_code := 'ERROR';
+                    l_status_message := sqlerrm;
+            end;
+        end case;
+        
+        util_xmldom_helper.setDoc(doc);
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'venue_id', p_data => r_venue.venue_id);
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_code', p_data => l_status_code);
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_message', p_data => l_status_message);
+        p_xml_doc := util_xmldom_helper.to_XMLtype;
+        util_xmldom_helper.freeDoc;
+        
+    exception
+        when others then
+            p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'create_venue');
+    end create_venue;
 
     function get_venue_events
     (
@@ -288,65 +281,66 @@ end create_venue;
             return get_xml_error_doc(sqlcode, sqlerrm, 'get_venue_events');
     end get_venue_events;
 
-procedure create_event
-(
-   p_xml_doc in out xmltype
-)
-is
-   v_event_id number := 0;
-   v_venue_id events.venue_id%type;
-   v_event_name events.event_name%type;
-   v_event_date events.event_date%type;   
-   v_event_capacity events.tickets_available%type;
-   
-   v_request_o json_object_t;
-   v_status_code varchar2(10);
-   v_status_message varchar2(4000);
-begin
-/*
-   v_request_o := json_object_t.parse(p_xml_doc);
+    procedure create_event
+    (
+        p_xml_doc in out xmltype
+    )
+    is
+        r_event event_system.events%rowtype;
+        doc dbms_xmldom.DOMdocument;
+        nRoot dbms_xmldom.DOMnode;
+        l_date_string varchar2(20);
+        l_date_mask varchar2(20) := 'yyyy-mm-dd';
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
+    begin
+        doc := dbms_xmldom.newDomDocument(p_xml_doc);
+        nRoot := dbms_xmldom.makeNode(elem => dbms_xmldom.getDocumentElement(doc));
+        
+        dbms_xslprocessor.valueof(nRoot, 'venue/venue_id/text()', r_event.venue_id);
+        dbms_xslprocessor.valueof(nRoot, 'event_name/text()', r_event.event_name);
+        dbms_xslprocessor.valueof(nRoot, 'event_date/text()', l_date_string);
+        r_event.event_date := to_date(l_date_string, l_date_mask);  
+        
+        dbms_xslprocessor.valueof(nRoot, 'tickets_available/text()', r_event.tickets_available);  
+        r_event.event_id := 0;
 
-   v_venue_id := v_request_o.get_string('venue_id');   
-   v_event_name := v_request_o.get_string('event_name');
-   v_event_date := v_request_o.get_date('event_date');
-   v_event_capacity := v_request_o.get_number('event_capacity');
+        case
+            when r_event.venue_id is null then
+                l_status_code := 'ERROR';
+                l_status_message := 'Missing venue, cannot create event';
+            when r_event.event_name is null then
+                l_status_code := 'ERROR';
+                l_status_message := 'Missing event name, cannot create event';         
+            when r_event.event_date is null then
+                l_status_code := 'ERROR';
+                l_status_message := 'Missing event date, cannot create event';
+            when r_event.tickets_available is null then
+                l_status_code := 'ERROR';
+                l_status_message := 'Missing event capacity, cannot create event';      
+            else
+                begin                  
+                    events_api.create_event(r_event.venue_id, r_event.event_name, r_event.event_date, r_event.tickets_available, r_event.event_id);
+                    l_status_code := 'SUCCESS';
+                    l_status_message := 'Created event';
+                exception
+                    when others then
+                        l_status_code := 'ERROR';
+                        l_status_message := sqlerrm;
+                end;
+        end case;
 
-      case
-      when v_venue_id is null then
-         v_status_code := 'ERROR';
-         v_status_message := 'Missing venue, cannot create event';
-      when v_event_name is null then
-         v_status_code := 'ERROR';
-         v_status_message := 'Missing event name, cannot create event';         
-      when v_event_date is null then
-         v_status_code := 'ERROR';
-         v_status_message := 'Missing event date, cannot create event';
-      when v_event_capacity is null then
-         v_status_code := 'ERROR';
-         v_status_message := 'Missing event capacity, cannot create event';      
-      else
-         begin                  
-            events_api.create_event(v_venue_id, v_event_name, v_event_date, v_event_capacity, v_event_id);
-            v_status_code := 'SUCCESS';
-            v_status_message := 'Created event';
-         exception
-            when others then
-               v_status_code := 'ERROR';
-               v_status_message := sqlerrm;
-         end;
-      end case;
+        util_xmldom_helper.setDoc(doc);
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'event_id', p_data => r_event.event_id);
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_code', p_data => l_status_code);
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_message', p_data => l_status_message);
+        p_xml_doc := util_xmldom_helper.to_XMLtype;
+        util_xmldom_helper.freeDoc;
 
-   v_request_o.put('event_id', v_event_id);
-   v_request_o.put('status_code',v_status_code);
-   v_request_o.put('status_message', v_status_message);
-
-   p_xml_doc := v_request_o.to_string; 
-*/
-null;
-exception
-   when others then
-      p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'create_event');
-end create_event;
+    exception
+        when others then
+            p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'create_event');
+    end create_event;
 
 --todo:  create recurring weekly event
 procedure create_event_weekly

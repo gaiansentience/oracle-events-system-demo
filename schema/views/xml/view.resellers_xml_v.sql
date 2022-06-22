@@ -8,6 +8,7 @@ with xml_base as
                 r.reseller_id     as "reseller_id"
                 ,r.reseller_name  as "reseller_name"
                 ,r.reseller_email as "reseller_email"
+                ,r.commission_percent as "commission_percent"
             )
         ) as xml_doc
     from event_system.resellers r
