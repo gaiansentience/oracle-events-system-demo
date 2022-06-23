@@ -142,6 +142,7 @@ as
   "event_id" : 24,
   "[*]event_name" : "Miles Morgan and the Undergound Jazz Trio",
   "[*]event_date" : "2022-07-29T16:07:19",
+  "purchase_channel" : "RESELLER|VENUE",
   "reseller_id" : 11,
   "[*]reseller_name" : "Your Ticket Supplier",
   "[**]customer_id" : 337,
@@ -152,16 +153,6 @@ as
   "[**]total_purchase_amount" : 410,
   "ticket_groups" :
   [
-    {
-      "ticket_group_id" : 39,
-      "[*]price_category" : "EARLYBIRD DISCOUNT",
-      "price" : 22,
-      "ticket_quantity_requested" : 5,
-      "[**]ticket_quantity_purchased" : 5,
-      "[**]extended_price" : 110,
-      "[**]ticket_sales_id" : 484,
-      "[**]sales_date" : "2022-05-13T16:07:20",
-    },
     {
       "ticket_group_id" : 38,
       "[*]price_category" : "VIP",

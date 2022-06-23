@@ -759,11 +759,11 @@ end create_event_weekly;
     end purchase_tickets_get_customer;
 
     procedure purchase_tickets_get_group_request(
-            o_group in out nocopy json_object_t,
-            p_group_id out number,
-            p_quantity out number,
-            p_price out number,
-            p_tickets_requested_all_groups in out number
+        o_group in out nocopy json_object_t,
+        p_group_id out number,
+        p_quantity out number,
+        p_price out number,
+        p_tickets_requested_all_groups in out number
     )
     is
         l_price_category ticket_groups.price_category%type;
@@ -843,7 +843,7 @@ end create_event_weekly;
         p_sales_id := 0;
     end purchase_tickets_set_group_values_error;
 
-    procedure purchase_tickets_update_group_object
+    procedure purchase_tickets_update_group
     (
         o_group in out nocopy json_object_t,
         p_sales_id in number,
@@ -866,9 +866,9 @@ end create_event_weekly;
         o_group.put('status_code', p_status_code);
         o_group.put('status_message', p_status_message);
 
-    end purchase_tickets_update_group_object;
+    end purchase_tickets_update_group;
 
-    procedure purchase_tickets_update_request_object
+    procedure purchase_tickets_update_request
     (
         o_request in out nocopy json_object_t,
         p_error_count in number,
@@ -887,7 +887,7 @@ end create_event_weekly;
         o_request.put('total_purchase_amount', p_total_purchase_amount);
         o_request.put('purchase_disclaimer', 'All Ticket Sales Are Final.');
         
-    end purchase_tickets_update_request_object;
+    end purchase_tickets_update_request;
 
     procedure purchase_tickets_from_reseller
     (
@@ -971,7 +971,7 @@ end create_event_weekly;
                         p_sales_id => r_sale.ticket_sales_id);
             end;
         
-            purchase_tickets_update_group_object(
+            purchase_tickets_update_group(
                 o_group => o_group, 
                 p_sales_id => r_sale.ticket_sales_id, 
                 p_sales_date => r_sale.sales_date, 
@@ -983,7 +983,7 @@ end create_event_weekly;
         
         end loop;
         
-        purchase_tickets_update_request_object(
+        purchase_tickets_update_request(
             o_request => o_request, 
             p_error_count => l_total_error_count,
             p_qty_requested_all_groups => l_total_tickets_requested,
@@ -1077,7 +1077,7 @@ end create_event_weekly;
                         p_sales_id => r_sale.ticket_sales_id);
             end;
             
-            purchase_tickets_update_group_object(
+            purchase_tickets_update_group(
                                     o_group => o_group, 
                                     p_sales_id => r_sale.ticket_sales_id, 
                                     p_sales_date => r_sale.sales_date, 
@@ -1089,7 +1089,7 @@ end create_event_weekly;
                     
         end loop;
    
-        purchase_tickets_update_request_object(
+        purchase_tickets_update_request(
                         o_request => o_request, 
                         p_error_count => l_total_error_count,
                         p_qty_requested_all_groups => l_total_tickets_requested,

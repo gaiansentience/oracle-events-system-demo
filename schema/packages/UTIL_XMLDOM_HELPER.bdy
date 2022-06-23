@@ -3,18 +3,41 @@ is
 
     g_doc dbms_xmldom.DOMdocument;
 
-    procedure addDeclaration
+    procedure newDoc(p_root_tag in varchar2, p_root_node out dbms_xmldom.DOMnode)
+    is
+        nDoc dbms_xmldom.DOMnode;
+        e dbms_xmldom.DOMelement;
+    begin
+        --???check if g_doc already exists and if so free it before creating a new document
+        --cannot do not null test on g_doc
+        
+        g_doc := dbms_xmldom.newDOMdocument;
+        nDoc := dbms_xmldom.makenode(doc => g_doc);
+        addNode(p_parent => nDoc, p_tag => p_root_tag, p_node => p_root_node);
+    end newDoc;
+
+    procedure newDocFromXML(p_xml in xmltype, p_root_node out dbms_xmldom.DOMnode)
+    is
+        eRoot dbms_xmldom.DOMelement;
+    begin
+        g_doc := dbms_xmldom.newDOMdocument(p_xml);
+        eRoot := dbms_xmldom.getDocumentElement(g_doc);
+        p_root_node := dbms_xmldom.makeNode(elem => eRoot);
+    end newDocFromXML;
+
+    procedure addDeclaration(p_version in varchar2 default '1.0', p_charset in varchar2 default 'UTF-8')
     is
     begin
-        dbms_xmldom.setVersion(g_doc, '1.0');
-        dbms_xmldom.setCharset(g_doc,'UTF-8');
+        dbms_xmldom.setVersion(g_doc, p_version);
+        dbms_xmldom.setCharset(g_doc, p_charset);
     end addDeclaration;
     
-    procedure setDoc(doc in out nocopy dbms_xmldom.DOMdocument)
+/*    procedure setDoc(doc in out nocopy dbms_xmldom.DOMdocument)
     is
     begin
         g_doc := doc;
     end setDoc;
+*/
 
     procedure addNode(p_parent in out nocopy dbms_xmldom.DOMnode, p_tag in varchar2, p_node out dbms_xmldom.DOMnode)
     is
@@ -32,7 +55,6 @@ is
         nt dbms_xmldom.DOMnode;
         nc dbms_xmldom.DOMnode;
     begin
-
         addNode(p_parent => p_parent, p_tag => p_tag, p_node => p_node);
         t := dbms_xmldom.createTextNode(doc => g_doc, data => p_data);
         nt := dbms_xmldom.makeNode(t => t);
@@ -45,18 +67,6 @@ is
     begin
         addTextNode(p_parent => p_parent, p_tag => p_tag, p_data => p_data, p_node => n);
     end addTextNode;
-
-    procedure newDoc(p_root_tag in varchar2, p_root_node out dbms_xmldom.DOMnode)
-    is
-        nDoc dbms_xmldom.DOMnode;
-        e dbms_xmldom.DOMelement;
-    begin
-        --may want to check if g_doc already exists and if so free it before creating a new document
-        g_doc := dbms_xmldom.newDOMdocument;
-        nDoc := dbms_xmldom.makenode(doc => g_doc);
-        addNode(p_parent => nDoc, p_tag => p_root_tag, p_node => p_root_node);
-
-    end newDoc;
 
     procedure addNodeAttribute(p_node in out nocopy dbms_xmldom.DOMnode, p_name in varchar2, p_value in varchar2)
     is

@@ -53,7 +53,6 @@ as
        
     end get_xml_error_doc;
 
-
     function get_all_resellers
     (
         p_formatted in boolean default false
@@ -103,17 +102,16 @@ as
 
     procedure create_reseller
     (
-       p_xml_doc in out xmltype
+        p_xml_doc in out xmltype
     )
     is
-       r_reseller event_system.resellers%rowtype;
-       doc dbms_xmldom.DOMdocument;
-       nRoot dbms_xmldom.DOMnode;
-       l_status_code varchar2(10);
-       l_status_message varchar2(4000);
+        r_reseller event_system.resellers%rowtype;
+        nRoot dbms_xmldom.DOMnode;
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
     begin
-        doc := dbms_xmldom.newDomDocument(p_xml_doc);
-        nRoot := dbms_xmldom.makeNode(elem => dbms_xmldom.getDocumentElement(doc));
+    
+        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
         
         dbms_xslprocessor.valueof(nRoot, 'reseller_name/text()', r_reseller.reseller_name);
         dbms_xslprocessor.valueof(nRoot, 'reseller_email/text()', r_reseller.reseller_email);
@@ -132,7 +130,11 @@ as
                 l_status_message := 'Missing reseller commission, cannot create reseller';      
             else
                 begin         
-                    events_api.create_reseller(r_reseller.reseller_name, r_reseller.reseller_email, r_reseller.commission_percent, r_reseller.reseller_id);
+                    events_api.create_reseller(
+                        r_reseller.reseller_name, 
+                        r_reseller.reseller_email, 
+                        r_reseller.commission_percent, 
+                        r_reseller.reseller_id);
                     l_status_code := 'SUCCESS';
                     l_status_message := 'Created reseller';
                 exception
@@ -142,7 +144,6 @@ as
                 end;
         end case;
         
-        util_xmldom_helper.setDoc(doc);
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'reseller_id', p_data => r_reseller.reseller_id);
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_code', p_data => l_status_code);
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_message', p_data => l_status_message);
@@ -151,6 +152,7 @@ as
         
     exception
         when others then
+            util_xmldom_helper.freeDoc;
             p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'create_reseller');
     end create_reseller;
 
@@ -206,13 +208,12 @@ as
     )
     is
         r_venue event_system.venues%rowtype;
-        doc dbms_xmldom.DOMdocument;
         nRoot dbms_xmldom.DOMnode;
        l_status_code varchar2(10);
        l_status_message varchar2(4000);
     begin
-        doc := dbms_xmldom.newDomDocument(p_xml_doc);
-        nRoot := dbms_xmldom.makeNode(elem => dbms_xmldom.getDocumentElement(doc));
+    
+        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
         
         dbms_xslprocessor.valueof(nRoot, 'venue_name/text()', r_venue.venue_name);
         dbms_xslprocessor.valueof(nRoot, 'organizer_name/text()', r_venue.organizer_name);
@@ -245,7 +246,6 @@ as
             end;
         end case;
         
-        util_xmldom_helper.setDoc(doc);
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'venue_id', p_data => r_venue.venue_id);
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_code', p_data => l_status_code);
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_message', p_data => l_status_message);
@@ -254,6 +254,7 @@ as
         
     exception
         when others then
+            util_xmldom_helper.freeDoc;
             p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'create_venue');
     end create_venue;
 
@@ -287,15 +288,14 @@ as
     )
     is
         r_event event_system.events%rowtype;
-        doc dbms_xmldom.DOMdocument;
         nRoot dbms_xmldom.DOMnode;
         l_date_string varchar2(20);
         l_date_mask varchar2(20) := 'yyyy-mm-dd';
         l_status_code varchar2(10);
         l_status_message varchar2(4000);
     begin
-        doc := dbms_xmldom.newDomDocument(p_xml_doc);
-        nRoot := dbms_xmldom.makeNode(elem => dbms_xmldom.getDocumentElement(doc));
+
+        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
         
         dbms_xslprocessor.valueof(nRoot, 'venue/venue_id/text()', r_event.venue_id);
         dbms_xslprocessor.valueof(nRoot, 'event_name/text()', r_event.event_name);
@@ -320,7 +320,12 @@ as
                 l_status_message := 'Missing event capacity, cannot create event';      
             else
                 begin                  
-                    events_api.create_event(r_event.venue_id, r_event.event_name, r_event.event_date, r_event.tickets_available, r_event.event_id);
+                    events_api.create_event(
+                        r_event.venue_id, 
+                        r_event.event_name, 
+                        r_event.event_date, 
+                        r_event.tickets_available, 
+                        r_event.event_id);
                     l_status_code := 'SUCCESS';
                     l_status_message := 'Created event';
                 exception
@@ -330,7 +335,6 @@ as
                 end;
         end case;
 
-        util_xmldom_helper.setDoc(doc);
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'event_id', p_data => r_event.event_id);
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_code', p_data => l_status_code);
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_message', p_data => l_status_message);
@@ -339,6 +343,7 @@ as
 
     exception
         when others then
+            util_xmldom_helper.freeDoc;
             p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'create_event');
     end create_event;
 
@@ -354,7 +359,7 @@ null;
 raise_application_error(-20100,'method not available in this release');
 
 /*
-procedure create_weekly_event
+events_api.create_weekly_event
 (
    p_venue_id in number,   
    p_event_name in varchar2,
@@ -367,8 +372,8 @@ procedure create_weekly_event
 */
 
 exception
-   when others then
-      p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'create_event_weekly');
+    when others then
+    p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'create_event_weekly');
 end create_event_weekly;
 
     function get_event
@@ -395,55 +400,53 @@ end create_event_weekly;
             return get_xml_error_doc(sqlcode, sqlerrm, 'get_event');
     end get_event;
 
-procedure create_customer
-(
-   p_xml_doc in out xmltype
-)
-is
-   v_customer_id number := 0;
-   v_customer_name customers.customer_name%type;
-   v_customer_email customers.customer_email%type;   
-   
-   v_request_o json_object_t;
-   v_status_code varchar2(10);
-   v_status_message varchar2(4000);
-begin
-/*
-   v_request_o := json_object_t.parse(p_xml_doc);
+    procedure create_customer
+    (
+        p_xml_doc in out xmltype
+    )
+    is
+        r_customer event_system.customers%rowtype;
+        nRoot dbms_xmldom.DOMnode;
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
+    begin
+    
+        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
+            
+        dbms_xslprocessor.valueof(nRoot, 'customer_name/text()', r_customer.customer_name);
+        dbms_xslprocessor.valueof(nRoot, 'customer_email/text()', r_customer.customer_email);
+        r_customer.customer_id := 0;
+    
+        case
+            when r_customer.customer_name is null then
+                l_status_code := 'ERROR';
+                l_status_message := 'Missing name, cannot create customer';
+            when r_customer.customer_email is null then
+                l_status_code := 'ERROR';
+                l_status_message := 'Missing email, cannot create customer';         
+            else
+                begin                  
+                    events_api.create_customer(r_customer.customer_name, r_customer.customer_email, r_customer.customer_id);
+                    l_status_code := 'SUCCESS';
+                    l_status_message := 'Created customer';
+                exception
+                    when others then
+                        l_status_code := 'ERROR';
+                        l_status_message := sqlerrm;
+                end;
+        end case;
 
-   v_customer_name := v_request_o.get_string('customer_name');
-   v_customer_email := v_request_o.get_string('customer_email');
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'customer_id', p_data => r_customer.customer_id);
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_code', p_data => l_status_code);
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_message', p_data => l_status_message);
+        p_xml_doc := util_xmldom_helper.to_XMLtype;
+        util_xmldom_helper.freeDoc;
 
-      case
-      when v_customer_name is null then
-         v_status_code := 'ERROR';
-         v_status_message := 'Missing name, cannot create customer';
-      when v_customer_email is null then
-         v_status_code := 'ERROR';
-         v_status_message := 'Missing email, cannot create customer';         
-      else
-         begin                  
-            events_api.create_customer(v_customer_name, v_customer_email, v_customer_id);
-            v_status_code := 'SUCCESS';
-            v_status_message := 'Created customer';
-         exception
-            when others then
-               v_status_code := 'ERROR';
-               v_status_message := sqlerrm;
-         end;
-      end case;
-
-   v_request_o.put('customer_id', v_customer_id);
-   v_request_o.put('status_code',v_status_code);
-   v_request_o.put('status_message', v_status_message);
-
-   p_xml_doc := v_request_o.to_string; 
-*/
-null;
-exception
-   when others then
-      p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'create_customer');
-end create_customer;
+    exception
+        when others then
+            util_xmldom_helper.freeDoc;
+            p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'create_customer');
+    end create_customer;
 
 --return ticket groups for event as json document
     function get_ticket_groups
@@ -470,76 +473,76 @@ end create_customer;
             return get_xml_error_doc(sqlcode, sqlerrm, 'get_ticket_groups');
     end get_ticket_groups;
 
---update ticket groups using a json document in the same format as get_event_ticket_groups
+--create/update ticket groups using an xml document in the same format as get_event_ticket_groups
 --do not create/update group for UNDEFINED price category
 --do not create/update group if price category is missing
 --update request document for each ticket group with status_code of SUCCESS or ERROR and a status_message
 --update entire request with a request_status of SUCCESS or ERRORS and request_errors (0 or N)
-procedure update_ticket_groups
-(
-   p_xml_doc in out xmltype
-)
-is
-   v_event_id number;
-   v_ticket_group_id number;
-   
-   v_request_o json_object_t;
-   v_groups_array json_array_t;
-   v_group_o json_object_t;
-   v_price_category varchar2(50);
-   v_price number;
-   v_tickets_available number;
-   v_error_count number := 0;
-   v_status_code varchar2(10);
-   v_status_message varchar2(4000);
-begin
-/*
-   v_request_o := json_object_t.parse(p_xml_doc);
-   v_event_id := v_request_o.get_number('event_id');
-   v_groups_array := v_request_o.get_array('ticket_groups');
-   for i in 0..v_groups_array.get_size - 1 loop
-      v_group_o := json_object_t(v_groups_array.get(i));
-      v_price_category := v_group_o.get_string('price_category');
-      v_price := v_group_o.get_number('price');
-      v_tickets_available := v_group_o.get_number('tickets_available');
-      v_ticket_group_id := 0;
-      case
-      when v_price_category is null then
-         v_error_count := v_error_count + 1;
-         v_status_code := 'ERROR';
-         v_status_message := 'Missing price category, cannot set group';
-      when v_price_category = 'UNDEFINED' then
-         v_error_count := v_error_count + 1;
-         v_status_code := 'ERROR';
-         v_status_message := 'Price category is UNDEFINED, cannot set group';
-      else
-         begin
-            events_api.create_ticket_group(v_event_id, v_price_category, v_price, v_tickets_available, v_ticket_group_id);
-            v_status_code := 'SUCCESS';
-            v_status_message := 'Created/updated ticket group';
-         exception
-            when others then
-               v_error_count := v_error_count + 1;
-               v_status_code := 'ERROR';
-               v_status_message := sqlerrm;
-         end;
-      end case;
-      --update the array element with results (updates request object by reference)
-      v_group_o.put('ticket_group_id', v_ticket_group_id);
-      v_group_o.put('status_code', v_status_code);
-      v_group_o.put('status_message', v_status_message);
-   end loop;
-   --add status information for all groups in the request
-   v_request_o.put('request_status',case when v_error_count = 0 then 'SUCCESS' else 'ERRORS' end);
-   v_request_o.put('request_errors', v_error_count);
+    procedure update_ticket_groups
+    (
+        p_xml_doc in out xmltype
+    )
+    is
+        r_group event_system.ticket_groups%rowtype;
+        nRoot dbms_xmldom.DOMnode;
+        nListGroups dbms_xmldom.DOMnodeList;
+        nGroup dbms_xmldom.DOMnode;
+        l_error_count number := 0;
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
+    begin
 
-   p_xml_doc := v_request_o.to_string; 
-*/
-null;
-exception
-   when others then
-      p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'update_ticket_groups');
-end update_ticket_groups;
+        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
+
+        dbms_xslprocessor.valueof(nRoot, 'event/event_id/text()', r_group.event_id);
+        
+        nListGroups := dbms_xslprocessor.selectNodes(n => nRoot, pattern => 'ticket_groups/ticket_group');
+        for i in 0..dbms_xmldom.getLength(nListGroups) - 1 loop
+            nGroup := dbms_xmldom.item(nListGroups, i);
+        
+            dbms_xslprocessor.valueof(nGroup, 'price_category/text()', r_group.price_category);
+            dbms_xslprocessor.valueof(nGroup, 'price/text()', r_group.price);
+            dbms_xslprocessor.valueof(nGroup, 'tickets_available/text()', r_group.tickets_available);
+            r_group.ticket_group_id := 0;
+
+            case
+                when r_group.price_category is null then
+                    l_error_count := l_error_count + 1;
+                    l_status_code := 'ERROR';
+                    l_status_message := 'Missing price category, cannot set group';
+                when r_group.price_category = 'UNDEFINED' then
+                    l_error_count := l_error_count + 1;
+                    l_status_code := 'ERROR';
+                    l_status_message := 'Price category is UNDEFINED, cannot set group';
+                else
+                    begin
+                        events_api.create_ticket_group(r_group.event_id, r_group.price_category, r_group.price, r_group.tickets_available, r_group.ticket_group_id);
+                        l_status_code := 'SUCCESS';
+                        l_status_message := 'Created/updated ticket group';
+                    exception
+                        when others then
+                            l_error_count := l_error_count + 1;
+                            l_status_code := 'ERROR';
+                            l_status_message := sqlerrm;
+                    end;
+            end case;
+
+            util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'ticket_group_id', p_data => r_group.ticket_group_id);
+            util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'status_code', p_data => l_status_code);
+            util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'status_message', p_data => l_status_message);
+        end loop;
+
+        --add status information for all groups in the request
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'request_status', p_data => case when l_error_count = 0 then 'SUCCESS' else 'ERRORS' end);
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'request_errors', p_data => l_error_count);
+        p_xml_doc := util_xmldom_helper.to_XMLtype;
+        util_xmldom_helper.freeDoc;
+
+    exception
+        when others then
+            util_xmldom_helper.freeDoc;
+            p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'update_ticket_groups');
+    end update_ticket_groups;
 
 --return possible reseller ticket assignments for event as json document
 --returns array of all resellers with ticket groups as nested array
@@ -567,98 +570,90 @@ end update_ticket_groups;
             return get_xml_error_doc(sqlcode, sqlerrm, 'get_ticket_assignments');
     end get_ticket_assignments;
 
---update ticket assignments for a reseller using a json document in the same format as get_event_reseller_ticket_assignments
+--update ticket assignments for a reseller using a xml document in the same format as get_ticket_assignments
 --update request document for each ticket group with status_code of SUCCESS or ERROR and a status_message
 --update entire request with a request_status of SUCCESS or ERRORS and request_errors (0 or N)
 --supports assignment of multiple ticket groups to multiple resellers
 --WARNING:  IF MULTIPLE RESELLERS ARE SUBMITTED ASSIGNMENTS CAN EXCEED LIMITS CREATING MULTIPLE ERRORS AT THE END OF BATCH
 --IT IS RECOMMENDED TO SUBMIT ASSIGNMENTS FOR ONE RESELLER AT A TIME AND REFRESH THE ASSIGNMENTS DOCUMENT TO SEE CHANGED LIMITS
---additional informational fields from get_event_reseller_ticket_assignments may be present
+--additional informational fields from get_ticket_assignments may be present
 --if additional informational fields are present they will not be processed
-procedure update_ticket_assignments
-(
-   p_xml_doc in out nocopy xmltype
-)
-is
-   v_event_id number;
-   v_reseller_id number;
-   v_ticket_group_id number;
-   v_tickets_assigned number;
-   v_ticket_assignment_id number;
+    procedure update_ticket_assignments
+    (
+        p_xml_doc in out nocopy xmltype
+    )
+    is
+        l_event_id number;
+        r_assignment event_system.ticket_assignments%rowtype;
+        nRoot dbms_xmldom.DOMnode;
+        nListResellers dbms_xmldom.DOMnodeList;
+        nReseller dbms_xmldom.DOMnode;
+        nListGroups dbms_xmldom.DOMnodeList;
+        nGroup dbms_xmldom.DOMnode;
+        l_reseller_error_count number := 0;
+        l_error_count number := 0;
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
+    begin
+    
+        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
+
+        dbms_xslprocessor.valueof(nRoot, 'event/event_id/text()', l_event_id);
+        
+        nListResellers := dbms_xslprocessor.selectNodes(n => nRoot, pattern => 'ticket_resellers/reseller');
+        for r in 0..dbms_xmldom.getLength(nListResellers) - 1 loop
+            nReseller := dbms_xmldom.item(nListResellers, r);
+        
+            dbms_xslprocessor.valueof(nReseller, 'reseller_id/text()', r_assignment.reseller_id);
+            l_reseller_error_count := 0;
+            
+            nListGroups := dbms_xslprocessor.selectNodes(n => nReseller, pattern => 'ticket_assignments/ticket_group');
+            for g in 0..dbms_xmldom.getLength(nListGroups) - 1 loop
+                nGroup := dbms_xmldom.item(nListGroups, g);
+                
+                dbms_xslprocessor.valueof(nGroup, 'ticket_group_id/text()', r_assignment.ticket_group_id);
+                dbms_xslprocessor.valueof(nGroup, 'tickets_assigned/text()', r_assignment.tickets_assigned);
+                r_assignment.ticket_assignment_id := 0;
+
+                begin
+                    events_api.create_ticket_assignment(
+                        p_reseller_id => r_assignment.reseller_id,
+                        p_ticket_group_id => r_assignment.ticket_group_id,
+                        p_number_tickets => r_assignment.tickets_assigned,
+                        p_ticket_assignment_id => r_assignment.ticket_assignment_id);
+                    l_status_code := 'SUCCESS';
+                    l_status_message := 'created/updated ticket group assignment';
+                exception
+                    when others then
+                        l_status_code := 'ERROR';
+                        l_reseller_error_count := l_reseller_error_count + 1;
+                        l_status_message := sqlerrm;
+                end;
+
+                util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'ticket_assignment_id', p_data => r_assignment.ticket_assignment_id);
+                util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'status_code', p_data => l_status_code);
+                util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'status_message', p_data => l_status_message);
+
+            end loop;
+
+            --update the reseller array element
+            util_xmldom_helper.addTextNode(p_parent => nReseller, p_tag => 'reseller_status', p_data => case when l_reseller_error_count = 0 then 'SUCCESS' else 'ERRORS' end);
+            util_xmldom_helper.addTextNode(p_parent => nReseller, p_tag => 'reseller_errors', p_data => l_reseller_error_count);
+            l_error_count := l_error_count + l_reseller_error_count;
+
+        end loop;
    
-   v_request_o json_object_t;
-   v_resellers_array json_array_t;
-   v_reseller_o json_object_t;
-   v_groups_array json_array_t;
-   v_group_o json_object_t;
+        --add status information for all resellers in the request
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'request_status', p_data => case when l_error_count = 0 then 'SUCCESS' else 'ERRORS' end);
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'request_errors', p_data => l_error_count);
+        p_xml_doc := util_xmldom_helper.to_XMLtype;
+        util_xmldom_helper.freeDoc;
 
-   v_reseller_error_count number := 0;
-   v_error_count number := 0;
-   v_status_code varchar2(10);
-   v_status_message varchar2(4000);
-begin
-/*
-   v_request_o := json_object_t.parse(p_xml_doc);
-   v_event_id := v_request_o.get_number('event_id');
-   
-   v_resellers_array := v_request_o.get_array('ticket_resellers');
-   for r in 0..v_resellers_array.get_size - 1 loop
-     v_reseller_o := json_object_t(v_resellers_array.get(r));
-
-     v_reseller_error_count := 0;
-     v_reseller_id := v_reseller_o.get_number('reseller_id');
-     
-     v_groups_array := v_reseller_o.get_array('ticket_assignments');
-     for g in 0..v_groups_array.get_size - 1 loop
-        v_group_o := json_object_t(v_groups_array.get(g));
-        
-        v_ticket_group_id := v_group_o.get_number('ticket_group_id');
-        v_tickets_assigned := v_group_o.get_number('tickets_assigned');
-        v_ticket_assignment_id := 0;
-        
-        --TODO: add validations here for ticket_group_id
-        
-        begin
-        
-            events_api.create_ticket_assignment(
-                p_reseller_id => v_reseller_id,
-                p_ticket_group_id => v_ticket_group_id,
-                p_number_tickets => v_tickets_assigned,
-                p_ticket_assignment_id => v_ticket_assignment_id);
-
-            --update the reseller assignment for the ticket group
-            v_status_code := 'SUCCESS';
-            v_status_message := 'created/updated ticket group assignment';
-        
-        exception
-           when others then
-              v_status_code := 'ERROR';
-              v_reseller_error_count := v_reseller_error_count + 1;
-              v_status_message := sqlerrm;
-        end;
-        
-        --update the assignment array element with results (updates request object by reference)
-        v_group_o.put('ticket_assignment_id', v_ticket_assignment_id);
-        v_group_o.put('status_code', v_status_code);
-        v_group_o.put('status_message', v_status_message);
-     end loop;
-     --update the reseller array element
-     v_reseller_o.put('reseller_status',case when v_reseller_error_count = 0 then 'SUCCESS' else 'ERRORS' end);
-     v_reseller_o.put('reseller_errors',v_reseller_error_count);
-     v_error_count := v_error_count + v_reseller_error_count;
-   end loop;
-   
-   --add status information for all resellers in the request
-   v_request_o.put('request_status',case when v_error_count = 0 then 'SUCCESS' else 'ERRORS' end);
-   v_request_o.put('request_errors', v_error_count);
-
-   p_xml_doc := v_request_o.to_clob; 
-*/
-null;
-exception
-   when others then
-      p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'update_ticket_assignments');
-end update_ticket_assignments;
+    exception
+        when others then
+            util_xmldom_helper.freeDoc;
+            p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'update_ticket_assignments');
+    end update_ticket_assignments;
 
 --get pricing and availability for tickets created for the event
     function get_event_ticket_prices
@@ -763,41 +758,62 @@ end update_ticket_assignments;
 
     procedure purchase_tickets_get_customer
     (
-        o_request in out nocopy json_object_t, 
+        nRequest in out nocopy dbms_xmldom.DOMnode, 
         p_customer_id out number
     )
     is
+        r_customer event_system.customers%rowtype;
+        nCustomer dbms_xmldom.DOMnode;
         v_customer_email customers.customer_email%type;
         v_customer_name customers.customer_name%type;
     begin
-        v_customer_email := o_request.get_string('customer_email');
-        v_customer_name := o_request.get_string('customer_name');
+/*    
+  <customer>
+    <**customer_id>1438</customer_id>
+    <*customer_name>Gary Walsh</customer_name> used to create customer record if customer email is not on file
+    <customer_email>Gary.Walsh@example.customer.com</customer_email>
+  </customer>
+*/
+        nCustomer := dbms_xslprocessor.selectSingleNode(n => nRequest, pattern => 'customer');
+        dbms_xslprocessor.valueof(nCustomer, 'customer_email/text()', r_customer.customer_email);
+        dbms_xslprocessor.valueof(nCustomer, 'customer_name/text()', r_customer.customer_name);
+
         --validate customer by email, set v_customer_id if found, else create    
         events_api.create_customer(
-                p_customer_name => v_customer_name,
-                p_customer_email => v_customer_email,
-                p_customer_id => p_customer_id);
+            p_customer_name => r_customer.customer_name,
+            p_customer_email => r_customer.customer_email,
+            p_customer_id => p_customer_id);
    
-        o_request.put('customer_id', p_customer_id);
+        util_xmldom_helper.addTextNode(p_parent => nCustomer, p_tag => 'customer_id', p_data => p_customer_id);
+
     end purchase_tickets_get_customer;
 
     procedure purchase_tickets_get_group_request(
-            o_group in out nocopy json_object_t,
+            nGroup in out nocopy dbms_xmldom.DOMnode,
             p_group_id out number,
             p_quantity out number,
             p_price out number,
             p_tickets_requested_all_groups in out number
     )
     is
-        v_price_category ticket_groups.price_category%type;
+        l_price_category ticket_groups.price_category%type;
     begin
-        
-        p_group_id := o_group.get_number('ticket_group_id');
-        p_quantity := o_group.get_number('ticket_quantity_requested');
-        p_price := o_group.get_number('price');
-        
-        v_price_category := events_api.get_ticket_group_category(p_group_id);    
-        o_group.put('price_category', v_price_category);
+/*
+    <ticket_group>
+      <ticket_group_id>922</ticket_group_id>
+      <**price_category>VIP</price_category>
+      <price>50</price>
+      <ticket_quantity_requested>6</ticket_quantity_requested>
+    </ticket_group>
+*/
+
+        dbms_xslprocessor.valueof(nGroup, 'ticket_group_id/text()', p_group_id);
+        dbms_xslprocessor.valueof(nGroup, 'ticket_quantity_requested/text()', p_quantity);
+        dbms_xslprocessor.valueof(nGroup, 'price/text()', p_price);
+                
+        l_price_category := events_api.get_ticket_group_category(p_group_id);    
+
+        util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'price_category', p_data => l_price_category);
         
         p_tickets_requested_all_groups := p_tickets_requested_all_groups + p_quantity;
 
@@ -866,9 +882,9 @@ end update_ticket_assignments;
         p_sales_id := 0;
     end purchase_tickets_set_group_values_error;
 
-    procedure purchase_tickets_update_group_object
+    procedure purchase_tickets_update_group
     (
-        o_group in out nocopy json_object_t,
+        nGroup in out nocopy dbms_xmldom.DOMnode,
         p_sales_id in number,
         p_sales_date in date,
         p_tickets_purchased in number,
@@ -879,20 +895,35 @@ end update_ticket_assignments;
     )
     is
     begin
-            
+/*
+    <ticket_group>
+      <ticket_group_id>922</ticket_group_id>
+      <**price_category>VIP</price_category>
+      <price>50</price>
+      <ticket_quantity_requested>6</ticket_quantity_requested>
+      <**ticket_quantity_purchased>0</ticket_quantity_purchased>
+      <**extended_price>0</extended_price>
+      <**ticket_sales_id>0<ticket_sales_id</ticket_sales_id>
+      <**sales_date>null</sales_date>
+      <**status_code>success</status_code>
+      <**status_message>tickets purchased</status_message>
+    </ticket_group>
+*/
         --update the array element with results (updates request object by reference)
-        o_group.put('ticket_sales_id', p_sales_id);
-        o_group.put('sales_date', p_sales_date);
-        o_group.put('ticket_quantity_purchased', p_tickets_purchased);
-        o_group.put('actual_price', p_actual_price);
-        o_group.put('extended_price', p_extended_price);
-        o_group.put('status_code', p_status_code);
-        o_group.put('status_message', p_status_message);
-    end purchase_tickets_update_group_object;
+        util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'ticket_sales_id', p_data => p_sales_id);
+        util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'sales_date', p_data => p_sales_date);
+        util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'ticket_quantity_purchased', p_data => p_tickets_purchased);
+        util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'actual_price', p_data => p_actual_price);
+        util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'extended_price', p_data => p_extended_price);
+        
+        util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'status_code', p_data => p_status_code);
+        util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'status_message', p_data => p_status_message);
+        
+    end purchase_tickets_update_group;
 
-    procedure purchase_tickets_update_request_object
+    procedure purchase_tickets_update_request
     (
-        o_request in out nocopy json_object_t,
+        nRequest in out nocopy dbms_xmldom.DOMnode,
         p_error_count in number,
         p_qty_requested_all_groups in number,
         p_qty_purchased_all_groups in number,
@@ -901,130 +932,170 @@ end update_ticket_assignments;
     is
     begin
         --add status information for all ticket purchases in the request
-        o_request.put('request_status',case when p_error_count = 0 then 'SUCCESS' else 'ERRORS' end);
-        o_request.put('request_errors', p_error_count);
-        o_request.put('total_tickets_requested', p_qty_requested_all_groups);
-        o_request.put('total_tickets_purchased', p_qty_purchased_all_groups);
-        o_request.put('total_purchase_amount', p_total_purchase_amount);
-        o_request.put('purchase_disclaimer', 'All Ticket Sales Are Final.');
-        
-    end purchase_tickets_update_request_object;
+/*
+  <**request_status>success or error</request_status>
+  <**request_errors>#</request_errors>
+  <**total_tickets_requested>99</total_tickets_requested>
+  <**total_tickets_purchased>88</total_tickets_purchased>
+  <**total_purchase_amount>2222</total_purchase_amount>
+  <**purchase_disclaimer>All Ticket Sales Are Final.</purchase_disclaimer>
+*/        
+
+        util_xmldom_helper.addTextNode(p_parent => nRequest, p_tag => 'request_status', p_data => case when p_error_count = 0 then 'SUCCESS' else 'ERRORS' end);
+        util_xmldom_helper.addTextNode(p_parent => nRequest, p_tag => 'request_errors', p_data => p_error_count);
+
+        util_xmldom_helper.addTextNode(p_parent => nRequest, p_tag => 'total_tickets_requested', p_data => p_qty_requested_all_groups);
+        util_xmldom_helper.addTextNode(p_parent => nRequest, p_tag => 'total_tickets_purchased', p_data => p_qty_purchased_all_groups);
+        util_xmldom_helper.addTextNode(p_parent => nRequest, p_tag => 'total_purchase_amount', p_data => p_total_purchase_amount);
+        util_xmldom_helper.addTextNode(p_parent => nRequest, p_tag => 'purchase_disclaimer', p_data => 'All Ticket Sales Are Final.');
+                
+    end purchase_tickets_update_request;
+
+/*
+<ticket_purchase_request>
+  <purchase_channel>reseller name|VENUE</purchase_channel>
+  <event>
+    <event_id>2</event_id>
+  </event>
+  <customer>
+    <**customer_id>1438</customer_id>
+    <*customer_name>Gary Walsh</customer_name> used to create customer record if customer email is not on file
+    <customer_email>Gary.Walsh@example.customer.com</customer_email>
+  </customer>
+  <*reseller> optional if purchase channel is VENUE
+    <reseller_id>3</reseller_id>
+    <*reseller_name>Old School</reseller_name>
+  </reseller>  
+  <ticket_groups>
+    <ticket_group>
+      <ticket_group_id>922</ticket_group_id>
+      <**price_category>VIP</price_category>
+      <price>50</price>
+      <ticket_quantity_requested>6</ticket_quantity_requested>
+      <**ticket_quantity_purchased>0</ticket_quantity_purchased>
+      <**extended_price>0</extended_price>
+      <**ticket_sales_id>0<ticket_sales_id</ticket_sales_id>
+      <**sales_date>null</sales_date>
+      <**status_code>success</status_code>
+      <**status_message>tickets purchased</status_message>
+    </ticket_group>
+  </ticket_groups>
+  <**request_status>success or error</request_status>
+  <**request_errors>#</request_errors>
+  <**total_tickets_requested>99</total_tickets_requested>
+  <**total_tickets_purchased>88</total_tickets_purchased>
+  <**total_purchase_amount>2222</total_purchase_amount>
+  <**purchase_disclaimer>All Ticket Sales Are Final.</purchase_disclaimer>
+</ticket_purchase_request>
+*/
 
     procedure purchase_tickets_from_reseller
     (
         p_xml_doc in out nocopy xmltype
     )
     is
-        v_event_id number;
-        v_reseller_id number;
-        v_customer_id number;
-        v_total_tickets_requested number := 0;
-        v_total_tickets_purchased number := 0;
-        v_total_purchase_amount number := 0;
-   
-        v_ticket_group_id number;
-        v_tickets_requested_in_group number;
-        v_tickets_purchased_in_group number;
-        v_ticket_price_requested number;
-        v_actual_ticket_price number;
-        v_extended_price_in_group number;
-        v_ticket_sales_id number;
-        v_sales_date date;
-      
-        v_request_o json_object_t;
-        v_groups_array json_array_t;
-        v_group_o json_object_t;
-
-        v_group_status_code varchar2(10);
-        v_group_status_message varchar2(4000);
-        v_total_error_count number := 0;
-        v_status_code varchar2(10);
-        v_status_message varchar2(4000);
+        l_event_id number;
+        r_sale event_system.ticket_sales%rowtype;
+        l_total_tickets_requested number := 0;
+        l_total_tickets_purchased number := 0;
+        l_total_purchase_amount number := 0;
+        l_tickets_purchased_in_group number;
+        l_ticket_price_requested number;
+        l_actual_ticket_price number;
+        nRequest dbms_xmldom.DOMnode;
+        nListGroups dbms_xmldom.DOMnodeList;
+        nGroup dbms_xmldom.DOMnode;
+        l_group_status_code varchar2(10);
+        l_group_status_message varchar2(4000);
+        l_total_error_count number := 0;
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
     begin
-/*
-        v_request_o := json_object_t.parse(p_xml_doc);
-        v_event_id := v_request_o.get_number('event_id');
-        v_reseller_id := v_request_o.get_number('reseller_id');
-   
-        purchase_tickets_get_customer(o_request => v_request_o, p_customer_id => v_customer_id);
+    
+        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRequest);
 
-        v_groups_array := v_request_o.get_array('ticket_groups');
-        for group_index in 0..v_groups_array.get_size - 1 loop
-        
-            v_group_o := json_object_t(v_groups_array.get(group_index));
+        dbms_xslprocessor.valueof(nRequest, 'event/event_id/text()', l_event_id);
+        dbms_xslprocessor.valueof(nRequest, 'reseller/reseller_id/text()', r_sale.reseller_id);
 
+        purchase_tickets_get_customer(nRequest => nRequest, p_customer_id => r_sale.customer_id);
+
+        nListGroups := dbms_xslprocessor.selectNodes(n => nRequest, pattern => 'ticket_groups/ticket_group');
+        for i in 0..dbms_xmldom.getLength(nListGroups) - 1 loop
+            nGroup := dbms_xmldom.item(nListGroups, i);
+    
             purchase_tickets_get_group_request(
-                            o_group => v_group_o, 
-                            p_group_id => v_ticket_group_id, 
-                            p_quantity => v_tickets_requested_in_group, 
-                            p_price => v_ticket_price_requested,
-                            p_tickets_requested_all_groups => v_total_tickets_requested);                            
+                            nGroup => nGroup, 
+                            p_group_id => r_sale.ticket_group_id, 
+                            p_quantity => r_sale.ticket_quantity, 
+                            p_price => l_ticket_price_requested,
+                            p_tickets_requested_all_groups => l_total_tickets_requested);                            
         
             begin
             
                 purchase_tickets_verify_requested_price(
-                                p_group_id => v_ticket_group_id, 
-                                p_requested_price => v_ticket_price_requested, 
-                                p_actual_price => v_actual_ticket_price);
+                                p_group_id => r_sale.ticket_group_id, 
+                                p_requested_price => l_ticket_price_requested, 
+                                p_actual_price => l_actual_ticket_price);
             
                 --purchase the tickets, this sets v_ticket_sales_id
                 --this will verify availability for the reseller and group
                 --raises an exception if tickets are not available
                 events_api.purchase_tickets_from_reseller(
-                                p_reseller_id => v_reseller_id,
-                                p_ticket_group_id => v_ticket_group_id,
-                                p_customer_id => v_customer_id,
-                                p_number_tickets => v_tickets_requested_in_group,
-                                p_ticket_sales_id => v_ticket_sales_id);
+                                p_reseller_id => r_sale.reseller_id,
+                                p_ticket_group_id => r_sale.ticket_group_id,
+                                p_customer_id => r_sale.customer_id,
+                                p_number_tickets => r_sale.ticket_quantity,
+                                p_ticket_sales_id => r_sale.ticket_sales_id);
 
                 purchase_tickets_set_group_values_success(
-                                p_qty_requested => v_tickets_requested_in_group,
-                                p_price => v_actual_ticket_price,
-                                p_qty_purchased => v_tickets_purchased_in_group,
-                                p_sales_date => v_sales_date,
-                                p_extended_price => v_extended_price_in_group,
-                                p_qty_purchased_all_groups => v_total_tickets_purchased,
-                                p_total_purchase_amount => v_total_purchase_amount,
-                                p_status_code => v_group_status_code,
-                                p_status_message => v_group_status_message);
+                                p_qty_requested => r_sale.ticket_quantity,
+                                p_price => l_actual_ticket_price,
+                                p_qty_purchased => l_tickets_purchased_in_group,
+                                p_sales_date => r_sale.sales_date,
+                                p_extended_price => r_sale.extended_price,
+                                p_qty_purchased_all_groups => l_total_tickets_purchased,
+                                p_total_purchase_amount => l_total_purchase_amount,
+                                p_status_code => l_group_status_code,
+                                p_status_message => l_group_status_message);
             
             exception
                 when others then
                     purchase_tickets_set_group_values_error(
                         p_sqlerrm => sqlerrm,
-                        p_status_code => v_group_status_code,
-                        p_status_message => v_group_status_message,
-                        p_error_count => v_total_error_count,
-                        p_qty_purchased => v_tickets_purchased_in_group,
-                        p_extended_price => v_extended_price_in_group,
-                        p_sales_date => v_sales_date,
-                        p_sales_id => v_ticket_sales_id);
+                        p_status_code => l_group_status_code,
+                        p_status_message => l_group_status_message,
+                        p_error_count => l_total_error_count,
+                        p_qty_purchased => l_tickets_purchased_in_group,
+                        p_extended_price => r_sale.extended_price,
+                        p_sales_date => r_sale.sales_date,
+                        p_sales_id => r_sale.ticket_sales_id);
             end;
         
-            purchase_tickets_update_group_object(
-                                    o_group => v_group_o, 
-                                    p_sales_id => v_ticket_sales_id, 
-                                    p_sales_date => v_sales_date, 
-                                    p_tickets_purchased => v_tickets_purchased_in_group,
-                                    p_actual_price => v_actual_ticket_price,
-                                    p_extended_price => v_extended_price_in_group,
-                                    p_status_code => v_group_status_code,
-                                    p_status_message => v_group_status_message);
+            purchase_tickets_update_group(
+                                    nGroup => nGroup, 
+                                    p_sales_id => r_sale.ticket_sales_id, 
+                                    p_sales_date => r_sale.sales_date, 
+                                    p_tickets_purchased => l_tickets_purchased_in_group,
+                                    p_actual_price => l_actual_ticket_price,
+                                    p_extended_price => r_sale.extended_price,
+                                    p_status_code => l_group_status_code,
+                                    p_status_message => l_group_status_message);
         
         end loop;
         
-        purchase_tickets_update_request_object(
-                        o_request => v_request_o, 
-                        p_error_count => v_total_error_count,
-                        p_qty_requested_all_groups => v_total_tickets_requested,
-                        p_qty_purchased_all_groups => v_total_tickets_purchased,
-                        p_total_purchase_amount => v_total_purchase_amount);
+        purchase_tickets_update_request(
+                        nRequest => nRequest, 
+                        p_error_count => l_total_error_count,
+                        p_qty_requested_all_groups => l_total_tickets_requested,
+                        p_qty_purchased_all_groups => l_total_tickets_purchased,
+                        p_total_purchase_amount => l_total_purchase_amount);
     
-        p_xml_doc := v_request_o.to_clob; 
-*/
-null;
+        p_xml_doc := util_xmldom_helper.to_XMLtype;
+        util_xmldom_helper.freeDoc;
+
     exception
         when others then
+            util_xmldom_helper.freeDoc;
             p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'purchase_tickets_from_reseller');
     end purchase_tickets_from_reseller;
 
@@ -1034,115 +1105,108 @@ null;
         p_xml_doc in out nocopy xmltype
     )
     is
-        v_event_id number;
-        v_customer_id number;
-        v_total_tickets_requested number := 0;
-        v_total_tickets_purchased number := 0;
-        v_total_purchase_amount number := 0;
-   
-        v_ticket_group_id number;
-        v_tickets_requested_in_group number;
-        v_tickets_purchased_in_group number;
-        v_ticket_price_requested number;
-        v_actual_ticket_price number;
-        v_extended_price_in_group number;
-        v_ticket_sales_id number;
-        v_sales_date date;
-      
-        v_request_o json_object_t;
-        v_groups_array json_array_t;
-        v_group_o json_object_t;
-
-        v_group_status_code varchar2(10);
-        v_group_status_message varchar2(4000);
-        v_total_error_count number := 0;
-        v_status_code varchar2(10);
-        v_status_message varchar2(4000);
+        l_event_id number;
+        r_sale event_system.ticket_sales%rowtype;
+        l_total_tickets_requested number := 0;
+        l_total_tickets_purchased number := 0;
+        l_total_purchase_amount number := 0;
+        l_tickets_purchased_in_group number;
+        l_ticket_price_requested number;
+        l_actual_ticket_price number;
+        nRequest dbms_xmldom.DOMnode;
+        nListGroups dbms_xmldom.DOMnodeList;
+        nGroup dbms_xmldom.DOMnode;
+        l_group_status_code varchar2(10);
+        l_group_status_message varchar2(4000);
+        l_total_error_count number := 0;
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
     begin
-/*
-        v_request_o := json_object_t.parse(p_xml_doc);
-        v_event_id := v_request_o.get_number('event_id');
 
-        purchase_tickets_get_customer(o_request => v_request_o, p_customer_id => v_customer_id);
+        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRequest);
 
-        v_groups_array := v_request_o.get_array('ticket_groups');
-        for group_index in 0..v_groups_array.get_size - 1 loop        
-            v_group_o := json_object_t(v_groups_array.get(group_index));
-        
+        dbms_xslprocessor.valueof(nRequest, 'event/event_id/text()', l_event_id);
+
+        purchase_tickets_get_customer(nRequest => nRequest, p_customer_id => r_sale.customer_id);
+
+        nListGroups := dbms_xslprocessor.selectNodes(n => nRequest, pattern => 'ticket_groups/ticket_group');
+        for i in 0..dbms_xmldom.getLength(nListGroups) - 1 loop
+            nGroup := dbms_xmldom.item(nListGroups, i);
+    
             purchase_tickets_get_group_request(
-                            o_group => v_group_o, 
-                            p_group_id => v_ticket_group_id, 
-                            p_quantity => v_tickets_requested_in_group, 
-                            p_price => v_ticket_price_requested,
-                            p_tickets_requested_all_groups => v_total_tickets_requested);                            
+                            nGroup => nGroup, 
+                            p_group_id => r_sale.ticket_group_id, 
+                            p_quantity => r_sale.ticket_quantity, 
+                            p_price => l_ticket_price_requested,
+                            p_tickets_requested_all_groups => l_total_tickets_requested);                            
         
             begin
-
+            
                 purchase_tickets_verify_requested_price(
-                                p_group_id => v_ticket_group_id, 
-                                p_requested_price => v_ticket_price_requested, 
-                                p_actual_price => v_actual_ticket_price);
+                                p_group_id => r_sale.ticket_group_id, 
+                                p_requested_price => l_ticket_price_requested, 
+                                p_actual_price => l_actual_ticket_price);
             
                 --purchase the tickets, this sets v_ticket_sales_id
                 --this will verify availability for the reseller and group
                 --raises an exception if tickets are not available
                 events_api.purchase_tickets_from_venue(
-                                p_ticket_group_id => v_ticket_group_id,
-                                p_customer_id => v_customer_id,
-                                p_number_tickets => v_tickets_requested_in_group,
-                                p_ticket_sales_id => v_ticket_sales_id);
+                                p_ticket_group_id => r_sale.ticket_group_id,
+                                p_customer_id => r_sale.customer_id,
+                                p_number_tickets => r_sale.ticket_quantity,
+                                p_ticket_sales_id => r_sale.ticket_sales_id);
 
                 purchase_tickets_set_group_values_success(
-                                p_qty_requested => v_tickets_requested_in_group,
-                                p_price => v_actual_ticket_price,
-                                p_qty_purchased => v_tickets_purchased_in_group,
-                                p_sales_date => v_sales_date,
-                                p_extended_price => v_extended_price_in_group,
-                                p_qty_purchased_all_groups => v_total_tickets_purchased,
-                                p_total_purchase_amount => v_total_purchase_amount,
-                                p_status_code => v_group_status_code,
-                                p_status_message => v_group_status_message);
+                                p_qty_requested => r_sale.ticket_quantity,
+                                p_price => l_actual_ticket_price,
+                                p_qty_purchased => l_tickets_purchased_in_group,
+                                p_sales_date => r_sale.sales_date,
+                                p_extended_price => r_sale.extended_price,
+                                p_qty_purchased_all_groups => l_total_tickets_purchased,
+                                p_total_purchase_amount => l_total_purchase_amount,
+                                p_status_code => l_group_status_code,
+                                p_status_message => l_group_status_message);
             
             exception
                 when others then
                     purchase_tickets_set_group_values_error(
                         p_sqlerrm => sqlerrm,
-                        p_status_code => v_group_status_code,
-                        p_status_message => v_group_status_message,
-                        p_error_count => v_total_error_count,
-                        p_qty_purchased => v_tickets_purchased_in_group,
-                        p_extended_price => v_extended_price_in_group,
-                        p_sales_date => v_sales_date,
-                        p_sales_id => v_ticket_sales_id);
+                        p_status_code => l_group_status_code,
+                        p_status_message => l_group_status_message,
+                        p_error_count => l_total_error_count,
+                        p_qty_purchased => l_tickets_purchased_in_group,
+                        p_extended_price => r_sale.extended_price,
+                        p_sales_date => r_sale.sales_date,
+                        p_sales_id => r_sale.ticket_sales_id);
             end;
-            
-            purchase_tickets_update_group_object(
-                                    o_group => v_group_o, 
-                                    p_sales_id => v_ticket_sales_id, 
-                                    p_sales_date => v_sales_date, 
-                                    p_tickets_purchased => v_tickets_purchased_in_group,
-                                    p_actual_price => v_actual_ticket_price,
-                                    p_extended_price => v_extended_price_in_group,
-                                    p_status_code => v_group_status_code,
-                                    p_status_message => v_group_status_message);
-                    
+        
+            purchase_tickets_update_group(
+                                    nGroup => nGroup, 
+                                    p_sales_id => r_sale.ticket_sales_id, 
+                                    p_sales_date => r_sale.sales_date, 
+                                    p_tickets_purchased => l_tickets_purchased_in_group,
+                                    p_actual_price => l_actual_ticket_price,
+                                    p_extended_price => r_sale.extended_price,
+                                    p_status_code => l_group_status_code,
+                                    p_status_message => l_group_status_message);
+        
         end loop;
-   
-        purchase_tickets_update_request_object(
-                        o_request => v_request_o, 
-                        p_error_count => v_total_error_count,
-                        p_qty_requested_all_groups => v_total_tickets_requested,
-                        p_qty_purchased_all_groups => v_total_tickets_purchased,
-                        p_total_purchase_amount => v_total_purchase_amount);
+        
+        purchase_tickets_update_request(
+                        nRequest => nRequest, 
+                        p_error_count => l_total_error_count,
+                        p_qty_requested_all_groups => l_total_tickets_requested,
+                        p_qty_purchased_all_groups => l_total_tickets_purchased,
+                        p_total_purchase_amount => l_total_purchase_amount);
+    
+        p_xml_doc := util_xmldom_helper.to_XMLtype;
+        util_xmldom_helper.freeDoc;
 
-        p_xml_doc := v_request_o.to_clob; 
-*/
-null;
     exception
         when others then
+            util_xmldom_helper.freeDoc;
             p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'purchase_tickets_from_venue');
     end purchase_tickets_from_venue;
-
 
 --get customer tickets purchased for event
 --used to verify customer purchases
@@ -1204,7 +1268,6 @@ null;
         when others then
             return get_xml_error_doc(sqlcode, sqlerrm, 'get_customer_event_tickets_by_email');
     end get_customer_event_tickets_by_email;
-
 
 begin
   null;
