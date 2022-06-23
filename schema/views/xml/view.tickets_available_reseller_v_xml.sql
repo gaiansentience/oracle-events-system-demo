@@ -33,7 +33,7 @@ with event_resellers as
     select
         e.venue_id
         ,e.event_id
-        ,er.reseller_id   --er.reseller_name
+        ,er.reseller_id
         ,xmlelement("event_ticket_availability"
             ,xmlelement("ticket_sources", er.reseller_name)
             ,xmlelement("event"
@@ -58,9 +58,9 @@ with event_resellers as
                                 g.ticket_group_id    as "ticket_group_id"
                                 ,g.price_category    as "price_category"
                                 ,g.price             as "price"
-                                ,g.tickets_available as "tickets_available"
-                                ,g.tickets_sold      as "tickets_sold"
-                                ,g.tickets_remaining as "tickets_remaining"
+                                ,g.tickets_available as "group_tickets_available"
+                                ,g.tickets_sold      as "group_tickets_sold"
+                                ,g.tickets_remaining as "group_tickets_remaining"
                             )
                             ,xmlelement("ticket_resellers"
                                 ,(select 
@@ -69,8 +69,8 @@ with event_resellers as
                                             ,xmlforest(
                                                 ta.reseller_id        as "reseller_id"
                                                 ,ta.reseller_name     as "reseller_name"
-                                                ,ta.tickets_available as "reseller_tickets_available"
-                                                ,ta.ticket_status     as "reseller_ticket_status"
+                                                ,ta.tickets_available as "tickets_available"
+                                                ,ta.ticket_status     as "ticket_status"
                                             )
                                         )
                                     )

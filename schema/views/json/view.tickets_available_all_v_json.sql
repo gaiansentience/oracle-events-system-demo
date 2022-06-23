@@ -18,17 +18,17 @@ with json_base as
                             'ticket_group_id'    : g.ticket_group_id
                             ,'price_category'    : g.price_category
                             ,'price'             : g.price
-                            ,'tickets_available' : g.tickets_available
-                            ,'tickets_sold'      : g.tickets_sold
-                            ,'tickets_remaining' : g.tickets_remaining
+                            ,'group_tickets_available' : g.tickets_available
+                            ,'group_tickets_sold'      : g.tickets_sold
+                            ,'group_tickets_remaining' : g.tickets_remaining
                             ,'ticket_resellers'  : 
                                 (select 
                                     json_arrayagg(
                                         json_object(
                                             'reseller_id'    : ta.reseller_id
                                             ,'reseller_name' : ta.reseller_name
-                                            ,'reseller_tickets_available' : ta.tickets_available
-                                            ,'reseller_ticket_status'     : ta.ticket_status
+                                            ,'tickets_available' : ta.tickets_available
+                                            ,'ticket_status'     : ta.ticket_status
                                         )
                                     )
                                 from event_system.tickets_available_all_v ta 

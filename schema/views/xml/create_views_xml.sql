@@ -28,7 +28,7 @@ prompt creating views for xml web services
 
 @@view.events_v_xml.sql;
 
---@verify_views\create_views_xml_verify.sql;
+@verify_views\create_views_xml_verify.sql;
 
 prompt events system xml api views created
 

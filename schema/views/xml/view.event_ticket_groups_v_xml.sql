@@ -7,8 +7,10 @@ with xml_base as
         ,xmlelement("event_ticket_groups"
         ,xmlelement("event"
             ,xmlforest(
-                e.venue_id           as "venue_id"
-                ,e.venue_name        as "venue_name"
+                xmlforest(
+                    e.venue_id           as "venue_id"
+                    ,e.venue_name        as "venue_name"
+                ) as "venue"
                 ,e.event_id          as "event_id"
                 ,e.event_name        as "event_name"
                 ,e.event_date        as "event_date"

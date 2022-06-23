@@ -8,14 +8,14 @@ from
     all_resellers_v_json r,
     json_table(r.json_doc
         columns
-            (
+        (
             nested path '$[*]'
                 columns
-                    (
-                    reseller_id         number       path '$.reseller_id'
-                    ,reseller_name      varchar2(50) path '$.reseller_name'
-                    ,reseller_email     varchar2(50) path '$.reseller_email'
-                    ,commission_percent number       path '$.commission_percent'
-                    )
-            )
+                (
+                    reseller_id         number        path '$.reseller_id'
+                    ,reseller_name      varchar2(100) path '$.reseller_name'
+                    ,reseller_email     varchar2(100) path '$.reseller_email'
+                    ,commission_percent number        path '$.commission_percent'
+                )
+        )
     ) j;

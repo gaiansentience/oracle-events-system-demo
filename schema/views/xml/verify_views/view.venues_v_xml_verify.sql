@@ -1,6 +1,13 @@
 create or replace view venues_v_xml_verify as
+with base as
+(
+    select
+        venue_id
+        ,xml_doc
+    from event_system.venues_v_xml
+)
 select 
-    x.venue_id
+    b.venue_id
     ,t.venue_id as venue_id_xml
     ,t.venue_name
     ,t.organizer_email
@@ -8,8 +15,8 @@ select
     ,t.max_event_capacity
     ,t.venue_scheduled_events
 from 
-    venues_v_xml x,
-    xmltable('/venue' passing x.xml_doc 
+    base b,
+    xmltable('/venue' passing b.xml_doc 
         columns
             venue_id                number        path 'venue_id'
             ,venue_name             varchar2(100) path 'venue_name'

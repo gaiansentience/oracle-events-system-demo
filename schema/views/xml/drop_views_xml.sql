@@ -1,7 +1,7 @@
 --drop schema objects before redeploy
 prompt dropping xml views
 
---@verify_views\drop_views_xml_verify.sql;
+@verify_views\drop_views_xml_verify.sql;
 
 drop view event_ticket_groups_v_xml;
 

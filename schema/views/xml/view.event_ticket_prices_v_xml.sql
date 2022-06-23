@@ -14,7 +14,7 @@ with xml_base as
                     ,e.event_id          as "event_id"
                     ,e.event_name        as "event_name"
                     ,e.event_date        as "event_date"
-                    ,e.tickets_available as "tickets_available"
+                    ,e.tickets_available as "event_tickets_available"
                 )
             )
             ,xmlelement("ticket_groups"

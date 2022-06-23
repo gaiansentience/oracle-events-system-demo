@@ -1,6 +1,13 @@
 create or replace view venue_events_v_xml_verify as
+with base as
+(
+    select
+        venue_id
+        ,xml_doc
+    from event_system.venue_events_v_xml
+)
 select 
-    x.venue_id
+    b.venue_id
     ,v.venue_id as venue_id_xml
     ,v.venue_name
     ,v.organizer_email
@@ -13,8 +20,8 @@ select
     ,e.tickets_available
     ,e.tickets_remaining
 from 
-    venue_events_v_xml x,
-    xmltable('/venue_events/venue' passing x.xml_doc 
+    base b,
+    xmltable('/venue_events/venue' passing b.xml_doc 
         columns
             venue_id                number        path 'venue_id'
             ,venue_name             varchar2(100) path 'venue_name'
@@ -23,12 +30,11 @@ from
             ,max_event_capacity     number        path 'max_event_capacity'
             ,venue_scheduled_events number        path 'venue_scheduled_events'
     ) v,
-    xmltable('/venue_events/venue_event_listing/event' passing x.xml_doc 
+    xmltable('/venue_events/venue_event_listing/event' passing b.xml_doc 
         columns
             event_id           number        path 'event_id'
             ,event_name        varchar2(100) path 'event_name'
             ,event_date        date          path 'event_date'
             ,tickets_available number        path 'tickets_available'
             ,tickets_remaining number        path 'tickets_remaining'
-    ) e
-    
+    ) e;

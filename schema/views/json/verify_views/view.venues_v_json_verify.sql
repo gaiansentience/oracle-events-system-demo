@@ -1,15 +1,22 @@
 create or replace view venues_v_json_verify as
+with base as
+(
+    select
+        venue_id
+        ,json_doc
+    from event_system.venues_v_json
+)
 select
-    v.venue_id
+    b.venue_id
     ,j.venue_id as venue_id_json
     ,j.venue_name
-    ,j.organizer_email
     ,j.organizer_name
+    ,j.organizer_email
     ,j.max_event_capacity
     ,j.venue_scheduled_events
 from
-    event_system.venues_v_json v,
-    json_table(v.json_doc
+    base b,
+    json_table(b.json_doc
         columns
             (
             venue_id                number        path '$.venue_id'

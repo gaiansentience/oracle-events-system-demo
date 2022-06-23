@@ -1,4 +1,12 @@
 create or replace view tickets_available_all_v_json_verify as
+with base as
+(
+    select
+        venue_id
+        ,event_id
+        ,json_doc
+    from tickets_available_all_v_json
+)
 select
     b.venue_id
     ,j.venue_id as venue_id_json
@@ -19,7 +27,7 @@ select
     ,j.tickets_available
     ,j.ticket_status
 from
-    tickets_available_all_v_json b,
+    base b,
     json_table (b.json_doc 
         columns
             (
@@ -35,16 +43,16 @@ from
                     ticket_group_id          number        path ticket_group_id
                     ,price_category          varchar2(100) path price_category
                     ,price                   number        path price
-                    ,group_tickets_available number        path tickets_available
-                    ,group_tickets_sold      number        path tickets_sold
-                    ,group_tickets_remaining number        path tickets_remaining
+                    ,group_tickets_available number        path group_tickets_available
+                    ,group_tickets_sold      number        path group_tickets_sold
+                    ,group_tickets_remaining number        path group_tickets_remaining
                     ,nested                                path '$.ticket_resellers[*]'
                         columns
                             (
                             reseller_id        number        path reseller_id
                             ,reseller_name     varchar2(100) path reseller_name
-                            ,tickets_available number        path reseller_tickets_available
-                            ,ticket_status     varchar2(100) path reseller_ticket_status
+                            ,tickets_available number        path tickets_available
+                            ,ticket_status     varchar2(100) path ticket_status
                             )
                     )
             )
