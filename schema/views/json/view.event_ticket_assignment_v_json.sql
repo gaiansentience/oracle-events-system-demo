@@ -1,4 +1,4 @@
-create or replace view reseller_ticket_assignment_v_json as
+create or replace view event_ticket_assignment_v_json as
 with json_base as
 (
     select
@@ -38,7 +38,7 @@ with json_base as
                                             ,'sold_by_venue'        : tg.sold_by_venue
                                         )
                                     returning clob) 
-                                from event_system.reseller_ticket_assignment_v tg
+                                from event_system.event_ticket_assignment_v tg
                                 where 
                                     tg.event_id = e.event_id 
                                     and tg.reseller_id = r.reseller_id

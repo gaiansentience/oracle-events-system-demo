@@ -2,6 +2,9 @@ prompt creating verification views for json web services
 
 @@view.event_ticket_groups_v_json_verify.sql;
 
+--these views are identical, reseller_ticket_assignment is currently in use
+--used to troubleshoot xml verify view anomaly
+@@view.event_ticket_assignment_v_json_verify.sql;
 @@view.reseller_ticket_assignment_v_json_verify.sql;
 
 @@view.event_ticket_prices_v_json_verify.sql;

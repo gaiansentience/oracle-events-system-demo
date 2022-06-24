@@ -704,7 +704,7 @@ as
          ra.reseller_id,
          ra.reseller_name,   
          ra.assigned_to_others,
-         ra.currently_assigned,
+         ra.tickets_assigned,
          ra.max_available,
          ra.min_assignment,
          ra.sold_by_reseller,

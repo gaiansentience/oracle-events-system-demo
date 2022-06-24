@@ -400,6 +400,16 @@ end create_event_weekly;
             return get_xml_error_doc(sqlcode, sqlerrm, 'get_event');
     end get_event;
 
+    /*
+<create_customer>
+  <customer>
+    <customer_id>4</customer_id>
+    <customer_name>Kathy Barry</customer_name>
+    <customer_email>Kathy.Barry@example.customer.com</customer_email>
+  </customer>
+</create_customer>    
+    */
+
     procedure create_customer
     (
         p_xml_doc in out xmltype
@@ -407,14 +417,17 @@ end create_event_weekly;
     is
         r_customer event_system.customers%rowtype;
         nRoot dbms_xmldom.DOMnode;
+        nCustomer dbms_xmldom.DOMnode;
         l_status_code varchar2(10);
         l_status_message varchar2(4000);
     begin
     
         util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
             
-        dbms_xslprocessor.valueof(nRoot, 'customer_name/text()', r_customer.customer_name);
-        dbms_xslprocessor.valueof(nRoot, 'customer_email/text()', r_customer.customer_email);
+        nCustomer := dbms_xslprocessor.selectSingleNode(n => nRoot, pattern => '/create_customer/customer');
+            
+        dbms_xslprocessor.valueof(nCustomer, 'customer_name/text()', r_customer.customer_name);
+        dbms_xslprocessor.valueof(nCustomer, 'customer_email/text()', r_customer.customer_email);
         r_customer.customer_id := 0;
     
         case
@@ -436,9 +449,9 @@ end create_event_weekly;
                 end;
         end case;
 
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'customer_id', p_data => r_customer.customer_id);
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_code', p_data => l_status_code);
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_message', p_data => l_status_message);
+        util_xmldom_helper.addTextNode(p_parent => nCustomer, p_tag => 'customer_id', p_data => r_customer.customer_id);
+        util_xmldom_helper.addTextNode(p_parent => nCustomer, p_tag => 'status_code', p_data => l_status_code);
+        util_xmldom_helper.addTextNode(p_parent => nCustomer, p_tag => 'status_message', p_data => l_status_message);
         p_xml_doc := util_xmldom_helper.to_XMLtype;
         util_xmldom_helper.freeDoc;
 
@@ -496,7 +509,7 @@ end create_event_weekly;
 
         dbms_xslprocessor.valueof(nRoot, 'event/event_id/text()', r_group.event_id);
         
-        nListGroups := dbms_xslprocessor.selectNodes(n => nRoot, pattern => 'ticket_groups/ticket_group');
+        nListGroups := dbms_xslprocessor.selectNodes(n => nRoot, pattern => '/event_ticket_groups/ticket_groups/ticket_group');
         for i in 0..dbms_xmldom.getLength(nListGroups) - 1 loop
             nGroup := dbms_xmldom.item(nListGroups, i);
         
@@ -504,7 +517,7 @@ end create_event_weekly;
             dbms_xslprocessor.valueof(nGroup, 'price/text()', r_group.price);
             dbms_xslprocessor.valueof(nGroup, 'tickets_available/text()', r_group.tickets_available);
             r_group.ticket_group_id := 0;
-
+            
             case
                 when r_group.price_category is null then
                     l_error_count := l_error_count + 1;
@@ -518,7 +531,7 @@ end create_event_weekly;
                     begin
                         events_api.create_ticket_group(r_group.event_id, r_group.price_category, r_group.price, r_group.tickets_available, r_group.ticket_group_id);
                         l_status_code := 'SUCCESS';
-                        l_status_message := 'Created/updated ticket group';
+                        l_status_message := 'Created or updated ticket group';
                     exception
                         when others then
                             l_error_count := l_error_count + 1;
@@ -529,7 +542,7 @@ end create_event_weekly;
 
             util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'ticket_group_id', p_data => r_group.ticket_group_id);
             util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'status_code', p_data => l_status_code);
-            util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'status_message', p_data => l_status_message);
+            util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'status_message', p_data => l_status_message);            
         end loop;
 
         --add status information for all groups in the request

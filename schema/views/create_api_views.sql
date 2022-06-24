@@ -8,7 +8,13 @@ prompt creating views for events api
 @@view.venues_summary_v.sql;
 @@view.event_ticket_groups_v.sql;
 @@view.event_ticket_prices_v.sql;
+
+--these views are identical, reseller_ticket_assignment is currently in use
+--used to troubleshoot xml verify view anomaly
+@@view.event_ticket_assignment_v.sql;
 @@view.reseller_ticket_assignment_v.sql;
+
+
 @@view.tickets_available_venue_v.sql;
 @@view.tickets_available_reseller_v.sql;
 @@view.tickets_available_all_v.sql;

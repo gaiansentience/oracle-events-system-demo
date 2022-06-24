@@ -1,11 +1,17 @@
-create or replace view tickets_available_all_v_xml_verify as
-with base as
+--querying test table shows same values for tickets_available and the number in ticket_status
+--querying the xml view directly yields the wrong value for the number in ticket_status
+--the value in tickets_available is correct, the number is ticket_statsu does not match anything
+--  CREATE OR REPLACE FORCE EDITIONABLE VIEW "EVENT_SYSTEM"."TICKETS_AVAILABLE_ALL_V_XML_VERIFY" ("VENUE_ID", "VENUE_ID_XML", "VENUE_NAME", "EVENT_ID", "EVENT_ID_XML", "EVENT_NAME", "EVENT_DATE", "EVENT_TICKETS_AVAILABLE", "PRICE_CATEGORY", "TICKET_GROUP_ID", "PRICE", "GROUP_TICKETS_AVAILABLE", "GROUP_TICKETS_SOLD", "GROUP_TICKETS_REMAINING", "RESELLER_ID", "RESELLER_NAME", "TICKETS_AVAILABLE", "TICKET_STATUS") AS 
+  with base as
 (
     select
         venue_id
         ,event_id
         ,xml_doc
-    from tickets_available_all_v_xml
+    from 
+--    a_test_all
+    tickets_available_all_v_xml 
+    where event_id = 42
 )
 select
     b.venue_id
@@ -55,3 +61,4 @@ from
             ,tickets_available number        path 'tickets_available'
             ,ticket_status     varchar2(100) path 'ticket_status'            
     ) r;
+

@@ -54,6 +54,6 @@ from
         columns
             reseller_id        number        path 'reseller_id'
             ,reseller_name     varchar2(100) path 'reseller_name'
-            ,tickets_available varchar2(100) path 'tickets_available'
+            ,tickets_available number        path 'tickets_available'
             ,ticket_status     varchar2(100) path 'ticket_status'            
     ) r;

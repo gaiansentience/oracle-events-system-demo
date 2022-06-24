@@ -1,11 +1,11 @@
-create or replace view reseller_ticket_assignment_v_xml_verify as
+create or replace view event_ticket_assignment_v_xml_verify as
 with base as
 (
     select
         venue_id
         ,event_id
         ,xml_doc
-    from reseller_ticket_assignment_v_xml
+    from event_ticket_assignment_v_xml
 )
 select 
     b.venue_id

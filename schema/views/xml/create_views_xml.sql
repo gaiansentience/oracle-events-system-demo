@@ -2,6 +2,9 @@
 prompt creating views for xml web services
 @@view.event_ticket_groups_v_xml.sql;
 
+--these views are identical, reseller_ticket_assignment is currently in use
+--used to troubleshoot xml verify view anomaly
+@@view.event_ticket_assignment_v_xml.sql;
 @@view.reseller_ticket_assignment_v_xml.sql;
 
 @@view.event_ticket_prices_v_xml.sql;

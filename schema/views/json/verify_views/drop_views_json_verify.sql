@@ -2,6 +2,9 @@ prompt dropping json verification views
 
 drop view event_ticket_groups_v_json_verify;
 
+--these views are identical, reseller_ticket_assignment is currently in use
+--used to troubleshoot xml verify view anomaly
+drop view event_ticket_assignment_v_json_verify;
 drop view reseller_ticket_assignment_v_json_verify;
 
 drop view tickets_available_all_v_json_verify;

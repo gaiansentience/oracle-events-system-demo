@@ -4,4 +4,3 @@ prompt deploying views and packages
 @views\json\create_views_json.sql;
 @views\xml\create_views_xml.sql;
 @packages\create_schema_packages.sql;
-

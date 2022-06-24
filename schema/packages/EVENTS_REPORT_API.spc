@@ -130,7 +130,7 @@ type r_ticket_assignment is record(
   reseller_id resellers.reseller_id%type,
   reseller_name resellers.reseller_name%type,
   assigned_to_others number,
-  currently_assigned number,
+  tickets_assigned number,
   max_available number,
   min_assignment number,
   sold_by_reseller number,

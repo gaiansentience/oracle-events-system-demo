@@ -1,4 +1,4 @@
-create or replace view reseller_ticket_assignment_v_xml as
+create or replace view event_ticket_assignment_v_xml as
 with event_resellers as
 (
     select
@@ -59,7 +59,7 @@ with event_resellers as
                                             )
                                         )   
                                     ) 
-                                from event_system.reseller_ticket_assignment_v tg
+                                from event_system.event_ticket_assignment_v tg
                                 where 
                                     tg.event_id = e.event_id 
                                     and tg.event_id = r.event_id
