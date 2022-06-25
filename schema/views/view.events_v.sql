@@ -5,6 +5,7 @@ select
     ,e.organizer_name
     ,e.organizer_email
     ,e.event_id
+    ,e.event_series_id
     ,e.event_name
     ,e.event_date
     ,e.tickets_available

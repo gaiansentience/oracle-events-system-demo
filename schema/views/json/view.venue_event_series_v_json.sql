@@ -1,4 +1,4 @@
-create or replace view venue_events_v_json as
+create or replace view venue_event_series_v_json as
 with json_base as
 (
     select
@@ -23,7 +23,7 @@ with json_base as
                             ,'tickets_remaining' : e.tickets_remaining
                         ) 
                     returning clob)
-                from event_system.venue_events_v e
+                from event_system.venue_event_series_v e
                 where e.venue_id = v.venue_id 
                 )
         returning clob) as json_doc

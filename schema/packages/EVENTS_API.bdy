@@ -408,6 +408,7 @@ as
         v_status := v_status || v_conflict_count || ' events could not be created because of conflicts with existing events.';
         --v_status := v_status || '  Conflicting dates are: ' || v_conflict_dates || '.';
         p_status := v_status;
+        p_event_series_id := v_event_series_id;
 
     exception
         when others then
@@ -428,13 +429,14 @@ as
     
         open p_events for
         select
-            ve.venue_id,
-            ve.venue_name,
-            ve.event_id,
-            ve.event_name,
-            ve.event_date,
-            ve.tickets_available,
-            ve.tickets_remaining
+            ve.venue_id
+            ,ve.venue_name
+            ,ve.event_id
+            ,ve.event_series_id
+            ,ve.event_name
+            ,ve.event_date
+            ,ve.tickets_available
+            ,ve.tickets_remaining
         from
             event_system.venue_events_v ve
         where 
@@ -443,6 +445,35 @@ as
             ve.event_date;
     
     end show_venue_upcoming_events;
+
+    --show all planned events that are part of an event series for the venue
+    --include total ticket sales to date
+    procedure show_venue_upcoming_event_series
+    (
+        p_venue_id in number,
+        p_events out sys_refcursor
+    )
+    is
+    begin
+    
+        open p_events for
+        select
+            ve.venue_id
+            ,ve.venue_name
+            ,ve.event_id
+            ,ve.event_series_id
+            ,ve.event_name
+            ,ve.event_date
+            ,ve.tickets_available
+            ,ve.tickets_remaining
+        from
+            event_system.venue_event_series_v ve
+        where 
+            ve.venue_id = p_venue_id
+        order by
+            ve.event_date;
+    
+    end show_venue_upcoming_event_series;
 
 
     --show ticket sales and ticket quantity for each reseller

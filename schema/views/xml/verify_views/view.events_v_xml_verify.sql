@@ -7,6 +7,7 @@ select
     ,e.organizer_email
     ,x.event_id
     ,e.event_id as event_id_xml
+    ,e.event_series_id
     ,e.event_name
     ,e.event_date
     ,e.tickets_available
@@ -20,6 +21,7 @@ from
             ,organizer_name     varchar2(100) path 'venue/organizer_name'
             ,organizer_email    varchar2(100) path 'venue/organizer_email'
             ,event_id           number        path 'event_id'
+            ,event_series_id    number        path 'event_series_id'
             ,event_name         varchar2(100) path 'event_name'
             ,event_date         date          path 'event_date'
             ,tickets_available  number        path 'tickets_available'

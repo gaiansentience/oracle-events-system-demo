@@ -7,11 +7,12 @@
 set serveroutput on;
 declare
   v_venue_id number;
-  v_name varchar2(100) := 'Amateur Comedy Hour';
+  v_name varchar2(100) := 'Classical Concert Series';
   v_start_date date := sysdate + 30;
   v_end_date date := sysdate + 180;
-  v_event_day varchar2(20) := 'Thursday';
+  v_event_day varchar2(20) := 'Sunday';
   v_tickets number := 1000;
+  v_event_series_id number;
   v_status varchar2(4000);
 begin
 
@@ -24,8 +25,10 @@ begin
      p_event_end_date => v_end_date,
      p_event_day => v_event_day,
      p_tickets_available => v_tickets,
+     p_event_series_id => v_event_series_id,
      p_status => v_status);
 
-  dbms_output.put_line(v_status);
+    dbms_output.put_line('Event series created with series id ' || v_event_series_id);
+    dbms_output.put_line(v_status);
 
 end;

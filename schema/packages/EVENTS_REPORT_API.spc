@@ -40,6 +40,7 @@ as
         venue_id           venues.venue_id%type
         ,venue_name        venues.venue_name%type
         ,event_id          events.event_id%type
+        ,event_series_id   events.event_series_id%type
         ,event_name        events.event_name%type
         ,event_date        events.event_date%type
         ,tickets_available events.tickets_available%type
@@ -50,6 +51,12 @@ as
 
     --show all planned events for the venue
     function show_venue_upcoming_events
+    (
+        p_venue_id in number
+    ) return t_upcoming_events pipelined;
+
+    --show all planned events for the venue
+    function show_venue_upcoming_event_series
     (
         p_venue_id in number
     ) return t_upcoming_events pipelined;

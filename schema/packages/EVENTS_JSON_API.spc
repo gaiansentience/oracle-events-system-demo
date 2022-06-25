@@ -49,6 +49,12 @@ as
         p_venue_id in number,
         p_formatted in boolean default false   
     ) return clob;
+
+    function get_venue_event_series
+    (
+        p_venue_id in number,
+        p_formatted in boolean default false   
+    ) return clob;
     
     procedure create_event
     (

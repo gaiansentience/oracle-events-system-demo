@@ -273,6 +273,30 @@ as
             return get_json_error_doc(sqlcode, sqlerrm, 'get_venue_events');
     end get_venue_events;
 
+    function get_venue_event_series
+    (
+        p_venue_id in number,
+        p_formatted in boolean default false   
+    ) return clob
+    is
+        l_json clob;
+    begin
+    
+        select b.json_doc
+        into l_json
+        from venue_event_series_v_json b
+        where b.venue_id = p_venue_id;
+    
+        if p_formatted then
+            l_json := format_json_clob(l_json);
+        end if;
+        return l_json;
+    
+    exception
+        when others then
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_venue_event_series');
+    end get_venue_event_series;
+
     procedure create_event
     (
         p_json_doc in out varchar2

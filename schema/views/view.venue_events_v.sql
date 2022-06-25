@@ -15,6 +15,7 @@ select
         )
     ,0) as venue_scheduled_events
     ,e.event_id
+    ,e.event_series_id
     ,e.event_name
     ,e.event_date
     ,e.tickets_available

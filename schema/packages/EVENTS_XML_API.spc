@@ -48,6 +48,12 @@ as
         p_formatted in boolean default false   
     ) return xmltype;
 
+    function get_venue_event_series
+    (
+        p_venue_id in number,
+        p_formatted in boolean default false   
+    ) return xmltype;
+
     procedure create_event
     (
         p_xml_doc in out xmltype

@@ -1,4 +1,4 @@
-create or replace view venue_events_v_xml as
+create or replace view venue_event_series_v_xml as
 with xml_base as
 (
     select
@@ -28,7 +28,7 @@ with xml_base as
                             ) 
                         )
                     )
-                from event_system.venue_events_v e
+                from event_system.venue_event_series_v e
                 where e.venue_id = v.venue_id)
             )
         ) as xml_doc

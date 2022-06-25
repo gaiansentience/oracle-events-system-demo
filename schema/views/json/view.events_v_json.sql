@@ -10,6 +10,7 @@ with json_base as
             ,'organizer_email'   : e.organizer_email
             ,'organizer_name'    : e.organizer_name
             ,'event_id'          : e.event_id
+            ,'event_series_id'   : e.event_series_id
             ,'event_name'        : e.event_name
             ,'event_date'        : e.event_date
             ,'tickets_available' : e.tickets_available

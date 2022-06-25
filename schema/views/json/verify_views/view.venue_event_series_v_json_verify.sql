@@ -1,10 +1,10 @@
-create or replace view venue_events_v_json_verify as
+create or replace view venue_event_series_v_json_verify as
 with base as
 (
     select
         venue_id
         ,json_doc
-    from event_system.venue_events_v_json
+    from event_system.venue_event_series_v_json
 )
 select
     b.venue_id

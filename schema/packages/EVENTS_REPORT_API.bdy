@@ -57,6 +57,26 @@ as
     
     end show_venue_upcoming_events;
 
+    function show_venue_upcoming_event_series
+    (
+        p_venue_id in number
+    )  return t_upcoming_events pipelined
+    is
+        t_rows t_upcoming_events;
+        rc sys_refcursor;
+    begin
+    
+        events_api.show_venue_upcoming_event_series(p_venue_id, rc);
+        fetch rc bulk collect into t_rows;
+        close rc;
+        
+        for i in 1..t_rows.count loop
+            pipe row(t_rows(i));
+        end loop;
+        return;
+    
+    end show_venue_upcoming_event_series;
+
     function show_venue_reseller_performance
     (
         p_venue_id in number

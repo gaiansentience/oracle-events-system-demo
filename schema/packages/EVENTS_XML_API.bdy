@@ -282,6 +282,30 @@ as
             return get_xml_error_doc(sqlcode, sqlerrm, 'get_venue_events');
     end get_venue_events;
 
+    function get_venue_event_series
+    (
+        p_venue_id in number,
+        p_formatted in boolean default false   
+    ) return xmltype
+    is
+        l_xml xmltype;
+    begin
+    
+        select b.xml_doc
+        into l_xml
+        from venue_event_series_v_xml b
+        where b.venue_id = p_venue_id;
+    
+        if p_formatted then
+            l_xml := format_xml_clob(l_xml);
+        end if;
+        return l_xml;
+    
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_venue_event_series');
+    end get_venue_event_series;
+
     procedure create_event
     (
         p_xml_doc in out xmltype

@@ -1,10 +1,10 @@
-create or replace view venue_events_v_xml_verify as
+create or replace view venue_event_series_v_xml_verify as
 with base as
 (
     select
         venue_id
         ,xml_doc
-    from event_system.venue_events_v_xml
+    from event_system.venue_event_series_v_xml
 )
 select 
     b.venue_id

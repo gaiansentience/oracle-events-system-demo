@@ -5,6 +5,7 @@ prompt creating views for events api
 @@view.venue_event_base_v.sql;
 @@view.events_v.sql;
 @@view.venue_events_v.sql;
+@@view.venue_event_series_v.sql;
 @@view.venues_summary_v.sql;
 @@view.event_ticket_groups_v.sql;
 @@view.event_ticket_prices_v.sql;

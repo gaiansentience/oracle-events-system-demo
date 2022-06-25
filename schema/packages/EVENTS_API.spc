@@ -69,6 +69,14 @@ as
         p_events out sys_refcursor
     );
     
+    --show all planned events that are part of an event series for the venue
+    --include total ticket sales to date
+    procedure show_venue_upcoming_event_series
+    (
+        p_venue_id in number,
+        p_events out sys_refcursor
+    );
+    
     --show ticket sales and ticket quantity for each reseller
     --rank resellers by total sales amount
     procedure show_venue_reseller_performance
