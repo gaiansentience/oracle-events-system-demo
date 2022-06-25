@@ -354,7 +354,9 @@ as
         p_event_day in varchar2,
         p_tickets_available in number,
         p_event_series_id out number,        
-        p_status out varchar2
+        p_status_details out events_api.t_series_event,
+        p_status_code out varchar2,
+        p_status_message out varchar2
     )
     is
     
@@ -370,8 +372,10 @@ as
             where to_char(the_date,'fmDAY', 'NLS_DATE_LANGUAGE=American') = upper(p_event_day)
             order by the_date;
         
-        v_event_id number;
         v_event_series_id number := event_series_id_seq.nextval;
+        i_event number := 0;
+        r_event events_api.r_series_event;
+        
         v_success_count number := 0;
         v_conflict_count number := 0;
         v_conflict_dates varchar2(32000);
@@ -380,6 +384,11 @@ as
     begin
 
         for r in d loop
+            i_event := i_event + 1;
+            r_event.event_date := r.the_date;
+            r_event.event_id := 0;
+            r_event.status_code := null;
+            r_event.status_message := null;
 
             begin
                 create_event(
@@ -388,27 +397,33 @@ as
                     p_event_date => r.the_date, 
                     p_tickets_available => p_tickets_available, 
                     p_event_series_id => v_event_series_id, 
-                    p_event_id => v_event_id);
-
+                    p_event_id => r_event.event_id);
+                    
+                r_event.status_code := 'SUCCESS';
+                r_event.status_message := 'Event Created';
                 v_success_count := v_success_count + 1;
                 v_success_dates := v_success_dates || to_char(r.the_date,'MM/DD/YYYY') || ', ';
             exception
                 when others then
-                    log_error(sqlerrm,sqlcode,'create_weekly_event:  adding weekly event');
+                    r_event.status_code := 'ERROR';
+                    r_event.status_message := sqlerrm;
+                    log_error(sqlerrm, sqlcode, 'create_weekly_event:  adding weekly event');
                     v_conflict_count := v_conflict_count + 1;
                     v_conflict_dates := v_conflict_dates || to_char(r.the_date,'MM/DD/YYYY') || ', ';
             end;
+            
+            p_status_details(i_event) := r_event;
 
         end loop;
 
         v_success_dates := rtrim(v_success_dates,', ');
         v_conflict_dates := rtrim(v_conflict_dates,', ');
-        
-        v_status := v_success_count || ' events for "' || p_event_name || '" created successfully. ';
+        p_status_code := case when v_conflict_count > 0 then 'ERRORS' else 'SUCCESS' end;
+        v_status := v_success_count || ' events for (' || p_event_name || ') created successfully. ';
         v_status := v_status || v_conflict_count || ' events could not be created because of conflicts with existing events.';
         --v_status := v_status || '  Conflicting dates are: ' || v_conflict_dates || '.';
-        p_status := v_status;
-        p_event_series_id := v_event_series_id;
+        p_status_message := v_status;
+        p_event_series_id := case when v_success_count > 0 then v_event_series_id else 0 end ;
 
     exception
         when others then
@@ -416,6 +431,38 @@ as
             raise;
     end create_weekly_event;
 
+    procedure create_weekly_event
+    (
+        p_venue_id in number,   
+        p_event_name in varchar2,
+        p_event_start_date in date,
+        p_event_end_date in date,
+        p_event_day in varchar2,
+        p_tickets_available in number,
+        p_event_series_id out number,        
+        p_status out varchar2
+    )
+    is
+        t_status_details events_api.t_series_event;
+        v_status_code varchar2(20);
+        v_status_message varchar2(4000);
+    begin
+
+        create_weekly_event(
+            p_venue_id => p_venue_id,   
+            p_event_name => p_event_name,
+            p_event_start_date => p_event_start_date,
+            p_event_end_date => p_event_end_date,
+            p_event_day => p_event_day,
+            p_tickets_available => p_tickets_available,
+            p_event_series_id => p_event_series_id,        
+            p_status_details => t_status_details,
+            p_status_code => v_status_code,
+            p_status_message => v_status_message);
+            
+            p_status := v_status_code || ' - ' || v_status_message;
+            
+    end create_weekly_event;
 
     --show all planned events for the venue
     --include total ticket sales to date
@@ -766,7 +813,65 @@ as
             log_error(sqlerrm, sqlcode,'create_ticket_group');
             raise;
     end create_ticket_group;
+    
+    --create a price category ticket group for all events in the event series
+    --if the group already exists, update the number of tickets available
+    --raise an error if ticket group would exceed event total tickets
+    procedure create_ticket_group_event_series
+    (
+        p_event_series_id in number,
+        p_price_category in varchar2 default 'General Admission',
+        p_price in number,
+        p_tickets in number,
+        p_status_code out varchar2,
+        p_status_message out varchar2
+    )
+    is
+        cursor c is
+            select e.event_id
+            from events e
+            where 
+                e.event_series_id = p_event_series_id;
+        v_ticket_group_id number;
+        v_error_count number := 0;
+        v_success_count number := 0;
+    begin
+        
+        for r in c loop
+        
+            begin
 
+                create_ticket_group(
+                    p_event_id => r.event_id,
+                    p_price_category => p_price_category,
+                    p_price => p_price,
+                    p_tickets => p_tickets,
+                    p_ticket_group_id => v_ticket_group_id);
+                    
+                v_success_count := v_success_count + 1;
+                
+            exception
+                when others then
+                    v_error_count := v_error_count + 1;
+            end;
+        
+        end loop;
+        
+        if v_error_count = 0 then
+            p_status_code := 'SUCCESS';
+            p_status_message := 'Ticket group (' || upper(p_price_category) || ') created for ' || v_success_count || ' events in series';    
+        else
+            p_status_code := 'ERRORS';
+            p_status_message := case when v_success_count > 0 then 'Ticket group (' || upper(p_price_category) || ') created for ' || v_success_count || ' events in series.  ' end
+                || v_error_count || ' errors encountered, ticket group (' || upper(p_price_category) || ') not created for these events.';
+        end if;
+        
+    exception
+        when others then
+            log_error(sqlerrm, sqlcode,'create_ticket_group_event_series');
+            raise;
+    end create_ticket_group_event_series;
+    
     --show ticket groups and availability for this event and reseller
     --     tickets_in_group    tickets in group, 
     --     assigned_to_others  tickets assigned to other resellers, 

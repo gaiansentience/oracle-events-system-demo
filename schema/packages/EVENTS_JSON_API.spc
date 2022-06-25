@@ -61,10 +61,9 @@ as
         p_json_doc in out varchar2
     );
 
---todo:  create recurring weekly event
-    procedure create_event_weekly
+    procedure create_weekly_event
     (
-        p_json_doc in out varchar2
+        p_json_doc in out clob
     );
     
     function get_event

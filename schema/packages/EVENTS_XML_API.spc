@@ -59,11 +59,10 @@ as
         p_xml_doc in out xmltype
     );
 
---todo:  create recurring weekly event
-procedure create_event_weekly
-(
-    p_xml_doc in out xmltype
-);
+    procedure create_weekly_event
+    (
+        p_xml_doc in out xmltype
+    );
 
     function get_event
     (

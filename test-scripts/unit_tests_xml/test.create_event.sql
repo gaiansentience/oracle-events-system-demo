@@ -6,15 +6,15 @@ BEGIN
 
 l_xml := 
 '
-<event>
+<create_event>
   <venue>
     <venue_id>21</venue_id>
     <venue_name>The Pink Pony Review</venue_name>
   </venue>
   <event_name>Evangeline Thorpe</event_name>
-  <event_date>2023-03-22</event_date>
+  <event_date>2023-05-01</event_date>
   <tickets_available>200</tickets_available>
-</event>
+</create_event>
 ';
 p_xml_doc := xmltype(l_xml);
 
@@ -27,16 +27,16 @@ DBMS_OUTPUT.PUT_LINE(P_XML_DOC.getstringval);
 END;
 
 /*
-<event>
+<create_event>
   <venue>
     <venue_id>21</venue_id>
     <venue_name>The Pink Pony Review</venue_name>
   </venue>
   <event_name>Evangeline Thorpe</event_name>
-  <event_date>2023-03-22</event_date>
+  <event_date>2023-05-01</event_date>
   <tickets_available>200</tickets_available>
-  <event_id>282</event_id>
+  <event_id>343</event_id>
   <status_code>SUCCESS</status_code>
   <status_message>Created event</status_message>
-</event>
+</create_event>
 */

@@ -371,34 +371,76 @@ as
             p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'create_event');
     end create_event;
 
---todo:  create recurring weekly event
-procedure create_event_weekly
-(
-   p_xml_doc in out xmltype
-)
-is
-begin
+    procedure create_weekly_event
+    (
+        p_xml_doc in out xmltype
+    )
+    is
+        l_venue_id venues.venue_id%type;
+        l_event_name events.event_name%type;
+        l_event_start_date date;
+        l_event_end_date date;
+        l_event_day varchar2(20);
+        l_tickets_available events.tickets_available%type;
+        
+        nRoot dbms_xmldom.DOMnode;
+        nEventDetails dbms_xmldom.DOMnode;
+        nEvent dbms_xmldom.DOMnode;
+        l_date_string varchar2(20);
+        l_date_mask varchar2(20) := 'yyyy-mm-dd';
+        
+        l_event_series_id number;        
+        t_status_details events_api.t_series_event;
+        l_status_code varchar2(20);
+        l_status_message varchar2(4000);
+    begin
 
-null;
-raise_application_error(-20100,'method not available in this release');
+        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
+        
+        dbms_xslprocessor.valueof(nRoot, 'venue/venue_id/text()', l_venue_id);
+        dbms_xslprocessor.valueof(nRoot, 'event_name/text()', l_event_name);
+        
+        dbms_xslprocessor.valueof(nRoot, 'event_start_date/text()', l_date_string);
+        l_event_start_date := to_date(l_date_string, l_date_mask);  
 
-/*
-events_api.create_weekly_event
-(
-   p_venue_id in number,   
-   p_event_name in varchar2,
-   p_event_start_date in date,
-   p_event_end_date in date,
-   p_event_day in varchar2,
-   p_tickets_available in number,
-   p_status out varchar2
-);
-*/
+        dbms_xslprocessor.valueof(nRoot, 'event_end_date/text()', l_date_string);
+        l_event_end_date := to_date(l_date_string, l_date_mask);  
 
-exception
-    when others then
-    p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'create_event_weekly');
-end create_event_weekly;
+        dbms_xslprocessor.valueof(nRoot, 'event_day/text()', l_event_day);          
+        dbms_xslprocessor.valueof(nRoot, 'tickets_available/text()', l_tickets_available);  
+
+        events_api.create_weekly_event(
+            p_venue_id => l_venue_id,   
+            p_event_name => l_event_name,
+            p_event_start_date => l_event_start_date,
+            p_event_end_date => l_event_end_date,
+            p_event_day => l_event_day,
+            p_tickets_available => l_tickets_available,
+            p_event_series_id => l_event_series_id,        
+            p_status_details => t_status_details,
+            p_status_code => l_status_code,
+            p_status_message => l_status_message);
+
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'event_series_id', p_data => l_event_series_id);
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'request_status_code', p_data => l_status_code);
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'request_status_message', p_data => l_status_message);
+        util_xmldom_helper.addNode(p_parent => nRoot, p_tag => 'event_series_details', p_node => nEventDetails);
+        for i in 1..t_status_details.count loop
+            util_xmldom_helper.addNode(p_parent => nEventDetails, p_tag => 'event', p_node => nEvent);
+
+            util_xmldom_helper.addTextNode(p_parent => nEvent, p_tag => 'event_id', p_data => t_status_details(i).event_id);
+            util_xmldom_helper.addTextNode(p_parent => nEvent, p_tag => 'event_date', p_data => t_status_details(i).event_date);
+            util_xmldom_helper.addTextNode(p_parent => nEvent, p_tag => 'status_code', p_data => t_status_details(i).status_code);
+            util_xmldom_helper.addTextNode(p_parent => nEvent, p_tag => 'status_message', p_data => t_status_details(i).status_message);            
+        end loop;
+
+        p_xml_doc := util_xmldom_helper.to_XMLtype;
+        util_xmldom_helper.freeDoc;
+
+    exception
+        when others then
+            p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'create_weekly_event');
+    end create_weekly_event;
 
     function get_event
     (

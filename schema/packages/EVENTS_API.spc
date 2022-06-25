@@ -49,7 +49,31 @@ as
         p_tickets_available in number,
         p_event_id out number
     );
-
+    
+    type r_series_event is record
+    (
+        event_id        number
+        ,event_date     date
+        ,status_code    varchar2(20)
+        ,status_message varchar2(4000)
+    );
+    
+    type t_series_event is table of r_series_event index by pls_integer;
+    
+    procedure create_weekly_event
+    (
+        p_venue_id in number,   
+        p_event_name in varchar2,
+        p_event_start_date in date,
+        p_event_end_date in date,
+        p_event_day in varchar2,
+        p_tickets_available in number,
+        p_event_series_id out number,        
+        p_status_details out events_api.t_series_event,
+        p_status_code out varchar2,
+        p_status_message out varchar2
+    );
+    
     procedure create_weekly_event
     (
         p_venue_id in number,   
@@ -124,6 +148,20 @@ as
         p_tickets in number,
         p_ticket_group_id out number
     );
+
+    --create a price category ticket group for all events in the event series
+    --if the group already exists, update the number of tickets available
+    --raise an error if ticket group would exceed event total tickets
+    procedure create_ticket_group_event_series
+    (
+        p_event_series_id in number,
+        p_price_category in varchar2 default 'General Admission',
+        p_price in number,
+        p_tickets in number,
+        p_status_code out varchar2,
+        p_status_message out varchar2
+    );
+
     
     function get_ticket_group_category
     (

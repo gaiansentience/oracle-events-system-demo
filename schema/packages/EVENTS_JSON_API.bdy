@@ -352,34 +352,70 @@ as
             p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'create_event');
     end create_event;
 
---todo:  create recurring weekly event
-procedure create_event_weekly
-(
-   p_json_doc in out varchar2
-)
-is
-begin
+    procedure create_weekly_event
+    (
+        p_json_doc in out clob
+    )
+    is
+        l_venue_id venues.venue_id%type;
+        l_event_name events.event_name%type;
+        l_event_start_date date;
+        l_event_end_date date;
+        l_event_day varchar2(20);
+        l_tickets_available events.tickets_available%type;
+        
+        o_request json_object_t;
+        a_eventDetails json_array_t := json_array_t;
+        o_event json_object_t;
+        
+        l_event_series_id number;        
+        t_status_details events_api.t_series_event;
+        l_status_code varchar2(20);
+        l_status_message varchar2(4000);
+    begin
+    
+        o_request := json_object_t.parse(p_json_doc);
+        
+        l_venue_id := o_request.get_string('venue_id');   
+        l_event_name := o_request.get_string('event_name');
+        l_event_start_date := o_request.get_date('event_start_date');
+        l_event_end_date := o_request.get_date('event_end_date');
+        l_event_day := o_request.get_string('event_day');
+        l_tickets_available := o_request.get_number('tickets_available');
+        
+        events_api.create_weekly_event(
+            p_venue_id => l_venue_id,   
+            p_event_name => l_event_name,
+            p_event_start_date => l_event_start_date,
+            p_event_end_date => l_event_end_date,
+            p_event_day => l_event_day,
+            p_tickets_available => l_tickets_available,
+            p_event_series_id => l_event_series_id,        
+            p_status_details => t_status_details,
+            p_status_code => l_status_code,
+            p_status_message => l_status_message);
 
-null;
-raise_application_error(-20100,'method not available in this release');
-
-/*
-procedure create_weekly_event
-(
-   p_venue_id in number,   
-   p_event_name in varchar2,
-   p_event_start_date in date,
-   p_event_end_date in date,
-   p_event_day in varchar2,
-   p_tickets_available in number,
-   p_status out varchar2
-);
-*/
-
-exception
-   when others then
-      p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'create_event_weekly');
-end create_event_weekly;
+        o_request.put('request_status_code', l_status_code);
+        o_request.put('request_status_message', l_status_message);
+        o_request.put('event_series_id', l_event_series_id);
+        o_request.put('event_series_details', a_eventDetails);
+        a_eventDetails := o_request.get_array('event_series_details');
+        --create event_details elements
+        for i in 1..t_status_details.count loop
+            o_event := json_object_t;
+            o_event.put('event_id', t_status_details(i).event_id);
+            o_event.put('event_date', t_status_details(i).event_date);
+            o_event.put('status_code', t_status_details(i).status_code);
+            o_event.put('status_message', t_status_details(i).status_message);
+            a_eventDetails.append(o_event);
+        end loop;
+        
+        p_json_doc := o_request.to_clob; 
+    
+    exception
+        when others then
+            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'create_weekly_event');
+    end create_weekly_event;
 
     function get_event
     (
