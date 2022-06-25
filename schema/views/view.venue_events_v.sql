@@ -29,5 +29,4 @@ select
             where tg.event_id = e.event_id
             )
         ,0) as tickets_remaining
-from event_system.venue_event_base_v e
-where e.event_date > trunc(sysdate);
+from event_system.venue_event_base_v e;

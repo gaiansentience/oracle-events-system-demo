@@ -13,3 +13,5 @@ create table resellers(
        constraint resellers_nn_commission_pct not null
        constraint resellers_chk_commission_pct_gt_0 check (commission_percent > 0)
   );
+  
+create index resellers_idx01 on resellers(reseller_id, commission_percent);

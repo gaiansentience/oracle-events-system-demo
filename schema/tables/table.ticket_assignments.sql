@@ -15,3 +15,5 @@ ticket_assignments(
   );
   
 create unique index ticket_assignments_udx on ticket_assignments (ticket_group_id, reseller_id);  
+
+create index ticket_assignments_idx01 on ticket_assignments (ticket_group_id, reseller_id, tickets_assigned);  

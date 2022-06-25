@@ -13,3 +13,5 @@ venues(
        constraint venues_nn_capacity not null
        constraint venues_chk_capacity_gt_0 check (max_event_capacity > 0)
 );
+
+create index venues_idx01 on venues (venue_id, venue_name);

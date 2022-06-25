@@ -339,14 +339,15 @@ is
   v_status varchar2(4000);
   v_start_date date := sysdate + 21;
   v_end_date date := sysdate + 180;
+  v_event_series_id number;
 begin
 
   for r in small_venues loop
-    events_api.create_weekly_event(r.venue_id, 'Amateur Comedy Hour', v_start_date, v_end_date, 'Thursday',r.event_tickets,v_status);
+    events_api.create_weekly_event(r.venue_id, 'Amateur Comedy Hour', v_start_date, v_end_date, 'Thursday',r.event_tickets,v_event_series_id,v_status);
     dbms_output.put_line(v_status);
-    events_api.create_weekly_event(r.venue_id, 'Poetry Night', v_start_date, v_end_date, 'Tuesday',r.event_tickets,v_status);
+    events_api.create_weekly_event(r.venue_id, 'Poetry Night', v_start_date, v_end_date, 'Tuesday',r.event_tickets,v_event_series_id,v_status);
     dbms_output.put_line(v_status);
-    events_api.create_weekly_event(r.venue_id, 'Open Mike Night', v_start_date, v_end_date, 'Wednesday',r.event_tickets,v_status);
+    events_api.create_weekly_event(r.venue_id, 'Open Mike Night', v_start_date, v_end_date, 'Wednesday',r.event_tickets,v_event_series_id,v_status);
     dbms_output.put_line(v_status);  
   end loop;
 

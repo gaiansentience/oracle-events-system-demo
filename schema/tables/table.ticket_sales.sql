@@ -19,3 +19,7 @@ create table ticket_sales(
   sales_date date default sysdate 
        constraint ticket_sales_nn_sales_date not null
   );
+
+create index ticket_sales_idx01 on ticket_sales (ticket_group_id, reseller_id, ticket_quantity);
+
+create index ticket_sales_idx02 on ticket_sales (ticket_group_id, customer_id, ticket_quantity);

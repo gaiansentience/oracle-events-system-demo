@@ -12,4 +12,6 @@ select
 from
     event_system.venues v 
     join event_system.events e 
-        on v.venue_id = e.venue_id;
+        on v.venue_id = e.venue_id
+where
+    e.event_date >= trunc(sysdate);
