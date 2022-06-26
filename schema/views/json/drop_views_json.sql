@@ -1,8 +1,8 @@
 prompt dropping json views
 @verify_views\drop_views_json_verify.sql;
 
+drop view event_series_ticket_groups_v_json;
 drop view event_ticket_groups_v_json;
-
 
 --these views are identical, reseller_ticket_assignment is currently in use
 --used to troubleshoot xml verify view anomaly
@@ -14,6 +14,7 @@ drop view tickets_available_all_v_json;
 drop view tickets_available_reseller_v_json;
 drop view tickets_available_venue_v_json;
 
+drop view event_series_ticket_prices_v_json;
 drop view event_ticket_prices_v_json;
 
 drop view customer_event_tickets_v_json;

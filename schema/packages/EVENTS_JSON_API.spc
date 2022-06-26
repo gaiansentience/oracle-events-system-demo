@@ -77,10 +77,15 @@ as
         p_json_doc in out varchar2
     );
 
---return ticket groups for event as json document
     function get_ticket_groups
     (
         p_event_id in number,
+        p_formatted in boolean default false
+    ) return varchar2;
+
+    function get_ticket_groups_series
+    (
+        p_event_series_id in number,
         p_formatted in boolean default false
     ) return varchar2;
 
@@ -122,6 +127,12 @@ as
         p_formatted in boolean default false
     ) return varchar2;
     
+    function get_event_series_ticket_prices
+    (
+        p_event_series_id in number,
+        p_formatted in boolean default false
+    ) return varchar2;
+
     function get_event_tickets_available_all
     (
         p_event_id in number,

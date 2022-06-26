@@ -3,12 +3,16 @@ prompt creating views for events api
 @@view.resellers_v.sql;
 @@view.venues_v.sql;
 @@view.venue_event_base_v.sql;
+@@view.venue_event_series_base_v.sql;
+
 @@view.events_v.sql;
 @@view.venue_events_v.sql;
 @@view.venue_event_series_v.sql;
 @@view.venues_summary_v.sql;
 @@view.event_ticket_groups_v.sql;
+@@view.event_series_ticket_groups_v.sql;
 @@view.event_ticket_prices_v.sql;
+@@view.event_series_ticket_prices_v.sql;
 
 --these views are identical, reseller_ticket_assignment is currently in use
 --used to troubleshoot xml verify view anomaly

@@ -1,7 +1,7 @@
 prompt creating views for json web services
 
 @@view.event_ticket_groups_v_json.sql;
-
+@@view.event_series_ticket_groups_v_json.sql;
 
 --these views are identical, reseller_ticket_assignment is currently in use
 --used to troubleshoot xml verify view anomaly
@@ -9,6 +9,7 @@ prompt creating views for json web services
 @@view.reseller_ticket_assignment_v_json.sql;
 
 @@view.event_ticket_prices_v_json.sql;
+@@view.event_series_ticket_prices_v_json.sql;
 
 @@view.tickets_available_all_v_json.sql;
 @@view.tickets_available_venue_v_json.sql;

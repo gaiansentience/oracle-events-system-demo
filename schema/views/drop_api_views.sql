@@ -5,6 +5,8 @@ drop view customer_event_ticket_base_v;
 drop view tickets_available_all_v;
 drop view tickets_available_reseller_v;
 drop view tickets_available_venue_v;
+
+drop view event_series_ticket_prices_v;
 drop view event_ticket_prices_v;
 
 --these views are identical, reseller_ticket_assignment is currently in use
@@ -12,11 +14,12 @@ drop view event_ticket_prices_v;
 drop view event_ticket_assignment_v;
 drop view reseller_ticket_assignment_v;
 
-
+drop view event_series_ticket_groups_v;
 drop view event_ticket_groups_v;
 drop view events_v;
 drop view venue_event_series_v;
 drop view venue_events_v;
+drop view venue_event_series_base_v;
 drop view venue_event_base_v;
 drop view venues_summary_v; 
 drop view event_reseller_performance_v;

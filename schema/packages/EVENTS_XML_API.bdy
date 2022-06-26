@@ -527,7 +527,6 @@ as
             p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'create_customer');
     end create_customer;
 
---return ticket groups for event as json document
     function get_ticket_groups
     (
         p_event_id in number,
@@ -551,6 +550,31 @@ as
         when others then
             return get_xml_error_doc(sqlcode, sqlerrm, 'get_ticket_groups');
     end get_ticket_groups;
+
+    function get_ticket_groups_series
+    (
+        p_event_series_id in number,
+        p_formatted in boolean default false   
+    ) return xmltype
+    is
+        l_xml xmltype;
+    begin
+    
+        select b.xml_doc 
+        into l_xml
+        from event_series_ticket_groups_v_xml b
+        where b.event_series_id = p_event_series_id;
+    
+        if p_formatted then
+            l_xml := format_xml_string(l_xml);
+        end if;
+        return l_xml;
+    
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_ticket_groups_series');
+    end get_ticket_groups_series;
+
 
 --create/update ticket groups using an xml document in the same format as get_event_ticket_groups
 --do not create/update group for UNDEFINED price category
@@ -758,6 +782,30 @@ as
         when others then
             return get_xml_error_doc(sqlcode, sqlerrm, 'get_event_ticket_prices');
     end get_event_ticket_prices;
+
+    function get_event_series_ticket_prices
+    (
+        p_event_series_id in number,
+        p_formatted in boolean default false
+    ) return xmltype
+    is
+        l_xml xmltype;
+    begin
+        
+        select b.xml_doc
+        into l_xml
+        from event_series_ticket_prices_v_xml b
+        where b.event_series_id = p_event_series_id;
+    
+        if p_formatted then
+            l_xml := format_xml_string(l_xml);
+        end if;
+        return l_xml;
+        
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_event_series_ticket_prices');
+    end get_event_series_ticket_prices;
 
     function get_event_tickets_available_all
     (

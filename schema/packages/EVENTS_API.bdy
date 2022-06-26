@@ -636,14 +636,14 @@ as
     
         open p_ticket_groups for
         select
-            etg.event_id,
-            etg.event_name,
-            etg.ticket_group_id,
-            etg.price_category,
-            etg.price,
-            etg.tickets_available,
-            etg.currently_assigned,
-            etg.sold_by_venue
+            etg.event_id
+            ,etg.event_name
+            ,etg.ticket_group_id
+            ,etg.price_category
+            ,etg.price
+            ,etg.tickets_available
+            ,etg.currently_assigned
+            ,etg.sold_by_venue
         from
             event_system.event_ticket_groups_v etg
         where 
@@ -653,7 +653,33 @@ as
     
     end show_ticket_groups;
 
-    procedure verify_ticket_group_availability
+    procedure show_ticket_groups_event_series
+    (
+        p_event_series_id in number,
+        p_ticket_groups out sys_refcursor
+    )
+    is
+    begin
+    
+        open p_ticket_groups for
+        select
+            etg.event_series_id
+            ,etg.event_name
+            ,etg.price_category
+            ,etg.price
+            ,etg.tickets_available
+            ,etg.currently_assigned
+            ,etg.sold_by_venue
+        from
+            event_system.event_series_ticket_groups_v etg
+        where 
+            etg.event_series_id = p_event_series_id
+        order by
+            etg.price_category;
+    
+    end show_ticket_groups_event_series;
+
+    procedure ticket_group_available
     (
         p_event_id in number,
         p_price_category in varchar2,
@@ -674,33 +700,23 @@ as
         from event_system.events e
         where e.event_id = p_event_id;
         
-        select nvl(sum(tg.tickets_available),0)
+        select nvl(sum(etg.tickets_available),0) as tickets_available
         into v_other_groups_tickets
-        from event_system.ticket_groups tg
+        from event_system.event_ticket_groups_v etg
+        where etg.price_category <> 'UNDEFINED'
+            and etg.event_id = p_event_id 
+            and price_category <> upper(p_price_category);
+            
+        select
+            nvl(sum(etg.currently_assigned),0) as currently_assigned
+            ,nvl(sum(etg.sold_by_venue),0) as sold_by_venue
+        into
+            v_reseller_assignments
+            ,v_direct_venue_sales
+        from event_system.event_ticket_groups_v etg
         where 
-            tg.event_id = p_event_id
-            and upper(tg.price_category) <> upper(p_price_category);
-        
-        select nvl(sum(ta.tickets_assigned),0) 
-        into v_reseller_assignments
-        from 
-            event_system.ticket_groups tg 
-            join event_system.ticket_assignments ta
-                on tg.ticket_group_id = ta.ticket_group_id
-        where 
-            tg.event_id = p_event_id 
-            and upper(tg.price_category) = upper(p_price_category);
-        
-        select nvl(sum(ts.ticket_quantity),0) 
-        into v_direct_venue_sales
-        from 
-            event_system.ticket_groups tg 
-            join event_system.ticket_sales ts 
-                on tg.ticket_group_id = ts.ticket_group_id
-        where 
-            tg.event_id = p_event_id 
-            and upper(tg.price_category) = upper(p_price_category) 
-            and ts.reseller_id is null;
+            etg.event_id = p_event_id 
+            and price_category = upper(p_price_category);            
         
         v_remaining_tickets := v_event_tickets - v_other_groups_tickets;
         v_group_minimum := v_reseller_assignments + v_direct_venue_sales;
@@ -715,7 +731,68 @@ as
             raise_application_error(-20100, v_message);
         end if;
         
-    end verify_ticket_group_availability;
+    end ticket_group_available;
+
+    procedure ticket_group_available_series
+    (
+        p_event_series_id in number,
+        p_price_category in varchar2,
+        p_group_tickets in number
+    )
+    is
+        v_event_tickets number;
+        v_other_groups_tickets number;
+        v_remaining_tickets number;
+        v_reseller_assignments number;
+        v_direct_venue_sales number;
+        v_group_minimum number;
+        v_message varchar2(1000);
+    begin
+        --limit all groups to the smallest event in the series
+        select min(e.tickets_available)
+        into v_event_tickets
+        from event_system.events e
+        where e.event_series_id = p_event_series_id;
+
+        --use largest tickets available of any event ticket group in the series to represent each ticket group            
+        select nvl(sum(sg.tickets_available), 0)
+        into v_other_groups_tickets
+        from event_series_ticket_groups_v sg
+        where 
+            sg.event_series_id = p_event_series_id 
+            and sg.price_category <> 'UNDEFINED'
+            and sg.price_category <> upper(p_price_category);
+            
+            
+        --largest assignment of event group to resellers to represent the ticket group in the series
+        --group by event and ticket group get the sum of assignments
+        --then take the max of this sum to represent currently assigned for the group in the series
+        --venue sales for the group in the series are the max sum of sales per event in this ticket group                    
+        select
+            nvl(max(sg.currently_assigned), 0)
+            ,nvl(max(sg.sold_by_venue),0) as sold_by_venue
+        into 
+            v_reseller_assignments,
+            v_direct_venue_sales
+        from event_series_ticket_groups_v sg
+        where 
+            sg.event_series_id = p_event_series_id 
+            and sg.price_category = upper(p_price_category);
+            
+        v_remaining_tickets := v_event_tickets - v_other_groups_tickets;
+        v_group_minimum := v_reseller_assignments + v_direct_venue_sales;
+ 
+        if v_remaining_tickets < p_group_tickets then
+            v_message := 'Cannot create ' || upper(p_price_category) || '  with ' || p_group_tickets 
+                || ' tickets.  Only ' || v_remaining_tickets || ' are available.';
+            raise_application_error(-20100, v_message);
+        elsif p_group_tickets < v_group_minimum then
+            v_message := 'Cannot set ' || upper(p_price_category) || ' to ' || p_group_tickets 
+                || ' tickets.  Current reseller assignments and direct venue sales are ' || v_group_minimum;
+            raise_application_error(-20100, v_message);
+        end if;
+        
+    end ticket_group_available_series;
 
     function ticket_group_exists
     (
@@ -771,7 +848,7 @@ as
     is
     begin
 
-        verify_ticket_group_availability(p_event_id, p_price_category, p_tickets);
+        ticket_group_available(p_event_id, p_price_category, p_tickets);
         
         if not ticket_group_exists(p_event_id, p_price_category) then
         
@@ -814,7 +891,7 @@ as
             raise;
     end create_ticket_group;
     
-    --create a price category ticket group for all events in the event series
+    --cre ate a price category ticket group for all events in the event series
     --if the group already exists, update the number of tickets available
     --raise an error if ticket group would exceed event total tickets
     procedure create_ticket_group_event_series
@@ -836,6 +913,12 @@ as
         v_error_count number := 0;
         v_success_count number := 0;
     begin
+        
+        --validate the ticket group for all events in the series
+        ticket_group_available_series(
+            p_event_series_id => p_event_series_id,
+            p_price_category => p_price_category,
+            p_group_tickets => p_tickets);
         
         for r in c loop
         
@@ -1050,18 +1133,18 @@ as
     
         open p_ticket_prices for
         select
-            tp.venue_id,
-            tp.venue_name,
-            tp.event_id,
-            tp.event_name,
-            tp.event_date,
-            tp.event_tickets_available,
-            tp.ticket_group_id,
-            tp.price_category,
-            tp.price,
-            tp.tickets_available,
-            tp.tickets_sold,
-            tp.tickets_remaining
+            tp.venue_id
+            ,tp.venue_name
+            ,tp.event_id
+            ,tp.event_name
+            ,tp.event_date
+            ,tp.event_tickets_available
+            ,tp.ticket_group_id
+            ,tp.price_category
+            ,tp.price
+            ,tp.tickets_available
+            ,tp.tickets_sold
+            ,tp.tickets_remaining
         from event_ticket_prices_v tp
         where tp.event_id = p_event_id;
     
@@ -1070,6 +1153,39 @@ as
             log_error(sqlerrm, sqlcode, 'show_event_ticket_prices');
             raise;
     end show_event_ticket_prices;
+
+    procedure show_event_series_ticket_prices
+    (
+        p_event_series_id in number,
+        p_ticket_prices out sys_refcursor
+    )
+    is
+    begin
+    
+        open p_ticket_prices for
+        select
+            tp.venue_id
+            ,tp.venue_name
+            ,tp.event_series_id
+            ,tp.event_name
+            ,tp.events_in_series
+            ,tp.first_event_date
+            ,tp.last_event_date
+            ,tp.event_tickets_available
+            ,tp.price_category
+            ,tp.price
+            ,tp.tickets_available_all_events
+            ,tp.tickets_sold_all_events
+            ,tp.tickets_remaining_all_events
+        from event_series_ticket_prices_v tp
+        where tp.event_series_id = p_event_series_id;
+    
+    exception
+        when others then
+            log_error(sqlerrm, sqlcode, 'show_event_series_ticket_prices');
+            raise;
+    end show_event_series_ticket_prices;
+
 
     --show all tickets available for event (reseller or venue direct)
     --show each ticket group with availability by source (each reseller or venue)
@@ -1187,7 +1303,75 @@ as
             event_id = p_event_id;
 
     end show_event_tickets_available_venue;
-
+    
+    procedure generate_serialized_tickets
+    (
+        p_sale in event_system.ticket_sales%rowtype
+    )
+    is
+        l_serialization tickets.serial_code%type;
+    begin
+        l_serialization := 
+            'G' || to_char(p_sale.ticket_group_id)
+            || 'C' || to_char(p_sale.customer_id)
+            || 'S' || to_char(p_sale.ticket_sales_id)
+            || 'D' || to_char(p_sale.sales_date,'YYYYMMDDHH24MISS')
+            || 'Q' || to_char(p_sale.ticket_quantity,'fm0999') || 'I';
+            
+        insert into event_system.tickets
+        (
+            ticket_sales_id, 
+            serial_code
+        )
+        select 
+            p_sale.ticket_sales_id, 
+            l_serialization || to_char(level,'fm0999')
+        from dual 
+        connect by level <= p_sale.ticket_quantity;
+        
+    end generate_serialized_tickets;
+    
+    procedure create_ticket_sale
+    (
+        p_sale in out event_system.ticket_sales%rowtype
+    )
+    is
+    begin
+    
+        insert into event_system.ticket_sales
+        (
+            ticket_group_id, 
+            customer_id, 
+            reseller_id, 
+            ticket_quantity,
+            extended_price,
+            reseller_commission,
+            sales_date
+        )
+        values 
+        (
+            p_sale.ticket_group_id,
+            p_sale.customer_id,
+            p_sale.reseller_id,
+            p_sale.ticket_quantity,
+            p_sale.extended_price,
+            p_sale.reseller_commission,
+            p_sale.sales_date
+        )
+        returning ticket_sales_id 
+        into p_sale.ticket_sales_id;
+        
+        generate_serialized_tickets(p_sale => p_sale);
+            
+        commit;
+    
+    exception
+        when others then
+            rollback;
+            log_error(sqlerrm, sqlcode, 'create_ticket_sale');
+            raise;
+    end create_ticket_sale;
+    
     function get_current_ticket_price
     (
         p_ticket_group_id in number
@@ -1301,43 +1485,25 @@ as
         p_ticket_sales_id out number
     )
     is
-        v_price number;
-        v_extended_price number;
-        v_commission_pct number;
-        v_commission number;
+        l_price number;
+        l_commission_pct number;        
+        r_sale event_system.ticket_sales%rowtype;
     begin
-
         verify_tickets_available_reseller(p_reseller_id, p_ticket_group_id, p_number_tickets);
+        l_price := get_current_ticket_price(p_ticket_group_id);
+        l_commission_pct := get_reseller_commission_percent(p_reseller_id);
         
-        v_price := get_current_ticket_price(p_ticket_group_id);
-        v_extended_price := v_price * p_number_tickets;
-        v_commission_pct := get_reseller_commission_percent(p_reseller_id);
-        v_commission := round(v_extended_price * v_commission_pct, 2);
+        r_sale.ticket_group_id := p_ticket_group_id;
+        r_sale.customer_id := p_customer_id;
+        r_sale.reseller_id := p_reseller_id;
+        r_sale.ticket_quantity := p_number_tickets;
+        r_sale.extended_price := l_price * r_sale.ticket_quantity;
+        r_sale.reseller_commission := round(r_sale.extended_price * l_commission_pct, 2);
+        r_sale.sales_date := sysdate;
+
+        create_ticket_sale(p_sale => r_sale);
         
-        insert into event_system.ticket_sales
-        (
-            ticket_group_id, 
-            customer_id, 
-            reseller_id, 
-            ticket_quantity,
-            extended_price,
-            reseller_commission,
-            sales_date
-        )
-        values 
-        (
-            p_ticket_group_id,
-            p_customer_id,
-            p_reseller_id,
-            p_number_tickets,
-            v_extended_price,
-            v_commission,
-            sysdate
-        )
-        returning ticket_sales_id 
-        into p_ticket_sales_id;
-        
-        commit;
+        p_ticket_sales_id := r_sale.ticket_sales_id;
 
     exception
         when others then
@@ -1413,46 +1579,30 @@ as
         p_ticket_sales_id out number
     )
     is
-        v_price number;
-        v_extended_price number;
+        l_price number;
+        r_sale event_system.ticket_sales%rowtype;
     begin
-    
-        verify_tickets_available_venue(p_ticket_group_id, p_number_tickets);
+        verify_tickets_available_venue(p_ticket_group_id, p_number_tickets);        
+        l_price := get_current_ticket_price(p_ticket_group_id);
+
+        r_sale.ticket_group_id := p_ticket_group_id;
+        r_sale.customer_id := p_customer_id;
+        r_sale.reseller_id := NULL;
+        r_sale.ticket_quantity := p_number_tickets;
+        r_sale.extended_price := l_price * r_sale.ticket_quantity;
+        r_sale.reseller_commission := 0;
+        r_sale.sales_date := sysdate;
+
+        create_ticket_sale(p_sale => r_sale);
         
-        v_price := get_current_ticket_price(p_ticket_group_id);
-        v_extended_price := v_price * p_number_tickets;
-        
-        insert into event_system.ticket_sales
-        (
-            ticket_group_id, 
-            customer_id, 
-            reseller_id, 
-            ticket_quantity,
-            extended_price,
-            reseller_commission,
-            sales_date
-        )
-        values 
-        (
-            p_ticket_group_id,
-            p_customer_id,
-            NULL,
-            p_number_tickets,
-            v_extended_price,
-            0,
-            sysdate
-        )
-        returning ticket_sales_id 
-        into p_ticket_sales_id;
-        
-        commit;
-    
+        p_ticket_sales_id := r_sale.ticket_sales_id;
+            
     exception
         when others then
             log_error(sqlerrm, sqlcode, 'purchase_tickets_from_venue');
             raise;
     end purchase_tickets_from_venue;
-
+    
     procedure show_customer_event_tickets
     (
         p_customer_id in number,

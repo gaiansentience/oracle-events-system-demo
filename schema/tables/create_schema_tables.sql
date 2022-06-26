@@ -8,6 +8,7 @@ prompt creating events schema tables
 @@table.ticket_groups.sql;
 @@table.ticket_assignments.sql;
 @@table.ticket_sales.sql;
+@@table.tickts.sql;
 @@table.error_log.sql;
 prompt all events tables created
 

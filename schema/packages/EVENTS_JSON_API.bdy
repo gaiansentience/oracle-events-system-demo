@@ -488,7 +488,6 @@ as
             p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'create_customer');
     end create_customer;
 
---return ticket groups for event as json document
     function get_ticket_groups
     (
         p_event_id in number,
@@ -512,6 +511,30 @@ as
         when others then
             return get_json_error_doc(sqlcode, sqlerrm, 'get_ticket_groups');
     end get_ticket_groups;
+
+    function get_ticket_groups_series
+    (
+        p_event_series_id in number,
+        p_formatted in boolean default false   
+    ) return varchar2
+    is
+        l_json varchar2(32000);
+    begin
+    
+        select b.json_doc
+        into l_json
+        from event_series_ticket_groups_v_json b
+        where b.event_series_id = p_event_series_id;
+        
+        if p_formatted then
+            l_json := format_json_string(l_json);
+        end if;
+        return l_json;
+    
+    exception
+        when others then
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_ticket_groups_series');
+    end get_ticket_groups_series;
 
 --update ticket groups using a json document in the same format as get_event_ticket_groups
 --do not create/update group for UNDEFINED price category
@@ -697,7 +720,6 @@ as
             p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'update_ticket_assignments');
     end update_ticket_assignments;
 
---get pricing and availability for tickets created for the event
     function get_event_ticket_prices
     (
         p_event_id in number,
@@ -721,6 +743,30 @@ as
         when others then
             return get_json_error_doc(sqlcode, sqlerrm, 'get_event_ticket_prices');
     end get_event_ticket_prices;
+
+    function get_event_series_ticket_prices
+    (
+        p_event_series_id in number,
+        p_formatted in boolean default false
+    ) return varchar2
+    is
+        l_json varchar2(4000);
+    begin
+    
+        select b.json_doc
+        into l_json
+        from event_series_ticket_prices_v_json b
+        where b.event_series_id = p_event_series_id;
+    
+        if p_formatted then
+            l_json := format_json_string(l_json);
+        end if;
+        return l_json;
+    
+    exception
+        when others then
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_event_series_ticket_prices');
+    end get_event_series_ticket_prices;
 
     function get_event_tickets_available_all
     (

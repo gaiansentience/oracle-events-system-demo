@@ -158,6 +158,26 @@ as
     
     end show_ticket_groups;
     
+    function show_ticket_groups_event_series
+    (
+        p_event_series_id in number
+    ) return t_ticket_groups_series pipelined
+    is
+        t_rows t_ticket_groups_series;
+        rc sys_refcursor;
+    begin
+    
+        events_api.show_ticket_groups_event_series(p_event_series_id, rc);
+        fetch rc bulk collect into t_rows;
+        close rc;
+        
+        for i in 1..t_rows.count loop
+            pipe row(t_rows(i));
+        end loop;
+        return;
+    
+    end show_ticket_groups_event_series;
+    
     function show_ticket_assignments
     (
         p_event_id in number,
@@ -199,6 +219,26 @@ as
         return;
     
     end show_event_ticket_prices;
+    
+    function show_event_series_ticket_prices
+    (
+        p_event_series_id in number
+    ) return t_ticket_prices_series pipelined
+    is
+        t_rows t_ticket_prices_series;
+        rc sys_refcursor;
+    begin
+    
+        events_api.show_event_series_ticket_prices(p_event_series_id, rc);
+        fetch rc bulk collect into t_rows;
+        close rc;
+        
+        for i in 1..t_rows.count loop
+            pipe row (t_rows(i));
+        end loop;
+        return;
+    
+    end show_event_series_ticket_prices;
     
     function show_event_tickets_available_all
     (

@@ -136,6 +136,12 @@ as
         p_event_id in number,
         p_ticket_groups out sys_refcursor
     );
+
+    procedure show_ticket_groups_event_series
+    (
+        p_event_series_id in number,
+        p_ticket_groups out sys_refcursor
+    );
     
     --create a price category ticket group for the event
     --if the group already exists, update the number of tickets available
@@ -195,6 +201,12 @@ as
     procedure show_event_ticket_prices
     (
         p_event_id in number,
+        p_ticket_prices out sys_refcursor
+    );
+
+    procedure show_event_series_ticket_prices
+    (
+        p_event_series_id in number,
         p_ticket_prices out sys_refcursor
     );
 

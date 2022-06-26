@@ -1,54 +1,72 @@
 create or replace package body events_test_data_api
 as
 
-procedure delete_test_data
-is
-   procedure truncate_table(p_table in varchar2)
-   is
-     v_ddl varchar2(100);
-   begin
-      v_ddl := 'truncate table event_system.' || p_table || ' drop storage'; 
-      execute immediate v_ddl;
-   end truncate_table;
-begin
+    procedure delete_test_data
+    is
+        procedure truncate_table(p_table in varchar2)
+        is
+            v_ddl varchar2(100);
+        begin
+            v_ddl := 'truncate table event_system.' || p_table || ' drop storage'; 
+            execute immediate v_ddl;
+        end truncate_table;
+    begin
 
-   truncate_table('ticket_sales');
-   truncate_table('ticket_assignments');
-   truncate_table('ticket_groups');
-   truncate_table('events');
-   truncate_table('venues');
-   truncate_table('resellers');
-   truncate_table('customers');
-   truncate_table('error_log');
+        truncate_table('tickets');
+        truncate_table('ticket_sales');
+        truncate_table('ticket_assignments');
+        truncate_table('ticket_groups');
+        truncate_table('events');
+        truncate_table('venues');
+        truncate_table('resellers');
+        truncate_table('customers');
+        truncate_table('error_log');
 
-end delete_test_data;
+    end delete_test_data;
 
 --remove all data for an event
 --use during testing to repeat event creation process
-procedure delete_event_data(p_event_id in number)
-is
-cursor event_ticket_groups is
-select tg.ticket_group_id 
-from ticket_groups tg where tg.event_id = p_event_id;
-begin
+    procedure delete_event_data(p_event_id in number)
+    is
+    begin
 
-for r_tg in event_ticket_groups loop
+        delete from tickets t 
+        where t.ticket_sales_id in 
+            (
+                select ts.ticket_sales_id 
+                from ticket_sales ts 
+                join ticket_groups tg 
+                    on ts.ticket_group_id = tg.ticket_group_id 
+                where tg.event_id = p_event_id
+            );
 
-   delete from ticket_sales ts where ts.ticket_group_id = r_tg.ticket_group_id;
-   
-   delete from ticket_assignments ta where ta.ticket_group_id = r_tg.ticket_group_id;
+        delete from ticket_sales ts 
+        where ts.ticket_group_id in 
+            (
+                select tg.ticket_group_id 
+                from ticket_groups tg 
+                where tg.event_id = p_event_id
+            );
+    
+        delete from ticket_assignments ta 
+        where ta.ticket_group_id in 
+            (
+                select tg.ticket_group_id 
+                from ticket_groups tg 
+                where tg.event_id = p_event_id
+            );
+    
+        delete from ticket_groups tg 
+        where tg.event_id = p_event_id;
 
-end loop;
+        delete from events e 
+        where e.event_id = p_event_id;
 
-delete from ticket_groups tg where tg.event_id = p_event_id;
+        commit;
 
-delete from events e where e.event_id = p_event_id;
+        dbms_output.put_line('all data for event ' || p_event_id || ' has been deleted');
 
-commit;
-
-dbms_output.put_line('all data for event ' || p_event_id || ' has been deleted');
-
-end delete_event_data;
+    end delete_event_data;
 
 --use during testing to remove a recurring venue event by name
 procedure delete_venue_events_by_name
