@@ -10,7 +10,10 @@ create table tickets(
   serial_code varchar2(1000)
        constraint tickets_nn_serial_code not null,
   issued_to_name varchar2(100),
-  issued_to_id varchar2(100)
+  issued_to_id varchar2(100),
+  assigned_section varchar2(20),
+  assigned_row varchar2(10),
+  assigned_seat varchar2(10)
   );
 
 create index tickets_idx_ticket_sales_id on tickets (ticket_sales_id);

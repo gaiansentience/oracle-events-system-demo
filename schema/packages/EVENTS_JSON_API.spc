@@ -81,13 +81,13 @@ as
     (
         p_event_id in number,
         p_formatted in boolean default false
-    ) return varchar2;
+    ) return clob;
 
     function get_ticket_groups_series
     (
         p_event_series_id in number,
         p_formatted in boolean default false
-    ) return varchar2;
+    ) return clob;
 
 --update ticket groups using a json document in the same format as get_event_ticket_groups
 --do not create/update group for UNDEFINED price category
@@ -96,7 +96,12 @@ as
 --update entire request with a request_status of SUCCESS or ERRORS and request_errors (0 or N)
     procedure update_ticket_groups
     (
-        p_json_doc in out varchar2
+        p_json_doc in out clob
+    );
+
+    procedure update_ticket_groups_series
+    (
+        p_json_doc in out clob
     );
 
 --return possible reseller ticket assignments for event as json document
@@ -125,13 +130,13 @@ as
     (
         p_event_id in number,
         p_formatted in boolean default false
-    ) return varchar2;
+    ) return clob;
     
     function get_event_series_ticket_prices
     (
         p_event_series_id in number,
         p_formatted in boolean default false
-    ) return varchar2;
+    ) return clob;
 
     function get_event_tickets_available_all
     (

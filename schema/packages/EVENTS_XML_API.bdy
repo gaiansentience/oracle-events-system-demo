@@ -46,7 +46,7 @@ as
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'xml_service_method', p_data => p_xml_method);
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'error_code', p_data => p_error_code);
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'error_message', p_data => p_error_message);
-        l_xml := util_xmldom_helper.to_XMLtype;
+        l_xml := util_xmldom_helper.docToXMLtype;
         util_xmldom_helper.freeDoc;
     
         return format_xml_string(l_xml);
@@ -147,7 +147,7 @@ as
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'reseller_id', p_data => r_reseller.reseller_id);
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_code', p_data => l_status_code);
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_message', p_data => l_status_message);
-        p_xml_doc := util_xmldom_helper.to_XMLtype;
+        p_xml_doc := util_xmldom_helper.docToXMLtype;
         util_xmldom_helper.freeDoc;
         
     exception
@@ -249,7 +249,7 @@ as
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'venue_id', p_data => r_venue.venue_id);
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_code', p_data => l_status_code);
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_message', p_data => l_status_message);
-        p_xml_doc := util_xmldom_helper.to_XMLtype;
+        p_xml_doc := util_xmldom_helper.docToXMLtype;
         util_xmldom_helper.freeDoc;
         
     exception
@@ -362,7 +362,7 @@ as
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'event_id', p_data => r_event.event_id);
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_code', p_data => l_status_code);
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_message', p_data => l_status_message);
-        p_xml_doc := util_xmldom_helper.to_XMLtype;
+        p_xml_doc := util_xmldom_helper.docToXMLtype;
         util_xmldom_helper.freeDoc;
 
     exception
@@ -434,7 +434,7 @@ as
             util_xmldom_helper.addTextNode(p_parent => nEvent, p_tag => 'status_message', p_data => t_status_details(i).status_message);            
         end loop;
 
-        p_xml_doc := util_xmldom_helper.to_XMLtype;
+        p_xml_doc := util_xmldom_helper.docToXMLtype;
         util_xmldom_helper.freeDoc;
 
     exception
@@ -518,7 +518,7 @@ as
         util_xmldom_helper.addTextNode(p_parent => nCustomer, p_tag => 'customer_id', p_data => r_customer.customer_id);
         util_xmldom_helper.addTextNode(p_parent => nCustomer, p_tag => 'status_code', p_data => l_status_code);
         util_xmldom_helper.addTextNode(p_parent => nCustomer, p_tag => 'status_message', p_data => l_status_message);
-        p_xml_doc := util_xmldom_helper.to_XMLtype;
+        p_xml_doc := util_xmldom_helper.docToXMLtype;
         util_xmldom_helper.freeDoc;
 
     exception
@@ -542,7 +542,7 @@ as
         where b.event_id = p_event_id;
     
         if p_formatted then
-            l_xml := format_xml_string(l_xml);
+            l_xml := format_xml_clob(l_xml);
         end if;
         return l_xml;
     
@@ -566,7 +566,7 @@ as
         where b.event_series_id = p_event_series_id;
     
         if p_formatted then
-            l_xml := format_xml_string(l_xml);
+            l_xml := format_xml_clob(l_xml);
         end if;
         return l_xml;
     
@@ -575,12 +575,40 @@ as
             return get_xml_error_doc(sqlcode, sqlerrm, 'get_ticket_groups_series');
     end get_ticket_groups_series;
 
-
+/*
+<event_ticket_groups>
+  <event>
+    <event_id>420</event_id>
+  </event>
+  <ticket_groups>
+    <ticket_group>
+      <price_category>VIP</price_category>
+      <price>100</price>
+      <tickets_available>100</tickets_available>
+    </ticket_group>
+  </ticket_groups>
+</event_ticket_groups>
+*/
 --create/update ticket groups using an xml document in the same format as get_event_ticket_groups
 --do not create/update group for UNDEFINED price category
 --do not create/update group if price category is missing
 --update request document for each ticket group with status_code of SUCCESS or ERROR and a status_message
 --update entire request with a request_status of SUCCESS or ERRORS and request_errors (0 or N)
+/*
+<event_ticket_groups>
+  <event>
+    <event_id>420</event_id>
+  </event>
+  <ticket_groups>
+    <ticket_group>
+      <price_category>VIP</price_category>
+      <price>100</price>
+      <tickets_available>100</tickets_available>
+    </ticket_group>
+  </ticket_groups>
+</event_ticket_groups>
+*/
+
     procedure update_ticket_groups
     (
         p_xml_doc in out xmltype
@@ -619,7 +647,14 @@ as
                     l_status_message := 'Price category is UNDEFINED, cannot set group';
                 else
                     begin
-                        events_api.create_ticket_group(r_group.event_id, r_group.price_category, r_group.price, r_group.tickets_available, r_group.ticket_group_id);
+                    
+                        events_api.create_ticket_group(
+                            p_event_id => r_group.event_id, 
+                            p_price_category => r_group.price_category, 
+                            p_price => r_group.price, 
+                            p_tickets => r_group.tickets_available, 
+                            p_ticket_group_id => r_group.ticket_group_id);
+                                                
                         l_status_code := 'SUCCESS';
                         l_status_message := 'Created or updated ticket group';
                     exception
@@ -638,7 +673,7 @@ as
         --add status information for all groups in the request
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'request_status', p_data => case when l_error_count = 0 then 'SUCCESS' else 'ERRORS' end);
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'request_errors', p_data => l_error_count);
-        p_xml_doc := util_xmldom_helper.to_XMLtype;
+        p_xml_doc := util_xmldom_helper.docToXMLtype;
         util_xmldom_helper.freeDoc;
 
     exception
@@ -646,6 +681,92 @@ as
             util_xmldom_helper.freeDoc;
             p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'update_ticket_groups');
     end update_ticket_groups;
+    
+/*
+<event_series_ticket_groups>
+  <event_series>
+    <event_series_id>11</event_series_id>
+  </event_series>
+  <ticket_groups>
+    <ticket_group>
+      <price_category>VIP</price_category>
+      <price>100</price>
+      <tickets_available>100</tickets_available>
+    </ticket_group>
+  </ticket_groups>
+</event_series_ticket_groups>
+*/
+    procedure update_ticket_groups_series
+    (
+        p_xml_doc in out xmltype
+    )
+    is
+        l_event_series_id event_system.events.event_series_id%type;
+        r_group event_system.ticket_groups%rowtype;
+        nRoot dbms_xmldom.DOMnode;
+        nListGroups dbms_xmldom.DOMnodeList;
+        nGroup dbms_xmldom.DOMnode;
+        l_error_count number := 0;
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
+    begin
+
+        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
+
+        dbms_xslprocessor.valueof(nRoot, 'event_series/event_series_id/text()', l_event_series_id);
+        
+        nListGroups := dbms_xslprocessor.selectNodes(n => nRoot, pattern => '/event_series_ticket_groups/ticket_groups/ticket_group');
+        for i in 0..dbms_xmldom.getLength(nListGroups) - 1 loop
+            nGroup := dbms_xmldom.item(nListGroups, i);
+        
+            dbms_xslprocessor.valueof(nGroup, 'price_category/text()', r_group.price_category);
+            dbms_xslprocessor.valueof(nGroup, 'price/text()', r_group.price);
+            dbms_xslprocessor.valueof(nGroup, 'tickets_available/text()', r_group.tickets_available);
+            r_group.ticket_group_id := 0;
+            
+            case
+                when r_group.price_category is null then
+                    l_error_count := l_error_count + 1;
+                    l_status_code := 'ERROR';
+                    l_status_message := 'Missing price category, cannot set group';
+                when r_group.price_category = 'UNDEFINED' then
+                    l_error_count := l_error_count + 1;
+                    l_status_code := 'ERROR';
+                    l_status_message := 'Price category is UNDEFINED, cannot set group';
+                else
+                    begin
+                                                
+                        events_api.create_ticket_group_event_series(
+                            p_event_series_id => l_event_series_id, 
+                            p_price_category => r_group.price_category, 
+                            p_price => r_group.price, 
+                            p_tickets => r_group.tickets_available, 
+                            p_status_code => l_status_code,
+                            p_status_message => l_status_message);
+
+                    exception
+                        when others then
+                            l_error_count := l_error_count + 1;
+                            l_status_code := 'ERROR';
+                            l_status_message := sqlerrm;
+                    end;
+            end case;
+
+            util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'status_code', p_data => l_status_code);
+            util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'status_message', p_data => l_status_message);            
+        end loop;
+
+        --add status information for all groups in the request
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'request_status', p_data => case when l_error_count = 0 then 'SUCCESS' else 'ERRORS' end);
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'request_errors', p_data => l_error_count);
+        p_xml_doc := util_xmldom_helper.docToXMLtype;
+        util_xmldom_helper.freeDoc;
+
+    exception
+        when others then
+            util_xmldom_helper.freeDoc;
+            p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'update_ticket_groups_series');
+    end update_ticket_groups_series;
 
 --return possible reseller ticket assignments for event as json document
 --returns array of all resellers with ticket groups as nested array
@@ -660,7 +781,7 @@ as
     
         select b.xml_doc
         into l_xml
-        from reseller_ticket_assignment_v_xml b
+        from event_system.event_ticket_assignment_v_xml b
         where b.event_id = p_event_id;
     
         if p_formatted then
@@ -681,6 +802,26 @@ as
 --IT IS RECOMMENDED TO SUBMIT ASSIGNMENTS FOR ONE RESELLER AT A TIME AND REFRESH THE ASSIGNMENTS DOCUMENT TO SEE CHANGED LIMITS
 --additional informational fields from get_ticket_assignments may be present
 --if additional informational fields are present they will not be processed
+/*
+<event_ticket_assignment>
+  <event>
+    <event_id>15</event_id>
+  </event>
+  <ticket_resellers>
+    <reseller>
+      <reseller_id>21</reseller_id>
+      <ticket_assignments>
+        <ticket_group>
+          <ticket_group_id>953</ticket_group_id>
+          <tickets_assigned>0</tickets_assigned>
+        </ticket_group>
+...
+      </ticket_assignments>
+    </reseller>
+...
+  </ticket_resellers>
+</event_ticket_assignment>
+*/
     procedure update_ticket_assignments
     (
         p_xml_doc in out nocopy xmltype
@@ -749,7 +890,7 @@ as
         --add status information for all resellers in the request
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'request_status', p_data => case when l_error_count = 0 then 'SUCCESS' else 'ERRORS' end);
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'request_errors', p_data => l_error_count);
-        p_xml_doc := util_xmldom_helper.to_XMLtype;
+        p_xml_doc := util_xmldom_helper.docToXMLtype;
         util_xmldom_helper.freeDoc;
 
     exception
@@ -774,7 +915,7 @@ as
         where b.event_id = p_event_id;
     
         if p_formatted then
-            l_xml := format_xml_string(l_xml);
+            l_xml := format_xml_clob(l_xml);
         end if;
         return l_xml;
         
@@ -798,7 +939,7 @@ as
         where b.event_series_id = p_event_series_id;
     
         if p_formatted then
-            l_xml := format_xml_string(l_xml);
+            l_xml := format_xml_clob(l_xml);
         end if;
         return l_xml;
         
@@ -1217,7 +1358,7 @@ as
                         p_qty_purchased_all_groups => l_total_tickets_purchased,
                         p_total_purchase_amount => l_total_purchase_amount);
     
-        p_xml_doc := util_xmldom_helper.to_XMLtype;
+        p_xml_doc := util_xmldom_helper.docToXMLtype;
         util_xmldom_helper.freeDoc;
 
     exception
@@ -1326,7 +1467,7 @@ as
                         p_qty_purchased_all_groups => l_total_tickets_purchased,
                         p_total_purchase_amount => l_total_purchase_amount);
     
-        p_xml_doc := util_xmldom_helper.to_XMLtype;
+        p_xml_doc := util_xmldom_helper.docToXMLtype;
         util_xmldom_helper.freeDoc;
 
     exception

@@ -17,11 +17,11 @@ is
     
     procedure addNodeAttribute(p_node in out nocopy dbms_xmldom.DOMnode, p_name in varchar2, p_value in varchar2);
 
-    function to_XMLtype return XMLtype;
+    function docToXMLtype return XMLtype;
 
-    function to_string return varchar2;
+    function docToString return varchar2;
 
-    function to_clob return clob;
+    function docToClob return clob;
 
     procedure freeDoc;
 

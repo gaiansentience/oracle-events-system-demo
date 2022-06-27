@@ -984,7 +984,7 @@ as
             ra.sold_by_reseller,
             ra.sold_by_venue
         from 
-            event_system.reseller_ticket_assignment_v ra
+            event_system.event_ticket_assignment_v ra
         where 
             ra.event_id = p_event_id 
             and ra.reseller_id = p_reseller_id;

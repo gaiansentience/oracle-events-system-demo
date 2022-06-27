@@ -1,16 +1,14 @@
 prompt dropping xml verification views
-
+drop view event_series_ticket_groups_v_xml_verify;
 drop view event_ticket_groups_v_xml_verify;
 
---these views are identical, reseller_ticket_assignment is currently in use
---used to troubleshoot xml verify view anomaly
 drop view event_ticket_assignment_v_xml_verify;
-drop view reseller_ticket_assignment_v_xml_verify;
 
 drop view tickets_available_all_v_xml_verify;
 drop view tickets_available_reseller_v_xml_verify;
 drop view tickets_available_venue_v_xml_verify;
 
+drop view event_series_ticket_prices_v_xml_verify;
 drop view event_ticket_prices_v_xml_verify;
 
 drop view customer_event_tickets_v_xml_verify;

@@ -80,29 +80,29 @@ is
         na := dbms_xmldom.appendchild(n=>p_node,newchild=>na);
     end addNodeAttribute;
 
-    function to_XMLtype return XMLtype
+    function docToXMLtype return XMLtype
     is
         l_xml xmltype;
     begin    
         l_xml := dbms_xmldom.getxmltype(g_doc);
         return l_xml;
-    end to_XMLtype;
+    end docToXMLtype;
 
-    function to_string return varchar2
+    function docToString return varchar2
     is
         l_xml xmltype;
     begin
-        l_xml := to_xmltype;
+        l_xml := docToXMLtype;
         return l_xml.getstringval();
-    end to_string;
+    end docToString;
 
-    function to_clob return clob
+    function docToClob return clob
     is
         l_xml xmltype;
     begin
-        l_xml := to_xmltype;
+        l_xml := docToXMLtype;
         return l_xml.getClobVal();
-    end to_clob;
+    end docToClob;
 
     procedure freeDoc
     is

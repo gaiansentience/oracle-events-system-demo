@@ -22,7 +22,7 @@ select
     ,min_assignment
     ,sold_by_reseller
     ,sold_by_venue
-from reseller_ticket_assignment_v
+from event_ticket_assignment_v
 minus
 select
     venue_id
@@ -48,4 +48,4 @@ select
     ,min_assignment
     ,sold_by_reseller
     ,sold_by_venue
-from reseller_ticket_assignment_v_json_verify
+from event_ticket_assignment_v_json_verify

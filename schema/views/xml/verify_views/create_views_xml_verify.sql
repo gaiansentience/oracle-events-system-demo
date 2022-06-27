@@ -1,12 +1,10 @@
 prompt creating verification views for xml web services
-
+@@view.event_series_ticket_groups_v_xml_verify.sql;
 @@view.event_ticket_groups_v_xml_verify.sql;
 
---these views are identical, reseller_ticket_assignment is currently in use
---used to troubleshoot xml verify view anomaly
 @@view.event_ticket_assignment_v_xml_verify.sql;
-@@view.reseller_ticket_assignment_v_xml_verify.sql;
 
+@@view.event_series_ticket_prices_v_xml_verify.sql;
 @@view.event_ticket_prices_v_xml_verify.sql;
 
 @@view.tickets_available_all_v_xml_verify.sql;

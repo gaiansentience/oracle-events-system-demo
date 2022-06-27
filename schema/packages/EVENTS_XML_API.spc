@@ -87,7 +87,7 @@ as
         p_formatted in boolean default false
     ) return xmltype;
 
---update ticket groups using a json document in the same format as get_event_ticket_groups
+--update ticket groups using an xml document in the same format as get_event_ticket_groups
 --do not create/update group for UNDEFINED price category
 --do not create/update group if price category is missing
 --update request document for each ticket group with status_code of SUCCESS or ERROR and a status_message
@@ -97,7 +97,12 @@ as
         p_xml_doc in out xmltype
     );
 
---return possible reseller ticket assignments for event as json document
+    procedure update_ticket_groups_series
+    (
+        p_xml_doc in out xmltype
+    );
+
+--return possible reseller ticket assignments for event as xml document
 --returns array of all resellers with ticket groups as nested array
     function get_ticket_assignments
     (
@@ -105,7 +110,7 @@ as
         p_formatted in boolean default false
     ) return xmltype;
 
---update ticket assignments for a reseller using a json document in the same format as get_event_reseller_ticket_assignments
+--update ticket assignments for a reseller using an xml document in the same format as get_event_reseller_ticket_assignments
 --update request document for each ticket group with status_code of SUCCESS or ERROR and a status_message
 --update entire request with a request_status of SUCCESS or ERRORS and request_errors (0 or N)
 --supports assignment of multiple ticket groups to multiple resellers

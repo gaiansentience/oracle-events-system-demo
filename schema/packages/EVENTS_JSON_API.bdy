@@ -492,9 +492,9 @@ as
     (
         p_event_id in number,
         p_formatted in boolean default false   
-    ) return varchar2
+    ) return clob
     is
-        l_json varchar2(32000);
+        l_json clob;
     begin
     
         select b.json_doc
@@ -503,7 +503,7 @@ as
         where b.event_id = p_event_id;
         
         if p_formatted then
-            l_json := format_json_string(l_json);
+            l_json := format_json_clob(l_json);
         end if;
         return l_json;
     
@@ -516,9 +516,9 @@ as
     (
         p_event_series_id in number,
         p_formatted in boolean default false   
-    ) return varchar2
+    ) return clob
     is
-        l_json varchar2(32000);
+        l_json clob;
     begin
     
         select b.json_doc
@@ -527,7 +527,7 @@ as
         where b.event_series_id = p_event_series_id;
         
         if p_formatted then
-            l_json := format_json_string(l_json);
+            l_json := format_json_clob(l_json);
         end if;
         return l_json;
     
@@ -536,6 +536,18 @@ as
             return get_json_error_doc(sqlcode, sqlerrm, 'get_ticket_groups_series');
     end get_ticket_groups_series;
 
+
+/*
+{
+  "event_id" : 11,
+  "ticket_groups" :
+  [
+    {
+      "price_category" : "VIP",
+      "price" : 100,
+      "tickets_available" : 100,
+    }}
+*/
 --update ticket groups using a json document in the same format as get_event_ticket_groups
 --do not create/update group for UNDEFINED price category
 --do not create/update group if price category is missing
@@ -543,7 +555,7 @@ as
 --update entire request with a request_status of SUCCESS or ERRORS and request_errors (0 or N)
     procedure update_ticket_groups
     (
-        p_json_doc in out varchar2
+        p_json_doc in out clob
     )
     is
         r_group event_system.ticket_groups%rowtype;
@@ -576,13 +588,15 @@ as
                     l_status_code := 'ERROR';
                     l_status_message := 'Price category is UNDEFINED, cannot set group';
                 else
-                    begin
+                    begin   
+                    
                         events_api.create_ticket_group(
-                            r_group.event_id, 
-                            r_group.price_category, 
-                            r_group.price, 
-                            r_group.tickets_available, 
-                            r_group.ticket_group_id);
+                            p_event_id => r_group.event_id, 
+                            p_price_category => r_group.price_category, 
+                            p_price => r_group.price, 
+                            p_tickets => r_group.tickets_available, 
+                            p_ticket_group_id => r_group.ticket_group_id);
+                            
                         l_status_code := 'SUCCESS';
                         l_status_message := 'Created/updated ticket group';
                     exception
@@ -602,12 +616,92 @@ as
         o_request.put('request_status', case when l_error_count = 0 then 'SUCCESS' else 'ERRORS' end);
         o_request.put('request_errors', l_error_count);
         
-        p_json_doc := o_request.to_string; 
+        p_json_doc := o_request.to_clob; 
    
     exception
         when others then
             p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'update_ticket_groups');
     end update_ticket_groups;
+
+/*
+{
+  "event_series_id" : 11,
+  "ticket_groups" :
+  [
+    {
+      "price_category" : "VIP",
+      "price" : 100,
+      "tickets_available" : 100,
+    }}
+*/
+
+    procedure update_ticket_groups_series
+    (
+        p_json_doc in out clob
+    )
+    is
+        r_group event_system.ticket_groups%rowtype;
+        l_event_series_id events.event_series_id%type;
+        o_request json_object_t;
+        a_groups json_array_t;
+        o_group json_object_t;
+        l_error_count number := 0;
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
+    begin
+
+        o_request := json_object_t.parse(p_json_doc);
+        l_event_series_id := o_request.get_number('event_series_id');
+        a_groups := o_request.get_array('ticket_groups');
+        for i in 0..a_groups.get_size - 1 loop
+        
+            o_group := json_object_t(a_groups.get(i));
+            r_group.price_category := o_group.get_string('price_category');
+            r_group.price := o_group.get_number('price');
+            r_group.tickets_available := o_group.get_number('tickets_available');
+            
+            case
+                when r_group.price_category is null then
+                    l_error_count := l_error_count + 1;
+                    l_status_code := 'ERROR';
+                    l_status_message := 'Missing price category, cannot set group';
+                when r_group.price_category = 'UNDEFINED' then
+                    l_error_count := l_error_count + 1;
+                    l_status_code := 'ERROR';
+                    l_status_message := 'Price category is UNDEFINED, cannot set group';
+                else
+                    begin
+                    
+                        events_api.create_ticket_group_event_series(
+                            p_event_series_id => l_event_series_id, 
+                            p_price_category => r_group.price_category, 
+                            p_price => r_group.price, 
+                            p_tickets => r_group.tickets_available, 
+                            p_status_code => l_status_code,
+                            p_status_message => l_status_message);
+                            
+                    exception
+                        when others then
+                            l_error_count := l_error_count + 1;
+                            l_status_code := 'ERROR';
+                            l_status_message := sqlerrm;
+                    end;
+            end case;
+            
+            o_group.put('status_code', l_status_code);
+            o_group.put('status_message', l_status_message);
+        
+        end loop;
+
+        o_request.put('request_status', case when l_error_count = 0 then 'SUCCESS' else 'ERRORS' end);
+        o_request.put('request_errors', l_error_count);
+        
+        p_json_doc := o_request.to_clob; 
+   
+    exception
+        when others then
+            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'update_ticket_groups_series');
+    end update_ticket_groups_series;
 
 --return possible reseller ticket assignments for event as json document
 --returns array of all resellers with ticket groups as nested array
@@ -622,7 +716,7 @@ as
     
         select b.json_doc
         into l_json
-        from reseller_ticket_assignment_v_json b
+        from event_system.event_ticket_assignment_v_json b
         where b.event_id = p_event_id;
     
         if p_formatted then
@@ -635,7 +729,7 @@ as
             return get_json_error_doc(sqlcode, sqlerrm, 'get_ticket_assignments');
     end get_ticket_assignments;
 
---update ticket assignments for a reseller using a json document in the same format as get_event_reseller_ticket_assignments
+--update ticket assignments for a reseller using a json document in the same format as get_ticket_assignments
 --update request document for each ticket group with status_code of SUCCESS or ERROR and a status_message
 --update entire request with a request_status of SUCCESS or ERRORS and request_errors (0 or N)
 --supports assignment of multiple ticket groups to multiple resellers
@@ -643,6 +737,24 @@ as
 --IT IS RECOMMENDED TO SUBMIT ASSIGNMENTS FOR ONE RESELLER AT A TIME AND REFRESH THE ASSIGNMENTS DOCUMENT TO SEE CHANGED LIMITS
 --additional informational fields from get_event_reseller_ticket_assignments may be present
 --if additional informational fields are present they will not be processed
+/*
+{
+  "event_id" : 18,
+  "ticket_resellers" :
+  [
+    {
+      "reseller_id" : 11,
+      "ticket_assignments" :
+      [
+        {
+          "ticket_group_id" : 27,
+          "tickets_assigned" : 100
+        }
+      ]
+    }
+  ]
+}
+*/
     procedure update_ticket_assignments
     (
         p_json_doc in out nocopy clob
@@ -724,9 +836,9 @@ as
     (
         p_event_id in number,
         p_formatted in boolean default false
-    ) return varchar2
+    ) return clob
     is
-        l_json varchar2(4000);
+        l_json clob;
     begin
     
         select b.json_doc
@@ -735,7 +847,7 @@ as
         where b.event_id = p_event_id;
     
         if p_formatted then
-            l_json := format_json_string(l_json);
+            l_json := format_json_clob(l_json);
         end if;
         return l_json;
     
@@ -748,9 +860,9 @@ as
     (
         p_event_series_id in number,
         p_formatted in boolean default false
-    ) return varchar2
+    ) return clob
     is
-        l_json varchar2(4000);
+        l_json clob;
     begin
     
         select b.json_doc
@@ -759,7 +871,7 @@ as
         where b.event_series_id = p_event_series_id;
     
         if p_formatted then
-            l_json := format_json_string(l_json);
+            l_json := format_json_clob(l_json);
         end if;
         return l_json;
     
