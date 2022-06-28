@@ -2,4 +2,4 @@
 select
 *
 from
-events_report_api.show_reseller_tickets_available(67,3)
+events_report_api.show_event_tickets_available_reseller(67,3)

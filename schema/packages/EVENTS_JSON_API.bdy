@@ -9,7 +9,7 @@ as
         l_json clob;
     begin
     
-        select json_serialize(p_json_doc pretty) 
+        select json_serialize(p_json_doc returning clob pretty) 
         into l_json 
         from dual;
     
@@ -25,7 +25,7 @@ as
         l_json varchar2(32000);
     begin
     
-        select json_serialize(p_json_doc pretty) 
+        select json_serialize(p_json_doc returning clob pretty) 
         into l_json 
         from dual;
     
@@ -912,7 +912,7 @@ as
                 l_price_category := null;
                 l_tickets_assigned := 0;
                 
-                l_price_category := o_group.get_number('price_category');
+                l_price_category := o_group.get_string('price_category');
                 l_tickets_assigned := o_group.get_number('tickets_assigned');
                 
                 begin

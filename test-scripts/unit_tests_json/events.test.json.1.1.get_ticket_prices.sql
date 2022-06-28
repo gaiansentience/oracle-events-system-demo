@@ -4,7 +4,7 @@ v_json_doc varchar2(32000);
 v_event_id number := 16;
 begin
 
-   v_json_doc := events_json_api.get_ticket_groups(
+   v_json_doc := events_json_api.get_event_ticket_prices(
                                            p_event_id => v_event_id,
                                            p_formatted => true);
 
@@ -26,46 +26,43 @@ end;
       "ticket_group_id" : 958,
       "price_category" : "BACKSTAGE-ALL ACCESS",
       "price" : 150,
-      "tickets_available" : 2000,
-      "currently_assigned" : 600,
-      "sold_by_venue" : 1357
+      "tickets_available" : 2500,
+      "tickets_sold" : 1929,
+      "tickets_remaining" : 571
     },
     {
       "ticket_group_id" : 959,
       "price_category" : "VIP",
       "price" : 100,
-      "tickets_available" : 2000,
-      "currently_assigned" : 500,
-      "sold_by_venue" : 1481
+      "tickets_available" : 2500,
+      "tickets_sold" : 1952,
+      "tickets_remaining" : 548
     },
     {
       "ticket_group_id" : 960,
       "price_category" : "EARLYBIRD DISCOUNT",
       "price" : 40,
       "tickets_available" : 2000,
-      "currently_assigned" : 500,
-      "sold_by_venue" : 1443
+      "tickets_sold" : 1928,
+      "tickets_remaining" : 72
     },
     {
       "ticket_group_id" : 961,
       "price_category" : "RESERVED SEATING",
       "price" : 75,
-      "tickets_available" : 2000,
-      "currently_assigned" : 400,
-      "sold_by_venue" : 1574
+      "tickets_available" : 3000,
+      "tickets_sold" : 1963,
+      "tickets_remaining" : 1037
     },
     {
       "ticket_group_id" : 962,
       "price_category" : "GENERAL ADMISSION",
       "price" : 50,
-      "tickets_available" : 12000,
-      "currently_assigned" : 3000,
-      "sold_by_venue" : 2245
+      "tickets_available" : 10000,
+      "tickets_sold" : 5123,
+      "tickets_remaining" : 4877
     }
   ]
 }
-
-
-PL/SQL procedure successfully completed.
 
 */

@@ -722,7 +722,7 @@ as
             dbms_xslprocessor.valueof(nGroup, 'price_category/text()', r_group.price_category);
             dbms_xslprocessor.valueof(nGroup, 'price/text()', r_group.price);
             dbms_xslprocessor.valueof(nGroup, 'tickets_available/text()', r_group.tickets_available);
-            r_group.ticket_group_id := 0;
+--            r_group.ticket_group_id := 0;
             
             case
                 when r_group.price_category is null then
@@ -964,7 +964,7 @@ as
     
         util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
 
-        dbms_xslprocessor.valueof(nRoot, 'event_series/l_event_series_id/text()', l_event_series_id);
+        dbms_xslprocessor.valueof(nRoot, 'event_series/event_series_id/text()', l_event_series_id);
         
         nListResellers := dbms_xslprocessor.selectNodes(n => nRoot, pattern => 'ticket_resellers/reseller');
         for r in 0..dbms_xmldom.getLength(nListResellers) - 1 loop

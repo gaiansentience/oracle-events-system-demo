@@ -19,7 +19,7 @@ where e.event_name = 'The New Toys' and tg.price_category = 'BACKSTAGE';
   
   
 
-  events_api.assign_reseller_ticket_group(
+  events_api.create_ticket_assignment(
            p_reseller_id => v_old_school_id,
            p_ticket_group_id => v_general_admission_group,
            p_number_tickets => v_general_admission_tickets,
@@ -27,7 +27,7 @@ where e.event_name = 'The New Toys' and tg.price_category = 'BACKSTAGE';
 
   dbms_output.put_line(v_assignment_id || ' = id for general admission tickets assigned to old school');
 
-  events_api.assign_reseller_ticket_group(
+  events_api.create_ticket_assignment(
            p_reseller_id => v_old_school_id,
            p_ticket_group_id => v_backstage_pass_group,
            p_number_tickets => v_backstage_pass_tickets,

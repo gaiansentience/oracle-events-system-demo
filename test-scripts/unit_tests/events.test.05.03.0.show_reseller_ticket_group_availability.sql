@@ -5,5 +5,5 @@
 select
 *
 from
-events_report_api.show_reseller_ticket_group_availability(287,3)
+events_report_api.show_ticket_assignments(483,3)
 

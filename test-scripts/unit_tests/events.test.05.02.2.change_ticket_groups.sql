@@ -11,7 +11,7 @@ declare
   v_event_id number;
   v_early varchar2(50) := 'EARLY PURCHASE DISCOUNT';
   v_early_price number := 33;
-  v_early_tickets number := 100;
+  v_early_tickets number := 1000;
   v_group_id number;
 begin
 

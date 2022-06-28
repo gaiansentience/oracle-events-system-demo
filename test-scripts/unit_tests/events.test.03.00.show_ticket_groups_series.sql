@@ -10,4 +10,4 @@
 select
 *
 from
-events_report_api.show_ticket_groups(483)
+events_report_api.show_ticket_groups_event_series(21)

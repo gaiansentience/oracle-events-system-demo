@@ -12,7 +12,7 @@ declare
   v_event_id number;
   v_general varchar2(50) := 'GENERAL ADMISSION';
   v_general_price number := 42;
-  v_general_tickets number := 8000;
+  v_general_tickets number := 10000;
   v_backstage varchar2(50) := 'BACKSTAGE';
   v_backstage_price number := 100;
   v_backstage_tickets number := 3000;

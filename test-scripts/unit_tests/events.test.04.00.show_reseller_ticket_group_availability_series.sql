@@ -5,5 +5,5 @@
 select
 *
 from
-events_report_api.show_ticket_assignments(483,3)
+events_report_api.show_ticket_assignments_event_series(21,3)
 

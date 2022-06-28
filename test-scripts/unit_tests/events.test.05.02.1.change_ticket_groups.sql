@@ -11,7 +11,7 @@ declare
   v_event_id number;
   v_BACKSTAGE varchar2(50) := 'BACKSTAGE';
   v_BACKSTAGE_price number := 100;
-  v_BACKSTAGE_tickets number := 100;
+  v_BACKSTAGE_tickets number := 800;
   v_group_id number;
 begin
 

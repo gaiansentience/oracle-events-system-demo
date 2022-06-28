@@ -7,11 +7,11 @@
 set serveroutput on;
 declare
   v_venue_id number;
-  v_name varchar2(100) := 'Classical Concert Series';
+  v_name varchar2(100) := 'Hometown Hockey League';
   v_start_date date := sysdate + 30;
   v_end_date date := sysdate + 180;
-  v_event_day varchar2(20) := 'Sunday';
-  v_tickets number := 1000;
+  v_event_day varchar2(20) := 'Saturday';
+  v_tickets number := 5000;
   v_event_series_id number;
   v_status varchar2(4000);
 begin

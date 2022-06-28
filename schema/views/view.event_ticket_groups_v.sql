@@ -1,4 +1,6 @@
 create or replace view event_ticket_groups_v as
+with base as
+(
 select
     e.venue_id
     ,e.venue_name
@@ -53,4 +55,21 @@ select
         ,0) as tickets_available
     ,0 as currently_assigned
     ,0 as sold_by_venue
-from event_system.venue_event_base_v e;
+from event_system.venue_event_base_v e
+)
+select
+    b.venue_id
+    ,b.venue_name
+    ,b.event_id
+    ,b.event_series_id
+    ,b.event_name
+    ,b.event_date
+    ,b.event_tickets_available
+    ,b.ticket_group_id
+    ,b.price_category
+    ,b.price
+    ,b.tickets_available
+    ,b.currently_assigned
+    ,b.sold_by_venue
+from base b
+where b.tickets_available > 0

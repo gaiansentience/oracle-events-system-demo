@@ -5,7 +5,7 @@ declare
 begin
 v_json_doc := 
 '{
-  "event_id" : 10,
+  "event_id" : 16,
   "ticket_groups" :
   [
     {
@@ -36,7 +36,7 @@ v_json_doc :=
   ]
 }';
 
-events_json_api.update_event_ticket_groups(p_json_doc => v_json_doc);
+events_json_api.update_ticket_groups(p_json_doc => v_json_doc);
 --dbms_output.put_line(v_json_doc);
 
 --output result in readable format
@@ -48,14 +48,14 @@ end;
 --reply for update with errors
 /*
 {
-  "event_id" : 10,
+  "event_id" : 16,
   "ticket_groups" :
   [
     {
       "price_category" : "BACKSTAGE-ALL ACCESS",
       "price" : 150,
       "tickets_available" : 2000,
-      "ticket_group_id" : 938,
+      "ticket_group_id" : 958,
       "status_code" : "SUCCESS",
       "status_message" : "Created/updated ticket group"
     },
@@ -65,15 +65,15 @@ end;
       "tickets_available" : 5000,
       "ticket_group_id" : 0,
       "status_code" : "ERROR",
-      "status_message" : "ORA-20100: Cannot create EARLYBIRD DISCOUNT  with 5000 tickets.  Only 2500 are available."
+      "status_message" : "ORA-20100: Cannot create EARLYBIRD DISCOUNT  with 5000 tickets.  Only 3500 are available."
     },
     {
       "price_category" : "GENERAL ADMISSION",
       "price" : 50,
       "tickets_available" : 12000,
-      "ticket_group_id" : 942,
-      "status_code" : "SUCCESS",
-      "status_message" : "Created/updated ticket group"
+      "ticket_group_id" : 0,
+      "status_code" : "ERROR",
+      "status_message" : "ORA-20100: Cannot create GENERAL ADMISSION  with 12000 tickets.  Only 11500 are available."
     },
     {
       "price_category" : "RESERVED SEATING",
@@ -81,7 +81,7 @@ end;
       "tickets_available" : 20000,
       "ticket_group_id" : 0,
       "status_code" : "ERROR",
-      "status_message" : "ORA-20100: Cannot create RESERVED SEATING  with 20000 tickets.  Only 2500 are available."
+      "status_message" : "ORA-20100: Cannot create RESERVED SEATING  with 20000 tickets.  Only 3500 are available."
     },
     {
       "price_category" : "VIP",
@@ -89,10 +89,15 @@ end;
       "tickets_available" : 500,
       "ticket_group_id" : 0,
       "status_code" : "ERROR",
-      "status_message" : "ORA-20100: Cannot set VIP to 500 tickets.  Current reseller assignments and direct venue sales are 1100"
+      "status_message" : "ORA-20100: Cannot set VIP to 500 tickets.  Current reseller assignments and direct venue sales are 1981"
     }
   ],
   "request_status" : "ERRORS",
-  "request_errors" : 3
+  "request_errors" : 4
 }
+
+
+PL/SQL procedure successfully completed.
+
+
 */

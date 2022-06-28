@@ -82,7 +82,7 @@ v_json_doc :=
 }';
 
 
-events_json_api.update_event_ticket_assignments(p_json_doc => v_json_doc);
+events_json_api.update_ticket_assignments(p_json_doc => v_json_doc);
 --dbms_output.put_line(v_json_doc);
 
 --output result in readable format
