@@ -112,6 +112,12 @@ as
         p_formatted in boolean default false
     ) return clob;
 
+    function get_ticket_assignments_series
+    (
+        p_event_series_id in number,
+        p_formatted in boolean default false
+    ) return clob;
+
 --update ticket assignments for a reseller using a json document in the same format as get_event_reseller_ticket_assignments
 --update request document for each ticket group with status_code of SUCCESS or ERROR and a status_message
 --update entire request with a request_status of SUCCESS or ERRORS and request_errors (0 or N)
@@ -121,6 +127,11 @@ as
 --additional informational fields from get_event_reseller_ticket_assignments may be present
 --if additional informational fields are present they will not be processed
     procedure update_ticket_assignments
+    (
+        p_json_doc in out nocopy clob
+    );
+
+    procedure update_ticket_assignments_series
     (
         p_json_doc in out nocopy clob
     );

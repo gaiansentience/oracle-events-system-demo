@@ -4,6 +4,7 @@ as
     g_db_user varchar2(30);
     g_os_user varchar2(100);
     g_db_sid number;
+    g_processing_event_series boolean := false;
 
     procedure initialize
     is
@@ -834,6 +835,48 @@ as
             return 'Ticket category not found';
     end get_ticket_group_category;
     
+    function get_event_series_id
+    (
+        p_event_id in number
+    ) return number
+    is
+        l_event_series_id number;
+    begin
+    
+        select e.event_series_id
+        into l_event_series_id
+        from event_system.events e
+        where e.event_id = p_event_id;
+    
+        return l_event_series_id;
+    exception
+        when others then
+            return null;
+    end get_event_series_id;
+    
+    function get_ticket_group_event_series_id
+    (
+        p_ticket_group_id in number
+    ) return number
+    is
+        l_event_series_id number;
+    begin
+        
+        select e.event_series_id
+        into l_event_series_id
+        from
+            event_system.events e
+            join event_system.ticket_groups tg
+                on e.event_id = tg.event_id
+        where
+            tg.ticket_group_id = p_ticket_group_id;
+    
+        return l_event_series_id;
+    exception
+        when others then
+            return null;
+    end get_ticket_group_event_series_id;
+    
     --create a price category ticket group for the event
     --if the group already exists, update the number of tickets available
     --raise an error if ticket group would exceed event total tickets
@@ -846,7 +889,17 @@ as
         p_ticket_group_id out number
     )
     is
+        l_event_series_id number;
     begin
+        l_event_series_id := get_event_series_id(p_event_id);
+        case
+            when l_event_series_id is not null and not g_processing_event_series then
+                raise_application_error(-20100, 'Event is part of a series, must use event series methods');
+            when l_event_series_id is null and g_processing_event_series then
+                raise_application_error(-20100, 'Event is not part of a series, cannot use event series methods');
+            else
+                null;
+        end case;
 
         ticket_group_available(p_event_id, p_price_category, p_tickets);
         
@@ -913,6 +966,8 @@ as
         v_error_count number := 0;
         v_success_count number := 0;
     begin
+    
+        g_processing_event_series := true;
         
         --validate the ticket group for all events in the series
         ticket_group_available_series(
@@ -949,8 +1004,10 @@ as
                 || v_error_count || ' errors encountered, ticket group (' || upper(p_price_category) || ') not created for these events.';
         end if;
         
+        g_processing_event_series := false;
     exception
         when others then
+            g_processing_event_series := false;
             log_error(sqlerrm, sqlcode,'create_ticket_group_event_series');
             raise;
     end create_ticket_group_event_series;
@@ -990,6 +1047,36 @@ as
             and ra.reseller_id = p_reseller_id;
     
     end show_ticket_assignments;
+
+    procedure show_ticket_assignments_event_series
+    (
+        p_event_series_id in number,
+        p_reseller_id in number,
+        p_ticket_groups out sys_refcursor
+    )
+    is
+    begin
+    
+        open p_ticket_groups for
+        select
+            ra.event_series_id,
+            ra.price_category,
+            ra.tickets_in_group,
+            ra.reseller_id,
+            ra.reseller_name,   
+            ra.assigned_to_others,
+            ra.tickets_assigned,
+            ra.max_available,
+            ra.min_assignment,
+            ra.sold_by_reseller,
+            ra.sold_by_venue
+        from 
+            event_system.event_series_ticket_assignment_v ra
+        where 
+            ra.event_series_id = p_event_series_id 
+            and ra.reseller_id = p_reseller_id;
+    
+    end show_ticket_assignments_event_series;
 
     procedure verify_ticket_assignment
     (
@@ -1082,7 +1169,17 @@ as
         p_ticket_assignment_id out number
     )
     is
+        l_event_series_id number;
     begin
+        l_event_series_id := get_ticket_group_event_series_id(p_ticket_group_id);
+        case
+            when l_event_series_id is not null and not g_processing_event_series then
+                raise_application_error(-20100, 'Event is part of a series, must use event series methods');
+            when l_event_series_id is null and g_processing_event_series then
+                raise_application_error(-20100, 'Event is not part of a series, cannot use event series methods');
+            else
+                null;
+        end case;        
 
         verify_ticket_assignment(p_reseller_id, p_ticket_group_id, p_number_tickets);
         
@@ -1122,7 +1219,70 @@ as
             log_error(sqlerrm, sqlcode, 'create_ticket_assignment');
             raise;
     end create_ticket_assignment;
-
+    
+    procedure create_ticket_assignment_event_series
+    (
+        p_event_series_id in number,    
+        p_reseller_id in number,
+        p_price_category in varchar2 default 'General Admission',
+        p_number_tickets in number,
+        p_status_code out varchar2,
+        p_status_message out varchar2
+    )
+    is
+        cursor c is
+            select
+                tg.ticket_group_id
+            from
+            event_system.events e
+            join event_system.ticket_groups tg
+                on e.event_id = tg.event_id
+            where
+                e.event_series_id = p_event_series_id
+                and e.event_date > sysdate
+                and tg.price_category = upper(p_price_category);
+        l_ticket_assignment_id number;
+        l_error_count number := 0;
+        l_success_count number := 0;        
+    begin
+        g_processing_event_series := true;
+        --validate assignment for all events in series that have not occurred yet
+        --not needed because each assignment will be validated by create_ticket_assignment
+        for r in c loop
+        
+            begin
+            
+                create_ticket_assignment(
+                    p_reseller_id => p_reseller_id,
+                    p_ticket_group_id => r.ticket_group_id,
+                    p_number_tickets => p_number_tickets,
+                    p_ticket_assignment_id => l_ticket_assignment_id);
+                    
+                l_success_count := l_success_count + 1;               
+            exception
+                when others then
+                    l_error_count := l_error_count + 1;
+            end;
+        
+        end loop;
+    
+        if l_error_count = 0 then
+            p_status_code := 'SUCCESS';
+            p_status_message := 'Ticket group (' || upper(p_price_category) || ') assigned to reseller for ' || l_success_count || ' events in series';    
+        else
+            p_status_code := 'ERRORS';
+            p_status_message := case when l_success_count > 0 then 'Ticket group (' || upper(p_price_category) || ') assigned to reseller for ' || l_success_count || ' events in series.  ' end
+                || l_error_count || ' errors encountered, ticket group (' || upper(p_price_category) || ') not assigned for these events.';
+        end if;
+        
+        g_processing_event_series := false;
+    exception
+        when others then
+            g_processing_event_series := false;
+            log_error(sqlerrm, sqlcode, 'create_ticket_assignment_event_series');
+            raise;    
+    end create_ticket_assignment_event_series;
+    
     procedure show_event_ticket_prices
     (
         p_event_id in number,

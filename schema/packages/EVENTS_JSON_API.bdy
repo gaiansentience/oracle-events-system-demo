@@ -729,6 +729,30 @@ as
             return get_json_error_doc(sqlcode, sqlerrm, 'get_ticket_assignments');
     end get_ticket_assignments;
 
+    function get_ticket_assignments_series
+    (
+        p_event_series_id in number,
+        p_formatted in boolean default false   
+    ) return clob
+    is
+        l_json clob;
+    begin
+    
+        select b.json_doc
+        into l_json
+        from event_system.event_series_ticket_assignment_v_json b
+        where b.event_series_id = p_event_series_id;
+    
+        if p_formatted then
+            l_json := format_json_clob(l_json);
+        end if;
+        return l_json;
+    
+    exception
+        when others then
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_ticket_assignments_series');
+    end get_ticket_assignments_series;
+
 --update ticket assignments for a reseller using a json document in the same format as get_ticket_assignments
 --update request document for each ticket group with status_code of SUCCESS or ERROR and a status_message
 --update entire request with a request_status of SUCCESS or ERRORS and request_errors (0 or N)
@@ -831,6 +855,102 @@ as
         when others then
             p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'update_ticket_assignments');
     end update_ticket_assignments;
+/*
+{
+  "event_series_id" : 13,
+  "ticket_resellers" :
+  [
+    {
+      "reseller_id" : 21,
+      "ticket_assignments" :
+      [
+        {
+          "price_category" : "VIP PIT ACCESS",
+          "tickets_assigned" : 0,
+        }
+      ]
+    }
+  ]
+}
+*/
+    procedure update_ticket_assignments_series
+    (
+        p_json_doc in out nocopy clob
+    )
+    is
+        l_event_series_id number;
+        l_reseller_id event_system.resellers.reseller_id%type;
+        l_price_category event_system.ticket_groups.price_category%type;
+        l_tickets_assigned number;
+        o_request json_object_t;
+        a_resellers json_array_t;
+        o_reseller json_object_t;
+        a_groups json_array_t;
+        o_group json_object_t;
+        
+        l_reseller_error_count number := 0;
+        l_error_count number := 0;
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
+    begin
+        
+        o_request := json_object_t.parse(p_json_doc);
+        l_event_series_id := o_request.get_number('event_series_id');
+        
+        a_resellers := o_request.get_array('ticket_resellers');
+        
+        for r in 0..a_resellers.get_size - 1 loop
+            l_reseller_id := 0;
+            o_reseller := json_object_t(a_resellers.get(r));
+            l_reseller_error_count := 0;
+            l_reseller_id := o_reseller.get_number('reseller_id');
+            
+            a_groups := o_reseller.get_array('ticket_assignments');
+            
+            for g in 0..a_groups.get_size - 1 loop
+                o_group := json_object_t(a_groups.get(g));
+                l_price_category := null;
+                l_tickets_assigned := 0;
+                
+                l_price_category := o_group.get_number('price_category');
+                l_tickets_assigned := o_group.get_number('tickets_assigned');
+                
+                begin
+                    events_api.create_ticket_assignment_event_series(
+                        p_event_series_id => l_event_series_id,
+                        p_reseller_id => l_reseller_id,
+                        p_price_category => l_price_category,
+                        p_number_tickets => l_tickets_assigned,
+                        p_status_code => l_status_code,
+                        p_status_message => l_status_message);
+                exception
+                    when others then
+                        l_status_code := 'ERROR';
+                        l_reseller_error_count := l_reseller_error_count + 1;
+                        l_status_message := sqlerrm;
+                end;
+                
+                o_group.put('status_code', l_status_code);
+                o_group.put('status_message', l_status_message);
+            
+            end loop;
+            
+            o_reseller.put('reseller_status', case when l_reseller_error_count = 0 then 'SUCCESS' else 'ERRORS' end);
+            o_reseller.put('reseller_errors', l_reseller_error_count);
+            l_error_count := l_error_count + l_reseller_error_count;
+        
+        end loop;
+        
+        --add status information for all resellers in the request
+        o_request.put('request_status', case when l_error_count = 0 then 'SUCCESS' else 'ERRORS' end);
+        o_request.put('request_errors', l_error_count);
+        
+        p_json_doc := o_request.to_clob; 
+
+    exception
+        when others then
+            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'update_ticket_assignments_series');
+    end update_ticket_assignments_series;
 
     function get_event_ticket_prices
     (

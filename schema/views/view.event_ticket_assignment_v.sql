@@ -75,6 +75,7 @@ select
     ,b.tickets_in_group
     ,b.reseller_id
     ,b.reseller_name
+    ,b.reseller_email
     ,b.assigned_to_others
     ,b.assigned_to_reseller as tickets_assigned
     ,b.ticket_assignment_id

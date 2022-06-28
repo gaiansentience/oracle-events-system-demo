@@ -9,6 +9,7 @@ drop view tickets_available_venue_v;
 drop view event_series_ticket_prices_v;
 drop view event_ticket_prices_v;
 
+drop view event_series_ticket_assignment_v;
 drop view event_ticket_assignment_v;
 
 drop view event_series_ticket_groups_v;

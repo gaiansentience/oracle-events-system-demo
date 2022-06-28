@@ -794,6 +794,30 @@ as
             return get_xml_error_doc(sqlcode, sqlerrm, 'get_ticket_assignments');
     end get_ticket_assignments;
 
+    function get_ticket_assignments_series
+    (
+        p_event_series_id in number,
+        p_formatted in boolean default false   
+    ) return xmltype
+    is
+        l_xml xmltype;
+    begin
+    
+        select b.xml_doc
+        into l_xml
+        from event_system.event_series_ticket_assignment_v_xml b
+        where b.event_series_id = p_event_series_id;
+    
+        if p_formatted then
+            l_xml := format_xml_clob(l_xml);
+        end if;
+        return l_xml;
+    
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_ticket_assignments_series');
+    end get_ticket_assignments_series;
+
 --update ticket assignments for a reseller using a xml document in the same format as get_ticket_assignments
 --update request document for each ticket group with status_code of SUCCESS or ERROR and a status_message
 --update entire request with a request_status of SUCCESS or ERRORS and request_errors (0 or N)
@@ -898,6 +922,107 @@ as
             util_xmldom_helper.freeDoc;
             p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'update_ticket_assignments');
     end update_ticket_assignments;
+/*
+<event_series_ticket_assignment>
+  <event_series>
+    <event_series_id>13</event_series_id>
+  </event_series>
+  <ticket_resellers>
+    <reseller>
+      <reseller_id>21</reseller_id>
+      <ticket_assignments>
+        <ticket_group>
+          <price_category>VIP PIT ACCESS</price_category>
+          <tickets_assigned>100</tickets_assigned>
+        </ticket_group>
+...
+      </ticket_assignments>
+    </reseller>
+...
+  </ticket_resellers>
+</event_series_ticket_assignment>
+*/
+    procedure update_ticket_assignments_series
+    (
+        p_xml_doc in out nocopy xmltype
+    )
+    is
+        l_event_series_id number;
+        l_reseller_id event_system.resellers.reseller_id%type;
+        l_price_category event_system.ticket_groups.price_category%type;
+        l_tickets_assigned number;
+        nRoot dbms_xmldom.DOMnode;
+        nListResellers dbms_xmldom.DOMnodeList;
+        nReseller dbms_xmldom.DOMnode;
+        nListGroups dbms_xmldom.DOMnodeList;
+        nGroup dbms_xmldom.DOMnode;
+        l_reseller_error_count number := 0;
+        l_error_count number := 0;
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
+    begin
+    
+        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
+
+        dbms_xslprocessor.valueof(nRoot, 'event_series/l_event_series_id/text()', l_event_series_id);
+        
+        nListResellers := dbms_xslprocessor.selectNodes(n => nRoot, pattern => 'ticket_resellers/reseller');
+        for r in 0..dbms_xmldom.getLength(nListResellers) - 1 loop
+            l_reseller_id := 0;
+            nReseller := dbms_xmldom.item(nListResellers, r);
+        
+            dbms_xslprocessor.valueof(nReseller, 'reseller_id/text()', l_reseller_id);
+            l_reseller_error_count := 0;
+            
+            nListGroups := dbms_xslprocessor.selectNodes(n => nReseller, pattern => 'ticket_assignments/ticket_group');
+            for g in 0..dbms_xmldom.getLength(nListGroups) - 1 loop
+                nGroup := dbms_xmldom.item(nListGroups, g);
+                l_price_category := null;
+                l_tickets_assigned := 0;
+                
+                dbms_xslprocessor.valueof(nGroup, 'price_category/text()', l_price_category);
+                dbms_xslprocessor.valueof(nGroup, 'tickets_assigned/text()', l_tickets_assigned);
+
+                begin
+
+                    events_api.create_ticket_assignment_event_series(
+                        p_event_series_id => l_event_series_id,
+                        p_reseller_id => l_reseller_id,
+                        p_price_category => l_price_category,
+                        p_number_tickets => l_tickets_assigned,
+                        p_status_code => l_status_code,
+                        p_status_message => l_status_message);
+
+                exception
+                    when others then
+                        l_status_code := 'ERROR';
+                        l_reseller_error_count := l_reseller_error_count + 1;
+                        l_status_message := sqlerrm;
+                end;
+
+                util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'status_code', p_data => l_status_code);
+                util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'status_message', p_data => l_status_message);
+
+            end loop;
+
+            --update the reseller array element
+            util_xmldom_helper.addTextNode(p_parent => nReseller, p_tag => 'reseller_status', p_data => case when l_reseller_error_count = 0 then 'SUCCESS' else 'ERRORS' end);
+            util_xmldom_helper.addTextNode(p_parent => nReseller, p_tag => 'reseller_errors', p_data => l_reseller_error_count);
+            l_error_count := l_error_count + l_reseller_error_count;
+
+        end loop;
+   
+        --add status information for all resellers in the request
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'request_status', p_data => case when l_error_count = 0 then 'SUCCESS' else 'ERRORS' end);
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'request_errors', p_data => l_error_count);
+        p_xml_doc := util_xmldom_helper.docToXMLtype;
+        util_xmldom_helper.freeDoc;
+
+    exception
+        when others then
+            util_xmldom_helper.freeDoc;
+            p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'update_ticket_assignments_series');
+    end update_ticket_assignments_series;
 
 --get pricing and availability for tickets created for the event
     function get_event_ticket_prices

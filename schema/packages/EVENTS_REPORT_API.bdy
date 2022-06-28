@@ -199,6 +199,27 @@ as
     
     end show_ticket_assignments;
 
+    function show_ticket_assignments_event_series
+    (
+        p_event_series_id in number,
+        p_reseller_id in number
+    ) return t_ticket_assignments_series pipelined
+    is
+        t_rows t_ticket_assignments_series;
+        rc sys_refcursor;
+    begin
+    
+        events_api.show_ticket_assignments_event_series(p_event_series_id, p_reseller_id, rc);
+        fetch rc bulk collect into t_rows;
+        close rc;
+        
+        for i in 1..t_rows.count loop
+            pipe row (t_rows(i));
+        end loop;
+        return;
+    
+    end show_ticket_assignments_event_series;
+
     --show pricing and availability for tickets created for the event
     function show_event_ticket_prices
     (

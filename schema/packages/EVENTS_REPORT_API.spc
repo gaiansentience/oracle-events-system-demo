@@ -212,6 +212,35 @@ as
         p_reseller_id in number 
     ) return t_ticket_assignments pipelined;
 
+    type r_ticket_assignment_series is record
+    (
+        event_series_id            events.event_series_id%type
+        ,price_category     ticket_groups.price_category%type
+        ,tickets_in_group   number
+        ,reseller_id        resellers.reseller_id%type
+        ,reseller_name      resellers.reseller_name%type
+        ,assigned_to_others number
+        ,tickets_assigned   number
+        ,max_available      number
+        ,min_assignment     number
+        ,sold_by_reseller   number
+        ,sold_by_venue      number
+    );
+    
+    type t_ticket_assignments_series is table of r_ticket_assignment_series;
+    
+    --show ticket groups and availability for this event and reseller
+    --     tickets_in_group    tickets in group, 
+    --     assigned_to_others  tickets assigned to other resellers, 
+    --     currently_assigned  tickets currently assigned to reseller, 
+    --     max_available       maximum tickets available for reseller (includes currently assigned)
+    function show_ticket_assignments_event_series
+    (
+        p_event_series_id in number,
+        p_reseller_id in number 
+    ) return t_ticket_assignments_series pipelined;
+
+
     type r_ticket_prices is record
     (
         venue_id                 venues.venue_id%type

@@ -185,6 +185,13 @@ as
         p_reseller_id in number,
         p_ticket_groups out sys_refcursor
     );
+
+    procedure show_ticket_assignments_event_series
+    (
+        p_event_series_id in number,
+        p_reseller_id in number,
+        p_ticket_groups out sys_refcursor
+    );
     
     --assign a group of tickets in a price category to a reseller
     --if the reseller already has that category assigned, update the number of tickets
@@ -195,6 +202,16 @@ as
         p_ticket_group_id in number,
         p_number_tickets in number,
         p_ticket_assignment_id out number
+    );
+
+    procedure create_ticket_assignment_event_series
+    (
+        p_event_series_id in number,    
+        p_reseller_id in number,
+        p_price_category in varchar2 default 'General Admission',
+        p_number_tickets in number,
+        p_status_code out varchar2,
+        p_status_message out varchar2
     );
 
     --show pricing and availability for tickets created for the event
