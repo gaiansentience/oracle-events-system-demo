@@ -20,8 +20,14 @@ prompt creating views for events api
 @@view.tickets_available_venue_v.sql;
 @@view.tickets_available_reseller_v.sql;
 @@view.tickets_available_all_v.sql;
+
+@@view.tickets_available_series_all_v.sql;
+@@view.tickets_available_series_venue_v.sql;
+@@view.tickets_available_series_reseller_v.sql;
+
 @@view.customer_event_ticket_base_v.sql;
 @@view.customer_event_tickets_v.sql;
+
 @@view.venue_reseller_performance_v.sql;
 @@view.event_reseller_performance_v.sql;
 @@view.venue_reseller_commission_v.sql;

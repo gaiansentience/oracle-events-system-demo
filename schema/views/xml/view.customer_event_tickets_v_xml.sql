@@ -14,6 +14,7 @@ with customer_total_tickets as
     select
         c.customer_id
         ,e.event_id
+        ,e.event_series_id
         ,xmlelement("customer_tickets",
             xmlforest(
                 xmlforest(
@@ -27,6 +28,7 @@ with customer_total_tickets as
                     ,e.venue_name as "venue_name"
                     ) as "venue"
                     ,e.event_id   as "event_id"
+                    ,e.event_series_id   as "event_series_id"
                     ,e.event_name as "event_name"
                     ,e.event_date as "event_date"
                 ) as "event"
@@ -63,6 +65,7 @@ with customer_total_tickets as
 select
     b.customer_id
     ,b.event_id
+    ,b.event_series_id
     ,b.xml_doc
     ,xmlserialize(content b.xml_doc as clob indent) as xml_doc_formatted
 from xml_base b;

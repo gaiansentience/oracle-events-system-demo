@@ -1149,7 +1149,7 @@ as
     end get_event_tickets_available_reseller;
 
 
-    procedure purchase_tickets_get_customer
+    procedure purchase_get_customer
     (
         nRequest in out nocopy dbms_xmldom.DOMnode, 
         p_customer_id out number
@@ -1179,9 +1179,9 @@ as
    
         util_xmldom_helper.addTextNode(p_parent => nCustomer, p_tag => 'customer_id', p_data => p_customer_id);
 
-    end purchase_tickets_get_customer;
+    end purchase_get_customer;
 
-    procedure purchase_tickets_get_group_request(
+    procedure purchase_get_group_request(
             nGroup in out nocopy dbms_xmldom.DOMnode,
             p_group_id out number,
             p_quantity out number,
@@ -1210,33 +1210,14 @@ as
         
         p_tickets_requested_all_groups := p_tickets_requested_all_groups + p_quantity;
 
-    end purchase_tickets_get_group_request;
+    end purchase_get_group_request;
 
-
-    procedure purchase_tickets_verify_requested_price
-    (
-        p_group_id in number,
-        p_requested_price in number,
-        p_actual_price out number
-    )
-    is
-    begin
-        --verify ticket price
-        p_actual_price := events_api.get_current_ticket_price(p_ticket_group_id => p_group_id);
-        if p_actual_price > p_requested_price then
-            raise_application_error(-20100, 'INVALID TICKET PRICE: CANCELLING TRANSACTION.  Price requested is ' 
-                                        || p_requested_price || ', current price is ' || p_actual_price);
-        end if;
-            
-    end purchase_tickets_verify_requested_price;
-
-    procedure purchase_tickets_set_group_values_success
+    procedure purchase_set_group_values_success
     (
         p_qty_requested in number,
-        p_price in number,
         p_qty_purchased out number,
         p_sales_date out date,
-        p_extended_price out number,
+        p_extended_price in number,
         p_qty_purchased_all_groups in out number,
         p_total_purchase_amount in out number,
         p_status_code out varchar2,
@@ -1249,16 +1230,15 @@ as
         p_status_message := 'group tickets purchased';
         p_qty_purchased := p_qty_requested;
         p_sales_date := sysdate;
-        p_extended_price := p_qty_purchased * p_price;
         p_qty_purchased_all_groups := p_qty_purchased_all_groups + p_qty_purchased;
         p_total_purchase_amount := p_total_purchase_amount + p_extended_price;
 
-    end purchase_tickets_set_group_values_success;
+    end purchase_set_group_values_success;
 
-    procedure purchase_tickets_set_group_values_error(
+    procedure purchase_set_group_values_error(
         p_sqlerrm in varchar2,
         p_status_code out varchar2,
-        p_status_message in out varchar2,
+        p_status_message out varchar2,
         p_error_count in out number,
         p_qty_purchased out number,
         p_extended_price out number,
@@ -1273,9 +1253,9 @@ as
         p_extended_price := 0;
         p_sales_date := null;
         p_sales_id := 0;
-    end purchase_tickets_set_group_values_error;
+    end purchase_set_group_values_error;
 
-    procedure purchase_tickets_update_group
+    procedure purchase_update_group
     (
         nGroup in out nocopy dbms_xmldom.DOMnode,
         p_sales_id in number,
@@ -1312,9 +1292,9 @@ as
         util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'status_code', p_data => p_status_code);
         util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'status_message', p_data => p_status_message);
         
-    end purchase_tickets_update_group;
+    end purchase_update_group;
 
-    procedure purchase_tickets_update_request
+    procedure purchase_update_request
     (
         nRequest in out nocopy dbms_xmldom.DOMnode,
         p_error_count in number,
@@ -1342,7 +1322,7 @@ as
         util_xmldom_helper.addTextNode(p_parent => nRequest, p_tag => 'total_purchase_amount', p_data => p_total_purchase_amount);
         util_xmldom_helper.addTextNode(p_parent => nRequest, p_tag => 'purchase_disclaimer', p_data => 'All Ticket Sales Are Final.');
                 
-    end purchase_tickets_update_request;
+    end purchase_update_request;
 
 /*
 <ticket_purchase_request>
@@ -1410,50 +1390,48 @@ as
         dbms_xslprocessor.valueof(nRequest, 'event/event_id/text()', l_event_id);
         dbms_xslprocessor.valueof(nRequest, 'reseller/reseller_id/text()', r_sale.reseller_id);
 
-        purchase_tickets_get_customer(nRequest => nRequest, p_customer_id => r_sale.customer_id);
+        purchase_get_customer(nRequest => nRequest, p_customer_id => r_sale.customer_id);
 
         nListGroups := dbms_xslprocessor.selectNodes(n => nRequest, pattern => 'ticket_groups/ticket_group');
         for i in 0..dbms_xmldom.getLength(nListGroups) - 1 loop
             nGroup := dbms_xmldom.item(nListGroups, i);
     
-            purchase_tickets_get_group_request(
-                            nGroup => nGroup, 
-                            p_group_id => r_sale.ticket_group_id, 
-                            p_quantity => r_sale.ticket_quantity, 
-                            p_price => l_ticket_price_requested,
-                            p_tickets_requested_all_groups => l_total_tickets_requested);                            
+            purchase_get_group_request(
+                nGroup => nGroup, 
+                p_group_id => r_sale.ticket_group_id, 
+                p_quantity => r_sale.ticket_quantity, 
+                p_price => l_ticket_price_requested,
+                p_tickets_requested_all_groups => l_total_tickets_requested);                            
         
             begin
-            
-                purchase_tickets_verify_requested_price(
-                                p_group_id => r_sale.ticket_group_id, 
-                                p_requested_price => l_ticket_price_requested, 
-                                p_actual_price => l_actual_ticket_price);
             
                 --purchase the tickets, this sets v_ticket_sales_id
                 --this will verify availability for the reseller and group
                 --raises an exception if tickets are not available
-                events_api.purchase_tickets_from_reseller(
-                                p_reseller_id => r_sale.reseller_id,
-                                p_ticket_group_id => r_sale.ticket_group_id,
-                                p_customer_id => r_sale.customer_id,
-                                p_number_tickets => r_sale.ticket_quantity,
-                                p_ticket_sales_id => r_sale.ticket_sales_id);
+                --raises an exception if requested price is lower than current price
+                events_api.purchase_tickets_reseller(
+                    p_reseller_id => r_sale.reseller_id,
+                    p_ticket_group_id => r_sale.ticket_group_id,
+                    p_customer_id => r_sale.customer_id,
+                    p_number_tickets => r_sale.ticket_quantity,
+                    p_requested_price => l_ticket_price_requested,
+                    p_actual_price => l_actual_ticket_price,
+                    p_extended_price => r_sale.extended_price,                    
+                    p_ticket_sales_id => r_sale.ticket_sales_id);
 
-                purchase_tickets_set_group_values_success(
-                                p_qty_requested => r_sale.ticket_quantity,
-                                p_price => l_actual_ticket_price,
-                                p_qty_purchased => l_tickets_purchased_in_group,
-                                p_sales_date => r_sale.sales_date,
-                                p_extended_price => r_sale.extended_price,
-                                p_qty_purchased_all_groups => l_total_tickets_purchased,
-                                p_total_purchase_amount => l_total_purchase_amount,
-                                p_status_code => l_group_status_code,
-                                p_status_message => l_group_status_message);
+                purchase_set_group_values_success(
+                    p_qty_requested => r_sale.ticket_quantity,
+                    p_qty_purchased => l_tickets_purchased_in_group,
+                    p_sales_date => r_sale.sales_date,
+                    p_extended_price => r_sale.extended_price,
+                    p_qty_purchased_all_groups => l_total_tickets_purchased,
+                    p_total_purchase_amount => l_total_purchase_amount,
+                    p_status_code => l_group_status_code,
+                    p_status_message => l_group_status_message);
             
             exception
                 when others then
-                    purchase_tickets_set_group_values_error(
+                    purchase_set_group_values_error(
                         p_sqlerrm => sqlerrm,
                         p_status_code => l_group_status_code,
                         p_status_message => l_group_status_message,
@@ -1464,24 +1442,24 @@ as
                         p_sales_id => r_sale.ticket_sales_id);
             end;
         
-            purchase_tickets_update_group(
-                                    nGroup => nGroup, 
-                                    p_sales_id => r_sale.ticket_sales_id, 
-                                    p_sales_date => r_sale.sales_date, 
-                                    p_tickets_purchased => l_tickets_purchased_in_group,
-                                    p_actual_price => l_actual_ticket_price,
-                                    p_extended_price => r_sale.extended_price,
-                                    p_status_code => l_group_status_code,
-                                    p_status_message => l_group_status_message);
+            purchase_update_group(
+                nGroup => nGroup, 
+                p_sales_id => r_sale.ticket_sales_id, 
+                p_sales_date => r_sale.sales_date, 
+                p_tickets_purchased => l_tickets_purchased_in_group,
+                p_actual_price => l_actual_ticket_price,
+                p_extended_price => r_sale.extended_price,
+                p_status_code => l_group_status_code,
+                p_status_message => l_group_status_message);
         
         end loop;
         
-        purchase_tickets_update_request(
-                        nRequest => nRequest, 
-                        p_error_count => l_total_error_count,
-                        p_qty_requested_all_groups => l_total_tickets_requested,
-                        p_qty_purchased_all_groups => l_total_tickets_purchased,
-                        p_total_purchase_amount => l_total_purchase_amount);
+        purchase_update_request(
+            nRequest => nRequest, 
+            p_error_count => l_total_error_count,
+            p_qty_requested_all_groups => l_total_tickets_requested,
+            p_qty_purchased_all_groups => l_total_tickets_purchased,
+            p_total_purchase_amount => l_total_purchase_amount);
     
         p_xml_doc := util_xmldom_helper.docToXMLtype;
         util_xmldom_helper.freeDoc;
@@ -1520,49 +1498,47 @@ as
 
         dbms_xslprocessor.valueof(nRequest, 'event/event_id/text()', l_event_id);
 
-        purchase_tickets_get_customer(nRequest => nRequest, p_customer_id => r_sale.customer_id);
+        purchase_get_customer(nRequest => nRequest, p_customer_id => r_sale.customer_id);
 
         nListGroups := dbms_xslprocessor.selectNodes(n => nRequest, pattern => 'ticket_groups/ticket_group');
         for i in 0..dbms_xmldom.getLength(nListGroups) - 1 loop
             nGroup := dbms_xmldom.item(nListGroups, i);
     
-            purchase_tickets_get_group_request(
-                            nGroup => nGroup, 
-                            p_group_id => r_sale.ticket_group_id, 
-                            p_quantity => r_sale.ticket_quantity, 
-                            p_price => l_ticket_price_requested,
-                            p_tickets_requested_all_groups => l_total_tickets_requested);                            
+            purchase_get_group_request(
+                nGroup => nGroup, 
+                p_group_id => r_sale.ticket_group_id, 
+                p_quantity => r_sale.ticket_quantity, 
+                p_price => l_ticket_price_requested,
+                p_tickets_requested_all_groups => l_total_tickets_requested);                            
         
             begin
-            
-                purchase_tickets_verify_requested_price(
-                                p_group_id => r_sale.ticket_group_id, 
-                                p_requested_price => l_ticket_price_requested, 
-                                p_actual_price => l_actual_ticket_price);
             
                 --purchase the tickets, this sets v_ticket_sales_id
                 --this will verify availability for the reseller and group
                 --raises an exception if tickets are not available
-                events_api.purchase_tickets_from_venue(
-                                p_ticket_group_id => r_sale.ticket_group_id,
-                                p_customer_id => r_sale.customer_id,
-                                p_number_tickets => r_sale.ticket_quantity,
-                                p_ticket_sales_id => r_sale.ticket_sales_id);
+                --raises an exception if requested price is lower than current price
+                events_api.purchase_tickets_venue(
+                    p_ticket_group_id => r_sale.ticket_group_id,
+                    p_customer_id => r_sale.customer_id,
+                    p_number_tickets => r_sale.ticket_quantity,
+                    p_requested_price => l_ticket_price_requested,
+                    p_actual_price => l_actual_ticket_price,
+                    p_extended_price => r_sale.extended_price,                                                    
+                    p_ticket_sales_id => r_sale.ticket_sales_id);
 
-                purchase_tickets_set_group_values_success(
-                                p_qty_requested => r_sale.ticket_quantity,
-                                p_price => l_actual_ticket_price,
-                                p_qty_purchased => l_tickets_purchased_in_group,
-                                p_sales_date => r_sale.sales_date,
-                                p_extended_price => r_sale.extended_price,
-                                p_qty_purchased_all_groups => l_total_tickets_purchased,
-                                p_total_purchase_amount => l_total_purchase_amount,
-                                p_status_code => l_group_status_code,
-                                p_status_message => l_group_status_message);
+                purchase_set_group_values_success(
+                    p_qty_requested => r_sale.ticket_quantity,
+                    p_qty_purchased => l_tickets_purchased_in_group,
+                    p_sales_date => r_sale.sales_date,
+                    p_extended_price => r_sale.extended_price,
+                    p_qty_purchased_all_groups => l_total_tickets_purchased,
+                    p_total_purchase_amount => l_total_purchase_amount,
+                    p_status_code => l_group_status_code,
+                    p_status_message => l_group_status_message);
             
             exception
                 when others then
-                    purchase_tickets_set_group_values_error(
+                    purchase_set_group_values_error(
                         p_sqlerrm => sqlerrm,
                         p_status_code => l_group_status_code,
                         p_status_message => l_group_status_message,
@@ -1573,24 +1549,24 @@ as
                         p_sales_id => r_sale.ticket_sales_id);
             end;
         
-            purchase_tickets_update_group(
-                                    nGroup => nGroup, 
-                                    p_sales_id => r_sale.ticket_sales_id, 
-                                    p_sales_date => r_sale.sales_date, 
-                                    p_tickets_purchased => l_tickets_purchased_in_group,
-                                    p_actual_price => l_actual_ticket_price,
-                                    p_extended_price => r_sale.extended_price,
-                                    p_status_code => l_group_status_code,
-                                    p_status_message => l_group_status_message);
+            purchase_update_group(
+                nGroup => nGroup, 
+                p_sales_id => r_sale.ticket_sales_id, 
+                p_sales_date => r_sale.sales_date, 
+                p_tickets_purchased => l_tickets_purchased_in_group,
+                p_actual_price => l_actual_ticket_price,
+                p_extended_price => r_sale.extended_price,
+                p_status_code => l_group_status_code,
+                p_status_message => l_group_status_message);
         
         end loop;
         
-        purchase_tickets_update_request(
-                        nRequest => nRequest, 
-                        p_error_count => l_total_error_count,
-                        p_qty_requested_all_groups => l_total_tickets_requested,
-                        p_qty_purchased_all_groups => l_total_tickets_purchased,
-                        p_total_purchase_amount => l_total_purchase_amount);
+        purchase_update_request(
+            nRequest => nRequest, 
+            p_error_count => l_total_error_count,
+            p_qty_requested_all_groups => l_total_tickets_requested,
+            p_qty_purchased_all_groups => l_total_tickets_purchased,
+            p_total_purchase_amount => l_total_purchase_amount);
     
         p_xml_doc := util_xmldom_helper.docToXMLtype;
         util_xmldom_helper.freeDoc;
@@ -1645,22 +1621,64 @@ as
     begin
        
         v_customer_id := events_api.get_customer_id(p_customer_email);
-       
-        select b.xml_doc into l_xml
-        from customer_event_tickets_v_xml b
-        where 
-            b.event_id = p_event_id 
-            and b.customer_id = v_customer_id;
-    
-        if p_formatted then
-            l_xml := format_xml_string(l_xml);
-        end if;
-        return l_xml;
+        
+        return get_customer_event_tickets(v_customer_id, p_event_id, p_formatted);
        
     exception
         when others then
             return get_xml_error_doc(sqlcode, sqlerrm, 'get_customer_event_tickets_by_email');
     end get_customer_event_tickets_by_email;
+
+    function get_customer_event_series_tickets
+    (
+        p_customer_id in number,
+        p_event_series_id in number,
+        p_formatted in boolean default false
+    ) return xmltype
+    is
+        l_xml xmltype;
+    begin
+    
+        select b.xml_doc
+        into l_xml
+        from customer_event_tickets_v_xml b
+        where 
+            b.event_series_id = p_event_series_id 
+            and b.customer_id = p_customer_id;
+    
+        if p_formatted then
+            l_xml := format_xml_string(l_xml);
+        end if;
+        return l_xml;
+    
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_customer_event_series_tickets');
+    end get_customer_event_series_tickets;
+
+
+--get customer tickets purchased for event
+--use email to get customer_id
+    function get_customer_event_series_tickets_by_email
+    (
+        p_customer_email in customers.customer_email%type,
+        p_event_series_id in number,
+        p_formatted in boolean default false
+    ) return xmltype
+    is
+        v_customer_id number;
+        l_xml xmltype;   
+    begin
+       
+        v_customer_id := events_api.get_customer_id(p_customer_email);
+        
+        return get_customer_event_series_tickets(v_customer_id, p_event_series_id, p_formatted);
+       
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_customer_event_series_tickets_by_email');
+    end get_customer_event_series_tickets_by_email;
+
 
 begin
   null;

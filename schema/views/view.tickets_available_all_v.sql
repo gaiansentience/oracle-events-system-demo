@@ -3,6 +3,7 @@ select
     r.venue_id
     ,r.venue_name
     ,r.event_id
+    ,r.event_series_id
     ,r.event_name
     ,r.event_date
     ,r.event_tickets_available
@@ -22,6 +23,7 @@ select
     v.venue_id
     ,v.venue_name
     ,v.event_id
+    ,v.event_series_id
     ,v.event_name
     ,v.event_date
     ,v.event_tickets_available

@@ -14,6 +14,7 @@ with customer_total_tickets as
     select
         c.customer_id
         ,e.event_id
+        ,e.event_series_id
         ,json_object(
             'customer_id'     : c.customer_id
             ,'customer_name'  : c.customer_name
@@ -21,6 +22,7 @@ with customer_total_tickets as
             ,'venue_id'       : e.venue_id
             ,'venue_name'     : e.venue_name
             ,'event_id'       : e.event_id
+            ,'event_series_id'       : e.event_series_id
             ,'event_name'     : e.event_name
             ,'event_date'     : e.event_date
             ,'total_tickets_purchased' : t.total_tickets_purchased
@@ -52,6 +54,7 @@ with customer_total_tickets as
 select
     b.customer_id
     ,b.event_id
+    ,b.event_series_id
     ,b.json_doc
     ,json_serialize(b.json_doc pretty) as json_doc_formatted
 from json_base b;

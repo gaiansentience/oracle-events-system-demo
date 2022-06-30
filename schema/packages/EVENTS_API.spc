@@ -270,24 +270,59 @@ as
     --record ticket purchased through reseller application
     --raise error if ticket group quantity available is less than number of tickets requested
     --return ticket sales id as sales confirmation number
-    procedure purchase_tickets_from_reseller
+    procedure purchase_tickets_reseller
     (
         p_reseller_id in number,
         p_ticket_group_id in number,
         p_customer_id in number,
         p_number_tickets in number,
+        p_requested_price in number,
+        p_actual_price out number,
+        p_extended_price out number,
         p_ticket_sales_id out number
     );
     
     --record ticket purchased from venue directly
     --raise error if ticket group quantity available is less than number of tickets requested
     --return ticket sales id as sales confirmation number
-    procedure purchase_tickets_from_venue
+    procedure purchase_tickets_venue
     (
         p_ticket_group_id in number,
         p_customer_id in number,
         p_number_tickets in number,
+        p_requested_price in number,
+        p_actual_price out number,
+        p_extended_price out number,
         p_ticket_sales_id out number
+    );
+
+    procedure purchase_tickets_reseller_series
+    (
+        p_reseller_id in number,
+        p_event_series_id in number,
+        p_price_category in varchar2,
+        p_customer_id in number,
+        p_number_tickets in number,
+        p_requested_price in number,
+        p_average_price out number,
+        p_total_purchase out number,
+        p_total_tickets out number,        
+        p_status_code out varchar2,
+        p_status_message out varchar2
+    );
+
+    procedure purchase_tickets_venue_series
+    (
+        p_event_series_id in number,
+        p_price_category in varchar2,
+        p_customer_id in number,
+        p_number_tickets in number,
+        p_requested_price in number,
+        p_average_price out number,
+        p_total_purchase out number,
+        p_total_tickets out number,        
+        p_status_code out varchar2,
+        p_status_message out varchar2
     );
 
     procedure show_customer_event_tickets
@@ -304,5 +339,18 @@ as
         p_tickets out sys_refcursor
     );
 
+    procedure show_customer_event_series_tickets
+    (
+        p_customer_id in number,
+        p_event_series_id in number,
+        p_tickets out sys_refcursor
+    );
+    
+    procedure show_customer_event_series_tickets_by_email
+    (
+        p_customer_email in varchar2,
+        p_event_series_id in number,
+        p_tickets out sys_refcursor
+    );
 
 end events_api;

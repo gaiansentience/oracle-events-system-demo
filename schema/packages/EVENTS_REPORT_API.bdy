@@ -349,14 +349,11 @@ as
         p_event_id in number
     ) return t_customer_event_tickets pipelined
     is
-        v_customer_id number;
         t_rows t_customer_event_tickets;
         rc sys_refcursor;
     begin
-    
-        v_customer_id := events_api.get_customer_id(p_customer_email);
-        
-        events_api.show_customer_event_tickets(v_customer_id, p_event_id, rc);
+            
+        events_api.show_customer_event_tickets_by_email(p_customer_email, p_event_id, rc);
         fetch rc bulk collect into t_rows;
         close rc;
         
@@ -366,6 +363,49 @@ as
         return;
     
     end show_customer_event_tickets_by_email;
+
+    function show_customer_event_series_tickets
+    (
+        p_customer_id in number,
+        p_event_series_id in number
+    ) return t_customer_event_tickets pipelined
+    is
+        t_rows t_customer_event_tickets;
+        rc sys_refcursor;
+    begin
+    
+        events_api.show_customer_event_series_tickets(p_customer_id, p_event_series_id, rc);
+        fetch rc bulk collect into t_rows;
+        close rc;
+        
+        for i in 1..t_rows.count loop
+            pipe row(t_rows(i));
+        end loop;
+        return;
+    
+    end show_customer_event_series_tickets;
+
+    function show_customer_event_series_tickets_by_email
+    (
+        p_customer_email in varchar2,
+        p_event_series_id in number
+    ) return t_customer_event_tickets pipelined
+    is
+        t_rows t_customer_event_tickets;
+        rc sys_refcursor;
+    begin
+        
+        events_api.show_customer_event_series_tickets_by_email(p_customer_email, p_event_series_id, rc);
+        fetch rc bulk collect into t_rows;
+        close rc;
+        
+        for i in 1..t_rows.count loop
+            pipe row(t_rows(i));
+        end loop;
+        return;
+    
+    end show_customer_event_series_tickets_by_email;
+
 
 begin
   null;

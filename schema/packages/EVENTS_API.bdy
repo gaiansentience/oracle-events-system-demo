@@ -1554,6 +1554,24 @@ as
             raise;
     end get_current_ticket_price;
 
+    procedure verify_requested_price
+    (
+        p_ticket_group_id in number,
+        p_requested_price in number,
+        p_actual_price out number
+    )
+    is
+        l_error varchar2(1000);
+    begin
+
+        p_actual_price := get_current_ticket_price(p_ticket_group_id => p_ticket_group_id);
+        if p_actual_price > p_requested_price then
+            l_error := 'INVALID TICKET PRICE: CANCELLING TRANSACTION.  Price requested is ' || p_requested_price || ', current price is ' || p_actual_price;
+            raise_application_error(-20100, l_error);
+        end if;
+            
+    end verify_requested_price;
+
     procedure verify_tickets_available_reseller
     (
         p_reseller_id in number,
@@ -1636,40 +1654,46 @@ as
     --record ticket purchased through reseller application
     --raise error if ticket group quantity available is less than number of tickets requested
     --return ticket sales id as sales confirmation number
-    procedure purchase_tickets_from_reseller
+    procedure purchase_tickets_reseller
     (
         p_reseller_id in number,
         p_ticket_group_id in number,
         p_customer_id in number,
         p_number_tickets in number,
+        p_requested_price in number,
+        p_actual_price out number,
+        p_extended_price out number,
         p_ticket_sales_id out number
     )
     is
-        l_price number;
+        --l_price number;
         l_commission_pct number;        
         r_sale event_system.ticket_sales%rowtype;
     begin
         verify_tickets_available_reseller(p_reseller_id, p_ticket_group_id, p_number_tickets);
-        l_price := get_current_ticket_price(p_ticket_group_id);
+        
+        verify_requested_price(p_ticket_group_id => p_ticket_group_id, p_requested_price => p_requested_price, p_actual_price => p_actual_price);
+
         l_commission_pct := get_reseller_commission_percent(p_reseller_id);
         
         r_sale.ticket_group_id := p_ticket_group_id;
         r_sale.customer_id := p_customer_id;
         r_sale.reseller_id := p_reseller_id;
         r_sale.ticket_quantity := p_number_tickets;
-        r_sale.extended_price := l_price * r_sale.ticket_quantity;
+        r_sale.extended_price := p_actual_price * p_number_tickets;
         r_sale.reseller_commission := round(r_sale.extended_price * l_commission_pct, 2);
         r_sale.sales_date := sysdate;
 
         create_ticket_sale(p_sale => r_sale);
         
         p_ticket_sales_id := r_sale.ticket_sales_id;
+        p_extended_price := r_sale.extended_price;
 
     exception
         when others then
-            log_error(sqlerrm, sqlcode,'purchase_tickets_from_reseller');
+            log_error(sqlerrm, sqlcode,'purchase_tickets_reseller');
             raise;
-    end purchase_tickets_from_reseller;
+    end purchase_tickets_reseller;
 
     procedure verify_tickets_available_venue
     (
@@ -1731,38 +1755,173 @@ as
     --record ticket purchased from venue directly
     --raise error if ticket group quantity available is less than number of tickets requested
     --return ticket sales id as sales confirmation number
-    procedure purchase_tickets_from_venue
+    procedure purchase_tickets_venue
     (
         p_ticket_group_id in number,
         p_customer_id in number,
         p_number_tickets in number,
+        p_requested_price in number,
+        p_actual_price out number,
+        p_extended_price out number,
         p_ticket_sales_id out number
     )
     is
-        l_price number;
         r_sale event_system.ticket_sales%rowtype;
     begin
         verify_tickets_available_venue(p_ticket_group_id, p_number_tickets);        
-        l_price := get_current_ticket_price(p_ticket_group_id);
+
+        verify_requested_price(p_ticket_group_id => p_ticket_group_id, p_requested_price => p_requested_price, p_actual_price => p_actual_price);
 
         r_sale.ticket_group_id := p_ticket_group_id;
         r_sale.customer_id := p_customer_id;
         r_sale.reseller_id := NULL;
         r_sale.ticket_quantity := p_number_tickets;
-        r_sale.extended_price := l_price * r_sale.ticket_quantity;
+        r_sale.extended_price := p_actual_price * p_number_tickets;
         r_sale.reseller_commission := 0;
         r_sale.sales_date := sysdate;
 
         create_ticket_sale(p_sale => r_sale);
         
         p_ticket_sales_id := r_sale.ticket_sales_id;
+        p_extended_price := r_sale.extended_price;
             
     exception
         when others then
-            log_error(sqlerrm, sqlcode, 'purchase_tickets_from_venue');
+            log_error(sqlerrm, sqlcode, 'purchase_tickets_venue');
             raise;
-    end purchase_tickets_from_venue;
+    end purchase_tickets_venue;
+        
+    procedure purchase_tickets_reseller_series
+    (
+        p_reseller_id in number,
+        p_event_series_id in number,
+        p_price_category in varchar2,
+        p_customer_id in number,
+        p_number_tickets in number,
+        p_requested_price in number,
+        p_average_price out number,
+        p_total_purchase out number,
+        p_total_tickets out number,
+        p_status_code out varchar2,
+        p_status_message out varchar2
+    )
+    is
+        cursor c is
+            select tg.ticket_group_id
+            from 
+                events e 
+                join ticket_groups tg
+                    on e.event_id = tg.event_id
+            where
+                e.event_date >= sysdate
+                and e.event_series_id = p_event_series_id
+                and tg.price_category = upper(p_price_category);
+
+        l_ticket_sales_id number;
+        l_actual_price number;
+        l_extended_price number;
+        l_success_count number := 0;
+        l_error_count number := 0;
+    begin
+        p_total_tickets := 0;
+        p_total_purchase := 0;
     
+        for r in c loop
+        
+            begin
+            
+                purchase_tickets_reseller(
+                    p_reseller_id => p_reseller_id,
+                    p_ticket_group_id => r.ticket_group_id,
+                    p_customer_id => p_customer_id,
+                    p_number_tickets => p_number_tickets,
+                    p_requested_price => p_requested_price,
+                    p_actual_price => l_actual_price,
+                    p_extended_price => l_extended_price,
+                    p_ticket_sales_id => l_ticket_sales_id);
+                    
+                p_total_purchase := p_total_purchase + l_extended_price;      
+                p_total_tickets := p_total_tickets + p_number_tickets;
+                l_success_count := l_success_count + 1;
+            exception
+                when others then
+                    l_error_count := l_error_count + 1;
+            end;
+        
+        end loop;
+        
+        p_average_price := case when p_total_tickets = 0 then 0 else round(p_total_purchase/p_total_tickets,2) end;        
+        p_status_code := case when l_error_count = 0 then 'SUCCESS' else 'ERRORS' end;
+        p_status_message := case when l_success_count > 0 then 'Tickets purchased for ' || l_success_count || ' events in the series.' end
+            || case when l_error_count > 0 then '  Tickets could not be purchased for ' || l_error_count || ' events in the series.' end;
+    
+    end purchase_tickets_reseller_series;
+
+
+    procedure purchase_tickets_venue_series
+    (
+        p_event_series_id in number,
+        p_price_category in varchar2,
+        p_customer_id in number,
+        p_number_tickets in number,
+        p_requested_price in number,
+        p_average_price out number,
+        p_total_purchase out number,
+        p_total_tickets out number,
+        p_status_code out varchar2,
+        p_status_message out varchar2
+    )
+    is
+        cursor c is
+            select tg.ticket_group_id
+            from 
+                events e 
+                join ticket_groups tg
+                    on e.event_id = tg.event_id
+            where
+                e.event_date >= sysdate
+                and e.event_series_id = p_event_series_id
+                and tg.price_category = upper(p_price_category);
+                
+        l_ticket_sales_id number;
+        l_actual_price number;
+        l_extended_price number;
+        l_success_count number := 0;
+        l_error_count number := 0;    
+    begin
+        p_total_tickets := 0;
+        p_total_purchase := 0;
+    --validate price category and price requested
+        for r in c loop
+        
+            begin
+            
+                purchase_tickets_venue(
+                    p_ticket_group_id => r.ticket_group_id,
+                    p_customer_id => p_customer_id,
+                    p_number_tickets => p_number_tickets,
+                    p_requested_price => p_requested_price,
+                    p_actual_price => l_actual_price,
+                    p_extended_price => l_extended_price,
+                    p_ticket_sales_id => l_ticket_sales_id);
+                    
+                p_total_purchase := p_total_purchase + l_extended_price;    
+                p_total_tickets := p_total_tickets + p_number_tickets;
+                l_success_count := l_success_count + 1;
+            exception
+                when others then
+                    l_error_count := l_error_count + 1;
+            end;
+        
+        end loop;
+        
+        p_average_price := case when p_total_tickets = 0 then 0 else round(p_total_purchase/p_total_tickets,2) end;
+        p_status_code := case when l_error_count = 0 then 'SUCCESS' else 'ERRORS' end;
+        p_status_message := case when l_success_count > 0 then 'Tickets purchased for ' || l_success_count || ' events in the series.' end
+            || case when l_error_count > 0 then '  Tickets could not be purchased for ' || l_error_count || ' events in the series.' end;
+        
+    end purchase_tickets_venue_series;
+
     procedure show_customer_event_tickets
     (
         p_customer_id in number,
@@ -1817,6 +1976,61 @@ as
     
     end show_customer_event_tickets_by_email;
     
+    procedure show_customer_event_series_tickets
+    (
+        p_customer_id in number,
+        p_event_series_id in number,
+        p_tickets out sys_refcursor
+    )
+    is
+    begin
+    
+        open p_tickets for
+        select
+            ct.customer_id,
+            ct.customer_name,
+            ct.customer_email,   
+            ct.venue_id,
+            ct.venue_name,
+            ct.event_id,
+            ct.event_name,
+            ct.event_date,
+            ct.total_tickets_purchased,
+            ct.ticket_group_id,
+            ct.price_category,
+            ct.ticket_sales_id,
+            ct.ticket_quantity,
+            ct.sales_date,
+            ct.reseller_id,
+            ct.reseller_name
+        from 
+            event_system.customer_event_tickets_v ct
+        where 
+            ct.event_series_id = p_event_series_id 
+            and ct.customer_id = p_customer_id
+        order by 
+            ct.price_category, 
+            ct.sales_date;
+    
+    end show_customer_event_series_tickets;
+
+    procedure show_customer_event_series_tickets_by_email
+    (
+        p_customer_email in varchar2,
+        p_event_series_id in number,
+        p_tickets out sys_refcursor
+    )
+    is
+        v_customer_id number;
+    begin
+    
+        v_customer_id := get_customer_id(p_customer_email);
+    
+        show_customer_event_series_tickets(v_customer_id, p_event_series_id, p_tickets);
+    
+    end show_customer_event_series_tickets_by_email;
+
+
 --package initialization
 begin
     initialize;

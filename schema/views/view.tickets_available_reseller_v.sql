@@ -4,6 +4,7 @@ with available_reseller as
 (
     select
         tg.event_id
+        ,tg.event_series_id
         ,tg.price_category
         ,tg.ticket_group_id
         ,tg.price
@@ -23,7 +24,7 @@ with available_reseller as
                 )
             ,0) as tickets_available
     from
-        event_ticket_prices_v tg 
+        event_system.event_ticket_prices_v tg 
         join event_system.ticket_assignments ta 
             on tg.ticket_group_id = ta.ticket_group_id
         join event_system.resellers r 
@@ -33,6 +34,7 @@ select
     e.venue_id
     ,e.venue_name
     ,e.event_id
+    ,e.event_series_id
     ,e.event_name
     ,e.event_date
     ,e.tickets_available as event_tickets_available    

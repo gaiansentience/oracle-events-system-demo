@@ -664,6 +664,7 @@ as
         cursor ticket_options is
             select
                 ticket_group_id,
+                price,
                 reseller_id,
                 trunc((trunc(dbms_random.value(30,100))/100 * tickets_available)) tickets_available
             from
@@ -675,8 +676,8 @@ as
         v_customers t_customers;
         v_sales_id number;
         v_tickets_available number;
-        i number := 0;
-        
+        v_actual_price number;
+        v_extended_price number;
         function get_random_customers return t_customers
         is
             l_customers t_customers;
@@ -688,36 +689,41 @@ as
             fetch first 50 rows only;
             return l_customers;
         end get_random_customers;
-    
+        
     begin
 
 
-        for o in ticket_options loop  --o.ticket_group_id o.reseller_id  o.tickets_available
+        for r in ticket_options loop  --o.ticket_group_id o.reseller_id  o.tickets_available
             v_customers := get_random_customers;
-            v_tickets_available := o.tickets_available;
+            v_tickets_available := r.tickets_available;
             for c in 1..v_customers.count loop
                 
                 if v_customers(c).number_tickets > 0 and v_tickets_available > v_customers(c).number_tickets then
                     begin
-                        if o.reseller_id is not null then
+                        if r.reseller_id is not null then
                         
-                            events_api.purchase_tickets_from_reseller(
-                                p_reseller_id => o.reseller_id,
-                                p_ticket_group_id => o.ticket_group_id,
+                            events_api.purchase_tickets_reseller(
+                                p_reseller_id => r.reseller_id,
+                                p_ticket_group_id => r.ticket_group_id,
                                 p_customer_id => v_customers(c).customer_id,
                                 p_number_tickets => v_customers(c).number_tickets,
+                                p_requested_price => r.price,
+                                p_actual_price => v_actual_price,
+                                p_extended_price => v_extended_price,
                                 p_ticket_sales_id => v_sales_id);
                         
                         else
                         
-                            events_api.purchase_tickets_from_venue(
-                                p_ticket_group_id => o.ticket_group_id,
+                            events_api.purchase_tickets_venue(
+                                p_ticket_group_id => r.ticket_group_id,
                                 p_customer_id => v_customers(c).customer_id,
                                 p_number_tickets => v_customers(c).number_tickets,
+                                p_requested_price => r.price,
+                                p_actual_price => v_actual_price,
+                                p_extended_price => v_extended_price,
                                 p_ticket_sales_id => v_sales_id);
                         
                         end if;
-                        i := i + 1;
                         v_tickets_available := v_tickets_available - v_customers(c).number_tickets;
                     exception
                         when others then

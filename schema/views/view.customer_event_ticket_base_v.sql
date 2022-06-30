@@ -11,7 +11,7 @@ select
     ,ts.sales_date
     ,ts.reseller_id
     ,nvl(r.reseller_name, 'VENUE DIRECT SALES') as reseller_name
-from 
+from
     ticket_groups tg 
     join ticket_sales ts 
         on tg.ticket_group_id = ts.ticket_group_id

@@ -379,4 +379,17 @@ as
         p_event_id in number
     ) return t_customer_event_tickets pipelined;
 
+    function show_customer_event_series_tickets
+    (
+        p_customer_id in number,
+        p_event_series_id in number
+    ) return t_customer_event_tickets pipelined;
+    
+    function show_customer_event_series_tickets_by_email
+    (
+        p_customer_email in varchar2,
+        p_event_series_id in number
+    ) return t_customer_event_tickets pipelined;
+
+
 end events_report_api;
