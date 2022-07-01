@@ -1074,6 +1074,80 @@ as
             return get_json_error_doc(sqlcode, sqlerrm, 'get_event_tickets_available_reseller');
     end get_event_tickets_available_reseller;
 
+    function get_event_series_tickets_available_all
+    (
+        p_event_series_id in number,
+        p_formatted in boolean default false
+    ) return clob
+    is
+        l_json clob;
+    begin
+    
+        select b.json_doc
+        into l_json
+        from tickets_available_series_all_v_json b
+        where b.event_series_id = p_event_series_id;
+    
+        if p_formatted then
+            l_json := format_json_clob(l_json);
+        end if;
+        return l_json;
+        
+    exception
+        when others then
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_event_series_tickets_available_all');
+    end get_event_series_tickets_available_all;
+
+    function get_event_series_tickets_available_venue
+    (
+        p_event_series_id in number,
+        p_formatted in boolean default false
+    ) return clob
+    is
+        l_json clob;
+    begin
+    
+        select b.json_doc
+        into l_json
+        from tickets_available_series_venue_v_json b
+        where b.event_series_id = p_event_series_id;
+    
+        if p_formatted then
+            l_json := format_json_clob(l_json);
+        end if;
+        return l_json;
+        
+    exception
+        when others then
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_event_series_tickets_available_venue');
+    end get_event_series_tickets_available_venue;
+
+    function get_event_series_tickets_available_reseller
+    (
+        p_event_series_id in number,
+        p_reseller_id in number,
+        p_formatted in boolean default false
+    ) return clob
+    is
+        l_json clob;
+    begin
+    
+        select b.json_doc
+        into l_json
+        from tickets_available_series_reseller_v_json b
+        where 
+            b.event_series_id = p_event_series_id
+            and b.reseller_id = p_reseller_id;
+    
+        if p_formatted then
+            l_json := format_json_clob(l_json);
+        end if;
+        return l_json;
+    exception
+        when others then
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_event_series_tickets_available_reseller');
+    end get_event_series_tickets_available_reseller;
+
     procedure purchase_get_customer
     (
         o_request in out nocopy json_object_t, 

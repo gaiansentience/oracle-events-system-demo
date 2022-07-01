@@ -2,6 +2,5 @@
 select
 * 
 from
-events_report_api.show_event_series_ticket_prices(13)
+events_report_api.show_event_series_ticket_prices(15)
 
---select * from tickets_available_all_v a where event_id = 30

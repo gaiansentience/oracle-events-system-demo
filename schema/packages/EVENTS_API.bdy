@@ -1379,11 +1379,13 @@ as
              ,reseller_name
              ,tickets_available
              ,ticket_status
-        from
-             event_system.tickets_available_all_v
-        where 
-             event_id = p_event_id;
+        from event_system.tickets_available_all_v
+        where event_id = p_event_id;
 
+    exception
+        when others then
+            log_error(sqlerrm, sqlcode, 'show_event_tickets_available_all');
+            raise;
     end show_event_tickets_available_all;
 
     --show ticket groups assigned to reseller for this event
@@ -1418,12 +1420,15 @@ as
              ,reseller_name
              ,tickets_available
              ,ticket_status
-        from
-            event_system.tickets_available_reseller_v
+        from event_system.tickets_available_reseller_v
         where 
             event_id = p_event_id
             and reseller_id = p_reseller_id;
 
+    exception
+        when others then
+            log_error(sqlerrm, sqlcode, 'show_event_tickets_available_reseller');
+            raise;
     end show_event_tickets_available_reseller;
 
     --show ticket groups not assigned to any reseller for this event
@@ -1457,12 +1462,126 @@ as
              ,reseller_name
              ,tickets_available
              ,ticket_status
-        from
-            event_system.tickets_available_venue_v
-        where 
-            event_id = p_event_id;
+        from event_system.tickets_available_venue_v
+        where event_id = p_event_id;
 
+    exception
+        when others then
+            log_error(sqlerrm, sqlcode, 'show_event_tickets_available_venue');
+            raise;
     end show_event_tickets_available_venue;
+
+    procedure show_event_series_tickets_available_all
+    (
+        p_event_series_id in number,
+        p_ticket_groups out sys_refcursor
+    )
+    is
+    begin
+    
+        open p_ticket_groups for
+        select
+            venue_id
+            ,venue_name
+            ,event_series_id
+            ,event_name
+            ,first_event_date
+            ,last_event_date
+            ,events_in_series
+            ,price_category
+            ,price
+            ,reseller_id
+            ,reseller_name
+            ,tickets_available
+            ,events_available
+            ,events_sold_out
+        from event_system.tickets_available_series_all_v
+        where event_series_id = p_event_series_id;
+
+    exception
+        when others then
+            log_error(sqlerrm, sqlcode, 'show_event_series_tickets_available_all');
+            raise;    
+    end show_event_series_tickets_available_all;
+
+    --show ticket groups assigned to reseller for this event
+    --include tickets available in each group
+    --show [number] AVAILABLE or SOLD OUT as status for each group
+    --include ticket price for each group
+    --used by reseller application to show available ticket groups to customers
+    procedure show_event_series_tickets_available_reseller
+    (
+        p_event_series_id in number,
+        p_reseller_id in number,
+        p_ticket_groups out sys_refcursor
+    )
+    is
+    begin
+    
+        open p_ticket_groups for
+        select
+            venue_id
+            ,venue_name
+            ,event_series_id
+            ,event_name
+            ,first_event_date
+            ,last_event_date
+            ,events_in_series
+            ,price_category
+            ,price
+            ,reseller_id
+            ,reseller_name
+            ,tickets_available
+            ,events_available
+            ,events_sold_out
+        from event_system.tickets_available_series_reseller_v
+        where 
+            event_series_id = p_event_series_id
+            and reseller_id = p_reseller_id;
+
+    exception
+        when others then
+            log_error(sqlerrm, sqlcode, 'show_event_series_tickets_available_reseller');
+            raise;    
+    end show_event_series_tickets_available_reseller;
+
+    --show ticket groups not assigned to any reseller for this event
+    --include tickets available in each group
+    --show [number] AVAILABLE or SOLD OUT as status for each group
+    --include ticket price for each group
+    --used by venue organizer application to show tickets available for direct purchase to customers
+    procedure show_event_series_tickets_available_venue
+    (
+        p_event_series_id in number,
+        p_ticket_groups out sys_refcursor
+    )
+    is
+    begin
+
+        open p_ticket_groups for
+        select
+            venue_id
+            ,venue_name
+            ,event_series_id
+            ,event_name
+            ,first_event_date
+            ,last_event_date
+            ,events_in_series
+            ,price_category
+            ,price
+            ,reseller_id
+            ,reseller_name
+            ,tickets_available
+            ,events_available
+            ,events_sold_out
+        from event_system.tickets_available_series_venue_v
+        where event_series_id = p_event_series_id;
+
+    exception
+        when others then
+            log_error(sqlerrm, sqlcode, 'show_event_series_tickets_available_venue');
+            raise;
+    end show_event_series_tickets_available_venue;
     
     procedure generate_serialized_tickets
     (

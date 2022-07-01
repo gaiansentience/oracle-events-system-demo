@@ -24,6 +24,10 @@ prompt creating views for xml web services
 @@view.tickets_available_venue_v_xml.sql;
 @@view.tickets_available_reseller_v_xml.sql;
 
+@@view.tickets_available_series_all_v_xml.sql;
+@@view.tickets_available_series_venue_v_xml.sql;
+@@view.tickets_available_series_reseller_v_xml.sql;
+
 @@view.customer_event_tickets_v_xml.sql;
 
 @verify_views\create_views_xml_verify.sql;

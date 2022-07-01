@@ -168,6 +168,25 @@ as
         p_formatted in boolean default false
     ) return clob;
 
+    function get_event_series_tickets_available_all
+    (
+        p_event_series_id in number,
+        p_formatted in boolean default false
+    ) return clob;
+    
+    function get_event_series_tickets_available_venue
+    (
+        p_event_series_id in number,
+        p_formatted in boolean default false
+    ) return clob;
+    
+    function get_event_series_tickets_available_reseller
+    (
+        p_event_series_id in number,
+        p_reseller_id in number,
+        p_formatted in boolean default false
+    ) return clob;
+
 --json input for purchase tickets from xxxx is modifed from json format from get_event_tickets_available_[venue|reseller]
 /*
 {

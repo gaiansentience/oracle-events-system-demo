@@ -240,10 +240,6 @@ as
     );
     
     --show ticket groups assigned to reseller for this event
-    --include tickets available in each group
-    --show [number] AVAILABLE or SOLD OUT as status for each group
-    --include ticket price for each group
-    --used by reseller application to show available ticket groups to customers
     procedure show_event_tickets_available_reseller
     (
         p_event_id in number,
@@ -252,15 +248,39 @@ as
     );
     
     --show ticket groups not assigned to any reseller for this event
-    --include tickets available in each group
-    --show [number] AVAILABLE or SOLD OUT as status for each group
-    --include ticket price for each group
-    --used by venue organizer application to show tickets available for direct purchase to customers
     procedure show_event_tickets_available_venue
     (
         p_event_id in number,
         p_ticket_groups out sys_refcursor
     );
+
+    --show all tickets available for events in the series (reseller or venue direct)
+    --show each ticket group with availability by source (each reseller or venue)
+    --include tickets available in each group by source
+    --events_in_series shows the total number of events included in the series
+    --events_available shows the number of events in the series the source still has tickets available for
+    --events_sold_out show the number of events in the series that the source has no more tickets available
+    --include ticket price for each group
+    --used by venue application to show overall ticket availability
+    procedure show_event_series_tickets_available_all
+    (
+        p_event_series_id in number,
+        p_ticket_groups out sys_refcursor
+    );
+    
+    procedure show_event_series_tickets_available_reseller
+    (
+        p_event_series_id in number,
+        p_reseller_id in number,
+        p_ticket_groups out sys_refcursor
+    );
+    
+    procedure show_event_series_tickets_available_venue
+    (
+        p_event_series_id in number,
+        p_ticket_groups out sys_refcursor
+    );
+
     
     function get_current_ticket_price
     (

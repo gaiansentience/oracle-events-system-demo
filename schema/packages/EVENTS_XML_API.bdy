@@ -1148,6 +1148,80 @@ as
             return get_xml_error_doc(sqlcode, sqlerrm, 'get_event_tickets_available_reseller');
     end get_event_tickets_available_reseller;
 
+    function get_event_series_tickets_available_all
+    (
+        p_event_series_id in number,
+        p_formatted in boolean default false
+    ) return xmltype
+    is
+        l_xml xmltype;
+    begin
+    
+        select b.xml_doc
+        into l_xml
+        from tickets_available_series_all_v_xml b
+        where b.event_series_id = p_event_series_id;
+    
+        if p_formatted then
+            l_xml := format_xml_clob(l_xml);
+        end if;
+        return l_xml;
+        
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_event_series_tickets_available_all');
+    end get_event_series_tickets_available_all;
+
+    function get_event_series_tickets_available_venue
+    (
+        p_event_series_id in number,
+        p_formatted in boolean default false
+    ) return xmltype
+    is
+        l_xml xmltype;
+    begin
+    
+        select b.xml_doc
+        into l_xml
+        from tickets_available_series_venue_v_xml b
+        where b.event_series_id = p_event_series_id;
+    
+        if p_formatted then
+            l_xml := format_xml_clob(l_xml);
+        end if;
+        return l_xml;
+        
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_event_series_tickets_available_venue');
+    end get_event_series_tickets_available_venue;
+
+    function get_event_series_tickets_available_reseller
+    (
+        p_event_series_id in number,
+        p_reseller_id in number,
+        p_formatted in boolean default false
+    ) return xmltype
+    is
+        l_xml xmltype;
+    begin
+    
+        select b.xml_doc
+        into l_xml
+        from tickets_available_series_reseller_v_xml b
+        where 
+            b.event_series_id = p_event_series_id
+            and b.reseller_id = p_reseller_id;
+    
+        if p_formatted then
+            l_xml := format_xml_clob(l_xml);
+        end if;
+        return l_xml;
+        
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_event_series_tickets_available_reseller');
+    end get_event_series_tickets_available_reseller;
 
     procedure purchase_get_customer
     (

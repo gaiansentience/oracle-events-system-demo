@@ -17,6 +17,6 @@ ticket_groups(
   
 create unique index ticket_groups_udx on ticket_groups (event_id, price_category);  
 
-create index ticket_groups_idx01 on ticket_groups (event_id, ticket_group_id, tickets_available, price, price_category);  
+create index ticket_groups_idx01 on ticket_groups (event_id, ticket_group_id, price_category, price, tickets_available);  
 
 create index ticket_groups_idx02 on ticket_groups (ticket_group_id, price);  

@@ -5,6 +5,10 @@ prompt dropping xml views
 
 drop view customer_event_tickets_v_xml;
 
+drop view tickets_available_series_all_v_xml;
+drop view tickets_available_series_reseller_v_xml;
+drop view tickets_available_series_venue_v_xml;
+
 drop view tickets_available_all_v_xml;
 drop view tickets_available_reseller_v_xml;
 drop view tickets_available_venue_v_xml;

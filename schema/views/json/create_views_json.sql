@@ -6,6 +6,10 @@ prompt creating views for json web services
 @@view.tickets_available_venue_v_json.sql;
 @@view.tickets_available_reseller_v_json.sql;
 
+@@view.tickets_available_series_all_v_json.sql;
+@@view.tickets_available_series_venue_v_json.sql;
+@@view.tickets_available_series_reseller_v_json.sql;
+
 @@view.event_ticket_prices_v_json.sql;
 @@view.event_series_ticket_prices_v_json.sql;
 
