@@ -23,7 +23,55 @@ as
         truncate_table('error_log');
 
     end delete_test_data;
+        
+    procedure delete_customer_data(p_customer_id in number)
+    is
+    begin
+    
+        delete from tickets t where t.ticket_sales_id in (select ts.ticket_sales_id from ticket_sales ts where ts.customer_id = p_customer_id);
+        
+        delete from ticket_sales ts where ts.customer_id = p_customer_id;
+        
+        delete from customers c where c.customer_id = p_customer_id;
+        
+        commit;
+    
+    end delete_customer_data;
 
+    procedure delete_reseller_data(p_reseller_id in number)
+    is
+    begin
+    
+        delete from tickets t where t.ticket_sales_id in (select ts.ticket_sales_id from ticket_sales ts where ts.reseller_id = p_reseller_id);
+        
+        delete from ticket_sales ts where ts.reseller_id = p_reseller_id;
+        
+        delete from ticket_assignments ta where ta.reseller_id = p_reseller_id;
+        
+        delete from resellers r where r.reseller_id = p_reseller_id;
+        
+        commit;
+        
+    end delete_reseller_data;
+    
+    procedure delete_venue_data(p_venue_id in number)
+    is
+        cursor c is
+            select e.event_id
+            from events e
+            where e.venue_id = p_venue_id;
+    begin
+    
+        for r in c loop
+            delete_event_data(r.event_id);
+        end loop;
+        
+        delete from venues v where v.venue_id = p_venue_id;
+        
+        commit;
+        
+    end delete_venue_data;
+    
 --remove all data for an event
 --use during testing to repeat event creation process
     procedure delete_event_data(p_event_id in number)

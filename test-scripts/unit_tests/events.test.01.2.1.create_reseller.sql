@@ -2,13 +2,13 @@
 --reseller name and email must be unique
 --error is returned when attempting to add a reseller with a duplicate name or email
 --add the reseller again with the same name or email to see the error messages
---ORA-00001: unique constraint (TOPTAL.RESELLERS_U_RESELLER_EMAIL) violated
---ORA-00001: unique constraint (TOPTAL.RESELLERS_U_RESELLER_NAME) violated
+--ORA-00001: unique constraint (RESELLERS_U_RESELLER_EMAIL) violated
+--ORA-00001: unique constraint (RESELLERS_U_RESELLER_NAME) violated
 set serveroutput on;
 
 declare
-  v_name varchar2(100) := 'New Ticket Source2';
-  v_email varchar2(100) := 'ticket.sales@NewTicketSource2.com';
+  v_name varchar2(100) := 'Easy Tickets';
+  v_email varchar2(100) := 'ticket.sales@EasyTickets.com';
   v_commission number := 0.11;
   v_reseller_id number;
 begin

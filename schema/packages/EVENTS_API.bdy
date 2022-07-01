@@ -222,10 +222,16 @@ as
             )
             returning customer_id 
             into v_customer_id;
-            
-            commit;
         
+        else
+        
+            update event_system.customers
+            set customer_name = p_customer_name
+            where customer_id = v_customer_id;
+            
         end if;
+        
+        commit;
         
         p_customer_id := v_customer_id;
     

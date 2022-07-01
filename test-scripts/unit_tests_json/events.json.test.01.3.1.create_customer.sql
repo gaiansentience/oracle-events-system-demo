@@ -1,4 +1,6 @@
---create event using a json document
+--create customer using a json document
+--if customer email already exists customer id for that email will be returned
+--if customer already exists customer name will be updated
 set serveroutput on;
 declare
   v_json_doc varchar2(4000);
@@ -33,6 +35,6 @@ begin
   "customer_email" : "Andi.Warenko@example.customer.com",
   "customer_id" : 0,
   "status_code" : "ERROR",
-  "status_message" : "ORA-00001: unique constraint (TOPTAL.CUSTOMERS_U_CUSTOMER_EMAIL) violated"
+  "status_message" : "ORA-00001: unique constraint (CUSTOMERS_U_CUSTOMER_EMAIL) violated"
 }
 */

@@ -6,6 +6,15 @@ as
     --remove all data from the system tables
     procedure delete_test_data;
 
+    --remove customer and any ticket purchases
+    procedure delete_customer_data(p_customer_id in number);
+
+    --remove reseller and any ticket sales and ticket assignments
+    procedure delete_reseller_data(p_reseller_id in number);
+    
+    --remove venue and any associated event data
+    procedure delete_venue_data(p_venue_id in number);
+
     --remove all data for an event
     --use during testing to repeat event creation process
     procedure delete_event_data(p_event_id in number);
