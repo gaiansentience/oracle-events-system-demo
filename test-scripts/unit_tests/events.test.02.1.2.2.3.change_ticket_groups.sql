@@ -7,39 +7,38 @@
 --prices can also be changed when modifying ticket groups
 --any changed prices will be reflected in new ticket sales (and commissions)
 set serveroutput on;
-
 declare
-  v_event_id number;
-  v_general varchar2(50) := 'GENERAL ADMISSION';
-  v_general_price number := 42;
-  v_general_tickets number := 10000;
-  v_backstage varchar2(50) := 'BACKSTAGE';
-  v_backstage_price number := 100;
-  v_backstage_tickets number := 3000;
-  v_group_id number;
+    l_event_id number;
+    type r_group is record(
+        group_id number,
+        price_category ticket_groups.price_category%type,
+        price number,
+        tickets number);
+    type t_groups is table of r_group index by pls_integer;
+    l_groups t_groups;
 begin
+    select event_id into l_event_id from events where event_name = 'The New Toys';
 
-select event_id into v_event_id from events where event_name = 'The New Toys';
+    l_groups(1) := r_group(0,'BACKSTAGE',150,1000);
+    l_groups(2) := r_group(0,'GENERAL ADMISSION', 42, 10000);
 
-  --decrease the general admission group from 10,000 to 8,000 tickets
-  --also drop the current price by 4
-  events_api.create_ticket_group(
-     p_event_id => v_event_id,
-     p_price_category => v_general,
-     p_price => v_general_price - 4,
-     p_tickets => v_general_tickets,
-     p_ticket_group_id => v_group_id);
-  dbms_output.put_line('general admission group changed with id = ' || v_group_id);
 
-  --increase the backstage pass group from 1,000 to 3,000 using the tickets just moved above
-  --also increase the backstage price by 11
-  events_api.create_ticket_group(
-     p_event_id => v_event_id,
-     p_price_category => v_backstage,
-     p_price => v_backstage_price + 11,
-     p_tickets => v_backstage_tickets,
-     p_ticket_group_id => v_group_id);
-  dbms_output.put_line('general admission group changed with id = ' || v_group_id);
-
+    for i in 1..l_groups.count loop
+        begin
+        
+            events_api.create_ticket_group(
+                p_event_id => l_event_id,
+                p_price_category => l_groups(i).price_category,
+                p_price => l_groups(i).price,
+                p_tickets => l_groups(i).tickets,
+                p_ticket_group_id => l_groups(i).group_id);
+            dbms_output.put_line(l_groups(i).price_category || ' group created with id = ' || l_groups(i).group_id);
+        
+        exception
+            when others then
+                dbms_output.put_line(sqlerrm);
+        end;
+        
+    end loop;
 
 end;

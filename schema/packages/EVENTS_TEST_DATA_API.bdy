@@ -1,5 +1,19 @@
 create or replace package body events_test_data_api
 as
+    type r_customer is record(customer_id number, number_tickets number);
+    type t_customers is table of r_customer;
+
+    function get_random_customers return t_customers
+    is
+        l_customers t_customers;
+    begin
+        select customer_id, trunc(dbms_random.value(2,20)) as number_tickets
+        bulk collect into l_customers
+        from customers
+        order by dbms_random.value()
+        fetch first 50 rows only;
+        return l_customers;
+    end get_random_customers;
 
     procedure delete_test_data
     is
@@ -706,40 +720,28 @@ as
         end loop;
 
     end create_ticket_assignments;
-
+    
+    
     procedure create_event_ticket_sales(p_event_id in number)
     is
         cursor ticket_options is
             select
-                ticket_group_id,
-                price,
-                reseller_id,
-                trunc((trunc(dbms_random.value(30,100))/100 * tickets_available)) tickets_available
-            from
-                events_report_api.show_event_tickets_available_all(p_event_id) 
-            where tickets_available > 0;
+                e.ticket_group_id,
+                e.price,
+                e.reseller_id,
+                trunc((trunc(dbms_random.value(30,100))/100 * e.tickets_available)) tickets_available
+            from tickets_available_all_v e
+            where
+                e.event_id = p_event_id
+                and e.tickets_available > 0;
         
-        type r_customer is record(customer_id number, number_tickets number);
-        type t_customers is table of r_customer;
         v_customers t_customers;
         v_sales_id number;
         v_tickets_available number;
         v_actual_price number;
         v_extended_price number;
-        function get_random_customers return t_customers
-        is
-            l_customers t_customers;
-        begin
-            select customer_id, trunc(dbms_random.value(2,20)) as number_tickets
-            bulk collect into l_customers
-            from customers
-            order by dbms_random.value()
-            fetch first 50 rows only;
-            return l_customers;
-        end get_random_customers;
         
     begin
-
 
         for r in ticket_options loop  --o.ticket_group_id o.reseller_id  o.tickets_available
             v_customers := get_random_customers;
@@ -783,11 +785,86 @@ as
 
     end create_event_ticket_sales;
 
+    procedure create_event_series_ticket_sales(p_event_series_id in number)
+    is
+        cursor ticket_options is
+            select
+                e.price_category,
+                e.price,
+                e.reseller_id,
+                trunc((trunc(dbms_random.value(30,100))/100 * e.tickets_available)) tickets_available
+            from tickets_available_series_all_v e
+            where
+                e.event_series_id = p_event_series_id
+                and e.tickets_available > 0;
+        
+        v_customers t_customers;
+        v_sales_id number;
+        v_tickets_available number;
+        v_average_price number;
+        v_total_purchase number;
+        v_total_tickets number;
+        v_status_code varchar2(25);
+        v_status_message varchar2(4000);
+    begin
+
+        for r in ticket_options loop  --o.ticket_group_id o.reseller_id  o.tickets_available
+            v_customers := get_random_customers;
+            v_tickets_available := r.tickets_available;
+            for c in 1..v_customers.count loop
+                
+                if v_customers(c).number_tickets > 0 and v_tickets_available > v_customers(c).number_tickets then
+                    begin
+                        if r.reseller_id is not null then
+
+                            events_api.purchase_tickets_reseller_series(
+                                p_reseller_id => r.reseller_id,
+                                p_event_series_id => p_event_series_id,
+                                p_price_category => r.price_category,
+                                p_customer_id => v_customers(c).customer_id,
+                                p_number_tickets => v_customers(c).number_tickets,
+                                p_requested_price => r.price,
+                                p_average_price => v_average_price,
+                                p_total_purchase => v_total_purchase,
+                                p_total_tickets => v_total_tickets,
+                                p_status_code => v_status_code,
+                                p_status_message => v_status_message);
+                                                
+                        else
+
+                            events_api.purchase_tickets_venue_series(
+                                p_event_series_id => p_event_series_id,
+                                p_price_category => r.price_category,
+                                p_customer_id => v_customers(c).customer_id,
+                                p_number_tickets => v_customers(c).number_tickets,
+                                p_requested_price => r.price,
+                                p_average_price => v_average_price,
+                                p_total_purchase => v_total_purchase,
+                                p_total_tickets => v_total_tickets,
+                                p_status_code => v_status_code,
+                                p_status_message => v_status_message);
+                                                
+                        end if;
+                        v_tickets_available := v_tickets_available - v_customers(c).number_tickets;
+                    exception
+                        when others then
+                            null;
+                    end;
+                end if;
+            end loop;
+        end loop;
+
+    end create_event_series_ticket_sales;
+
+
     procedure create_ticket_sales
     is
         type r_event is record(event_id number, generate_sales number);
         type t_events is table of r_event;
         v_events t_events;
+        type r_event_series is record(event_series_id number, generate_sales number);
+        type t_event_series is table of r_event_series;
+        v_event_series t_event_series;
         i number := 0;
     begin
     
@@ -804,6 +881,21 @@ as
         end loop;
     
         dbms_output.put_line('created sales for ' || i || ' events.');
+        i := 0;
+
+        select event_series_id, sign(trunc(dbms_random.value(-3,3))) as generate_sales 
+        bulk collect into v_event_series
+        from (select e.event_series_id from events e where e.event_series_id is not null group by e.event_series_id)
+        order by dbms_random.value;
+
+        for e in 1..v_event_series.count loop
+            if v_events(e).generate_sales = 1 then
+                create_event_series_ticket_sales(v_event_series(e).event_series_id);
+                i := i + 1;
+            end if;   
+        end loop;
+        dbms_output.put_line('created sales for ' || i || ' event series.');
+
 
     end create_ticket_sales;
 
@@ -822,7 +914,7 @@ as
         create_ticket_groups;
         create_ticket_assignments;
         
-        for i in 1..4 loop
+        for i in 1..3 loop
             create_ticket_sales;
         end loop;
     

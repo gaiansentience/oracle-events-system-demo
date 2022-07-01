@@ -21,7 +21,7 @@ v_customer_id := events_api.get_customer_id('Julius.Irving@example.customer.com'
 events_test_data_api.delete_customer_data(v_customer_id);
 
 --delete test reseller created
-select r.reseller_id into v_reseller_id from resellers r where r.reseller_id = 'Easy Tickets';
+select r.reseller_id into v_reseller_id from resellers r where r.reseller_name = 'Easy Tickets';
 events_test_data_api.delete_reseller_data(v_reseller_id);
 
 --delete test venue created

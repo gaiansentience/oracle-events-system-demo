@@ -10,4 +10,6 @@
 select
 *
 from
-events_report_api.show_ticket_groups_event_series(21)
+events_report_api.show_ticket_groups_event_series(13);
+
+select max(event_series_id) from events where event_series_id is not null and event_name = 'Hometown Hockey League' group by event_series_id;

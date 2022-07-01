@@ -5,5 +5,8 @@
 select
 *
 from
-events_report_api.show_ticket_assignments_event_series(21,3)
+events_report_api.show_ticket_assignments_event_series(13,3);
 
+select max(event_series_id) from events where event_series_id is not null and event_name = 'Hometown Hockey League' group by event_series_id;
+
+select * from resellers where reseller_name = 'Old School';

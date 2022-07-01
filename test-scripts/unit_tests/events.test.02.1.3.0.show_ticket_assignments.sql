@@ -5,5 +5,10 @@
 select
 *
 from
-events_report_api.show_ticket_assignments(483,3)
+events_report_api.show_ticket_assignments(533,3);
+
+
+select * from events e where e.event_name = 'The New Toys';
+
+select * from resellers r where r.reseller_name = 'Old School';
 

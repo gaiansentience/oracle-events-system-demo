@@ -2,15 +2,9 @@
 select
 *  
 from 
-events_report_api.show_customer_event_tickets_by_email('Kathy.Jackson@example.customer.com', 27);
+events_report_api.show_customer_event_tickets_by_email('Harry.Potter@example.customer.com', 533);
 
   
-  --find a customer with tickets from a reseller
-  select tg.event_id, ts.customer_id
-  from ticket_groups tg join ticket_sales ts on tg.ticket_group_id = ts.ticket_group_id
-  where ts.reseller_id is not null;
+  select * from events where event_name = 'The New Toys';
   
-  --find a customer with tickets from the venue
-  select tg.event_id, ts.customer_id
-  from ticket_groups tg join ticket_sales ts on tg.ticket_group_id = ts.ticket_group_id
-  where ts.reseller_id is null;
+  select * from customers where customer_name = 'Harry Potter';

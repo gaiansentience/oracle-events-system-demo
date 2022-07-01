@@ -1,4 +1,4 @@
-create or replace view event_ticket_prices_v_xml_verify as
+create or replace view event_series_ticket_prices_v_xml_verify as
 with base as
 (
     select

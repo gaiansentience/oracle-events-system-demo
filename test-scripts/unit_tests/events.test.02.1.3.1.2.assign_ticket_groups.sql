@@ -1,43 +1,43 @@
---assign tickets to another reseller
---amounts are visible in assigned_to_others in show_reseller_ticket_availability(test.04.00) for the first reseller
---error when assigning more to reseller than are available based on other assignments and total amount in group
---ORA-20100: Cannot assign 30000 tickets for  GENERAL ADMISSION to reseller, maximum available are 3000
+--assign ticket groups to another reseller for an event
 set serveroutput on;
 declare
-  v_tickets_r_us_id     number;
-  v_general_admission_group    number;
-  v_general_admission_tickets  number := 3000;  
-  v_backstage_pass_group       number;
-  v_backstage_pass_tickets     number := 100;  
-  v_assignment_id number;
+    l_reseller_id number;
+    l_event_id number;
+    type r_assign is record(price_category varchar2(50), ticket_group_id number, quantity number, assignment_id number);
+    type t_assign is table of r_assign index by pls_integer;
+    l_assign t_assign;
+    
 begin
 
-  select reseller_id into v_tickets_r_us_id from resellers where reseller_name = 'Tickets R Us';
-  
-select tg.ticket_group_id into v_general_admission_group from events e join ticket_groups tg on e.event_id = tg.event_id
-where e.event_name = 'The New Toys' and tg.price_category = 'GENERAL ADMISSION';
+select reseller_id into l_reseller_id from resellers where reseller_name = 'Tickets R Us';
 
-select tg.ticket_group_id into v_backstage_pass_group from events e join ticket_groups tg on e.event_id = tg.event_id
-where e.event_name = 'The New Toys' and tg.price_category = 'BACKSTAGE';
-  
+select event_id into l_event_id from events where event_name = 'The New Toys';
 
+l_assign(1).price_category := 'GENERAL ADMISSION';
+l_assign(1).quantity := 1000;
+l_assign(2).price_category := 'BACKSTAGE';
+l_assign(2).quantity := 100;
+l_assign(3).price_category := 'VIP';
+l_assign(3).quantity := 100;
+
+
+for i in 1..l_assign.count loop
+
+    select e.ticket_group_id into l_assign(i).ticket_group_id
+    from event_ticket_prices_v e where e.event_id = l_event_id and e.price_category = l_assign(i).price_category;
+
+end loop;
+
+for i in 1..l_assign.count loop  
 
   events_api.create_ticket_assignment(
-           p_reseller_id => v_tickets_r_us_id,
-           p_ticket_group_id => v_general_admission_group,
-           p_number_tickets => v_general_admission_tickets,
-           p_ticket_assignment_id => v_assignment_id);
+           p_reseller_id => l_reseller_id,
+           p_ticket_group_id => l_assign(i).ticket_group_id,
+           p_number_tickets => l_assign(i).quantity,
+           p_ticket_assignment_id => l_assign(i).assignment_id);
 
-  dbms_output.put_line(v_assignment_id || ' = id for general admission tickets assigned to tickets r us');
+    dbms_output.put_line(l_assign(i).assignment_id || ' = id for ' || l_assign(i).price_category || ' tickets assigned to reseller');
 
-  events_api.create_ticket_assignment(
-           p_reseller_id => v_tickets_r_us_id,
-           p_ticket_group_id => v_backstage_pass_group,
-           p_number_tickets => v_backstage_pass_tickets,
-           p_ticket_assignment_id => v_assignment_id);
-
-  dbms_output.put_line(v_assignment_id || ' = id for general admission tickets assigned to tickets r us');
-
-
+end loop;
 
 end;

@@ -2,6 +2,6 @@
 select
 * 
 from
-events_report_api.show_event_ticket_prices(30)
+events_report_api.show_event_ticket_prices(533);
 
---select * from tickets_available_all_v a where event_id = 30
+select * from events e where e.event_name = 'The New Toys';

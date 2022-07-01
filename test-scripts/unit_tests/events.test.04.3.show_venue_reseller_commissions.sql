@@ -3,4 +3,8 @@
 select
 *
 from
-events_report_api.show_venue_reseller_commissions(1,3)
+events_report_api.show_venue_reseller_commissions(1,3);
+
+select * from venues where venue_name = 'City Stadium';
+
+select * from resellers where reseller_name = 'Old School';

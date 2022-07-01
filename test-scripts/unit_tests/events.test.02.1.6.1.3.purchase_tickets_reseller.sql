@@ -28,7 +28,10 @@ declare
     type t_purchase is table of r_purchase index by pls_integer;
     l_purchases t_purchase;
     l_reseller_id number;
+    l_event_id number;
 begin
+
+select event_id into l_event_id from events where event_name = 'The New Toys';
 
 select reseller_id into l_reseller_id from resellers where reseller_name = 'Old School';
 
@@ -48,10 +51,10 @@ for i in 1..l_purchases.count loop
     into l_purchases(i).customer_id 
     from customers where customer_email = l_purchases(i).email;
 
-    select tg.ticket_group_id, tg.price 
+    select e.ticket_group_id, 3 as price 
     into l_purchases(i).ticket_group_id, l_purchases(i).price 
-    from events e join ticket_groups tg on e.event_id = tg.event_id
-    where e.event_name = 'The New Toys' and tg.price_category = l_purchases(i).price_category;
+    from event_ticket_prices_v e
+    where e.event_id = l_event_id and e.price_category = l_purchases(i).price_category;
 end loop;
 
 for i in 1..l_purchases.count loop

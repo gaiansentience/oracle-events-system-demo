@@ -2,15 +2,6 @@
 select
 *  
 from 
-events_report_api.show_customer_event_tickets_by_email('Kathy.Jackson@example.customer.com', 27);
+events_report_api.show_customer_event_series_tickets_by_email('James.Kirk@example.customer.com', 21);
 
-  
-  --find a customer with tickets from a reseller
-  select tg.event_id, ts.customer_id
-  from ticket_groups tg join ticket_sales ts on tg.ticket_group_id = ts.ticket_group_id
-  where ts.reseller_id is not null;
-  
-  --find a customer with tickets from the venue
-  select tg.event_id, ts.customer_id
-  from ticket_groups tg join ticket_sales ts on tg.ticket_group_id = ts.ticket_group_id
-  where ts.reseller_id is null;
+select max(event_series_id) from events where event_name = 'Hometown Hockey League';

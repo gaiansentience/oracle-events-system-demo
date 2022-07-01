@@ -14,8 +14,8 @@ prompt creating views for events api
 @@view.event_ticket_prices_v.sql;
 @@view.event_series_ticket_prices_v.sql;
 
-@@view.event_series_ticket_assignment_v.sql;
 @@view.event_ticket_assignment_v.sql;
+@@view.event_series_ticket_assignment_v.sql;
 
 @@view.tickets_available_venue_v.sql;
 @@view.tickets_available_reseller_v.sql;

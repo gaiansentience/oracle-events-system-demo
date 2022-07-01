@@ -27,6 +27,9 @@ as
     --create random sales for an event
     procedure create_event_ticket_sales(p_event_id in number);
 
+    --create random series sales for an event series
+    procedure create_event_series_ticket_sales(p_event_series_id in number);
+
     --generate random sales for random events
     procedure create_ticket_sales;
 

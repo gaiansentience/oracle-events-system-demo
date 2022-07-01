@@ -2,6 +2,7 @@
 select
 * 
 from
-events_report_api.show_event_series_tickets_available_all(21)
+events_report_api.show_event_series_tickets_available_all(13);
 
---select * from tickets_available_all_v a where event_id = 30
+select max(event_series_id) from events where event_series_id is not null and event_name = 'Hometown Hockey League' group by event_series_id;
+

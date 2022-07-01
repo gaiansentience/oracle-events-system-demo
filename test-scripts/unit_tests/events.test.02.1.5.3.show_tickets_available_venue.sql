@@ -3,4 +3,7 @@
 select
 *
 from
-events_report_api.show_event_tickets_available_venue(67)
+events_report_api.show_event_tickets_available_venue(533);
+
+select * from events e where e.event_name = 'The New Toys';
+

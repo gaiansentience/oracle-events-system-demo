@@ -10,4 +10,7 @@
 select
 *
 from
-events_report_api.show_ticket_groups(483)
+events_report_api.show_ticket_groups(533);
+
+
+select * from events where event_name = 'The New Toys';

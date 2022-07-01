@@ -4,7 +4,6 @@ select
 *
 from
 events_report_api.show_venue_upcoming_events(1) 
-where event_name = 'The New Toys'
---where event_name = 'Amateur Comedy Hour'
+--where event_name = 'The New Toys'
 order by event_date;
 
