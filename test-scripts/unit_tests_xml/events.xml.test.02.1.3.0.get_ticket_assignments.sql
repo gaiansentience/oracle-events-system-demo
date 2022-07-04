@@ -1,11 +1,13 @@
 declare
-  p_event_id number := 281;
-  l_xml xmltype;
+    l_event_id number;
+    l_xml xmltype;
 begin
 
-  l_xml := events_xml_api.get_ticket_assignments(p_event_id => p_event_id,p_formatted => true);
+    select event_id into l_event_id from events where event_name = 'Evangeline Thorpe';
 
-dbms_output.put_line(l_xml.getclobval());
+    l_xml := events_xml_api.get_ticket_assignments(p_event_id => l_event_id, p_formatted => true);
+
+    dbms_output.put_line(l_xml.getclobval());
 
 end;
 
@@ -18,9 +20,9 @@ end;
       <organizer_email>Julia.Stein@ThePinkPonyRevue.com</organizer_email>
       <organizer_name>Julia Stein</organizer_name>
     </venue>
-    <event_id>281</event_id>
+    <event_id>561</event_id>
     <event_name>Evangeline Thorpe</event_name>
-    <event_date>2023-02-15</event_date>
+    <event_date>2023-05-01</event_date>
     <event_tickets_available>200</event_tickets_available>
   </event>
   <ticket_resellers>
@@ -30,20 +32,7 @@ end;
       <reseller_email>ticket.sales@NewWaveTickets.com</reseller_email>
       <ticket_assignments>
         <ticket_group>
-          <ticket_group_id>1144</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <price>42</price>
-          <tickets_in_group>100</tickets_in_group>
-          <tickets_assigned>0</tickets_assigned>
-          <ticket_assignment_id>0</ticket_assignment_id>
-          <assigned_to_others>0</assigned_to_others>
-          <max_available>100</max_available>
-          <min_assignment>0</min_assignment>
-          <sold_by_reseller>0</sold_by_reseller>
-          <sold_by_venue>0</sold_by_venue>
-        </ticket_group>
-        <ticket_group>
-          <ticket_group_id>1142</ticket_group_id>
+          <ticket_group_id>2281</ticket_group_id>
           <price_category>SPONSOR</price_category>
           <price>120</price>
           <tickets_in_group>30</tickets_in_group>
@@ -56,7 +45,7 @@ end;
           <sold_by_venue>0</sold_by_venue>
         </ticket_group>
         <ticket_group>
-          <ticket_group_id>1143</ticket_group_id>
+          <ticket_group_id>2282</ticket_group_id>
           <price_category>VIP</price_category>
           <price>85</price>
           <tickets_in_group>70</tickets_in_group>
@@ -64,6 +53,19 @@ end;
           <ticket_assignment_id>0</ticket_assignment_id>
           <assigned_to_others>0</assigned_to_others>
           <max_available>70</max_available>
+          <min_assignment>0</min_assignment>
+          <sold_by_reseller>0</sold_by_reseller>
+          <sold_by_venue>0</sold_by_venue>
+        </ticket_group>
+        <ticket_group>
+          <ticket_group_id>2283</ticket_group_id>
+          <price_category>GENERAL ADMISSION</price_category>
+          <price>42</price>
+          <tickets_in_group>100</tickets_in_group>
+          <tickets_assigned>0</tickets_assigned>
+          <ticket_assignment_id>0</ticket_assignment_id>
+          <assigned_to_others>0</assigned_to_others>
+          <max_available>100</max_available>
           <min_assignment>0</min_assignment>
           <sold_by_reseller>0</sold_by_reseller>
           <sold_by_venue>0</sold_by_venue>
@@ -76,20 +78,7 @@ end;
       <reseller_email>ticket.sales@EventsForYou.com</reseller_email>
       <ticket_assignments>
         <ticket_group>
-          <ticket_group_id>1144</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <price>42</price>
-          <tickets_in_group>100</tickets_in_group>
-          <tickets_assigned>0</tickets_assigned>
-          <ticket_assignment_id>0</ticket_assignment_id>
-          <assigned_to_others>0</assigned_to_others>
-          <max_available>100</max_available>
-          <min_assignment>0</min_assignment>
-          <sold_by_reseller>0</sold_by_reseller>
-          <sold_by_venue>0</sold_by_venue>
-        </ticket_group>
-        <ticket_group>
-          <ticket_group_id>1142</ticket_group_id>
+          <ticket_group_id>2281</ticket_group_id>
           <price_category>SPONSOR</price_category>
           <price>120</price>
           <tickets_in_group>30</tickets_in_group>
@@ -102,7 +91,7 @@ end;
           <sold_by_venue>0</sold_by_venue>
         </ticket_group>
         <ticket_group>
-          <ticket_group_id>1143</ticket_group_id>
+          <ticket_group_id>2282</ticket_group_id>
           <price_category>VIP</price_category>
           <price>85</price>
           <tickets_in_group>70</tickets_in_group>
@@ -110,6 +99,19 @@ end;
           <ticket_assignment_id>0</ticket_assignment_id>
           <assigned_to_others>0</assigned_to_others>
           <max_available>70</max_available>
+          <min_assignment>0</min_assignment>
+          <sold_by_reseller>0</sold_by_reseller>
+          <sold_by_venue>0</sold_by_venue>
+        </ticket_group>
+        <ticket_group>
+          <ticket_group_id>2283</ticket_group_id>
+          <price_category>GENERAL ADMISSION</price_category>
+          <price>42</price>
+          <tickets_in_group>100</tickets_in_group>
+          <tickets_assigned>0</tickets_assigned>
+          <ticket_assignment_id>0</ticket_assignment_id>
+          <assigned_to_others>0</assigned_to_others>
+          <max_available>100</max_available>
           <min_assignment>0</min_assignment>
           <sold_by_reseller>0</sold_by_reseller>
           <sold_by_venue>0</sold_by_venue>
@@ -122,20 +124,7 @@ end;
       <reseller_email>ticket.sales@MaxTix.com</reseller_email>
       <ticket_assignments>
         <ticket_group>
-          <ticket_group_id>1144</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <price>42</price>
-          <tickets_in_group>100</tickets_in_group>
-          <tickets_assigned>0</tickets_assigned>
-          <ticket_assignment_id>0</ticket_assignment_id>
-          <assigned_to_others>0</assigned_to_others>
-          <max_available>100</max_available>
-          <min_assignment>0</min_assignment>
-          <sold_by_reseller>0</sold_by_reseller>
-          <sold_by_venue>0</sold_by_venue>
-        </ticket_group>
-        <ticket_group>
-          <ticket_group_id>1142</ticket_group_id>
+          <ticket_group_id>2281</ticket_group_id>
           <price_category>SPONSOR</price_category>
           <price>120</price>
           <tickets_in_group>30</tickets_in_group>
@@ -148,7 +137,7 @@ end;
           <sold_by_venue>0</sold_by_venue>
         </ticket_group>
         <ticket_group>
-          <ticket_group_id>1143</ticket_group_id>
+          <ticket_group_id>2282</ticket_group_id>
           <price_category>VIP</price_category>
           <price>85</price>
           <tickets_in_group>70</tickets_in_group>
@@ -156,6 +145,19 @@ end;
           <ticket_assignment_id>0</ticket_assignment_id>
           <assigned_to_others>0</assigned_to_others>
           <max_available>70</max_available>
+          <min_assignment>0</min_assignment>
+          <sold_by_reseller>0</sold_by_reseller>
+          <sold_by_venue>0</sold_by_venue>
+        </ticket_group>
+        <ticket_group>
+          <ticket_group_id>2283</ticket_group_id>
+          <price_category>GENERAL ADMISSION</price_category>
+          <price>42</price>
+          <tickets_in_group>100</tickets_in_group>
+          <tickets_assigned>0</tickets_assigned>
+          <ticket_assignment_id>0</ticket_assignment_id>
+          <assigned_to_others>0</assigned_to_others>
+          <max_available>100</max_available>
           <min_assignment>0</min_assignment>
           <sold_by_reseller>0</sold_by_reseller>
           <sold_by_venue>0</sold_by_venue>
@@ -168,20 +170,7 @@ end;
       <reseller_email>ticket.sales@OldSchool.com</reseller_email>
       <ticket_assignments>
         <ticket_group>
-          <ticket_group_id>1144</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <price>42</price>
-          <tickets_in_group>100</tickets_in_group>
-          <tickets_assigned>0</tickets_assigned>
-          <ticket_assignment_id>0</ticket_assignment_id>
-          <assigned_to_others>0</assigned_to_others>
-          <max_available>100</max_available>
-          <min_assignment>0</min_assignment>
-          <sold_by_reseller>0</sold_by_reseller>
-          <sold_by_venue>0</sold_by_venue>
-        </ticket_group>
-        <ticket_group>
-          <ticket_group_id>1142</ticket_group_id>
+          <ticket_group_id>2281</ticket_group_id>
           <price_category>SPONSOR</price_category>
           <price>120</price>
           <tickets_in_group>30</tickets_in_group>
@@ -194,7 +183,7 @@ end;
           <sold_by_venue>0</sold_by_venue>
         </ticket_group>
         <ticket_group>
-          <ticket_group_id>1143</ticket_group_id>
+          <ticket_group_id>2282</ticket_group_id>
           <price_category>VIP</price_category>
           <price>85</price>
           <tickets_in_group>70</tickets_in_group>
@@ -202,6 +191,19 @@ end;
           <ticket_assignment_id>0</ticket_assignment_id>
           <assigned_to_others>0</assigned_to_others>
           <max_available>70</max_available>
+          <min_assignment>0</min_assignment>
+          <sold_by_reseller>0</sold_by_reseller>
+          <sold_by_venue>0</sold_by_venue>
+        </ticket_group>
+        <ticket_group>
+          <ticket_group_id>2283</ticket_group_id>
+          <price_category>GENERAL ADMISSION</price_category>
+          <price>42</price>
+          <tickets_in_group>100</tickets_in_group>
+          <tickets_assigned>0</tickets_assigned>
+          <ticket_assignment_id>0</ticket_assignment_id>
+          <assigned_to_others>0</assigned_to_others>
+          <max_available>100</max_available>
           <min_assignment>0</min_assignment>
           <sold_by_reseller>0</sold_by_reseller>
           <sold_by_venue>0</sold_by_venue>
@@ -214,20 +216,7 @@ end;
       <reseller_email>ticket.sales@SourceTix.com</reseller_email>
       <ticket_assignments>
         <ticket_group>
-          <ticket_group_id>1144</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <price>42</price>
-          <tickets_in_group>100</tickets_in_group>
-          <tickets_assigned>0</tickets_assigned>
-          <ticket_assignment_id>0</ticket_assignment_id>
-          <assigned_to_others>0</assigned_to_others>
-          <max_available>100</max_available>
-          <min_assignment>0</min_assignment>
-          <sold_by_reseller>0</sold_by_reseller>
-          <sold_by_venue>0</sold_by_venue>
-        </ticket_group>
-        <ticket_group>
-          <ticket_group_id>1142</ticket_group_id>
+          <ticket_group_id>2281</ticket_group_id>
           <price_category>SPONSOR</price_category>
           <price>120</price>
           <tickets_in_group>30</tickets_in_group>
@@ -240,7 +229,7 @@ end;
           <sold_by_venue>0</sold_by_venue>
         </ticket_group>
         <ticket_group>
-          <ticket_group_id>1143</ticket_group_id>
+          <ticket_group_id>2282</ticket_group_id>
           <price_category>VIP</price_category>
           <price>85</price>
           <tickets_in_group>70</tickets_in_group>
@@ -248,6 +237,19 @@ end;
           <ticket_assignment_id>0</ticket_assignment_id>
           <assigned_to_others>0</assigned_to_others>
           <max_available>70</max_available>
+          <min_assignment>0</min_assignment>
+          <sold_by_reseller>0</sold_by_reseller>
+          <sold_by_venue>0</sold_by_venue>
+        </ticket_group>
+        <ticket_group>
+          <ticket_group_id>2283</ticket_group_id>
+          <price_category>GENERAL ADMISSION</price_category>
+          <price>42</price>
+          <tickets_in_group>100</tickets_in_group>
+          <tickets_assigned>0</tickets_assigned>
+          <ticket_assignment_id>0</ticket_assignment_id>
+          <assigned_to_others>0</assigned_to_others>
+          <max_available>100</max_available>
           <min_assignment>0</min_assignment>
           <sold_by_reseller>0</sold_by_reseller>
           <sold_by_venue>0</sold_by_venue>
@@ -260,20 +262,7 @@ end;
       <reseller_email>ticket.sales@TheSource.com</reseller_email>
       <ticket_assignments>
         <ticket_group>
-          <ticket_group_id>1144</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <price>42</price>
-          <tickets_in_group>100</tickets_in_group>
-          <tickets_assigned>0</tickets_assigned>
-          <ticket_assignment_id>0</ticket_assignment_id>
-          <assigned_to_others>0</assigned_to_others>
-          <max_available>100</max_available>
-          <min_assignment>0</min_assignment>
-          <sold_by_reseller>0</sold_by_reseller>
-          <sold_by_venue>0</sold_by_venue>
-        </ticket_group>
-        <ticket_group>
-          <ticket_group_id>1142</ticket_group_id>
+          <ticket_group_id>2281</ticket_group_id>
           <price_category>SPONSOR</price_category>
           <price>120</price>
           <tickets_in_group>30</tickets_in_group>
@@ -286,7 +275,7 @@ end;
           <sold_by_venue>0</sold_by_venue>
         </ticket_group>
         <ticket_group>
-          <ticket_group_id>1143</ticket_group_id>
+          <ticket_group_id>2282</ticket_group_id>
           <price_category>VIP</price_category>
           <price>85</price>
           <tickets_in_group>70</tickets_in_group>
@@ -294,6 +283,19 @@ end;
           <ticket_assignment_id>0</ticket_assignment_id>
           <assigned_to_others>0</assigned_to_others>
           <max_available>70</max_available>
+          <min_assignment>0</min_assignment>
+          <sold_by_reseller>0</sold_by_reseller>
+          <sold_by_venue>0</sold_by_venue>
+        </ticket_group>
+        <ticket_group>
+          <ticket_group_id>2283</ticket_group_id>
+          <price_category>GENERAL ADMISSION</price_category>
+          <price>42</price>
+          <tickets_in_group>100</tickets_in_group>
+          <tickets_assigned>0</tickets_assigned>
+          <ticket_assignment_id>0</ticket_assignment_id>
+          <assigned_to_others>0</assigned_to_others>
+          <max_available>100</max_available>
           <min_assignment>0</min_assignment>
           <sold_by_reseller>0</sold_by_reseller>
           <sold_by_venue>0</sold_by_venue>
@@ -306,20 +308,7 @@ end;
       <reseller_email>ticket.sales@TicketSupply.com</reseller_email>
       <ticket_assignments>
         <ticket_group>
-          <ticket_group_id>1144</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <price>42</price>
-          <tickets_in_group>100</tickets_in_group>
-          <tickets_assigned>0</tickets_assigned>
-          <ticket_assignment_id>0</ticket_assignment_id>
-          <assigned_to_others>0</assigned_to_others>
-          <max_available>100</max_available>
-          <min_assignment>0</min_assignment>
-          <sold_by_reseller>0</sold_by_reseller>
-          <sold_by_venue>0</sold_by_venue>
-        </ticket_group>
-        <ticket_group>
-          <ticket_group_id>1142</ticket_group_id>
+          <ticket_group_id>2281</ticket_group_id>
           <price_category>SPONSOR</price_category>
           <price>120</price>
           <tickets_in_group>30</tickets_in_group>
@@ -332,7 +321,7 @@ end;
           <sold_by_venue>0</sold_by_venue>
         </ticket_group>
         <ticket_group>
-          <ticket_group_id>1143</ticket_group_id>
+          <ticket_group_id>2282</ticket_group_id>
           <price_category>VIP</price_category>
           <price>85</price>
           <tickets_in_group>70</tickets_in_group>
@@ -340,6 +329,19 @@ end;
           <ticket_assignment_id>0</ticket_assignment_id>
           <assigned_to_others>0</assigned_to_others>
           <max_available>70</max_available>
+          <min_assignment>0</min_assignment>
+          <sold_by_reseller>0</sold_by_reseller>
+          <sold_by_venue>0</sold_by_venue>
+        </ticket_group>
+        <ticket_group>
+          <ticket_group_id>2283</ticket_group_id>
+          <price_category>GENERAL ADMISSION</price_category>
+          <price>42</price>
+          <tickets_in_group>100</tickets_in_group>
+          <tickets_assigned>0</tickets_assigned>
+          <ticket_assignment_id>0</ticket_assignment_id>
+          <assigned_to_others>0</assigned_to_others>
+          <max_available>100</max_available>
           <min_assignment>0</min_assignment>
           <sold_by_reseller>0</sold_by_reseller>
           <sold_by_venue>0</sold_by_venue>
@@ -352,20 +354,7 @@ end;
       <reseller_email>ticket.sales@TicketTime.com</reseller_email>
       <ticket_assignments>
         <ticket_group>
-          <ticket_group_id>1144</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <price>42</price>
-          <tickets_in_group>100</tickets_in_group>
-          <tickets_assigned>0</tickets_assigned>
-          <ticket_assignment_id>0</ticket_assignment_id>
-          <assigned_to_others>0</assigned_to_others>
-          <max_available>100</max_available>
-          <min_assignment>0</min_assignment>
-          <sold_by_reseller>0</sold_by_reseller>
-          <sold_by_venue>0</sold_by_venue>
-        </ticket_group>
-        <ticket_group>
-          <ticket_group_id>1142</ticket_group_id>
+          <ticket_group_id>2281</ticket_group_id>
           <price_category>SPONSOR</price_category>
           <price>120</price>
           <tickets_in_group>30</tickets_in_group>
@@ -378,7 +367,7 @@ end;
           <sold_by_venue>0</sold_by_venue>
         </ticket_group>
         <ticket_group>
-          <ticket_group_id>1143</ticket_group_id>
+          <ticket_group_id>2282</ticket_group_id>
           <price_category>VIP</price_category>
           <price>85</price>
           <tickets_in_group>70</tickets_in_group>
@@ -386,6 +375,19 @@ end;
           <ticket_assignment_id>0</ticket_assignment_id>
           <assigned_to_others>0</assigned_to_others>
           <max_available>70</max_available>
+          <min_assignment>0</min_assignment>
+          <sold_by_reseller>0</sold_by_reseller>
+          <sold_by_venue>0</sold_by_venue>
+        </ticket_group>
+        <ticket_group>
+          <ticket_group_id>2283</ticket_group_id>
+          <price_category>GENERAL ADMISSION</price_category>
+          <price>42</price>
+          <tickets_in_group>100</tickets_in_group>
+          <tickets_assigned>0</tickets_assigned>
+          <ticket_assignment_id>0</ticket_assignment_id>
+          <assigned_to_others>0</assigned_to_others>
+          <max_available>100</max_available>
           <min_assignment>0</min_assignment>
           <sold_by_reseller>0</sold_by_reseller>
           <sold_by_venue>0</sold_by_venue>
@@ -398,20 +400,7 @@ end;
       <reseller_email>ticket.sales@Ticketron.com</reseller_email>
       <ticket_assignments>
         <ticket_group>
-          <ticket_group_id>1144</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <price>42</price>
-          <tickets_in_group>100</tickets_in_group>
-          <tickets_assigned>0</tickets_assigned>
-          <ticket_assignment_id>0</ticket_assignment_id>
-          <assigned_to_others>0</assigned_to_others>
-          <max_available>100</max_available>
-          <min_assignment>0</min_assignment>
-          <sold_by_reseller>0</sold_by_reseller>
-          <sold_by_venue>0</sold_by_venue>
-        </ticket_group>
-        <ticket_group>
-          <ticket_group_id>1142</ticket_group_id>
+          <ticket_group_id>2281</ticket_group_id>
           <price_category>SPONSOR</price_category>
           <price>120</price>
           <tickets_in_group>30</tickets_in_group>
@@ -424,7 +413,7 @@ end;
           <sold_by_venue>0</sold_by_venue>
         </ticket_group>
         <ticket_group>
-          <ticket_group_id>1143</ticket_group_id>
+          <ticket_group_id>2282</ticket_group_id>
           <price_category>VIP</price_category>
           <price>85</price>
           <tickets_in_group>70</tickets_in_group>
@@ -432,6 +421,19 @@ end;
           <ticket_assignment_id>0</ticket_assignment_id>
           <assigned_to_others>0</assigned_to_others>
           <max_available>70</max_available>
+          <min_assignment>0</min_assignment>
+          <sold_by_reseller>0</sold_by_reseller>
+          <sold_by_venue>0</sold_by_venue>
+        </ticket_group>
+        <ticket_group>
+          <ticket_group_id>2283</ticket_group_id>
+          <price_category>GENERAL ADMISSION</price_category>
+          <price>42</price>
+          <tickets_in_group>100</tickets_in_group>
+          <tickets_assigned>0</tickets_assigned>
+          <ticket_assignment_id>0</ticket_assignment_id>
+          <assigned_to_others>0</assigned_to_others>
+          <max_available>100</max_available>
           <min_assignment>0</min_assignment>
           <sold_by_reseller>0</sold_by_reseller>
           <sold_by_venue>0</sold_by_venue>
@@ -444,20 +446,7 @@ end;
       <reseller_email>ticket.sales@Tickets2Go.com</reseller_email>
       <ticket_assignments>
         <ticket_group>
-          <ticket_group_id>1144</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <price>42</price>
-          <tickets_in_group>100</tickets_in_group>
-          <tickets_assigned>0</tickets_assigned>
-          <ticket_assignment_id>0</ticket_assignment_id>
-          <assigned_to_others>0</assigned_to_others>
-          <max_available>100</max_available>
-          <min_assignment>0</min_assignment>
-          <sold_by_reseller>0</sold_by_reseller>
-          <sold_by_venue>0</sold_by_venue>
-        </ticket_group>
-        <ticket_group>
-          <ticket_group_id>1142</ticket_group_id>
+          <ticket_group_id>2281</ticket_group_id>
           <price_category>SPONSOR</price_category>
           <price>120</price>
           <tickets_in_group>30</tickets_in_group>
@@ -470,7 +459,7 @@ end;
           <sold_by_venue>0</sold_by_venue>
         </ticket_group>
         <ticket_group>
-          <ticket_group_id>1143</ticket_group_id>
+          <ticket_group_id>2282</ticket_group_id>
           <price_category>VIP</price_category>
           <price>85</price>
           <tickets_in_group>70</tickets_in_group>
@@ -478,6 +467,19 @@ end;
           <ticket_assignment_id>0</ticket_assignment_id>
           <assigned_to_others>0</assigned_to_others>
           <max_available>70</max_available>
+          <min_assignment>0</min_assignment>
+          <sold_by_reseller>0</sold_by_reseller>
+          <sold_by_venue>0</sold_by_venue>
+        </ticket_group>
+        <ticket_group>
+          <ticket_group_id>2283</ticket_group_id>
+          <price_category>GENERAL ADMISSION</price_category>
+          <price>42</price>
+          <tickets_in_group>100</tickets_in_group>
+          <tickets_assigned>0</tickets_assigned>
+          <ticket_assignment_id>0</ticket_assignment_id>
+          <assigned_to_others>0</assigned_to_others>
+          <max_available>100</max_available>
           <min_assignment>0</min_assignment>
           <sold_by_reseller>0</sold_by_reseller>
           <sold_by_venue>0</sold_by_venue>
@@ -490,20 +492,7 @@ end;
       <reseller_email>ticket.sales@TicketsRUs.com</reseller_email>
       <ticket_assignments>
         <ticket_group>
-          <ticket_group_id>1144</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <price>42</price>
-          <tickets_in_group>100</tickets_in_group>
-          <tickets_assigned>0</tickets_assigned>
-          <ticket_assignment_id>0</ticket_assignment_id>
-          <assigned_to_others>0</assigned_to_others>
-          <max_available>100</max_available>
-          <min_assignment>0</min_assignment>
-          <sold_by_reseller>0</sold_by_reseller>
-          <sold_by_venue>0</sold_by_venue>
-        </ticket_group>
-        <ticket_group>
-          <ticket_group_id>1142</ticket_group_id>
+          <ticket_group_id>2281</ticket_group_id>
           <price_category>SPONSOR</price_category>
           <price>120</price>
           <tickets_in_group>30</tickets_in_group>
@@ -516,7 +505,7 @@ end;
           <sold_by_venue>0</sold_by_venue>
         </ticket_group>
         <ticket_group>
-          <ticket_group_id>1143</ticket_group_id>
+          <ticket_group_id>2282</ticket_group_id>
           <price_category>VIP</price_category>
           <price>85</price>
           <tickets_in_group>70</tickets_in_group>
@@ -524,6 +513,19 @@ end;
           <ticket_assignment_id>0</ticket_assignment_id>
           <assigned_to_others>0</assigned_to_others>
           <max_available>70</max_available>
+          <min_assignment>0</min_assignment>
+          <sold_by_reseller>0</sold_by_reseller>
+          <sold_by_venue>0</sold_by_venue>
+        </ticket_group>
+        <ticket_group>
+          <ticket_group_id>2283</ticket_group_id>
+          <price_category>GENERAL ADMISSION</price_category>
+          <price>42</price>
+          <tickets_in_group>100</tickets_in_group>
+          <tickets_assigned>0</tickets_assigned>
+          <ticket_assignment_id>0</ticket_assignment_id>
+          <assigned_to_others>0</assigned_to_others>
+          <max_available>100</max_available>
           <min_assignment>0</min_assignment>
           <sold_by_reseller>0</sold_by_reseller>
           <sold_by_venue>0</sold_by_venue>
@@ -536,20 +538,7 @@ end;
       <reseller_email>ticket.sales@YourTicketSupplier.com</reseller_email>
       <ticket_assignments>
         <ticket_group>
-          <ticket_group_id>1144</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <price>42</price>
-          <tickets_in_group>100</tickets_in_group>
-          <tickets_assigned>0</tickets_assigned>
-          <ticket_assignment_id>0</ticket_assignment_id>
-          <assigned_to_others>0</assigned_to_others>
-          <max_available>100</max_available>
-          <min_assignment>0</min_assignment>
-          <sold_by_reseller>0</sold_by_reseller>
-          <sold_by_venue>0</sold_by_venue>
-        </ticket_group>
-        <ticket_group>
-          <ticket_group_id>1142</ticket_group_id>
+          <ticket_group_id>2281</ticket_group_id>
           <price_category>SPONSOR</price_category>
           <price>120</price>
           <tickets_in_group>30</tickets_in_group>
@@ -562,7 +551,7 @@ end;
           <sold_by_venue>0</sold_by_venue>
         </ticket_group>
         <ticket_group>
-          <ticket_group_id>1143</ticket_group_id>
+          <ticket_group_id>2282</ticket_group_id>
           <price_category>VIP</price_category>
           <price>85</price>
           <tickets_in_group>70</tickets_in_group>
@@ -574,14 +563,67 @@ end;
           <sold_by_reseller>0</sold_by_reseller>
           <sold_by_venue>0</sold_by_venue>
         </ticket_group>
+        <ticket_group>
+          <ticket_group_id>2283</ticket_group_id>
+          <price_category>GENERAL ADMISSION</price_category>
+          <price>42</price>
+          <tickets_in_group>100</tickets_in_group>
+          <tickets_assigned>0</tickets_assigned>
+          <ticket_assignment_id>0</ticket_assignment_id>
+          <assigned_to_others>0</assigned_to_others>
+          <max_available>100</max_available>
+          <min_assignment>0</min_assignment>
+          <sold_by_reseller>0</sold_by_reseller>
+          <sold_by_venue>0</sold_by_venue>
+        </ticket_group>
+      </ticket_assignments>
+    </reseller>
+    <reseller>
+      <reseller_id>12</reseller_id>
+      <reseller_name>Easy Tickets</reseller_name>
+      <reseller_email>ticket.sales@EasyTickets.com</reseller_email>
+      <ticket_assignments>
+        <ticket_group>
+          <ticket_group_id>2281</ticket_group_id>
+          <price_category>SPONSOR</price_category>
+          <price>120</price>
+          <tickets_in_group>30</tickets_in_group>
+          <tickets_assigned>0</tickets_assigned>
+          <ticket_assignment_id>0</ticket_assignment_id>
+          <assigned_to_others>0</assigned_to_others>
+          <max_available>30</max_available>
+          <min_assignment>0</min_assignment>
+          <sold_by_reseller>0</sold_by_reseller>
+          <sold_by_venue>0</sold_by_venue>
+        </ticket_group>
+        <ticket_group>
+          <ticket_group_id>2282</ticket_group_id>
+          <price_category>VIP</price_category>
+          <price>85</price>
+          <tickets_in_group>70</tickets_in_group>
+          <tickets_assigned>0</tickets_assigned>
+          <ticket_assignment_id>0</ticket_assignment_id>
+          <assigned_to_others>0</assigned_to_others>
+          <max_available>70</max_available>
+          <min_assignment>0</min_assignment>
+          <sold_by_reseller>0</sold_by_reseller>
+          <sold_by_venue>0</sold_by_venue>
+        </ticket_group>
+        <ticket_group>
+          <ticket_group_id>2283</ticket_group_id>
+          <price_category>GENERAL ADMISSION</price_category>
+          <price>42</price>
+          <tickets_in_group>100</tickets_in_group>
+          <tickets_assigned>0</tickets_assigned>
+          <ticket_assignment_id>0</ticket_assignment_id>
+          <assigned_to_others>0</assigned_to_others>
+          <max_available>100</max_available>
+          <min_assignment>0</min_assignment>
+          <sold_by_reseller>0</sold_by_reseller>
+          <sold_by_venue>0</sold_by_venue>
+        </ticket_group>
       </ticket_assignments>
     </reseller>
   </ticket_resellers>
 </event_ticket_assignment>
-
-
-
-PL/SQL procedure successfully completed.
-
-
 */

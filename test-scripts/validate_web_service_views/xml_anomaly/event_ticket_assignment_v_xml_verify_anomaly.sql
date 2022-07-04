@@ -7,9 +7,11 @@
         ,event_id
         ,xml_doc
     from 
-    --event_ticket_assignment_v_xml
-    a_test_assignment
+    event_ticket_assignment_v_xml
+    --a_test_assignment
     where event_id = 42
+    --workaround to keep the optimizer from becoming confused
+    and rownum >= 1
 )
 select 
     b.venue_id

@@ -10,9 +10,11 @@
         ,event_id
         ,xml_doc
     from 
---    a_test_venue
+    --a_test_venue
     tickets_available_venue_v_xml
     where event_id = 42
+    --workaround to force optimizer not to rewrite without using xmlagg and xmltable
+    and rownum >= 1
 )
 select
     b.venue_id

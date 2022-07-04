@@ -1,11 +1,22 @@
 create or replace view events_v_xml_verify as
+with base as
+(
+    select
+        venue_id
+        ,event_id
+        ,xml_doc
+    from event_system.events_v_xml
+    --workaround to force optimizer to materialize the xml and parse it
+    --without workaround optimizer rewrite attempts to skip xmlagg and xmltable
+    where rownum >= 1    
+)
 select 
-    x.venue_id
+    b.venue_id
     ,e.venue_id as venue_id_xml
     ,e.venue_name
     ,e.organizer_name
     ,e.organizer_email
-    ,x.event_id
+    ,b.event_id
     ,e.event_id as event_id_xml
     ,e.event_series_id
     ,e.event_name
@@ -13,8 +24,8 @@ select
     ,e.tickets_available
     ,e.tickets_remaining
 from 
-    events_v_xml x,
-    xmltable('/event' passing x.xml_doc 
+    base b,
+    xmltable('/event' passing b.xml_doc 
         columns
             venue_id            number        path 'venue/venue_id'
             ,venue_name         varchar2(100) path 'venue/venue_name'

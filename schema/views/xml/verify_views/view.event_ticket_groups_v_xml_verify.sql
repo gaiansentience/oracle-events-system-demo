@@ -6,6 +6,9 @@ with base as
         ,event_id
         ,xml_doc
     from event_ticket_groups_v_xml
+    --workaround to force optimizer to materialize the xml and parse it
+    --without workaround optimizer rewrite attempts to skip xmlagg and xmltable
+    where rownum >= 1    
 )
 select 
     b.venue_id

@@ -3,6 +3,7 @@ prompt creating verification views for json web services
 @@view.event_ticket_groups_v_json_verify.sql;
 
 @@view.event_ticket_assignment_v_json_verify.sql;
+@@view.event_series_ticket_assignment_v_json_verify.sql;
 
 @@view.event_series_ticket_prices_v_json_verify.sql;
 @@view.event_ticket_prices_v_json_verify.sql;
@@ -10,6 +11,10 @@ prompt creating verification views for json web services
 @@view.tickets_available_all_v_json_verify.sql;
 @@view.tickets_available_venue_v_json_verify.sql;
 @@view.tickets_available_reseller_v_json_verify.sql;
+
+@@view.tickets_available_series_all_v_json_verify.sql;
+@@view.tickets_available_series_venue_v_json_verify.sql;
+@@view.tickets_available_series_reseller_v_json_verify.sql;
 
 @@view.customer_event_tickets_v_json_verify.sql;
 

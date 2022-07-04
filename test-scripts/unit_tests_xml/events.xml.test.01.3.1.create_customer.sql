@@ -14,11 +14,11 @@ l_xml :=
 </create_customer>    
 ';
 
-p_xml_doc := xmltype(l_xml);
+    p_xml_doc := xmltype(l_xml);
 
-  events_xml_api.create_customer(p_xml_doc => p_xml_doc);
+    events_xml_api.create_customer(p_xml_doc => p_xml_doc);
 
-dbms_output.put_line(p_xml_doc.getclobval());
+    dbms_output.put_line(p_xml_doc.getclobval());
 
 end;
 
@@ -27,7 +27,7 @@ end;
   <customer>
     <customer_name>Edward Scissorfoot</customer_name>
     <customer_email>Edward.Scissorfoot@example.customer.com</customer_email>
-    <customer_id>2761</customer_id>
+    <customer_id>4961</customer_id>
     <status_code>SUCCESS</status_code>
     <status_message>Created customer</status_message>
   </customer>

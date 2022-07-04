@@ -7,6 +7,10 @@ with base as
         ,reseller_id
         ,xml_doc
     from tickets_available_reseller_v_xml
+    --workaround to force optimizer to materialize the xml and parse it
+    --without workaround optimizer rewrite attempts to skip xmlagg and xmltable
+    --this view causes xml anomaly (see unit test scripts for web service views)
+    where rownum >= 1    
 )
 select
     b.venue_id

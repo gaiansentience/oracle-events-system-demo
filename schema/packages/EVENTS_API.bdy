@@ -2046,6 +2046,116 @@ as
             || case when l_error_count > 0 then '  Tickets could not be purchased for ' || l_error_count || ' events in the series.' end;
         
     end purchase_tickets_venue_series;
+    
+    procedure purchase_tickets_set_error_values(
+        p_sqlerrm in varchar2, 
+        p_purchase in out r_purchase)
+    is
+    begin
+
+        p_purchase.status_code := 'ERROR';
+        p_purchase.status_message := sqlerrm;
+        p_purchase.tickets_purchased := 0;
+        p_purchase.purchase_amount := 0;
+    
+        --for event
+        p_purchase.ticket_sales_id := 0;
+    
+        --for series
+        p_purchase.average_price := 0;
+    
+    end purchase_tickets_set_error_values;
+    
+    --expose purchase methods to web services with shared record type for parameters
+    procedure purchase_tickets_reseller(p_purchase in out r_purchase)
+    is
+    begin
+        purchase_tickets_reseller(
+            p_reseller_id => p_purchase.reseller_id,
+            p_ticket_group_id => p_purchase.ticket_group_id,
+            p_customer_id => p_purchase.customer_id,
+            p_number_tickets => p_purchase.tickets_requested,
+            p_requested_price => p_purchase.price_requested,
+            p_actual_price => p_purchase.actual_price,
+            p_extended_price => p_purchase.purchase_amount,                    
+            p_ticket_sales_id => p_purchase.ticket_sales_id);
+
+            p_purchase.status_code := 'SUCCESS';
+            p_purchase.status_message := 'group tickets purchased';
+            p_purchase.tickets_purchased := p_purchase.tickets_requested;
+        
+    exception
+        when others then
+            purchase_tickets_set_error_values(p_sqlerrm => sqlerrm, p_purchase => p_purchase);
+            raise;
+    end purchase_tickets_reseller;
+
+    procedure purchase_tickets_venue(p_purchase in out r_purchase)
+    is
+    begin
+        purchase_tickets_venue(
+            p_ticket_group_id => p_purchase.ticket_group_id,
+            p_customer_id => p_purchase.customer_id,
+            p_number_tickets => p_purchase.tickets_requested,
+            p_requested_price => p_purchase.price_requested,
+            p_actual_price => p_purchase.actual_price,
+            p_extended_price => p_purchase.purchase_amount,                    
+            p_ticket_sales_id => p_purchase.ticket_sales_id);
+            
+            p_purchase.status_code := 'SUCCESS';
+            p_purchase.status_message := 'group tickets purchased';
+            p_purchase.tickets_purchased := p_purchase.tickets_requested;
+            
+    exception
+        when others then
+            purchase_tickets_set_error_values(p_sqlerrm => sqlerrm, p_purchase => p_purchase);
+            raise;    
+    end purchase_tickets_venue;
+
+    procedure purchase_tickets_reseller_series(p_purchase in out r_purchase)
+    is
+    begin
+    
+        purchase_tickets_reseller_series(
+            p_reseller_id => p_purchase.reseller_id,
+            p_event_series_id => p_purchase.event_series_id,
+            p_price_category => p_purchase.price_category,
+            p_customer_id => p_purchase.customer_id,
+            p_number_tickets => p_purchase.tickets_requested,
+            p_requested_price => p_purchase.price_requested,
+            p_average_price => p_purchase.average_price,
+            p_total_purchase => p_purchase.purchase_amount,    
+            p_total_tickets => p_purchase.tickets_purchased,
+            p_status_code => p_purchase.status_code,
+            p_status_message => p_purchase.status_message);
+        
+    exception
+        when others then
+            purchase_tickets_set_error_values(p_sqlerrm => sqlerrm, p_purchase => p_purchase);
+            raise;        
+    end purchase_tickets_reseller_series;
+
+    procedure purchase_tickets_venue_series(p_purchase in out r_purchase)
+    is
+    begin
+        purchase_tickets_venue_series(
+            p_event_series_id => p_purchase.event_series_id,
+            p_price_category => p_purchase.price_category,
+            p_customer_id => p_purchase.customer_id,
+            p_number_tickets => p_purchase.tickets_requested,
+            p_requested_price => p_purchase.price_requested,
+            p_average_price => p_purchase.average_price,
+            p_total_purchase => p_purchase.purchase_amount,    
+            p_total_tickets => p_purchase.tickets_purchased,
+            p_status_code => p_purchase.status_code,
+            p_status_message => p_purchase.status_message);
+    
+    exception
+        when others then
+            purchase_tickets_set_error_values(p_sqlerrm => sqlerrm, p_purchase => p_purchase);
+            raise;    
+    end purchase_tickets_venue_series;
+    
 
     procedure show_customer_event_tickets
     (

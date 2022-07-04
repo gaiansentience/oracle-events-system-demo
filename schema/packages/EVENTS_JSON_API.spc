@@ -25,7 +25,7 @@ as
 
     procedure create_reseller
     (
-        p_json_doc in out varchar2
+        p_json_doc in out nocopy varchar2
     );
     
     function get_all_venues
@@ -41,7 +41,7 @@ as
     
     procedure create_venue
     (
-        p_json_doc in out varchar2
+        p_json_doc in out nocopy varchar2
     );
     
     function get_venue_events
@@ -58,12 +58,12 @@ as
     
     procedure create_event
     (
-        p_json_doc in out varchar2
+        p_json_doc in out nocopy varchar2
     );
 
     procedure create_weekly_event
     (
-        p_json_doc in out clob
+        p_json_doc in out nocopy clob
     );
     
     function get_event
@@ -74,7 +74,7 @@ as
     
     procedure create_customer
     (
-        p_json_doc in out varchar2
+        p_json_doc in out nocopy varchar2
     );
 
     function get_ticket_groups
@@ -96,12 +96,12 @@ as
 --update entire request with a request_status of SUCCESS or ERRORS and request_errors (0 or N)
     procedure update_ticket_groups
     (
-        p_json_doc in out clob
+        p_json_doc in out nocopy clob
     );
 
     procedure update_ticket_groups_series
     (
-        p_json_doc in out clob
+        p_json_doc in out nocopy clob
     );
 
 --return possible reseller ticket assignments for event as json document
@@ -191,34 +191,34 @@ as
 /*
 {
   "event_id" : 24,
-  "[*]event_name" : "Miles Morgan and the Undergound Jazz Trio",
-  "[*]event_date" : "2022-07-29T16:07:19",
   "purchase_channel" : "RESELLER|VENUE",
   "reseller_id" : 11,
   "[*]reseller_name" : "Your Ticket Supplier",
   "[**]customer_id" : 337,
   "[*]customer_name" : "John Kirby",
   "customer_email" : "John.Kirby@example.customer.com",
-  "[**]total_tickets_requested" : 8,
-  "[**]total_tickets_purchased" : 14,  
-  "[**]total_purchase_amount" : 410,
   "ticket_groups" :
   [
     {
       "ticket_group_id" : 38,
       "[*]price_category" : "VIP",
       "price" : 42,
-      "ticket_quantity_requested" : 6,
-      "[**]ticket_quantity_purchased" : 0,
-      "[**]extended_price" : 0,
-      "[**]ticket_sales_id" : 0,
-      "[**]sales_date" : null,
+      "tickets_requested" : 6,
+      "[**]status_code" : "SUCCESS|ERRORS",
+      "[**]status_message" : 14,  
+      "[**]tickets_purchased" : 0,
+      "[**]purchase_amount" : 0,
+      "[**]ticket_sales_id" : 0
     }
-  ]
-}  
-  
+  ],
+  "[**]request_status" : "SUCCESS|ERRORS",
+  "[**]request_errors" : 14,  
+  "[**]total_tickets_requested" : 8,
+  "[**]total_tickets_purchased" : 14,  
+  "[**]total_purchase_amount" : 410,
+  "[**]purchase_disclaimer" : "All Ticket Sales Are Final."
+}    
 */
-
 -- optional elements are marked with [*] and will be ignored if present
 -- reply elements are marked with [**] and will be returned.
 --customer will be verified by email
@@ -235,12 +235,53 @@ as
 --if current price is equal to or lower than requested price transaction will go through at the lower price
 --if current price is greater than requested price transaction will be cancelled
 
-    procedure purchase_tickets_from_reseller
+    procedure purchase_tickets_reseller
     (
         p_json_doc in out nocopy clob
     );
     
-    procedure purchase_tickets_from_venue
+    procedure purchase_tickets_venue
+    (
+        p_json_doc in out nocopy clob
+    );
+
+/*
+{
+  "event_series_id" : 24,
+  "purchase_channel" : "RESELLER|VENUE",
+  "reseller_id" : 11,  NOTE: ONLY REQUIRED WHEN PURCHASING VIA RESELLER
+  "[*]reseller_name" : "Your Ticket Supplier",
+  "[**]customer_id" : 337,
+  "[*]customer_name" : "John Kirby",
+  "customer_email" : "John.Kirby@example.customer.com",
+  "ticket_groups" :
+  [
+    {
+      "price_category" : "VIP",
+      "price" : 42,
+      "tickets_requested" : 6,
+      "[**]status_code" : "SUCCESS|ERRORS",
+      "[**]status_message" : 14,  
+      "[**]tickets_purchased" : 0,
+      "[**]average_price" : 0,
+      "[**]purchase_amount" : 0
+    }
+  ],
+  "[**]request_status" : "SUCCESS|ERRORS",
+  "[**]request_errors" : 14,  
+  "[**]total_tickets_requested" : 8,
+  "[**]total_tickets_purchased" : 14,  
+  "[**]total_purchase_amount" : 410,
+  "[**]purchase_disclaimer" : "All Ticket Sales Are Final."
+}    
+*/
+
+    procedure purchase_tickets_reseller_series
+    (
+        p_json_doc in out nocopy clob
+    );
+    
+    procedure purchase_tickets_venue_series
     (
         p_json_doc in out nocopy clob
     );

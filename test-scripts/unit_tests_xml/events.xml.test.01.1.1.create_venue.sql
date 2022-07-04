@@ -1,8 +1,8 @@
 set serveroutput on;
-DECLARE
-  P_XML_DOC XMLTYPE;
+declare
+  p_xml_doc xmltype;
   l_xml varchar2(1000);
-BEGIN
+begin
 
 l_xml :=
 '
@@ -13,15 +13,13 @@ l_xml :=
   <max_event_capacity>200</max_event_capacity>
 </venue>
 ';
-P_xml_doc := xmltype(l_xml);
+    p_xml_doc := xmltype(l_xml);
 
-  EVENTS_XML_API.CREATE_VENUE(
-    P_XML_DOC => P_XML_DOC
-  );
+    events_xml_api.create_venue(p_xml_doc => p_xml_doc);
 
-DBMS_OUTPUT.PUT_LINE(P_XML_DOC.getstringval);
+    dbms_output.put_line(p_xml_doc.getstringval);
 
-END;
+end;
 
 /*
 <venue>
@@ -33,4 +31,5 @@ END;
   <status_code>SUCCESS</status_code>
   <status_message>Created venue</status_message>
 </venue>
+
 */

@@ -1,6 +1,7 @@
 --querying test table shows same values for tickets_available and the number in ticket_status
 --querying the xml view directly yields the wrong value for tickets_available
 --the value in tickets_available does not match anything
+--2022/07/04 NOT REPRODUCIBLE
 
 ---  CREATE OR REPLACE FORCE EDITIONABLE VIEW "EVENT_SYSTEM"."TICKETS_AVAILABLE_RESELLER_V_XML_VERIFY" ("VENUE_ID", "VENUE_ID_XML", "VENUE_NAME", "EVENT_ID", "EVENT_ID_XML", "EVENT_NAME", "EVENT_DATE", "EVENT_TICKETS_AVAILABLE", "PRICE_CATEGORY", "TICKET_GROUP_ID", "PRICE", "GROUP_TICKETS_AVAILABLE", "GROUP_TICKETS_SOLD", "GROUP_TICKETS_REMAINING", "RESELLER_ID", "RESELLER_ID_XML", "RESELLER_NAME", "TICKETS_AVAILABLE", "TICKET_STATUS") AS 
   with base as

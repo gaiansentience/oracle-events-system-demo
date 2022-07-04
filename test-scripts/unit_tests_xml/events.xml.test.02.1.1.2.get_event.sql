@@ -1,35 +1,29 @@
 set serveroutput on;
-DECLARE
-  P_EVENT_ID NUMBER;
-  P_FORMATTED BOOLEAN;
-  v_Return XMLTYPE;
-BEGIN
-  P_EVENT_ID := 1;
-  P_FORMATTED := true;
+declare
+  l_event_id number;
+  l_xml xmltype;
+begin
 
-  v_Return := EVENTS_XML_API.GET_EVENT(
-    P_EVENT_ID => P_EVENT_ID,
-    P_FORMATTED => P_FORMATTED
-  );
+    select event_id into l_event_id from events where event_name = 'Evangeline Thorpe';
+    
+    l_xml := events_xml_api.get_event(p_event_id => l_event_id, p_formatted => true);
 
-DBMS_OUTPUT.PUT_LINE(v_Return.getstringval);
+    dbms_output.put_line(l_xml.getstringval);
 
-END;
+end;
 
 /*
-
 <event>
   <venue>
-    <venue_id>1</venue_id>
-    <venue_name>City Stadium</venue_name>
-    <organizer_email>Erin.Johanson@CityStadium.com</organizer_email>
-    <organizer_name>Erin Johanson</organizer_name>
+    <venue_id>21</venue_id>
+    <venue_name>The Pink Pony Revue</venue_name>
+    <organizer_email>Julia.Stein@ThePinkPonyRevue.com</organizer_email>
+    <organizer_name>Julia Stein</organizer_name>
   </venue>
-  <event_id>1</event_id>
-  <event_name>Rudy and the Trees</event_name>
-  <event_date>2022-05-27</event_date>
-  <tickets_available>20000</tickets_available>
-  <tickets_remaining>7808</tickets_remaining>
+  <event_id>561</event_id>
+  <event_name>Evangeline Thorpe</event_name>
+  <event_date>2023-05-01</event_date>
+  <tickets_available>200</tickets_available>
+  <tickets_remaining>200</tickets_remaining>
 </event>
-
 */

@@ -1,26 +1,22 @@
 set serveroutput on;
-DECLARE
-  P_RESELLER_ID NUMBER;
-  P_FORMATTED BOOLEAN;
-  v_Return XMLTYPE;
-BEGIN
-  P_RESELLER_ID := 1;
-  P_FORMATTED := true;
+declare
+  l_reseller_id number;
+  l_xml xmltype;
+begin
 
-  v_Return := EVENTS_XML_API.GET_RESELLER(
-    P_RESELLER_ID => P_RESELLER_ID,
-    P_FORMATTED => P_FORMATTED
-  );
+    select reseller_id into l_reseller_id from resellers where reseller_name = 'New Wave Tickets'; 
 
-DBMS_OUTPUT.PUT_LINE(v_Return.getstringval);
+    l_xml := events_xml_api.get_reseller(p_reseller_id => l_reseller_id, p_formatted => true);
 
-END;
+    dbms_output.put_line(l_xml.getstringval);
+
+end;
 
 /*
 <reseller>
-  <reseller_id>1</reseller_id>
-  <reseller_name>Events For You</reseller_name>
-  <reseller_email>ticket.sales@EventsForYou.com</reseller_email>
-  <commission_percent>.1461</commission_percent>
+  <reseller_id>21</reseller_id>
+  <reseller_name>New Wave Tickets</reseller_name>
+  <reseller_email>ticket.sales@NewWaveTickets.com</reseller_email>
+  <commission_percent>.1111</commission_percent>
 </reseller>
 */

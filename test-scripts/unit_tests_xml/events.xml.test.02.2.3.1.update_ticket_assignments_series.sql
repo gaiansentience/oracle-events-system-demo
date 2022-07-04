@@ -8,11 +8,12 @@ l_xml :=
 '
 <event_series_ticket_assignment>
   <event_series>
-    <event_series_id>15</event_series_id>
+    <venue>
+      <venue_id>21</venue_id>
+      <venue_name>The Pink Pony Revue</venue_name>
+    </venue>
+    <event_series_id>21</event_series_id>
     <event_name>Cool Jazz Evening</event_name>
-    <first_event_date>2023-04-06</first_event_date>
-    <last_event_date>2023-06-29</last_event_date>
-    <event_tickets_available>500</event_tickets_available>
   </event_series>
   <ticket_resellers>
     <reseller>
@@ -21,11 +22,11 @@ l_xml :=
       <ticket_assignments>
         <ticket_group>
           <price_category>VIP</price_category>
-          <tickets_assigned>30</tickets_assigned>
+          <tickets_assigned>15</tickets_assigned>
         </ticket_group>
         <ticket_group>
           <price_category>GENERAL ADMISSION</price_category>
-          <tickets_assigned>100</tickets_assigned>
+          <tickets_assigned>50</tickets_assigned>
         </ticket_group>
       </ticket_assignments>
     </reseller>
@@ -35,11 +36,11 @@ l_xml :=
       <ticket_assignments>
         <ticket_group>
           <price_category>VIP</price_category>
-          <tickets_assigned>30</tickets_assigned>
+          <tickets_assigned>15</tickets_assigned>
         </ticket_group>
         <ticket_group>
           <price_category>GENERAL ADMISSION</price_category>
-          <tickets_assigned>200</tickets_assigned>
+          <tickets_assigned>50</tickets_assigned>
         </ticket_group>
       </ticket_assignments>
     </reseller>
@@ -59,14 +60,14 @@ end;
 
 
 /*
-
 <event_series_ticket_assignment>
   <event_series>
-    <event_series_id>15</event_series_id>
+    <venue>
+      <venue_id>21</venue_id>
+      <venue_name>The Pink Pony Revue</venue_name>
+    </venue>
+    <event_series_id>21</event_series_id>
     <event_name>Cool Jazz Evening</event_name>
-    <first_event_date>2023-04-06</first_event_date>
-    <last_event_date>2023-06-29</last_event_date>
-    <event_tickets_available>500</event_tickets_available>
   </event_series>
   <ticket_resellers>
     <reseller>
@@ -75,15 +76,15 @@ end;
       <ticket_assignments>
         <ticket_group>
           <price_category>VIP</price_category>
-          <tickets_assigned>30</tickets_assigned>
+          <tickets_assigned>15</tickets_assigned>
           <status_code>SUCCESS</status_code>
-          <status_message>Ticket group (VIP) assigned to reseller for 13 events in series</status_message>
+          <status_message>Ticket group (VIP) assigned to reseller for 17 events in series</status_message>
         </ticket_group>
         <ticket_group>
           <price_category>GENERAL ADMISSION</price_category>
-          <tickets_assigned>100</tickets_assigned>
+          <tickets_assigned>50</tickets_assigned>
           <status_code>SUCCESS</status_code>
-          <status_message>Ticket group (GENERAL ADMISSION) assigned to reseller for 13 events in series</status_message>
+          <status_message>Ticket group (GENERAL ADMISSION) assigned to reseller for 17 events in series</status_message>
         </ticket_group>
       </ticket_assignments>
       <reseller_status>SUCCESS</reseller_status>
@@ -95,15 +96,15 @@ end;
       <ticket_assignments>
         <ticket_group>
           <price_category>VIP</price_category>
-          <tickets_assigned>30</tickets_assigned>
+          <tickets_assigned>15</tickets_assigned>
           <status_code>SUCCESS</status_code>
-          <status_message>Ticket group (VIP) assigned to reseller for 13 events in series</status_message>
+          <status_message>Ticket group (VIP) assigned to reseller for 17 events in series</status_message>
         </ticket_group>
         <ticket_group>
           <price_category>GENERAL ADMISSION</price_category>
-          <tickets_assigned>200</tickets_assigned>
+          <tickets_assigned>50</tickets_assigned>
           <status_code>SUCCESS</status_code>
-          <status_message>Ticket group (GENERAL ADMISSION) assigned to reseller for 13 events in series</status_message>
+          <status_message>Ticket group (GENERAL ADMISSION) assigned to reseller for 17 events in series</status_message>
         </ticket_group>
       </ticket_assignments>
       <reseller_status>SUCCESS</reseller_status>
@@ -113,11 +114,5 @@ end;
   <request_status>SUCCESS</request_status>
   <request_errors>0</request_errors>
 </event_series_ticket_assignment>
-
-
-
-PL/SQL procedure successfully completed.
-
-
 
 */

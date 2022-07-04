@@ -287,6 +287,8 @@ as
         p_ticket_group_id in number
     ) return number;
     
+    
+    
     --record ticket purchased through reseller application
     --raise error if ticket group quantity available is less than number of tickets requested
     --return ticket sales id as sales confirmation number
@@ -344,6 +346,32 @@ as
         p_status_code out varchar2,
         p_status_message out varchar2
     );
+
+    --expose purchase methods to web services using a common record type for parameters
+    type r_purchase is record(
+        event_id number,
+        event_series_id number,
+        reseller_id number,
+        customer_id number,
+        ticket_group_id number,
+        price_category ticket_groups.price_category%type,
+        tickets_requested number,
+        price_requested number,
+        actual_price number,
+        average_price number,
+        tickets_purchased number,
+        purchase_amount number,
+        ticket_sales_id number,
+        status_code varchar2(20),
+        status_message varchar2(4000));
+
+    procedure purchase_tickets_reseller(p_purchase in out r_purchase);
+
+    procedure purchase_tickets_venue(p_purchase in out r_purchase);
+
+    procedure purchase_tickets_reseller_series(p_purchase in out r_purchase);
+
+    procedure purchase_tickets_venue_series(p_purchase in out r_purchase);
 
     procedure show_customer_event_tickets
     (

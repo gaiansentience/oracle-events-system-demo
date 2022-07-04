@@ -40,6 +40,11 @@ as
         p_json_method in varchar2
     ) return varchar2
     is
+        $if dbms_db_version.version >= 21 $then
+        pragma suppresses_warning_6009(get_json_error_doc);
+        --pragma works for exception handlers that return get_json_error_doc
+        --pragma doesnt work for exception handlers that set in out parameter to get_json_error_doc
+        $end
         o_error json_object_t := new json_object_t;
         l_json varchar2(4000);
     begin
@@ -101,7 +106,7 @@ as
 
     procedure create_reseller
     (
-        p_json_doc in out varchar2
+        p_json_doc in out nocopy varchar2
     )
     is
         r_reseller event_system.resellers%rowtype;
@@ -197,7 +202,7 @@ as
 
     procedure create_venue
     (
-        p_json_doc in out varchar2
+        p_json_doc in out nocopy varchar2
     )
     is
         r_venue event_system.venues%rowtype;
@@ -299,7 +304,7 @@ as
 
     procedure create_event
     (
-        p_json_doc in out varchar2
+        p_json_doc in out nocopy varchar2
     )
     is
         r_event event_system.events%rowtype;
@@ -354,7 +359,7 @@ as
 
     procedure create_weekly_event
     (
-        p_json_doc in out clob
+        p_json_doc in out nocopy clob
     )
     is
         l_venue_id venues.venue_id%type;
@@ -443,7 +448,7 @@ as
 
     procedure create_customer
     (
-        p_json_doc in out varchar2
+        p_json_doc in out nocopy varchar2
     )
     is
         r_customer event_system.customers%rowtype;
@@ -555,7 +560,7 @@ as
 --update entire request with a request_status of SUCCESS or ERRORS and request_errors (0 or N)
     procedure update_ticket_groups
     (
-        p_json_doc in out clob
+        p_json_doc in out nocopy clob
     )
     is
         r_group event_system.ticket_groups%rowtype;
@@ -637,7 +642,7 @@ as
 
     procedure update_ticket_groups_series
     (
-        p_json_doc in out clob
+        p_json_doc in out nocopy clob
     )
     is
         r_group event_system.ticket_groups%rowtype;
@@ -1169,94 +1174,27 @@ as
         o_request.put('customer_id', p_customer_id);
     
     end purchase_get_customer;
-
-    procedure purchase_get_group_request(
-        o_group in out nocopy json_object_t,
-        p_group_id out number,
-        p_quantity out number,
-        p_price out number,
-        p_tickets_requested_all_groups in out number
-    )
-    is
-        l_price_category ticket_groups.price_category%type;
-    begin
         
-        p_group_id := o_group.get_number('ticket_group_id');
-        p_quantity := o_group.get_number('ticket_quantity_requested');
-        p_price := o_group.get_number('price');
-        
-        l_price_category := events_api.get_ticket_group_category(p_group_id);    
-        o_group.put('price_category', l_price_category);
-        
-        p_tickets_requested_all_groups := p_tickets_requested_all_groups + p_quantity;
-
-    end purchase_get_group_request;
-
-    procedure purchase_set_group_values_success
-    (
-        p_qty_requested in number,
-        p_qty_purchased out number,
-        p_sales_date out date,
-        p_extended_price in number,
-        p_qty_purchased_all_groups in out number,
-        p_total_purchase_amount in out number,
-        p_status_code out varchar2,
-        p_status_message out varchar2
-    )
-    is
-    begin
-        
-        p_status_code := 'SUCCESS';
-        p_status_message := p_qty_requested || ' group tickets purchased.';
-        p_qty_purchased := p_qty_requested;
-        p_sales_date := sysdate;
-        p_qty_purchased_all_groups := p_qty_purchased_all_groups + p_qty_purchased;
-        p_total_purchase_amount := p_total_purchase_amount + p_extended_price;
-
-    end purchase_set_group_values_success;
-
-    procedure purchase_set_group_values_error(
-        p_sqlerrm in varchar2,
-        p_status_code out varchar2,
-        p_status_message out varchar2,
-        p_error_count in out number,
-        p_qty_purchased out number,
-        p_extended_price out number,
-        p_sales_date out date,
-        p_sales_id out number)
-    is
-    begin
-        p_status_code := 'ERROR';
-        p_status_message := p_sqlerrm;              
-        p_error_count := p_error_count + 1;
-        p_qty_purchased := 0;
-        p_extended_price := 0;
-        p_sales_date := null;
-        p_sales_id := 0;
-    end purchase_set_group_values_error;
-
     procedure purchase_update_group
     (
         o_group in out nocopy json_object_t,
-        p_sales_id in number,
-        p_sales_date in date,
-        p_tickets_purchased in number,
-        p_actual_price in number,
-        p_extended_price in number,
-        p_status_code in varchar2,
-        p_status_message in varchar2
+        p_purchase in events_api.r_purchase,
+        p_is_series in boolean
     )
     is
     begin
-            
-        --update the array element with results (updates request object by reference)
-        o_group.put('ticket_sales_id', p_sales_id);
-        o_group.put('sales_date', p_sales_date);
-        o_group.put('ticket_quantity_purchased', p_tickets_purchased);
-        o_group.put('actual_price', p_actual_price);
-        o_group.put('extended_price', p_extended_price);
-        o_group.put('status_code', p_status_code);
-        o_group.put('status_message', p_status_message);
+
+        if p_is_series then
+            o_group.put('average_price', p_purchase.average_price);
+        else
+            o_group.put('ticket_sales_id', p_purchase.ticket_sales_id);
+            o_group.put('actual_price', p_purchase.actual_price);
+        end if;
+        
+        o_group.put('tickets_purchased', p_purchase.tickets_purchased);
+        o_group.put('purchase_amount', p_purchase.purchase_amount);
+        o_group.put('status_code', p_purchase.status_code);
+        o_group.put('status_message', p_purchase.status_message);
 
     end purchase_update_group;
 
@@ -1281,95 +1219,53 @@ as
         
     end purchase_update_request;
 
-    procedure purchase_tickets_from_reseller
+    procedure purchase_tickets_reseller
     (
         p_json_doc in out nocopy clob
     )
     is
-        l_event_id number;
-        r_sale event_system.ticket_sales%rowtype;
+        l_purchase events_api.r_purchase;
+        l_total_error_count number := 0;
         l_total_tickets_requested number := 0;
         l_total_tickets_purchased number := 0;
         l_total_purchase_amount number := 0;
-        l_tickets_purchased_in_group number;
-        l_ticket_price_requested number;
-        l_actual_ticket_price number; 
-        o_request json_object_t;
-        a_groups json_array_t;
-        o_group json_object_t;
-        l_group_status_code varchar2(10);
-        l_group_status_message varchar2(4000);
-        l_total_error_count number := 0;
         l_status_code varchar2(10);
         l_status_message varchar2(4000);
+                
+        o_request json_object_t;
+        a_groups json_array_t;
+        o_group json_object_t;        
     begin
-
         o_request := json_object_t.parse(p_json_doc);
-        l_event_id := o_request.get_number('event_id');
-        r_sale.reseller_id := o_request.get_number('reseller_id');
-   
-        purchase_get_customer(o_request => o_request, p_customer_id => r_sale.customer_id);
+        l_purchase.event_id := o_request.get_number('event_id');
+        l_purchase.reseller_id := o_request.get_number('reseller_id');   
+        purchase_get_customer(o_request => o_request, p_customer_id => l_purchase.customer_id);
 
         a_groups := o_request.get_array('ticket_groups');
-        for group_index in 0..a_groups.get_size - 1 loop
-        
+        for group_index in 0..a_groups.get_size - 1 loop        
             o_group := json_object_t(a_groups.get(group_index));
 
-            purchase_get_group_request(
-                o_group => o_group, 
-                p_group_id => r_sale.ticket_group_id, 
-                p_quantity => r_sale.ticket_quantity, 
-                p_price => l_ticket_price_requested,
-                p_tickets_requested_all_groups => l_total_tickets_requested);                            
+            l_purchase.ticket_group_id := o_group.get_number('ticket_group_id');
+            l_purchase.price_category := events_api.get_ticket_group_category(l_purchase.ticket_group_id);    
+            o_group.put('price_category', l_purchase.price_category);
+            l_purchase.tickets_requested := o_group.get_number('tickets_requested');
+            l_purchase.price_requested := o_group.get_number('price');
+                    
+            l_total_tickets_requested := l_total_tickets_requested + l_purchase.tickets_requested;
         
             begin
                         
-                --purchase the tickets, this sets v_ticket_sales_id
-                --this will verify availability for the reseller and group
-                --raises an exception if tickets are not available
-                --raises an exception if requested price is lower than current price
-                events_api.purchase_tickets_reseller(
-                    p_reseller_id => r_sale.reseller_id,
-                    p_ticket_group_id => r_sale.ticket_group_id,
-                    p_customer_id => r_sale.customer_id,
-                    p_number_tickets => r_sale.ticket_quantity,
-                    p_requested_price => l_ticket_price_requested,
-                    p_actual_price => l_actual_ticket_price,
-                    p_extended_price => r_sale.extended_price,                    
-                    p_ticket_sales_id => r_sale.ticket_sales_id);
+                events_api.purchase_tickets_reseller(p_purchase => l_purchase);
 
-                purchase_set_group_values_success(
-                    p_qty_requested => r_sale.ticket_quantity,
-                    p_qty_purchased => l_tickets_purchased_in_group,
-                    p_sales_date => r_sale.sales_date,
-                    p_extended_price => r_sale.extended_price,
-                    p_qty_purchased_all_groups => l_total_tickets_purchased,
-                    p_total_purchase_amount => l_total_purchase_amount,
-                    p_status_code => l_group_status_code,
-                    p_status_message => l_group_status_message);
+                l_total_tickets_purchased := l_total_tickets_purchased + l_purchase.tickets_purchased;
+                l_total_purchase_amount := l_total_purchase_amount + l_purchase.purchase_amount;
             
             exception
                 when others then
-                    purchase_set_group_values_error(
-                        p_sqlerrm => sqlerrm,
-                        p_status_code => l_group_status_code,
-                        p_status_message => l_group_status_message,
-                        p_error_count => l_total_error_count,
-                        p_qty_purchased => l_tickets_purchased_in_group,
-                        p_extended_price => r_sale.extended_price,
-                        p_sales_date => r_sale.sales_date,
-                        p_sales_id => r_sale.ticket_sales_id);
+                    l_total_error_count := l_total_error_count + 1;
             end;
-        
-            purchase_update_group(
-                o_group => o_group, 
-                p_sales_id => r_sale.ticket_sales_id, 
-                p_sales_date => r_sale.sales_date, 
-                p_tickets_purchased => l_tickets_purchased_in_group,
-                p_actual_price => l_actual_ticket_price,
-                p_extended_price => r_sale.extended_price,
-                p_status_code => l_group_status_code,
-                p_status_message => l_group_status_message);
+         
+            purchase_update_group(o_group => o_group, p_purchase => l_purchase, p_is_series => false);
         
         end loop;
         
@@ -1384,96 +1280,56 @@ as
 
     exception
         when others then
-            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'purchase_tickets_from_reseller');
-    end purchase_tickets_from_reseller;
+            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'purchase_tickets_reseller');
+    end purchase_tickets_reseller;
 
     --see comments above purchase tickets from reseller for restrictions and error conditions
-    procedure purchase_tickets_from_venue
+    procedure purchase_tickets_venue
     (
         p_json_doc in out nocopy clob
     )
     is
-        l_event_id number;
-        r_sale event_system.ticket_sales%rowtype;
+        l_purchase events_api.r_purchase;
+        l_total_error_count number := 0;
         l_total_tickets_requested number := 0;
         l_total_tickets_purchased number := 0;
         l_total_purchase_amount number := 0;
-        l_tickets_purchased_in_group number;
-        l_ticket_price_requested number;
-        l_actual_ticket_price number;
-        o_request json_object_t;
-        a_groups json_array_t;
-        o_group json_object_t;
-        l_group_status_code varchar2(10);
-        l_group_status_message varchar2(4000);
-        l_total_error_count number := 0;
         l_status_code varchar2(10);
         l_status_message varchar2(4000);
+        
+        o_request json_object_t;
+        a_groups json_array_t;
+        o_group json_object_t;        
     begin
-
         o_request := json_object_t.parse(p_json_doc);
-        l_event_id := o_request.get_number('event_id');
-
-        purchase_get_customer(o_request => o_request, p_customer_id => r_sale.customer_id);
+        l_purchase.event_id := o_request.get_number('event_id');
+        purchase_get_customer(o_request => o_request, p_customer_id => l_purchase.customer_id);
 
         a_groups := o_request.get_array('ticket_groups');
         for group_index in 0..a_groups.get_size - 1 loop        
             o_group := json_object_t(a_groups.get(group_index));
         
-            purchase_get_group_request(
-                o_group => o_group, 
-                p_group_id => r_sale.ticket_group_id, 
-                p_quantity => r_sale.ticket_quantity, 
-                p_price => l_ticket_price_requested,
-                p_tickets_requested_all_groups => l_total_tickets_requested);                            
+            l_purchase.ticket_group_id := o_group.get_number('ticket_group_id');
+            l_purchase.price_category := events_api.get_ticket_group_category(l_purchase.ticket_group_id);    
+            o_group.put('price_category', l_purchase.price_category);
+            l_purchase.tickets_requested := o_group.get_number('tickets_requested');
+            l_purchase.price_requested := o_group.get_number('price');
+            
+            l_total_tickets_requested := l_total_tickets_requested + l_purchase.tickets_requested;
         
             begin
 
-                --purchase the tickets, this sets v_ticket_sales_id
-                --this will verify availability for the reseller and group
-                --raises an exception if tickets are not available
-                --raises an exception if requested price is lower than current price
-                events_api.purchase_tickets_venue(
-                    p_ticket_group_id => r_sale.ticket_group_id,
-                    p_customer_id => r_sale.customer_id,
-                    p_number_tickets => r_sale.ticket_quantity,
-                    p_requested_price => l_ticket_price_requested,
-                    p_actual_price => l_actual_ticket_price,
-                    p_extended_price => r_sale.extended_price,                                                    
-                    p_ticket_sales_id => r_sale.ticket_sales_id);
+                events_api.purchase_tickets_venue(p_purchase => l_purchase);
 
-                purchase_set_group_values_success(
-                    p_qty_requested => r_sale.ticket_quantity,
-                    p_qty_purchased => l_tickets_purchased_in_group,
-                    p_sales_date => r_sale.sales_date,
-                    p_extended_price => r_sale.extended_price,
-                    p_qty_purchased_all_groups => l_total_tickets_purchased,
-                    p_total_purchase_amount => l_total_purchase_amount,
-                    p_status_code => l_group_status_code,
-                    p_status_message => l_group_status_message);
+                l_total_tickets_purchased := l_total_tickets_purchased + l_purchase.tickets_purchased;
+                l_total_purchase_amount := l_total_purchase_amount + l_purchase.purchase_amount;
             
             exception
                 when others then
-                    purchase_set_group_values_error(
-                        p_sqlerrm => sqlerrm,
-                        p_status_code => l_group_status_code,
-                        p_status_message => l_group_status_message,
-                        p_error_count => l_total_error_count,
-                        p_qty_purchased => l_tickets_purchased_in_group,
-                        p_extended_price => r_sale.extended_price,
-                        p_sales_date => r_sale.sales_date,
-                        p_sales_id => r_sale.ticket_sales_id);
+                    l_total_error_count := l_total_error_count + 1;
             end;
-            
-            purchase_update_group(
-                o_group => o_group, 
-                p_sales_id => r_sale.ticket_sales_id, 
-                p_sales_date => r_sale.sales_date, 
-                p_tickets_purchased => l_tickets_purchased_in_group,
-                p_actual_price => l_actual_ticket_price,
-                p_extended_price => r_sale.extended_price,
-                p_status_code => l_group_status_code,
-                p_status_message => l_group_status_message);
+             
+            purchase_update_group(o_group => o_group, p_purchase => l_purchase, p_is_series => false);
                     
         end loop;
    
@@ -1488,9 +1344,131 @@ as
 
     exception
         when others then
-            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'purchase_tickets_from_venue');
-    end purchase_tickets_from_venue;
+            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'purchase_tickets_venue');
+    end purchase_tickets_venue;
 
+    procedure purchase_tickets_reseller_series
+    (
+        p_json_doc in out nocopy clob
+    )
+    is
+        l_purchase events_api.r_purchase;
+        l_total_error_count number := 0;
+        l_total_tickets_requested number := 0;
+        l_total_tickets_purchased number := 0;
+        l_total_purchase_amount number := 0;
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
+                
+        o_request json_object_t;
+        a_groups json_array_t;
+        o_group json_object_t;        
+    begin
+        o_request := json_object_t.parse(p_json_doc);
+        l_purchase.event_series_id := o_request.get_number('event_series_id');
+        l_purchase.reseller_id := o_request.get_number('reseller_id');
+        purchase_get_customer(o_request => o_request, p_customer_id => l_purchase.customer_id);
+
+        a_groups := o_request.get_array('ticket_groups');
+        for group_index in 0..a_groups.get_size - 1 loop        
+            o_group := json_object_t(a_groups.get(group_index));
+
+            l_purchase.price_category := o_group.get_number('price_category');
+            l_purchase.tickets_requested := o_group.get_number('tickets_requested');
+            l_purchase.price_requested := o_group.get_number('price');                    
+            l_total_tickets_requested := l_total_tickets_requested + l_purchase.tickets_requested;
+        
+            begin
+            
+                events_api.purchase_tickets_reseller_series(p_purchase => l_purchase);
+                    
+                l_total_tickets_purchased := l_total_tickets_purchased + l_purchase.tickets_purchased;
+                l_total_purchase_amount := l_total_purchase_amount + l_purchase.purchase_amount;
+                                
+            exception
+                when others then
+                    l_total_error_count := l_total_error_count + 1;
+            end;
+         
+            purchase_update_group(o_group => o_group, p_purchase => l_purchase, p_is_series => true);
+        
+         end loop;
+        
+        purchase_update_request(
+            o_request => o_request, 
+            p_error_count => l_total_error_count,
+            p_qty_requested_all_groups => l_total_tickets_requested,
+            p_qty_purchased_all_groups => l_total_tickets_purchased,
+            p_total_purchase_amount => l_total_purchase_amount);
+    
+        p_json_doc := o_request.to_clob; 
+
+    exception
+        when others then
+            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'purchase_tickets_reseller_series');
+    end purchase_tickets_reseller_series;
+
+    --see comments above purchase tickets from reseller for restrictions and error conditions
+    procedure purchase_tickets_venue_series
+    (
+        p_json_doc in out nocopy clob
+    )
+    is
+        l_purchase events_api.r_purchase;
+        l_total_error_count number := 0;
+        l_total_tickets_requested number := 0;
+        l_total_tickets_purchased number := 0;
+        l_total_purchase_amount number := 0;
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
+        
+        o_request json_object_t;
+        a_groups json_array_t;
+        o_group json_object_t;        
+    begin
+        o_request := json_object_t.parse(p_json_doc);
+        l_purchase.event_series_id := o_request.get_number('event_series_id');
+        purchase_get_customer(o_request => o_request, p_customer_id => l_purchase.customer_id);
+
+        a_groups := o_request.get_array('ticket_groups');
+        for group_index in 0..a_groups.get_size - 1 loop        
+            o_group := json_object_t(a_groups.get(group_index));
+        
+            l_purchase.price_category := o_group.get_number('price_category');
+            l_purchase.tickets_requested := o_group.get_number('tickets_requested');
+            l_purchase.price_requested := o_group.get_number('price');                    
+            l_total_tickets_requested := l_total_tickets_requested + l_purchase.tickets_requested;
+        
+            begin
+            
+                events_api.purchase_tickets_venue_series(p_purchase => l_purchase);
+                                    
+                l_total_tickets_purchased := l_total_tickets_purchased + l_purchase.tickets_purchased;
+                l_total_purchase_amount := l_total_purchase_amount + l_purchase.purchase_amount;
+            
+            exception
+                when others then
+                    l_total_error_count := l_total_error_count + 1;
+            end;
+             
+            purchase_update_group(o_group => o_group, p_purchase => l_purchase, p_is_series => true);
+                    
+        end loop;
+   
+        purchase_update_request(
+            o_request => o_request, 
+            p_error_count => l_total_error_count,
+            p_qty_requested_all_groups => l_total_tickets_requested,
+            p_qty_purchased_all_groups => l_total_tickets_purchased,
+            p_total_purchase_amount => l_total_purchase_amount);
+
+        p_json_doc := o_request.to_clob; 
+
+    exception
+        when others then
+            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'purchase_tickets_venue_series');
+    end purchase_tickets_venue_series;
+    
 --get customer tickets purchased for event
 --used to verify customer purchases
     function get_customer_event_tickets

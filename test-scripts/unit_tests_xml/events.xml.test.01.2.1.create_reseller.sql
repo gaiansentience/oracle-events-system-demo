@@ -1,8 +1,8 @@
 set serveroutput on;
-DECLARE
-l_xml varchar2(4000);
-  P_XML_DOC XMLTYPE;
-BEGIN
+declare
+    l_xml varchar2(4000);
+    p_xml_doc xmltype;
+begin
 
 l_xml :=
 '
@@ -12,17 +12,15 @@ l_xml :=
   <commission_percent>.1111</commission_percent>
 </reseller>
 ';
-p_xml_doc := xmltype(l_xml);
+    p_xml_doc := xmltype(l_xml);
 
-  EVENTS_XML_API.CREATE_RESELLER(
-    P_XML_DOC => P_XML_DOC
-  );
-DBMS_OUTPUT.PUT_LINE(P_XML_DOC.getstringval);
+    events_xml_api.create_reseller(p_xml_doc => p_xml_doc);
+  
+    dbms_output.put_line(p_xml_doc.getstringval);
 
-END;
+end;
 
 /*
-
 <reseller>
   <reseller_name>New Wave Tickets</reseller_name>
   <reseller_email>ticket.sales@NewWaveTickets.com</reseller_email>
@@ -31,5 +29,4 @@ END;
   <status_code>SUCCESS</status_code>
   <status_message>Created reseller</status_message>
 </reseller>
-
 */

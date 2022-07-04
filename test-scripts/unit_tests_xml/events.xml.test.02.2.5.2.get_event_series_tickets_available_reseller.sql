@@ -1,30 +1,34 @@
 set serveroutput on;
 declare
-  p_event_series_id number := 15;
-  v_reseller_id number := 3;
-  l_xml xmltype;
+    l_venue_id number;
+    l_event_series_id number := 15;
+    l_reseller_id number;
+    l_xml xmltype;
 begin
 
-  l_xml := events_xml_api.get_event_series_tickets_available_reseller(p_event_series_id => p_event_series_id,p_reseller_id => v_reseller_id,p_formatted => true);
+    select venue_id into l_venue_id from venues where venue_name = 'The Pink Pony Revue';    
+    select max(event_series_id) into l_event_series_id from events where venue_id = l_venue_id and event_name = 'Cool Jazz Evening';
+    select reseller_id into l_reseller_id from resellers where reseller_name = 'Old School';
 
-dbms_output.put_line(l_xml.getclobval());
+    l_xml := events_xml_api.get_event_series_tickets_available_reseller(p_event_series_id => l_event_series_id, p_reseller_id => l_reseller_id, p_formatted => true);
+
+    dbms_output.put_line(l_xml.getclobval());
 
 end;
 
 /*
-
 <event_series_ticket_availability>
   <ticket_sources>Old School</ticket_sources>
   <event_series>
     <venue>
-      <venue_id>2</venue_id>
-      <venue_name>Club 11</venue_name>
+      <venue_id>21</venue_id>
+      <venue_name>The Pink Pony Revue</venue_name>
     </venue>
-    <event_series_id>15</event_series_id>
+    <event_series_id>21</event_series_id>
     <event_name>Cool Jazz Evening</event_name>
-    <first_event_date>2023-04-06</first_event_date>
-    <last_event_date>2023-06-29</last_event_date>
-    <events_in_series>13</events_in_series>
+    <first_event_date>2023-05-04</first_event_date>
+    <last_event_date>2023-08-24</last_event_date>
+    <events_in_series>17</events_in_series>
   </event_series>
   <ticket_groups>
     <ticket_group>
@@ -34,8 +38,8 @@ end;
         <reseller>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-          <tickets_available>390</tickets_available>
-          <events_available>13</events_available>
+          <tickets_available>255</tickets_available>
+          <events_available>17</events_available>
           <events_sold_out>0</events_sold_out>
         </reseller>
       </ticket_resellers>
@@ -47,13 +51,14 @@ end;
         <reseller>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-          <tickets_available>2600</tickets_available>
-          <events_available>13</events_available>
+          <tickets_available>850</tickets_available>
+          <events_available>17</events_available>
           <events_sold_out>0</events_sold_out>
         </reseller>
       </ticket_resellers>
     </ticket_group>
   </ticket_groups>
 </event_series_ticket_availability>
+
 
 */

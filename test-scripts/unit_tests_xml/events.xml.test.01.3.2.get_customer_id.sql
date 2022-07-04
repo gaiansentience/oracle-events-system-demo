@@ -6,17 +6,18 @@ begin
 
 l_xml := 
 '
-<create_customer>
+<get_customer_id>
   <customer>
     <customer_name>Edward Scissorfoot</customer_name>
     <customer_email>Edward.Scissorfoot@example.customer.com</customer_email>
   </customer>
-</create_customer>    
+</get_customer_id>    
 ';
 
 p_xml_doc := xmltype(l_xml);
 
-  events_xml_api.create_customer(p_xml_doc => p_xml_doc);
+--not implemented
+  events_xml_api.get_customer_id(p_xml_doc => p_xml_doc);
 
 dbms_output.put_line(p_xml_doc.getclobval());
 

@@ -1,8 +1,8 @@
 set serveroutput on;
-DECLARE
-  P_XML_DOC XMLTYPE;
+declare
+  p_xml_doc xmltype;
   l_xml varchar2(4000);
-BEGIN
+begin
 
 l_xml := 
 '
@@ -16,15 +16,13 @@ l_xml :=
   <tickets_available>200</tickets_available>
 </create_event>
 ';
-p_xml_doc := xmltype(l_xml);
+    p_xml_doc := xmltype(l_xml);
 
-  EVENTS_XML_API.CREATE_EVENT(
-    P_XML_DOC => P_XML_DOC
-  );
+    events_xml_api.create_event(p_xml_doc => p_xml_doc);
 
-DBMS_OUTPUT.PUT_LINE(P_XML_DOC.getstringval);
+    dbms_output.put_line(p_xml_doc.getstringval);
 
-END;
+end;
 
 /*
 <create_event>
@@ -35,7 +33,7 @@ END;
   <event_name>Evangeline Thorpe</event_name>
   <event_date>2023-05-01</event_date>
   <tickets_available>200</tickets_available>
-  <event_id>343</event_id>
+  <event_id>561</event_id>
   <status_code>SUCCESS</status_code>
   <status_message>Created event</status_message>
 </create_event>

@@ -1,4 +1,4 @@
---xml view will not validate
+--xml view will not validate without rownum >= 1 trick in verify view
 --shows all ticket groups for all events under the reseller for any given event
 --(see xml anomaly folder)
 select

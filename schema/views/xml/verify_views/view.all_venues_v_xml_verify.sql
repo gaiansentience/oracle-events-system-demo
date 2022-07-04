@@ -1,4 +1,13 @@
 create or replace view all_venues_v_xml_verify as
+with base as
+(
+    select
+        xml_doc
+    from event_system.all_venues_v_xml
+    --workaround to force optimizer to materialize the xml and parse it
+    --without workaround optimizer rewrite attempts to skip xmlagg and xmltable
+    where rownum >= 1    
+)
 select 
     t.venue_id
     ,t.venue_name
@@ -7,8 +16,8 @@ select
     ,t.max_event_capacity
     ,t.venue_scheduled_events
 from 
-    all_venues_v_xml x,
-    xmltable('/all_venues/venue' passing x.xml_doc 
+    base b,
+    xmltable('/all_venues/venue' passing b.xml_doc 
         columns
             venue_id                number        path 'venue_id'
             ,venue_name             varchar2(100) path 'venue_name'

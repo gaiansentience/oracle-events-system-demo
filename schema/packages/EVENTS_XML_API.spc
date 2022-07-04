@@ -23,7 +23,7 @@ as
 
     procedure create_reseller
     (
-        p_xml_doc in out xmltype
+        p_xml_doc in out nocopy xmltype
     );
 
     function get_all_venues
@@ -39,7 +39,7 @@ as
 
     procedure create_venue
     (
-        p_xml_doc in out xmltype
+        p_xml_doc in out nocopy xmltype
     );
 
     function get_venue_events
@@ -56,12 +56,12 @@ as
 
     procedure create_event
     (
-        p_xml_doc in out xmltype
+        p_xml_doc in out nocopy xmltype
     );
 
     procedure create_weekly_event
     (
-        p_xml_doc in out xmltype
+        p_xml_doc in out nocopy xmltype
     );
 
     function get_event
@@ -72,7 +72,7 @@ as
 
     procedure create_customer
     (
-        p_xml_doc in out xmltype
+        p_xml_doc in out nocopy xmltype
     );
 
     function get_ticket_groups
@@ -94,12 +94,12 @@ as
 --update entire request with a request_status of SUCCESS or ERRORS and request_errors (0 or N)
     procedure update_ticket_groups
     (
-        p_xml_doc in out xmltype
+        p_xml_doc in out nocopy xmltype
     );
 
     procedure update_ticket_groups_series
     (
-        p_xml_doc in out xmltype
+        p_xml_doc in out nocopy xmltype
     );
 
 --return possible reseller ticket assignments for event as xml document
@@ -188,10 +188,10 @@ as
 
 --xml input for purchase tickets from xxxx is modifed from xml format from get_event_tickets_available_[venue|reseller]
 --customer format is same as get_customer_tickets
-/*
 
+/*
 <ticket_purchase_request>
-  <purchase_channel>reseller|VENUE</purchase_channel>
+  <purchase_channel>reseller name|VENUE</purchase_channel>
   <event>
     <event_id>2</event_id>
   </event>
@@ -202,32 +202,29 @@ as
   </customer>
   <*reseller> optional if purchase channel is VENUE
     <reseller_id>3</reseller_id>
-    <*reseller_name>Old School</reseller_name>
   </reseller>  
   <ticket_groups>
     <ticket_group>
       <ticket_group_id>922</ticket_group_id>
-      <*price_category>VIP</price_category>
+      <**price_category>VIP</price_category>
       <price>50</price>
-      <ticket_quantity_requested>6</ticket_quantity_requested>
-      <**ticket_quantity_purchased>0</ticket_quantity_purchased>
-      <**extended_price>0</extended_price>
+      <tickets_requested>6</tickets_requested>
+      <**tickets_purchased>0</tickets_purchased>
+      <**actual_price>10</actual_price>
+      <**purchase_amount>0</purchase_amount>
       <**ticket_sales_id>0<ticket_sales_id</ticket_sales_id>
-      <**sales_date>null</sales_date>
-      <status_code>success</status_code>
-      <status_message>tickets purchased</status_message>
+      <**status_code>success</status_code>
+      <**status_message>tickets purchased</status_message>
     </ticket_group>
   </ticket_groups>
-  <request_status>success or error</request_status>
-  <request_errors>#</request_errors>
+  <**request_status>success or error</request_status>
+  <**request_errors>#</request_errors>
   <**total_tickets_requested>99</total_tickets_requested>
   <**total_tickets_purchased>88</total_tickets_purchased>
   <**total_purchase_amount>2222</total_purchase_amount>
-  <purchase_disclaimer>All Ticket Sales Are Final.</purchase_disclaimer>
+  <**purchase_disclaimer>All Ticket Sales Are Final.</purchase_disclaimer>
 </ticket_purchase_request>
-  
 */
-
 -- optional elements are marked with [*] and will be ignored if present
 -- reply elements are marked with [**] and will be returned.
 --customer will be verified by email
@@ -243,15 +240,66 @@ as
 --price for a ticket group will be checked at time of purchase
 --if current price is equal to or lower than requested price transaction will go through at the lower price
 --if current price is greater than requested price transaction will be cancelled
-    procedure purchase_tickets_from_reseller
+    procedure purchase_tickets_reseller
     (
         p_xml_doc in out nocopy xmltype
     );
     
-    procedure purchase_tickets_from_venue
+    procedure purchase_tickets_venue
     (
         p_xml_doc in out nocopy xmltype
     );
+
+/*
+<ticket_purchase_request>
+  <purchase_channel>reseller name|VENUE</purchase_channel>
+  <event_series>
+    <event_series_id>2</event_series_id>
+  </event_series>
+  <customer>
+    <**customer_id>1438</customer_id>
+    <*customer_name>Gary Walsh</customer_name> used to create customer record if customer email is not on file
+    <customer_email>Gary.Walsh@example.customer.com</customer_email>
+  </customer>
+  <*reseller> optional if purchase channel is VENUE
+    <reseller_id>3</reseller_id>
+  </reseller>  
+  <ticket_groups>
+    <ticket_group>
+      <price_category>VIP</price_category>
+      <price>50</price>
+      <tickets_requested>6</tickets_requested>
+      <**tickets_purchased>0</tickets_purchased>
+      <**purchase_amount>0</purchase_amount>
+      <**average_price>0</average_price>
+      <**status_code>success</status_code>
+      <**status_message>tickets purchased</status_message>
+    </ticket_group>
+  </ticket_groups>
+  <**request_status>success or error</request_status>
+  <**request_errors>#</request_errors>
+  <**total_tickets_requested>99</total_tickets_requested>
+  <**total_tickets_purchased>88</total_tickets_purchased>
+  <**total_purchase_amount>2222</total_purchase_amount>
+  <**purchase_disclaimer>All Ticket Sales Are Final.</purchase_disclaimer>
+</ticket_purchase_request>
+*/
+    --purchase tickets for all available events in an event series
+    --ticket groups are specified by price_category and requested price
+    --if an event has no available tickets or the price is higher than the requested price the individual transaction will not go through
+    --if purchasing through reseller, reseller availability and price is checked for each event
+    --if purchasing through venue, venue availability and price is checked for each event
+    --if any event in the series has a lower price currently than requested price the transaction will use the current price
+    procedure purchase_tickets_reseller_series
+    (
+        p_xml_doc in out nocopy xmltype
+    );
+    
+    procedure purchase_tickets_venue_series
+    (
+        p_xml_doc in out nocopy xmltype
+    );
+
 
 --get customer tickets purchased for event
 --used to verify customer purchases
