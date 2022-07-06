@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="TICKET_SALES_FK_RESELLERSv1" directorySegmentName="seg_0" id="B084AB88-63AB-5B64-0885-99046DAA6270">
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="TICKET SALES FK RESELLERS" directorySegmentName="seg_0" id="B084AB88-63AB-5B64-0885-99046DAA6270">
 <createdBy>gaian</createdBy>
 <createdTime>2022-05-24 16:01:18 UTC</createdTime>
 <generatorID>07921E00-2E7B-6F6F-6BBE-40ECCA1A36BD</generatorID>

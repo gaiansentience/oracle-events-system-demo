@@ -1,0 +1,234 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="44E5970A-FF38-13DC-6B03-9522CEBFF0AC" schemaObject="3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431" name="TICKETS">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>EVENT_SYSTEM</sourceObjSchema>
+<sourceObjName>TICKETS</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>55E58D3B-EA16-ADA6-3D11-85DFD1A59CE0</importedID>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="TICKET_ID" id="F9D9CB7E-C6C4-39FD-4B08-6A31771548FC">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>TICKETS</sourceObjSchema>
+<sourceObjName>TICKET_ID</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>BADD45EE-D573-5B5F-2BFF-EEF0161AD404</importedID>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<autoIncrementGenerateAlways>true</autoIncrementGenerateAlways>
+<autoIncrementCycle>false</autoIncrementCycle>
+<autoIncrementDisableCache>false</autoIncrementDisableCache>
+<autoIncrementCache>20</autoIncrementCache>
+<autoIncrementOrder>false</autoIncrementOrder>
+<notNullConstraintName>TICKET_NN_ID</notNullConstraintName>
+</Column>
+<Column name="TICKET_SALES_ID" id="91447556-7364-65AC-223B-5A0F1BF02C29">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>TICKETS</sourceObjSchema>
+<sourceObjName>TICKET_SALES_ID</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>009E18B5-C509-ECA7-C0B2-0F1CB00E630F</importedID>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<notNullConstraintName>TICKETS_NN_TICKET_SALES_ID</notNullConstraintName>
+<associations>
+<colAssociation fkAssociation="682F5527-B547-6857-A38E-80E43B9112B6" referredColumn="66A8B73D-2790-EF5B-1B71-BC4708EEDA83"/>
+</associations>
+</Column>
+<Column name="STATUS" id="2358060E-BA35-99F4-23E2-ED2093AA717E">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>TICKETS</sourceObjSchema>
+<sourceObjName>STATUS</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>CB754EB1-20CC-1791-99CE-D5EBC4C989EE</importedID>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>25 BYTE</dataTypeSize>
+<defaultValue>&apos;ISSUED&apos;</defaultValue>
+<ownDataTypeParameters>25 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="SERIAL_CODE" id="524C6B64-7B61-D67C-F13C-51046CDE2B10">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>TICKETS</sourceObjSchema>
+<sourceObjName>SERIAL_CODE</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>FB3EFBFC-3E91-7D2B-76DD-ED5C81670CF8</importedID>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>1000 BYTE</dataTypeSize>
+<ownDataTypeParameters>1000 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<notNullConstraintName>TICKETS_NN_SERIAL_CODE</notNullConstraintName>
+</Column>
+<Column name="ISSUED_TO_NAME" id="E1306177-6286-1D40-EBD1-C481F1C91CBD">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>TICKETS</sourceObjSchema>
+<sourceObjName>ISSUED_TO_NAME</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>2B9D753B-D6DC-943D-7667-C4217CBBB7F7</importedID>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100 BYTE</dataTypeSize>
+<ownDataTypeParameters>100 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ISSUED_TO_ID" id="3B784FFB-88EF-9A21-99A8-87E3B1E9977A">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>TICKETS</sourceObjSchema>
+<sourceObjName>ISSUED_TO_ID</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>3CC2BD2E-343B-6AA4-A1AF-B8FCE05FB0C0</importedID>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100 BYTE</dataTypeSize>
+<ownDataTypeParameters>100 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ASSIGNED_SECTION" id="179CB3C4-70BA-0742-D95C-E826EC09C547">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>TICKETS</sourceObjSchema>
+<sourceObjName>ASSIGNED_SECTION</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>A9A0116E-4DDE-94CD-C1CB-A1682D411934</importedID>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>20 BYTE</dataTypeSize>
+<ownDataTypeParameters>20 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ASSIGNED_ROW" id="A0D2F1CF-A4B3-9DE5-C9E9-1A00108B62D5">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>TICKETS</sourceObjSchema>
+<sourceObjName>ASSIGNED_ROW</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>F5D5A6FB-E684-2CFA-615F-E9F7B24B8EAA</importedID>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10 BYTE</dataTypeSize>
+<ownDataTypeParameters>10 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ASSIGNED_SEAT" id="BCABB411-1078-9DE7-7955-E16E1D68CB9E">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>TICKETS</sourceObjSchema>
+<sourceObjName>ASSIGNED_SEAT</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>5DC0CFAD-3C52-6391-DF1A-EE5C91021933</importedID>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10 BYTE</dataTypeSize>
+<ownDataTypeParameters>10 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="5C6AB973-18A8-D736-9532-89DF5A690CA6" name="TICKET_PK">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>EVENT_SYSTEM</sourceObjSchema>
+<sourceObjName>TICKET_PK</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>14B9A030-F652-A7A2-2AE2-9E82ED3E8D15</importedID>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="F9D9CB7E-C6C4-39FD-4B08-6A31771548FC"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="81B2AFE4-8666-0010-DA2A-8326129A2A5A" schemaObject="3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431" name="TICKETS_IDX_SERIAL_CODE">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>EVENT_SYSTEM</sourceObjSchema>
+<sourceObjName>TICKETS_IDX_SERIAL_CODE</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>3364E8BD-E5F4-4CE3-2F2A-0E64D5A467E4</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="524C6B64-7B61-D67C-F13C-51046CDE2B10"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="F2BB025B-DA1A-92D0-7E6B-3DC037B67F64" schemaObject="3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431" name="TICKETS_IDX_TICKET_SALES_ID">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>EVENT_SYSTEM</sourceObjSchema>
+<sourceObjName>TICKETS_IDX_TICKET_SALES_ID</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>FC7F9126-FA68-086C-69F0-2FBFE1B5A205</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="91447556-7364-65AC-223B-5A0F1BF02C29"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="88636999-8C73-C27D-710E-31DAF21F0BE4" schemaObject="3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431" name="TICKET_PK">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>EVENT_SYSTEM</sourceObjSchema>
+<sourceObjName>TICKET_PK</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>9C74B368-8A95-1FB7-6FBE-7A98348C1FA6</importedID>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="F9D9CB7E-C6C4-39FD-4B08-6A31771548FC"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="37E9EA56-6BF6-6634-CD5B-FB9FA27EEF2D" name="TICKETS_FK_TICKET_SALES">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="91447556-7364-65AC-223B-5A0F1BF02C29"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

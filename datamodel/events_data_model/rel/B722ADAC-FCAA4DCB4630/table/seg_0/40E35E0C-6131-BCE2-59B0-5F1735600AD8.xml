@@ -149,5 +149,19 @@
 <colUsage columnID="5ED56B84-446C-E633-6B9B-D9617D630943"/>
 </indexColumnUsage>
 </ind_PK_UK>
+<ind_PK_UK id="08ABF5D0-9E11-2E6B-FB87-3524EB7115C7" schemaObject="3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431" name="VENUES_IDX01">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>EVENT_SYSTEM</sourceObjSchema>
+<sourceObjName>VENUES_IDX01</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>01895202-BF24-CAF5-9EC1-443AC31FA927</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="042CD707-C515-EE99-24BB-B9FDBDAB08D8"/>
+<colUsage columnID="5ED56B84-446C-E633-6B9B-D9617D630943"/>
+</indexColumnUsage>
+</ind_PK_UK>
 </indexes>
 </Table>

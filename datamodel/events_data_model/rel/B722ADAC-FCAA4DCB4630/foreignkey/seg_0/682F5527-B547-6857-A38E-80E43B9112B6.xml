@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="682F5527-B547-6857-A38E-80E43B9112B6" containerWithKeyObject="44E5970A-FF38-13DC-6B03-9522CEBFF0AC" localFKIndex="37E9EA56-6BF6-6634-CD5B-FB9FA27EEF2D" name="TICKETS_FK_TICKET_SALES">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>EVENT_SYSTEM</sourceObjSchema>
+<sourceObjName>TICKETS_FK_TICKET_SALES</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>6377388B-81D9-6CDB-98BD-1D6741C9A3C1</importedID>
+<referredTableLongName>EVENT_SYSTEM.TICKET_SALES</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>D5FE5218-5971-C271-9E7D-D0B887F8DD34</referredTableID>
+<keyObject>F1E48460-A772-5BE6-417D-CA0FC91720E0</keyObject>
+<referredKeyID>F1E48460-A772-5BE6-417D-CA0FC91720E0</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>TICKET_SALES_ID</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

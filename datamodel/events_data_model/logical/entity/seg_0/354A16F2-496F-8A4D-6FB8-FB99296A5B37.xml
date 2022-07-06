@@ -1,0 +1,168 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="354A16F2-496F-8A4D-6FB8-FB99296A5B37" name="TICKETS">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:23:40 UTC</createdTime>
+<generatorID>44E5970A-FF38-13DC-6B03-9522CEBFF0AC</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<createSurrogateKey>true</createSurrogateKey>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="TICKET ID" id="1118F30E-C650-FB30-4B65-ABE50271D4A4">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:23:40 UTC</createdTime>
+<generatorID>F9D9CB7E-C6C4-39FD-4B08-6A31771548FC</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="TICKET SALES ID" id="D6790836-B1CF-AE53-4B50-20EAE89A023F">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:23:40 UTC</createdTime>
+<generatorID>87A2CC66-CECA-BC09-310E-A670B393BC04</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<referedAttribute>FC9D1DDA-9A5F-8D96-2AB1-1A233E983F09</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="STATUS" id="35B7E8B2-E4C1-B82B-99C4-DAC8A53C750A">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:23:40 UTC</createdTime>
+<generatorID>2358060E-BA35-99F4-23E2-ED2093AA717E</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>25 BYTE</dataTypeSize>
+<defaultValue>&apos;ISSUED&apos;</defaultValue>
+<ownDataTypeParameters>25 BYTE,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="SERIAL CODE" id="DC596147-0AB1-D5DC-2B79-68E0A147DE1C">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:23:40 UTC</createdTime>
+<generatorID>524C6B64-7B61-D67C-F13C-51046CDE2B10</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>1000 BYTE</dataTypeSize>
+<ownDataTypeParameters>1000 BYTE,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ISSUED TO NAME" id="5E56A405-9F7D-EE32-3885-9F60241E4A56">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:23:40 UTC</createdTime>
+<generatorID>E1306177-6286-1D40-EBD1-C481F1C91CBD</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100 BYTE</dataTypeSize>
+<ownDataTypeParameters>100 BYTE,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ISSUED TO ID" id="BE4C4902-E10D-B338-9F2F-7B39A769B893">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:23:40 UTC</createdTime>
+<generatorID>3B784FFB-88EF-9A21-99A8-87E3B1E9977A</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100 BYTE</dataTypeSize>
+<ownDataTypeParameters>100 BYTE,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ASSIGNED SECTION" id="79EF902E-EBFF-7B98-AD74-06C0B6749073">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:23:40 UTC</createdTime>
+<generatorID>179CB3C4-70BA-0742-D95C-E826EC09C547</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>20 BYTE</dataTypeSize>
+<ownDataTypeParameters>20 BYTE,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ASSIGNED ROW" id="1CBE7D46-268A-6D2E-4F3B-E1BDDFEA9D51">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:23:40 UTC</createdTime>
+<generatorID>A0D2F1CF-A4B3-9DE5-C9E9-1A00108B62D5</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10 BYTE</dataTypeSize>
+<ownDataTypeParameters>10 BYTE,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ASSIGNED SEAT" id="82AAEFA5-602C-6D45-A035-FF31B669462D">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:23:40 UTC</createdTime>
+<generatorID>BCABB411-1078-9DE7-7955-E16E1D68CB9E</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10 BYTE</dataTypeSize>
+<ownDataTypeParameters>10 BYTE,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="D326C4DD-6B5F-1645-283B-6287EFCCA7EB" name="TICKET PK">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:23:40 UTC</createdTime>
+<generatorID>5C6AB973-18A8-D736-9532-89DF5A690CA6</generatorID>
+<ownerDesignName>events_data_model</ownerDesignName>
+<engineerTo>
+<item key="B722ADAC-F6D6-B300-0CC5-FCAA4DCB4630" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>1118F30E-C650-FB30-4B65-ABE50271D4A4</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

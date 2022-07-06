@@ -135,6 +135,37 @@
 <colUsage columnID="19A1422F-EAC3-9485-DF81-DD6C0E285087"/>
 </indexColumnUsage>
 </ind_PK_UK>
+<ind_PK_UK id="37459EA1-EE66-2617-EAC0-DDCA80C7EF49" schemaObject="3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431" name="TICKET_GROUPS_IDX01">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>EVENT_SYSTEM</sourceObjSchema>
+<sourceObjName>TICKET_GROUPS_IDX01</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>5AD71544-893C-6CE1-0A34-B09C8E6AA970</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="5DC54DA0-1D61-8C97-AA18-3572230EC8C5"/>
+<colUsage columnID="F2C1E5A7-9E47-D5F3-64D9-0C6E1B52D64F"/>
+<colUsage columnID="19A1422F-EAC3-9485-DF81-DD6C0E285087"/>
+<colUsage columnID="21C5A22F-1FBC-F8ED-9269-6BA8A16B9C8C"/>
+<colUsage columnID="69AB21D6-8A49-0758-8C85-55FF5C5E9D2B"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="5E006E15-7FBC-2D60-3F50-568E7AA5A6B0" schemaObject="3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431" name="TICKET_GROUPS_IDX02">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>EVENT_SYSTEM</sourceObjSchema>
+<sourceObjName>TICKET_GROUPS_IDX02</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>0643D4C2-127F-C715-94D5-3E505F59BEC5</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="F2C1E5A7-9E47-D5F3-64D9-0C6E1B52D64F"/>
+<colUsage columnID="21C5A22F-1FBC-F8ED-9269-6BA8A16B9C8C"/>
+</indexColumnUsage>
+</ind_PK_UK>
 <ind_PK_UK id="31D0F031-9D06-A0EB-3F50-68E89F69D626" name="TICKET_GROUPS_FK_EVENTS">
 <createdBy>gaian</createdBy>
 <createdTime>2022-05-24 15:54:35 UTC</createdTime>

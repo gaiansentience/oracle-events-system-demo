@@ -1,0 +1,97 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev20c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="TICKET_GROUPS" directorySegmentName="seg_0" id="41A1F4B8-C3F6-7FE6-5A0D-2D3A042C6908">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<schemaObject>3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>7A3DA2D0-C9A5-6989-C7D9-BF012E97BA33</segment>
+<tableSpace>A92BBCA4-7575-BEA3-7A5F-A369BD9216A1</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<inMemory>NO</inMemory>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="PRICE_CATEGORY" id="19A1422F-EAC3-9485-DF81-DD6C0E285087">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="PRICE" id="21C5A22F-1FBC-F8ED-9269-6BA8A16B9C8C">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="EVENT_ID" id="5DC54DA0-1D61-8C97-AA18-3572230EC8C5">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="TICKETS_AVAILABLE" id="69AB21D6-8A49-0758-8C85-55FF5C5E9D2B">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="TICKET_GROUP_ID" id="F2C1E5A7-9E47-D5F3-64D9-0C6E1B52D64F">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<autoIncrementDDL>IDENTITY_CLAUSE</autoIncrementDDL>
+</ColumnProxy>
+</columnProxies>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="TICKET_GROUPS_IDX01" id="37459EA1-EE66-2617-EAC0-DDCA80C7EF49">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<schemaObject>3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431</schemaObject>
+<segment>499892F6-F467-6C57-D38F-4E27E141E117</segment>
+<tableSpace>A92BBCA4-7575-BEA3-7A5F-A369BD9216A1</tableSpace>
+</IndexProxy>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="TICKET_GROUPS_IDX02" id="5E006E15-7FBC-2D60-3F50-568E7AA5A6B0">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<schemaObject>3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431</schemaObject>
+<segment>499892F6-F467-6C57-D38F-4E27E141E117</segment>
+<tableSpace>A92BBCA4-7575-BEA3-7A5F-A369BD9216A1</tableSpace>
+</IndexProxy>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="TICKET_GROUPS_PK" id="A1EEAA0C-43BD-08D6-618A-B170E1BF3315">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<schemaObject>3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431</schemaObject>
+<segment>AC2EA04C-CE6C-091A-9B43-1FCA957FF30C</segment>
+<tableSpace>A92BBCA4-7575-BEA3-7A5F-A369BD9216A1</tableSpace>
+</IndexProxy>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="TICKET_GROUPS_UDX" id="A91BC5C1-39C8-6F59-28A6-4F9C403FA176">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<schemaObject>3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431</schemaObject>
+<segment>AC2EA04C-CE6C-091A-9B43-1FCA957FF30C</segment>
+<tableSpace>A92BBCA4-7575-BEA3-7A5F-A369BD9216A1</tableSpace>
+</IndexProxy>
+</indexProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="TICKET_GROUPS_FK_EVENTS" id="31D0F031-9D06-A0EB-3F50-68E89F69D626">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="TICKET_GROUPS_PK" id="02E21B4B-ED0B-2D41-8907-3BEA07E3B3D7">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<segment>AC2EA04C-CE6C-091A-9B43-1FCA957FF30C</segment>
+<tableSpace>A92BBCA4-7575-BEA3-7A5F-A369BD9216A1</tableSpace>
+<existingIndex>A1EEAA0C-43BD-08D6-618A-B170E1BF3315</existingIndex>
+<indexSegment>AC2EA04C-CE6C-091A-9B43-1FCA957FF30C</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev20c>

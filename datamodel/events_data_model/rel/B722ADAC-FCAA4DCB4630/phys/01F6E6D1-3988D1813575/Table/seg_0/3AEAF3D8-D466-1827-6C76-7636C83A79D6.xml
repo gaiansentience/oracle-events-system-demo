@@ -1,0 +1,77 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev20c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="CUSTOMERS" directorySegmentName="seg_0" id="3AEAF3D8-D466-1827-6C76-7636C83A79D6">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<schemaObject>3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>7A3DA2D0-C9A5-6989-C7D9-BF012E97BA33</segment>
+<tableSpace>A92BBCA4-7575-BEA3-7A5F-A369BD9216A1</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<inMemory>NO</inMemory>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="CUSTOMER_EMAIL" id="357CC7E5-E6B2-84BA-31A8-3F22A62EE82A">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="CUSTOMER_ID" id="A4D3E54F-1B88-8A35-E1E4-0B5221138144">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<autoIncrementDDL>IDENTITY_CLAUSE</autoIncrementDDL>
+</ColumnProxy>
+<ColumnProxy name="CUSTOMER_NAME" id="EAD441A3-4154-599F-DB55-FA736A8BEB4E">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="CUSTOMERS_U_CUSTOMER_EMAIL" id="C9189129-EBFC-51BC-1A09-81DE79A0E33F">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<schemaObject>3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431</schemaObject>
+<segment>AC2EA04C-CE6C-091A-9B43-1FCA957FF30C</segment>
+<tableSpace>A92BBCA4-7575-BEA3-7A5F-A369BD9216A1</tableSpace>
+</IndexProxy>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="CUSTOMERS_PK" id="CFAC3B8C-9CB4-0D3C-48CD-AF7617673F5A">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<schemaObject>3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431</schemaObject>
+<segment>AC2EA04C-CE6C-091A-9B43-1FCA957FF30C</segment>
+<tableSpace>A92BBCA4-7575-BEA3-7A5F-A369BD9216A1</tableSpace>
+</IndexProxy>
+</indexProxies>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="CUSTOMERS_PK" id="44F1B9B4-F513-8651-0B4F-BCB35C060109">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<segment>AC2EA04C-CE6C-091A-9B43-1FCA957FF30C</segment>
+<tableSpace>A92BBCA4-7575-BEA3-7A5F-A369BD9216A1</tableSpace>
+<existingIndex>CFAC3B8C-9CB4-0D3C-48CD-AF7617673F5A</existingIndex>
+<indexSegment>AC2EA04C-CE6C-091A-9B43-1FCA957FF30C</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+<uniqueKeys>
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="CUSTOMERS_U_CUSTOMER_EMAIL" id="E81AECF9-63DB-32B9-7EE7-9941E7C9DD25">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<segment>AC2EA04C-CE6C-091A-9B43-1FCA957FF30C</segment>
+<tableSpace>A92BBCA4-7575-BEA3-7A5F-A369BD9216A1</tableSpace>
+<existingIndex>C9189129-EBFC-51BC-1A09-81DE79A0E33F</existingIndex>
+<indexSegment>AC2EA04C-CE6C-091A-9B43-1FCA957FF30C</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</UniqueKey>
+</uniqueKeys>
+</TableProxyOraclev20c>

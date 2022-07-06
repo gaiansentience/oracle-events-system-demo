@@ -9,5 +9,8 @@
 <designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="EA52F002-DCBC-F867-F41D-CDBE0385051E">
 <designStoragePath>C:\VirtualBox\$fileshare\scripts\toptal\datamodel</designStoragePath>
 </designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="2EAA8530-2F2D-B812-A769-28B7F31B1887">
+<designStoragePath>C:\SourceControl\git\ora-events-system\datamodel</designStoragePath>
+</designDescr>
 </usedDesignStorageDescriptors>
 </OSDM_Design>

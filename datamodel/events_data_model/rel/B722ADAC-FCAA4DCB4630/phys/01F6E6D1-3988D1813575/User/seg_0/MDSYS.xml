@@ -1,0 +1,11 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<UserOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UserOraclev10g" name="MDSYS" directorySegmentName="seg_0" id="MDSYS">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjName>MDSYS</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<schemaObject>7B74E00B-F3BC-9EBC-1669-9C26F3A3D899</schemaObject>
+<nullInstance>true</nullInstance>
+<storableNullInstance>true</storableNullInstance>
+</UserOraclev10g>

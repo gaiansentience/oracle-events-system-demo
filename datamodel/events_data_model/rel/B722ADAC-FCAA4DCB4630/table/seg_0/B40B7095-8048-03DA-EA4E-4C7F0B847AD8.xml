@@ -163,5 +163,19 @@
 <colUsage columnID="510D3A06-0AA1-16E3-CD9B-96D5DBFF9413"/>
 </indexColumnUsage>
 </ind_PK_UK>
+<ind_PK_UK id="BAC10298-AFB2-666C-3173-5485F5A74670" schemaObject="3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431" name="RESELLERS_IDX01">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>EVENT_SYSTEM</sourceObjSchema>
+<sourceObjName>RESELLERS_IDX01</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>9056780C-A15D-9FE1-225A-F137CFA05729</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="8735CED1-22D2-E81E-452E-67986D427B10"/>
+<colUsage columnID="4612643A-F745-B448-1CFB-CD44773DCC62"/>
+</indexColumnUsage>
+</ind_PK_UK>
 </indexes>
 </Table>

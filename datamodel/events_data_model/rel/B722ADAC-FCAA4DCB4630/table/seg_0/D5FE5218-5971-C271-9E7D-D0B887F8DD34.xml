@@ -178,6 +178,36 @@
 <colUsage columnID="66A8B73D-2790-EF5B-1B71-BC4708EEDA83"/>
 </indexColumnUsage>
 </ind_PK_UK>
+<ind_PK_UK id="08E4757B-B8A0-7D83-A4EE-F953853DB832" schemaObject="3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431" name="TICKET_SALES_IDX01">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>EVENT_SYSTEM</sourceObjSchema>
+<sourceObjName>TICKET_SALES_IDX01</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>B848707A-7D7A-B775-AFEC-2FC30EAEA7F0</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="F766C2FE-1818-C52B-A910-C21BC943725A"/>
+<colUsage columnID="F22C1D31-575A-9829-290F-0EC2711FBF6A"/>
+<colUsage columnID="64ECF1B9-B67E-C12A-DCA5-8B5315EC8BBD"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="928F88FB-7091-394C-4154-864AFDA5294D" schemaObject="3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431" name="TICKET_SALES_IDX02">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>EVENT_SYSTEM</sourceObjSchema>
+<sourceObjName>TICKET_SALES_IDX02</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>DC372824-E06A-4DEC-54AF-60548EC45FBF</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="F766C2FE-1818-C52B-A910-C21BC943725A"/>
+<colUsage columnID="DED8635E-65A6-E4B9-06E4-7D1B6563AEB2"/>
+<colUsage columnID="64ECF1B9-B67E-C12A-DCA5-8B5315EC8BBD"/>
+</indexColumnUsage>
+</ind_PK_UK>
 <ind_PK_UK id="124DF410-97E3-6D4B-C2F1-5A5E6B5749B8" name="TICKET_SALES_FK_CUSTOMERS">
 <createdBy>gaian</createdBy>
 <createdTime>2022-05-24 15:54:35 UTC</createdTime>

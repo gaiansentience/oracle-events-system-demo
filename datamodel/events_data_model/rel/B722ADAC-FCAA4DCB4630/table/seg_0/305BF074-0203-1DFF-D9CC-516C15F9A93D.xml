@@ -29,6 +29,22 @@
 <autoIncrementCache>20</autoIncrementCache>
 <autoIncrementOrder>false</autoIncrementOrder>
 </Column>
+<Column name="OS_USER_NAME" id="481C1847-95B2-34E3-16CF-52482BFF71F1">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>ERROR_LOG</sourceObjSchema>
+<sourceObjName>OS_USER_NAME</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>C73BA508-A1A3-6FE7-1A36-D419819E150C</importedID>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100 BYTE</dataTypeSize>
+<ownDataTypeParameters>100 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
 <Column name="DB_USER_NAME" id="ECAA57DE-93D5-9FF5-957E-D8C07A275B8F">
 <sourceConnName>orcl event_system at DeveloperDays APEX</sourceConnName>
 <sourceObjSchema>ERROR_LOG</sourceObjSchema>

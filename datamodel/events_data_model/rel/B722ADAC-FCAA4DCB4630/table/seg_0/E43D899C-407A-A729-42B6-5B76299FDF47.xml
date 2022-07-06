@@ -121,6 +121,21 @@
 <colUsage columnID="12562E32-16BD-4DC3-D1A1-1C020736AE1D"/>
 </indexColumnUsage>
 </ind_PK_UK>
+<ind_PK_UK id="F70C6605-A5DC-8A05-C3DC-1DFA109C68AD" schemaObject="3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431" name="TICKET_ASSIGNMENTS_IDX01">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>EVENT_SYSTEM</sourceObjSchema>
+<sourceObjName>TICKET_ASSIGNMENTS_IDX01</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>31E3F725-E0A5-AF13-8693-20990E59AF55</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="A1B61990-EE63-4843-0A04-54518D7B1030"/>
+<colUsage columnID="12562E32-16BD-4DC3-D1A1-1C020736AE1D"/>
+<colUsage columnID="02022E09-705E-49E3-903A-5A996A1E97D5"/>
+</indexColumnUsage>
+</ind_PK_UK>
 <ind_PK_UK id="CC02C93B-6733-08C5-D5FE-2D839FA7D67B" name="TICKET_ASSIGNMENTS_FK_RESELLERS">
 <createdBy>gaian</createdBy>
 <createdTime>2022-05-24 15:54:35 UTC</createdTime>

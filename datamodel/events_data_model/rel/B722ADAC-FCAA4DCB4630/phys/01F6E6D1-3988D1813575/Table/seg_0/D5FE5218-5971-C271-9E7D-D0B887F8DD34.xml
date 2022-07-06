@@ -1,0 +1,116 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev20c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="TICKET_SALES" directorySegmentName="seg_0" id="D5FE5218-5971-C271-9E7D-D0B887F8DD34">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<schemaObject>3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>7A3DA2D0-C9A5-6989-C7D9-BF012E97BA33</segment>
+<tableSpace>A92BBCA4-7575-BEA3-7A5F-A369BD9216A1</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<inMemory>NO</inMemory>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="TICKET_QUANTITY" id="64ECF1B9-B67E-C12A-DCA5-8B5315EC8BBD">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="TICKET_SALES_ID" id="66A8B73D-2790-EF5B-1B71-BC4708EEDA83">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<autoIncrementDDL>IDENTITY_CLAUSE</autoIncrementDDL>
+</ColumnProxy>
+<ColumnProxy name="SALES_DATE" id="9B04B101-ACCE-0F5D-42C5-2E51DB68ACA7">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<defaultValue>sysdate</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="RESELLER_COMMISSION" id="C26728AF-25F5-1825-5683-EB1F26BD23C0">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<defaultValue>0</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="EXTENDED_PRICE" id="D98B2F40-9311-48F5-49A9-AD7A0C33439C">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="CUSTOMER_ID" id="DED8635E-65A6-E4B9-06E4-7D1B6563AEB2">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="RESELLER_ID" id="F22C1D31-575A-9829-290F-0EC2711FBF6A">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="TICKET_GROUP_ID" id="F766C2FE-1818-C52B-A910-C21BC943725A">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="TICKET_SALES_IDX01" id="08E4757B-B8A0-7D83-A4EE-F953853DB832">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<schemaObject>3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431</schemaObject>
+<segment>499892F6-F467-6C57-D38F-4E27E141E117</segment>
+<tableSpace>A92BBCA4-7575-BEA3-7A5F-A369BD9216A1</tableSpace>
+</IndexProxy>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="TICKET_SALES_IDX02" id="928F88FB-7091-394C-4154-864AFDA5294D">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<schemaObject>3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431</schemaObject>
+<segment>499892F6-F467-6C57-D38F-4E27E141E117</segment>
+<tableSpace>A92BBCA4-7575-BEA3-7A5F-A369BD9216A1</tableSpace>
+</IndexProxy>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="TICKET_SALES_PK" id="E62D8533-1FC3-C673-D0AF-FAC3B3DC8291">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<schemaObject>3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431</schemaObject>
+<segment>AC2EA04C-CE6C-091A-9B43-1FCA957FF30C</segment>
+<tableSpace>A92BBCA4-7575-BEA3-7A5F-A369BD9216A1</tableSpace>
+</IndexProxy>
+</indexProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="TICKET_SALES_FK_CUSTOMERS" id="124DF410-97E3-6D4B-C2F1-5A5E6B5749B8">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="TICKET_SALES_FK_RESELLERS" id="47ACD2CE-17F5-CD0A-17CD-070D937923DC">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="TICKET_SALES_FK_TICKET_GROUPS" id="CAF72F18-7413-3101-F639-407D371CA38E">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="TICKET_SALES_PK" id="F1E48460-A772-5BE6-417D-CA0FC91720E0">
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:00:52 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<segment>AC2EA04C-CE6C-091A-9B43-1FCA957FF30C</segment>
+<tableSpace>A92BBCA4-7575-BEA3-7A5F-A369BD9216A1</tableSpace>
+<existingIndex>E62D8533-1FC3-C673-D0AF-FAC3B3DC8291</existingIndex>
+<indexSegment>AC2EA04C-CE6C-091A-9B43-1FCA957FF30C</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev20c>

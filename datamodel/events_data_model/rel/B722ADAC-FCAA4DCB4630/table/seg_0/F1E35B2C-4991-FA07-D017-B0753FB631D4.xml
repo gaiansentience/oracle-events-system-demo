@@ -91,6 +91,21 @@
 <autoIncrementCycle>false</autoIncrementCycle>
 <notNullConstraintName>EVENTS_NN_TICKETS</notNullConstraintName>
 </Column>
+<Column name="EVENT_SERIES_ID" id="8B4025A4-1C00-01F3-8E6A-20D040D522A7">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>EVENTS</sourceObjSchema>
+<sourceObjName>EVENT_SERIES_ID</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>064F8B0E-B435-9958-B3AA-B7BF4997405C</importedID>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
 <ind_PK_UK id="4C618C59-9679-0925-8567-2A1841382C80" name="EVENTS_PK">
@@ -118,6 +133,62 @@
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="3939EAD3-FCE6-2FB3-41B3-FA96DBFDE566"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="03ED91C1-DCC7-EC0E-08D5-741CA9AC3C9F" schemaObject="3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431" name="EVENTS_IDX01">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>EVENT_SYSTEM</sourceObjSchema>
+<sourceObjName>EVENTS_IDX01</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>848D2375-3846-7F92-1793-478CCACC3785</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="3939EAD3-FCE6-2FB3-41B3-FA96DBFDE566"/>
+<colUsage columnID="30BA8517-5DE0-E2C4-3838-BD9D27181647"/>
+<colUsage columnID="65E6A48C-3805-0C48-3C8C-C71A0B02201A"/>
+<colUsage columnID="89B939B9-D855-316A-95DC-3B2CC4DC5A10"/>
+<colUsage columnID="E5A3C229-0922-6613-7482-6261EC4DB9F4"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="F17BFEA8-C51E-53B4-6BC8-107905AC8BE4" schemaObject="3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431" name="EVENTS_IDX_DATE">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>EVENT_SYSTEM</sourceObjSchema>
+<sourceObjName>EVENTS_IDX_DATE</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>AFB09A76-F3A3-DC7C-794D-91BE96717F5D</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="30BA8517-5DE0-E2C4-3838-BD9D27181647"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="C1FFD257-5471-6128-B964-CD62786F2AB8" schemaObject="3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431" name="EVENTS_IDX_SERIES">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>EVENT_SYSTEM</sourceObjSchema>
+<sourceObjName>EVENTS_IDX_SERIES</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>F5539715-3A08-F9B5-AE9E-9BA48FA91364</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="8B4025A4-1C00-01F3-8E6A-20D040D522A7"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="E3206768-60B0-0AF0-D1CE-1B94CA95A1FE" schemaObject="3ADF2CA2-4C5A-6DC4-7580-2F727FE6D431" name="EVENTS_IDX_VENUE_ID">
+<sourceConnName>event_system xe at xepdb1</sourceConnName>
+<sourceObjSchema>EVENT_SYSTEM</sourceObjSchema>
+<sourceObjName>EVENTS_IDX_VENUE_ID</sourceObjName>
+<createdBy>gaian</createdBy>
+<createdTime>2022-07-06 22:17:22 UTC</createdTime>
+<ownerDesignName>events_data_model</ownerDesignName>
+<importedID>F813AB6A-F9A4-2E2A-6970-13415DC9D59B</importedID>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="65E6A48C-3805-0C48-3C8C-C71A0B02201A"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="FE99AD71-1DCE-5736-AE10-3CD241DE0E34" name="EVENTS_FK_VENUES">
