@@ -21,7 +21,7 @@ select
     ,e.event_id as event_id_xml
     ,e.event_name
     ,e.event_date
-    ,e.total_tickets_purchased
+    ,e.event_tickets
     ,p.ticket_group_id
     ,p.price_category
     ,p.ticket_sales_id
@@ -33,16 +33,16 @@ from
     base b,
     xmltable('/customer_tickets' passing b.xml_doc 
         columns
-            customer_id               number        path 'customer/customer_id'
-            ,customer_name            varchar2(100) path 'customer/customer_name'
-            ,customer_email           varchar2(100) path 'customer/customer_email'
-            ,venue_id                 number        path 'event/venue/venue_id'
-            ,venue_name               varchar2(100) path 'event/venue/venue_name'
-            ,event_id                 number        path 'event/event_id'
-            ,event_name               varchar2(100) path 'event/event_name'
-            ,event_date               date          path 'event/event_date'
-            ,total_tickets_purchased  number        path 'total_tickets_purchased'
-            ,ticket_purchase          xmltype       path 'event_ticket_purchases/ticket_purchase'
+            customer_id      number        path 'customer/customer_id'
+            ,customer_name   varchar2(100) path 'customer/customer_name'
+            ,customer_email  varchar2(100) path 'customer/customer_email'
+            ,venue_id        number        path 'event/venue/venue_id'
+            ,venue_name      varchar2(100) path 'event/venue/venue_name'
+            ,event_id        number        path 'event/event_id'
+            ,event_name      varchar2(100) path 'event/event_name'
+            ,event_date      date          path 'event/event_date'
+            ,event_tickets   number        path 'event/event_tickets'
+            ,ticket_purchase xmltype       path 'event/event_ticket_purchases/ticket_purchase'
     ) e,
     xmltable('/ticket_purchase' passing e.ticket_purchase 
         columns

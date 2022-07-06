@@ -30,29 +30,28 @@ end;
     <event_id>561</event_id>
     <event_name>Evangeline Thorpe</event_name>
     <event_date>2023-05-01</event_date>
+    <event_tickets_purchased>8</event_tickets_purchased>
+    <event_ticket_purchases>
+      <ticket_purchase>
+        <ticket_group_id>2282</ticket_group_id>
+        <price_category>VIP</price_category>
+        <ticket_sales_id>71021</ticket_sales_id>
+        <ticket_quantity>6</ticket_quantity>
+        <sales_date>2022-07-04</sales_date>
+        <reseller_id>3</reseller_id>
+        <reseller_name>Old School</reseller_name>
+      </ticket_purchase>
+      <ticket_purchase>
+        <ticket_group_id>2283</ticket_group_id>
+        <price_category>GENERAL ADMISSION</price_category>
+        <ticket_sales_id>71022</ticket_sales_id>
+        <ticket_quantity>2</ticket_quantity>
+        <sales_date>2022-07-04</sales_date>
+        <reseller_id>3</reseller_id>
+        <reseller_name>Old School</reseller_name>
+      </ticket_purchase>
+    </event_ticket_purchases>
   </event>
-  <total_tickets_purchased>8</total_tickets_purchased>
-  <event_ticket_purchases>
-    <ticket_purchase>
-      <ticket_group_id>2282</ticket_group_id>
-      <price_category>VIP</price_category>
-      <ticket_sales_id>71021</ticket_sales_id>
-      <ticket_quantity>6</ticket_quantity>
-      <sales_date>2022-07-04</sales_date>
-      <reseller_id>3</reseller_id>
-      <reseller_name>Old School</reseller_name>
-    </ticket_purchase>
-    <ticket_purchase>
-      <ticket_group_id>2283</ticket_group_id>
-      <price_category>GENERAL ADMISSION</price_category>
-      <ticket_sales_id>71022</ticket_sales_id>
-      <ticket_quantity>2</ticket_quantity>
-      <sales_date>2022-07-04</sales_date>
-      <reseller_id>3</reseller_id>
-      <reseller_name>Old School</reseller_name>
-    </ticket_purchase>
-  </event_ticket_purchases>
 </customer_tickets>
-
 
 */

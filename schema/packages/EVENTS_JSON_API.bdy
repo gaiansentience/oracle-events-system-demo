@@ -1532,7 +1532,7 @@ as
     
         select b.json_doc
         into l_json
-        from customer_event_tickets_v_json b
+        from customer_event_series_tickets_v_json b
         where 
             b.event_series_id = p_event_series_id 
             and b.customer_id = p_customer_id;

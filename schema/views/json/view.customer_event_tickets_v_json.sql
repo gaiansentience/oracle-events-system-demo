@@ -1,13 +1,15 @@
 create or replace view customer_event_tickets_v_json as
-with customer_total_tickets as
+with customer_event_tickets as
 (
     select
-        b.event_id
+        b.event_series_id
+        ,b.event_id
         ,b.customer_id
-        ,sum(b.ticket_quantity) total_tickets_purchased
+        ,sum(b.ticket_quantity) event_tickets
     from event_system.customer_event_ticket_base_v b
     group by 
-        b.event_id
+        b.event_series_id
+        ,b.event_id
         ,b.customer_id
 ), json_base as
 (
@@ -25,7 +27,7 @@ with customer_total_tickets as
             ,'event_series_id'       : e.event_series_id
             ,'event_name'     : e.event_name
             ,'event_date'     : e.event_date
-            ,'total_tickets_purchased' : t.total_tickets_purchased
+            ,'event_tickets' : t.event_tickets
             ,'event_ticket_purchases'  :
                 (select 
                     json_arrayagg(
@@ -46,7 +48,7 @@ with customer_total_tickets as
         ) as json_doc
     from 
         event_system.venue_event_base_v e 
-        join customer_total_tickets t 
+        join customer_event_tickets t 
             on e.event_id = t.event_id
         join event_system.customers c 
             on t.customer_id = c.customer_id

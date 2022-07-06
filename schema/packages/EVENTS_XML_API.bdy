@@ -1623,7 +1623,7 @@ as
     
         select b.xml_doc
         into l_xml
-        from customer_event_tickets_v_xml b
+        from customer_event_series_tickets_v_xml b
         where 
             b.event_series_id = p_event_series_id 
             and b.customer_id = p_customer_id;

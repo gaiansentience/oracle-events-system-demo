@@ -1,5 +1,7 @@
 prompt dropping json views
 @verify_views\drop_views_json_verify.sql;
+
+drop view customer_event_series_tickets_v_json;
 drop view customer_event_tickets_v_json;
 
 drop view tickets_available_series_all_v_json;

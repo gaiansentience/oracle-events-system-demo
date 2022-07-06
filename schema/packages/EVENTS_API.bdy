@@ -2176,7 +2176,7 @@ as
             ct.event_id,
             ct.event_name,
             ct.event_date,
-            ct.total_tickets_purchased,
+            ct.event_tickets,
             ct.ticket_group_id,
             ct.price_category,
             ct.ticket_sales_id,
@@ -2222,24 +2222,28 @@ as
     
         open p_tickets for
         select
-            ct.customer_id,
-            ct.customer_name,
-            ct.customer_email,   
-            ct.venue_id,
-            ct.venue_name,
-            ct.event_id,
-            ct.event_name,
-            ct.event_date,
-            ct.total_tickets_purchased,
-            ct.ticket_group_id,
-            ct.price_category,
-            ct.ticket_sales_id,
-            ct.ticket_quantity,
-            ct.sales_date,
-            ct.reseller_id,
-            ct.reseller_name
+            ct.customer_id
+            ,ct.customer_name
+            ,ct.customer_email
+            ,ct.venue_id
+            ,ct.venue_name
+            ,ct.event_series_id
+            ,ct.event_name
+            ,ct.first_event_date
+            ,ct.last_event_date
+            ,ct.series_tickets
+            ,ct.event_id
+            ,ct.event_date
+            ,ct.event_tickets
+            ,ct.ticket_group_id
+            ,ct.price_category
+            ,ct.ticket_sales_id
+            ,ct.ticket_quantity
+            ,ct.sales_date
+            ,ct.reseller_id
+            ,ct.reseller_name
         from 
-            event_system.customer_event_tickets_v ct
+            event_system.customer_event_series_tickets_v ct
         where 
             ct.event_series_id = p_event_series_id 
             and ct.customer_id = p_customer_id
