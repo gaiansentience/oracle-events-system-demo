@@ -1,96 +1,86 @@
 set serveroutput on;
 declare
-
-v_jdoc varchar2(4000) :=
-'{
-  "event_id" : 24,
-  "customer_id" : 337,
-  "customer_name" : "John Kirby",
-  "customer_email" : "John.Kirby@example.customer.com",
+    l_customer_email varchar2(100) := 'Albert.Einstein@example.customer.com';
+    l_customer_id number;
+v_jdoc clob :=
+'
+{
+  "venue_id" : 1,
+  "venue_name" : "City Stadium",
+  "event_series_id" : 41,
+  "event_name" : "Monster Truck Smashup",
+  "customer_email" : "Albert.Einstein@example.customer.com",
   "ticket_groups" :
   [
     {
-      "ticket_group_id" : 39,
-      "price" : 22,
-      "ticket_quantity_requested" : 5
+      "price_category" : "GENERAL ADMISSION",
+      "price" : 200,
+      "tickets_requested" : 5
     },
     {
-      "ticket_group_id" : 37,
-      "price" : 100,
-      "ticket_quantity_requested" : 6
-    }, 
-    {
-      "ticket_group_id" : 38,
-      "price" : 42,
-      "ticket_quantity_requested" : 6
+      "price_category" : "VIP PIT ACCESS",
+      "price" : 500,
+      "tickets_requested" : 2
     }
   ]
-}';
+}
+';
 
 begin
-delete from tickets t where t.ticket_sales_id in (select ts.ticket_sales_id from ticket_sales ts where ts.customer_id = 337);
-delete from ticket_sales ts where ts.customer_id = 337;
-commit;
+    l_customer_id := events_api.get_customer_id(p_customer_email => l_customer_email);
+    
+    delete from tickets t where t.ticket_sales_id in (select ts.ticket_sales_id from ticket_sales ts where ts.customer_id = l_customer_id);
+    delete from ticket_sales ts where ts.customer_id = l_customer_id;
+    commit;
 
-events_json_api.purchase_tickets_from_venue(v_jdoc);
-v_jdoc := events_json_api.format_json_clob(v_jdoc);
-dbms_output.put_line(v_jdoc);
+    events_json_api.purchase_tickets_venue_series(v_jdoc);
+    v_jdoc := events_json_api.format_json_clob(v_jdoc);
+    dbms_output.put_line(v_jdoc);
 
 end;
 
 /*
 {
-  "event_id" : 24,
-  "customer_name" : "John Kirby",
-  "customer_email" : "John.Kirby@example.customer.com",
+  "venue_id" : 1,
+  "venue_name" : "City Stadium",
+  "event_series_id" : 41,
+  "event_name" : "Monster Truck Smashup",
+  "customer_email" : "Albert.Einstein@example.customer.com",
   "ticket_groups" :
   [
     {
-      "ticket_group_id" : 39,
-      "price" : 22,
-      "ticket_quantity_requested" : 5,
-      "price_category" : "EARLYBIRD DISCOUNT",
-      "ticket_sales_id" : 28753,
-      "sales_date" : "2022-06-30T15:50:46",
-      "ticket_quantity_purchased" : 5,
-      "actual_price" : 22,
-      "extended_price" : 110,
+      "price_category" : "GENERAL ADMISSION",
+      "price" : 200,
+      "tickets_requested" : 5,
+      "average_price" : 200,
+      "tickets_purchased" : 65,
+      "purchase_amount" : 13000,
       "status_code" : "SUCCESS",
-      "status_message" : "5 group tickets purchased."
+      "status_message" : "Tickets purchased for 13 events in the series."
     },
     {
-      "ticket_group_id" : 37,
-      "price" : 100,
-      "ticket_quantity_requested" : 6,
-      "price_category" : "SPONSOR",
-      "ticket_sales_id" : 28754,
-      "sales_date" : "2022-06-30T15:50:46",
-      "ticket_quantity_purchased" : 6,
-      "actual_price" : 100,
-      "extended_price" : 600,
+      "price_category" : "VIP PIT ACCESS",
+      "price" : 500,
+      "tickets_requested" : 2,
+      "average_price" : 500,
+      "tickets_purchased" : 26,
+      "purchase_amount" : 13000,
       "status_code" : "SUCCESS",
-      "status_message" : "6 group tickets purchased."
-    },
-    {
-      "ticket_group_id" : 38,
-      "price" : 42,
-      "ticket_quantity_requested" : 6,
-      "price_category" : "VIP",
-      "ticket_sales_id" : 28755,
-      "sales_date" : "2022-06-30T15:50:46",
-      "ticket_quantity_purchased" : 6,
-      "actual_price" : 42,
-      "extended_price" : 252,
-      "status_code" : "SUCCESS",
-      "status_message" : "6 group tickets purchased."
+      "status_message" : "Tickets purchased for 13 events in the series."
     }
   ],
-  "customer_id" : 337,
+  "customer_id" : 4734,
   "request_status" : "SUCCESS",
   "request_errors" : 0,
-  "total_tickets_requested" : 17,
-  "total_tickets_purchased" : 17,
-  "total_purchase_amount" : 962,
+  "total_tickets_requested" : 7,
+  "total_tickets_purchased" : 91,
+  "total_purchase_amount" : 26000,
   "purchase_disclaimer" : "All Ticket Sales Are Final."
 }
+
+
+PL/SQL procedure successfully completed.
+
+
+
 */

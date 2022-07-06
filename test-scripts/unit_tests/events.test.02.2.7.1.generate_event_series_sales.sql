@@ -4,8 +4,14 @@ set serveroutput on;
 
 declare
 cursor c is
-select e.event_id from events e
-where e.event_name = 'Hometown Hockey League';
+select e.event_id 
+from 
+    venues v 
+    join events e
+        on v.venue_id = e.venue_id
+where 
+    v.venue_name = 'City Stadium'
+    and e.event_name = 'Hometown Hockey League';
 
 begin
 

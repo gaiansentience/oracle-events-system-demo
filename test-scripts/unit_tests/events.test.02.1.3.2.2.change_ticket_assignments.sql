@@ -13,9 +13,9 @@ declare
     
 begin
 
-select reseller_id into l_reseller_id from resellers where reseller_name = 'Old School';
-
-select event_id into l_event_id from events where event_name = 'The New Toys';
+    l_reseller_id := events_api.get_reseller_id(p_reseller_name => 'Old School');
+    l_venue_id := events_api.get_venue_id(p_venue_name => 'City Stadium');
+    l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'The New Toys');
 
 l_assign(1).price_category := 'GENERAL ADMISSION';
 l_assign(1).quantity := 10;

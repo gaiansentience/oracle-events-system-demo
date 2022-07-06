@@ -1,10 +1,12 @@
 set serveroutput on;
 declare
-  l_event_id number;
-  l_xml xmltype;
+    l_event_id number;
+    l_venue_id number;
+    l_xml xmltype;
 begin
 
-    select event_id into l_event_id from events where event_name = 'Evangeline Thorpe';
+    l_venue_id := events_api.get_venue_id(p_venue_name => 'The Pink Pony Revue');
+    l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'Evangeline Thorpe');
 
     l_xml := events_xml_api.get_event_ticket_prices(p_event_id => l_event_id, p_formatted => true);
 
@@ -13,6 +15,7 @@ begin
 end;
 
 /*
+
 <event_ticket_prices>
   <event>
     <venue>
@@ -51,4 +54,6 @@ end;
     </ticket_group>
   </ticket_groups>
 </event_ticket_prices>
+
+
 */

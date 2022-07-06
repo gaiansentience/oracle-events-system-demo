@@ -1,11 +1,13 @@
 set serveroutput on;
 declare
-  l_event_id number;
-  l_xml xmltype;
+    l_event_id number;
+    l_venue_id number;
+    l_xml xmltype;
 begin
 
-    select event_id into l_event_id from events where event_name = 'Evangeline Thorpe';
-    
+    l_venue_id := events_api.get_venue_id(p_venue_name => 'The Pink Pony Revue');
+    l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'Evangeline Thorpe');
+
     l_xml := events_xml_api.get_event(p_event_id => l_event_id, p_formatted => true);
 
     dbms_output.put_line(l_xml.getstringval);
@@ -24,6 +26,6 @@ end;
   <event_name>Evangeline Thorpe</event_name>
   <event_date>2023-05-01</event_date>
   <tickets_available>200</tickets_available>
-  <tickets_remaining>200</tickets_remaining>
+  <tickets_remaining>186</tickets_remaining>
 </event>
 */

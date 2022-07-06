@@ -23,10 +23,12 @@ declare
     type t_purchase is table of r_purchase index by pls_integer;
 
     l_purchases t_purchase;
+    l_venue_id number;
     l_event_series_id number;    
 begin
 
-select max(e.event_series_id) into l_event_series_id from events e where e.event_name = 'Hometown Hockey League';
+    l_venue_id := events_api.get_venue_id(p_venue_name => 'City Stadium');
+    l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => 'Hometown Hockey League');
 
 l_purchases(1).email := 'James.Kirk@example.customer.com';
 l_purchases(1).price_category := 'GENERAL ADMISSION';
@@ -41,9 +43,7 @@ l_purchases(3).quantity := 5;
 
 for i in 1..l_purchases.count loop
 
-    select customer_id 
-    into l_purchases(i).customer_id 
-    from customers where customer_email = l_purchases(i).email;
+    l_purchases(i).customer_id := events_api.get_customer_id(p_customer_email => l_purchases(i).email);
 
     select e.price 
     into l_purchases(i).price 

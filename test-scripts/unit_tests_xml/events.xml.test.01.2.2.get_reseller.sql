@@ -4,7 +4,7 @@ declare
   l_xml xmltype;
 begin
 
-    select reseller_id into l_reseller_id from resellers where reseller_name = 'New Wave Tickets'; 
+    l_reseller_id := events_api.get_reseller_id(p_reseller_name => 'New Wave Tickets');
 
     l_xml := events_xml_api.get_reseller(p_reseller_id => l_reseller_id, p_formatted => true);
 

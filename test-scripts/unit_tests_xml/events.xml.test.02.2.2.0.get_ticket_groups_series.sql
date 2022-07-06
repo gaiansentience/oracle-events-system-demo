@@ -4,10 +4,10 @@ declare
     l_event_series_id number;
     l_xml xmltype;
 begin
-    select venue_id into l_venue_id from venues where venue_name = 'The Pink Pony Revue';
-    
-    select max(event_series_id) into l_event_series_id from events where venue_id = l_venue_id and event_name = 'Cool Jazz Evening';
-    
+
+    l_venue_id := events_api.get_venue_id(p_venue_name => 'The Pink Pony Revue');
+    l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => 'Cool Jazz Evening');
+        
     l_xml := events_xml_api.get_ticket_groups_series(p_event_series_id => l_event_series_id, p_formatted => true);
 
     dbms_output.put_line(l_xml.getclobval());

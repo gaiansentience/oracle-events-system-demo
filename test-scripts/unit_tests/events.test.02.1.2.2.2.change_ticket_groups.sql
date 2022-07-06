@@ -8,6 +8,7 @@
 set serveroutput on;
 declare
     l_event_id number;
+    l_venue_id number;
     type r_group is record(
         group_id number,
         price_category ticket_groups.price_category%type,
@@ -16,13 +17,14 @@ declare
     type t_groups is table of r_group index by pls_integer;
     l_groups t_groups;
 begin
-    select event_id into l_event_id from events where event_name = 'The New Toys';
+
+    l_venue_id := events_api.get_venue_id(p_venue_name => 'City Stadium');
+    l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'The New Toys');
 
     l_groups(1) := r_group(0,'VIP',75,1500);
     l_groups(2) := r_group(0,'BACKSTAGE',100,100);
     l_groups(3) := r_group(0,'GENERAL ADMISSION', 42, 8000);
     l_groups(4) := r_group(0,'EARLY PURCHASE DISCOUNT', 33, 10);
-
 
     for i in 1..l_groups.count loop
         begin

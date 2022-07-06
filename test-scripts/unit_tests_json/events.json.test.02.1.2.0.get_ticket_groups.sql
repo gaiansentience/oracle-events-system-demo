@@ -1,71 +1,76 @@
 set serveroutput on;
 declare
-v_json_doc varchar2(32000);
-v_event_id number := 16;
+    l_json_doc varchar2(32000);
+    l_event_id number;
+    l_venue_id number;
 begin
 
-   v_json_doc := events_json_api.get_ticket_groups(
-                                           p_event_id => v_event_id,
-                                           p_formatted => true);
+    l_venue_id := events_api.get_venue_id(p_venue_name => 'Another Roadside Attraction');
+    l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'New Years Mischief');
 
-   dbms_output.put_line(v_json_doc);
+    l_json_doc := events_json_api.get_ticket_groups(p_event_id => l_event_id, p_formatted => true);
+
+    dbms_output.put_line(l_json_doc);
 
 end;
---reply format example
+
 /*
+--BEFORE CREATING TICKET GROUPS
 {
-  "venue_id" : 1,
-  "venue_name" : "City Stadium",
-  "event_id" : 16,
-  "event_name" : "The Specials",
-  "event_date" : "2022-07-08T16:07:19",
-  "event_tickets_available" : 20000,
+  "venue_id" : 41,
+  "venue_name" : "Another Roadside Attraction",
+  "event_id" : 581,
+  "event_name" : "New Years Mischief",
+  "event_date" : "2023-12-31T20:00:00",
+  "event_tickets_available" : 400,
   "ticket_groups" :
   [
     {
-      "ticket_group_id" : 958,
-      "price_category" : "BACKSTAGE-ALL ACCESS",
-      "price" : 150,
-      "tickets_available" : 2000,
-      "currently_assigned" : 600,
-      "sold_by_venue" : 1357
-    },
-    {
-      "ticket_group_id" : 959,
-      "price_category" : "VIP",
-      "price" : 100,
-      "tickets_available" : 2000,
-      "currently_assigned" : 500,
-      "sold_by_venue" : 1481
-    },
-    {
-      "ticket_group_id" : 960,
-      "price_category" : "EARLYBIRD DISCOUNT",
-      "price" : 40,
-      "tickets_available" : 2000,
-      "currently_assigned" : 500,
-      "sold_by_venue" : 1443
-    },
-    {
-      "ticket_group_id" : 961,
-      "price_category" : "RESERVED SEATING",
-      "price" : 75,
-      "tickets_available" : 2000,
-      "currently_assigned" : 400,
-      "sold_by_venue" : 1574
-    },
-    {
-      "ticket_group_id" : 962,
-      "price_category" : "GENERAL ADMISSION",
-      "price" : 50,
-      "tickets_available" : 12000,
-      "currently_assigned" : 3000,
-      "sold_by_venue" : 2245
+      "ticket_group_id" : 0,
+      "price_category" : "UNDEFINED",
+      "price" : 0,
+      "tickets_available" : 400,
+      "currently_assigned" : 0,
+      "sold_by_venue" : 0
     }
   ]
 }
 
-
-PL/SQL procedure successfully completed.
+--AFTER CREATING TICKET GROUPS
+{
+  "venue_id" : 41,
+  "venue_name" : "Another Roadside Attraction",
+  "event_id" : 581,
+  "event_name" : "New Years Mischief",
+  "event_date" : "2023-12-31T20:00:00",
+  "event_tickets_available" : 400,
+  "ticket_groups" :
+  [
+    {
+      "ticket_group_id" : 2321,
+      "price_category" : "SPONSOR",
+      "price" : 150,
+      "tickets_available" : 50,
+      "currently_assigned" : 0,
+      "sold_by_venue" : 0
+    },
+    {
+      "ticket_group_id" : 2322,
+      "price_category" : "VIP",
+      "price" : 80,
+      "tickets_available" : 50,
+      "currently_assigned" : 0,
+      "sold_by_venue" : 0
+    },
+    {
+      "ticket_group_id" : 2323,
+      "price_category" : "GENERAL ADMISSION",
+      "price" : 50,
+      "tickets_available" : 300,
+      "currently_assigned" : 0,
+      "sold_by_venue" : 0
+    }
+  ]
+}
 
 */

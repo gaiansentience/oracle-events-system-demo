@@ -5,8 +5,8 @@ declare
     l_xml xmltype;
 begin
 
-    select venue_id into l_venue_id from venues where venue_name = 'The Pink Pony Revue';    
-    select max(event_series_id) into l_event_series_id from events where venue_id = l_venue_id and event_name = 'Cool Jazz Evening';
+    l_venue_id := events_api.get_venue_id(p_venue_name => 'The Pink Pony Revue');
+    l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => 'Cool Jazz Evening');
 
     l_xml := events_xml_api.get_event_series_ticket_prices(p_event_series_id => l_event_series_id, p_formatted => true);
 
@@ -31,21 +31,25 @@ end;
   </event_series>
   <ticket_groups>
     <ticket_group>
-      <price_category>GENERAL ADMISSION</price_category>
-      <price>50</price>
-      <tickets_available_all_events>2550</tickets_available_all_events>
-      <tickets_sold_all_events>0</tickets_sold_all_events>
-      <tickets_remaining_all_events>2550</tickets_remaining_all_events>
-    </ticket_group>
-    <ticket_group>
       <price_category>VIP</price_category>
       <price>100</price>
       <tickets_available_all_events>850</tickets_available_all_events>
-      <tickets_sold_all_events>0</tickets_sold_all_events>
-      <tickets_remaining_all_events>850</tickets_remaining_all_events>
+      <tickets_sold_all_events>102</tickets_sold_all_events>
+      <tickets_remaining_all_events>748</tickets_remaining_all_events>
+    </ticket_group>
+    <ticket_group>
+      <price_category>GENERAL ADMISSION</price_category>
+      <price>50</price>
+      <tickets_available_all_events>2550</tickets_available_all_events>
+      <tickets_sold_all_events>187</tickets_sold_all_events>
+      <tickets_remaining_all_events>2363</tickets_remaining_all_events>
     </ticket_group>
   </ticket_groups>
 </event_series_ticket_prices>
+
+
+
+PL/SQL procedure successfully completed.
 
 
 */

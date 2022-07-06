@@ -1,27 +1,30 @@
 set serveroutput on;
 declare
-  v_event_id number := 16;
-  v_json_doc CLOB;
+    l_event_id number;
+    l_venue_id number;
+    l_json_doc CLOB;
 begin
 
-  v_json_doc := events_json_api.get_ticket_assignments(
-                                          p_event_id => v_event_id,
-                                          p_formatted => true);
+    l_venue_id := events_api.get_venue_id(p_venue_name => 'Another Roadside Attraction');
+    l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'New Years Mischief');
 
-  dbms_output.put_line(v_json_doc);
+    l_json_doc := events_json_api.get_ticket_assignments(p_event_id => l_event_id, p_formatted => true);
+
+    dbms_output.put_line(l_json_doc);
 
 end;
 --reply format example
 /*
+
 {
-  "venue_id" : 1,
-  "venue_name" : "City Stadium",
-  "organizer_email" : "Erin.Johanson@CityStadium.com",
-  "organizer_name" : "Erin Johanson",
-  "event_id" : 16,
-  "event_name" : "The Specials",
-  "event_date" : "2022-07-08T16:07:19",
-  "event_tickets_available" : 20000,
+  "venue_id" : 41,
+  "venue_name" : "Another Roadside Attraction",
+  "organizer_email" : "Susie.Brewer@AnotherRoadsideAttraction.com",
+  "organizer_name" : "Susie Brewer",
+  "event_id" : 581,
+  "event_name" : "New Years Mischief",
+  "event_date" : "2023-12-31T20:00:00",
+  "event_tickets_available" : 400,
   "ticket_resellers" :
   [
     {
@@ -31,69 +34,43 @@ end;
       "ticket_assignments" :
       [
         {
-          "ticket_group_id" : 958,
-          "price_category" : "BACKSTAGE-ALL ACCESS",
+          "ticket_group_id" : 2321,
+          "price_category" : "SPONSOR",
           "price" : 150,
-          "tickets_in_group" : 2000,
+          "tickets_in_group" : 50,
           "tickets_assigned" : 0,
           "ticket_assignment_id" : 0,
-          "assigned_to_others" : 600,
-          "max_available" : 43,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 1357
+          "sold_by_venue" : 0
         },
         {
-          "ticket_group_id" : 959,
+          "ticket_group_id" : 2322,
           "price_category" : "VIP",
-          "price" : 100,
-          "tickets_in_group" : 2000,
+          "price" : 80,
+          "tickets_in_group" : 50,
           "tickets_assigned" : 0,
           "ticket_assignment_id" : 0,
-          "assigned_to_others" : 500,
-          "max_available" : 19,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 1481
+          "sold_by_venue" : 0
         },
         {
-          "ticket_group_id" : 960,
-          "price_category" : "EARLYBIRD DISCOUNT",
-          "price" : 40,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 0,
-          "ticket_assignment_id" : 0,
-          "assigned_to_others" : 500,
-          "max_available" : 57,
-          "min_assignment" : 0,
-          "sold_by_reseller" : 0,
-          "sold_by_venue" : 1443
-        },
-        {
-          "ticket_group_id" : 961,
-          "price_category" : "RESERVED SEATING",
-          "price" : 75,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 0,
-          "ticket_assignment_id" : 0,
-          "assigned_to_others" : 400,
-          "max_available" : 26,
-          "min_assignment" : 0,
-          "sold_by_reseller" : 0,
-          "sold_by_venue" : 1574
-        },
-        {
-          "ticket_group_id" : 962,
+          "ticket_group_id" : 2323,
           "price_category" : "GENERAL ADMISSION",
           "price" : 50,
-          "tickets_in_group" : 12000,
+          "tickets_in_group" : 300,
           "tickets_assigned" : 0,
           "ticket_assignment_id" : 0,
-          "assigned_to_others" : 3000,
-          "max_available" : 6755,
+          "assigned_to_others" : 0,
+          "max_available" : 300,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 2245
+          "sold_by_venue" : 0
         }
       ]
     },
@@ -104,69 +81,43 @@ end;
       "ticket_assignments" :
       [
         {
-          "ticket_group_id" : 958,
-          "price_category" : "BACKSTAGE-ALL ACCESS",
+          "ticket_group_id" : 2321,
+          "price_category" : "SPONSOR",
           "price" : 150,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 100,
-          "ticket_assignment_id" : 170,
-          "assigned_to_others" : 500,
-          "max_available" : 143,
-          "min_assignment" : 93,
-          "sold_by_reseller" : 93,
-          "sold_by_venue" : 1357
+          "tickets_in_group" : 50,
+          "tickets_assigned" : 0,
+          "ticket_assignment_id" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
         },
         {
-          "ticket_group_id" : 959,
+          "ticket_group_id" : 2322,
           "price_category" : "VIP",
-          "price" : 100,
-          "tickets_in_group" : 2000,
+          "price" : 80,
+          "tickets_in_group" : 50,
           "tickets_assigned" : 0,
           "ticket_assignment_id" : 0,
-          "assigned_to_others" : 500,
-          "max_available" : 19,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 1481
+          "sold_by_venue" : 0
         },
         {
-          "ticket_group_id" : 960,
-          "price_category" : "EARLYBIRD DISCOUNT",
-          "price" : 40,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 0,
-          "ticket_assignment_id" : 0,
-          "assigned_to_others" : 500,
-          "max_available" : 57,
-          "min_assignment" : 0,
-          "sold_by_reseller" : 0,
-          "sold_by_venue" : 1443
-        },
-        {
-          "ticket_group_id" : 961,
-          "price_category" : "RESERVED SEATING",
-          "price" : 75,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 0,
-          "ticket_assignment_id" : 0,
-          "assigned_to_others" : 400,
-          "max_available" : 26,
-          "min_assignment" : 0,
-          "sold_by_reseller" : 0,
-          "sold_by_venue" : 1574
-        },
-        {
-          "ticket_group_id" : 962,
+          "ticket_group_id" : 2323,
           "price_category" : "GENERAL ADMISSION",
           "price" : 50,
-          "tickets_in_group" : 12000,
+          "tickets_in_group" : 300,
           "tickets_assigned" : 0,
           "ticket_assignment_id" : 0,
-          "assigned_to_others" : 3000,
-          "max_available" : 6755,
+          "assigned_to_others" : 0,
+          "max_available" : 300,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 2245
+          "sold_by_venue" : 0
         }
       ]
     },
@@ -177,69 +128,43 @@ end;
       "ticket_assignments" :
       [
         {
-          "ticket_group_id" : 958,
-          "price_category" : "BACKSTAGE-ALL ACCESS",
+          "ticket_group_id" : 2321,
+          "price_category" : "SPONSOR",
           "price" : 150,
-          "tickets_in_group" : 2000,
+          "tickets_in_group" : 50,
           "tickets_assigned" : 0,
           "ticket_assignment_id" : 0,
-          "assigned_to_others" : 600,
-          "max_available" : 43,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 1357
+          "sold_by_venue" : 0
         },
         {
-          "ticket_group_id" : 959,
+          "ticket_group_id" : 2322,
           "price_category" : "VIP",
-          "price" : 100,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 100,
-          "ticket_assignment_id" : 175,
-          "assigned_to_others" : 400,
-          "max_available" : 119,
-          "min_assignment" : 97,
-          "sold_by_reseller" : 97,
-          "sold_by_venue" : 1481
-        },
-        {
-          "ticket_group_id" : 960,
-          "price_category" : "EARLYBIRD DISCOUNT",
-          "price" : 40,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 100,
-          "ticket_assignment_id" : 181,
-          "assigned_to_others" : 400,
-          "max_available" : 157,
-          "min_assignment" : 97,
-          "sold_by_reseller" : 97,
-          "sold_by_venue" : 1443
-        },
-        {
-          "ticket_group_id" : 961,
-          "price_category" : "RESERVED SEATING",
-          "price" : 75,
-          "tickets_in_group" : 2000,
+          "price" : 80,
+          "tickets_in_group" : 50,
           "tickets_assigned" : 0,
           "ticket_assignment_id" : 0,
-          "assigned_to_others" : 400,
-          "max_available" : 26,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 1574
+          "sold_by_venue" : 0
         },
         {
-          "ticket_group_id" : 962,
+          "ticket_group_id" : 2323,
           "price_category" : "GENERAL ADMISSION",
           "price" : 50,
-          "tickets_in_group" : 12000,
+          "tickets_in_group" : 300,
           "tickets_assigned" : 0,
           "ticket_assignment_id" : 0,
-          "assigned_to_others" : 3000,
-          "max_available" : 6755,
+          "assigned_to_others" : 0,
+          "max_available" : 300,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 2245
+          "sold_by_venue" : 0
         }
       ]
     },
@@ -250,69 +175,43 @@ end;
       "ticket_assignments" :
       [
         {
-          "ticket_group_id" : 958,
-          "price_category" : "BACKSTAGE-ALL ACCESS",
+          "ticket_group_id" : 2321,
+          "price_category" : "SPONSOR",
           "price" : 150,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 100,
-          "ticket_assignment_id" : 166,
-          "assigned_to_others" : 500,
-          "max_available" : 143,
-          "min_assignment" : 98,
-          "sold_by_reseller" : 98,
-          "sold_by_venue" : 1357
+          "tickets_in_group" : 50,
+          "tickets_assigned" : 0,
+          "ticket_assignment_id" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
         },
         {
-          "ticket_group_id" : 959,
+          "ticket_group_id" : 2322,
           "price_category" : "VIP",
-          "price" : 100,
-          "tickets_in_group" : 2000,
+          "price" : 80,
+          "tickets_in_group" : 50,
           "tickets_assigned" : 0,
           "ticket_assignment_id" : 0,
-          "assigned_to_others" : 500,
-          "max_available" : 19,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 1481
+          "sold_by_venue" : 0
         },
         {
-          "ticket_group_id" : 960,
-          "price_category" : "EARLYBIRD DISCOUNT",
-          "price" : 40,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 0,
-          "ticket_assignment_id" : 0,
-          "assigned_to_others" : 500,
-          "max_available" : 57,
-          "min_assignment" : 0,
-          "sold_by_reseller" : 0,
-          "sold_by_venue" : 1443
-        },
-        {
-          "ticket_group_id" : 961,
-          "price_category" : "RESERVED SEATING",
-          "price" : 75,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 0,
-          "ticket_assignment_id" : 0,
-          "assigned_to_others" : 400,
-          "max_available" : 26,
-          "min_assignment" : 0,
-          "sold_by_reseller" : 0,
-          "sold_by_venue" : 1574
-        },
-        {
-          "ticket_group_id" : 962,
+          "ticket_group_id" : 2323,
           "price_category" : "GENERAL ADMISSION",
           "price" : 50,
-          "tickets_in_group" : 12000,
+          "tickets_in_group" : 300,
           "tickets_assigned" : 0,
           "ticket_assignment_id" : 0,
-          "assigned_to_others" : 3000,
-          "max_available" : 6755,
+          "assigned_to_others" : 0,
+          "max_available" : 300,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 2245
+          "sold_by_venue" : 0
         }
       ]
     },
@@ -323,69 +222,43 @@ end;
       "ticket_assignments" :
       [
         {
-          "ticket_group_id" : 958,
-          "price_category" : "BACKSTAGE-ALL ACCESS",
+          "ticket_group_id" : 2321,
+          "price_category" : "SPONSOR",
           "price" : 150,
-          "tickets_in_group" : 2000,
+          "tickets_in_group" : 50,
           "tickets_assigned" : 0,
           "ticket_assignment_id" : 0,
-          "assigned_to_others" : 600,
-          "max_available" : 43,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 1357
+          "sold_by_venue" : 0
         },
         {
-          "ticket_group_id" : 959,
+          "ticket_group_id" : 2322,
           "price_category" : "VIP",
-          "price" : 100,
-          "tickets_in_group" : 2000,
+          "price" : 80,
+          "tickets_in_group" : 50,
           "tickets_assigned" : 0,
           "ticket_assignment_id" : 0,
-          "assigned_to_others" : 500,
-          "max_available" : 19,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 1481
+          "sold_by_venue" : 0
         },
         {
-          "ticket_group_id" : 960,
-          "price_category" : "EARLYBIRD DISCOUNT",
-          "price" : 40,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 100,
-          "ticket_assignment_id" : 180,
-          "assigned_to_others" : 400,
-          "max_available" : 157,
-          "min_assignment" : 94,
-          "sold_by_reseller" : 94,
-          "sold_by_venue" : 1443
-        },
-        {
-          "ticket_group_id" : 961,
-          "price_category" : "RESERVED SEATING",
-          "price" : 75,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 0,
-          "ticket_assignment_id" : 0,
-          "assigned_to_others" : 400,
-          "max_available" : 26,
-          "min_assignment" : 0,
-          "sold_by_reseller" : 0,
-          "sold_by_venue" : 1574
-        },
-        {
-          "ticket_group_id" : 962,
+          "ticket_group_id" : 2323,
           "price_category" : "GENERAL ADMISSION",
           "price" : 50,
-          "tickets_in_group" : 12000,
-          "tickets_assigned" : 500,
-          "ticket_assignment_id" : 191,
-          "assigned_to_others" : 2500,
-          "max_available" : 7255,
-          "min_assignment" : 464,
-          "sold_by_reseller" : 464,
-          "sold_by_venue" : 2245
+          "tickets_in_group" : 300,
+          "tickets_assigned" : 0,
+          "ticket_assignment_id" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 300,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
         }
       ]
     },
@@ -396,69 +269,43 @@ end;
       "ticket_assignments" :
       [
         {
-          "ticket_group_id" : 958,
-          "price_category" : "BACKSTAGE-ALL ACCESS",
+          "ticket_group_id" : 2321,
+          "price_category" : "SPONSOR",
           "price" : 150,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 100,
-          "ticket_assignment_id" : 169,
-          "assigned_to_others" : 500,
-          "max_available" : 143,
-          "min_assignment" : 92,
-          "sold_by_reseller" : 92,
-          "sold_by_venue" : 1357
-        },
-        {
-          "ticket_group_id" : 959,
-          "price_category" : "VIP",
-          "price" : 100,
-          "tickets_in_group" : 2000,
+          "tickets_in_group" : 50,
           "tickets_assigned" : 0,
           "ticket_assignment_id" : 0,
-          "assigned_to_others" : 500,
-          "max_available" : 19,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 1481
+          "sold_by_venue" : 0
         },
         {
-          "ticket_group_id" : 960,
-          "price_category" : "EARLYBIRD DISCOUNT",
-          "price" : 40,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 100,
-          "ticket_assignment_id" : 177,
-          "assigned_to_others" : 400,
-          "max_available" : 157,
-          "min_assignment" : 98,
-          "sold_by_reseller" : 98,
-          "sold_by_venue" : 1443
+          "ticket_group_id" : 2322,
+          "price_category" : "VIP",
+          "price" : 80,
+          "tickets_in_group" : 50,
+          "tickets_assigned" : 0,
+          "ticket_assignment_id" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
         },
         {
-          "ticket_group_id" : 961,
-          "price_category" : "RESERVED SEATING",
-          "price" : 75,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 100,
-          "ticket_assignment_id" : 182,
-          "assigned_to_others" : 300,
-          "max_available" : 126,
-          "min_assignment" : 97,
-          "sold_by_reseller" : 97,
-          "sold_by_venue" : 1574
-        },
-        {
-          "ticket_group_id" : 962,
+          "ticket_group_id" : 2323,
           "price_category" : "GENERAL ADMISSION",
           "price" : 50,
-          "tickets_in_group" : 12000,
-          "tickets_assigned" : 500,
-          "ticket_assignment_id" : 186,
-          "assigned_to_others" : 2500,
-          "max_available" : 7255,
-          "min_assignment" : 494,
-          "sold_by_reseller" : 494,
-          "sold_by_venue" : 2245
+          "tickets_in_group" : 300,
+          "tickets_assigned" : 0,
+          "ticket_assignment_id" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 300,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
         }
       ]
     },
@@ -469,69 +316,43 @@ end;
       "ticket_assignments" :
       [
         {
-          "ticket_group_id" : 958,
-          "price_category" : "BACKSTAGE-ALL ACCESS",
+          "ticket_group_id" : 2321,
+          "price_category" : "SPONSOR",
           "price" : 150,
-          "tickets_in_group" : 2000,
+          "tickets_in_group" : 50,
           "tickets_assigned" : 0,
           "ticket_assignment_id" : 0,
-          "assigned_to_others" : 600,
-          "max_available" : 43,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 1357
+          "sold_by_venue" : 0
         },
         {
-          "ticket_group_id" : 959,
+          "ticket_group_id" : 2322,
           "price_category" : "VIP",
-          "price" : 100,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 100,
-          "ticket_assignment_id" : 176,
-          "assigned_to_others" : 400,
-          "max_available" : 119,
-          "min_assignment" : 98,
-          "sold_by_reseller" : 98,
-          "sold_by_venue" : 1481
-        },
-        {
-          "ticket_group_id" : 960,
-          "price_category" : "EARLYBIRD DISCOUNT",
-          "price" : 40,
-          "tickets_in_group" : 2000,
+          "price" : 80,
+          "tickets_in_group" : 50,
           "tickets_assigned" : 0,
           "ticket_assignment_id" : 0,
-          "assigned_to_others" : 500,
-          "max_available" : 57,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 1443
+          "sold_by_venue" : 0
         },
         {
-          "ticket_group_id" : 961,
-          "price_category" : "RESERVED SEATING",
-          "price" : 75,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 100,
-          "ticket_assignment_id" : 183,
-          "assigned_to_others" : 300,
-          "max_available" : 126,
-          "min_assignment" : 96,
-          "sold_by_reseller" : 96,
-          "sold_by_venue" : 1574
-        },
-        {
-          "ticket_group_id" : 962,
+          "ticket_group_id" : 2323,
           "price_category" : "GENERAL ADMISSION",
           "price" : 50,
-          "tickets_in_group" : 12000,
-          "tickets_assigned" : 500,
-          "ticket_assignment_id" : 188,
-          "assigned_to_others" : 2500,
-          "max_available" : 7255,
-          "min_assignment" : 478,
-          "sold_by_reseller" : 478,
-          "sold_by_venue" : 2245
+          "tickets_in_group" : 300,
+          "tickets_assigned" : 0,
+          "ticket_assignment_id" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 300,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
         }
       ]
     },
@@ -542,69 +363,43 @@ end;
       "ticket_assignments" :
       [
         {
-          "ticket_group_id" : 958,
-          "price_category" : "BACKSTAGE-ALL ACCESS",
+          "ticket_group_id" : 2321,
+          "price_category" : "SPONSOR",
           "price" : 150,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 100,
-          "ticket_assignment_id" : 167,
-          "assigned_to_others" : 500,
-          "max_available" : 143,
-          "min_assignment" : 96,
-          "sold_by_reseller" : 96,
-          "sold_by_venue" : 1357
-        },
-        {
-          "ticket_group_id" : 959,
-          "price_category" : "VIP",
-          "price" : 100,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 100,
-          "ticket_assignment_id" : 174,
-          "assigned_to_others" : 400,
-          "max_available" : 119,
-          "min_assignment" : 92,
-          "sold_by_reseller" : 92,
-          "sold_by_venue" : 1481
-        },
-        {
-          "ticket_group_id" : 960,
-          "price_category" : "EARLYBIRD DISCOUNT",
-          "price" : 40,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 100,
-          "ticket_assignment_id" : 178,
-          "assigned_to_others" : 400,
-          "max_available" : 157,
-          "min_assignment" : 98,
-          "sold_by_reseller" : 98,
-          "sold_by_venue" : 1443
-        },
-        {
-          "ticket_group_id" : 961,
-          "price_category" : "RESERVED SEATING",
-          "price" : 75,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 100,
-          "ticket_assignment_id" : 185,
-          "assigned_to_others" : 300,
-          "max_available" : 126,
-          "min_assignment" : 98,
-          "sold_by_reseller" : 98,
-          "sold_by_venue" : 1574
-        },
-        {
-          "ticket_group_id" : 962,
-          "price_category" : "GENERAL ADMISSION",
-          "price" : 50,
-          "tickets_in_group" : 12000,
+          "tickets_in_group" : 50,
           "tickets_assigned" : 0,
           "ticket_assignment_id" : 0,
-          "assigned_to_others" : 3000,
-          "max_available" : 6755,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 2245
+          "sold_by_venue" : 0
+        },
+        {
+          "ticket_group_id" : 2322,
+          "price_category" : "VIP",
+          "price" : 80,
+          "tickets_in_group" : 50,
+          "tickets_assigned" : 0,
+          "ticket_assignment_id" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
+        },
+        {
+          "ticket_group_id" : 2323,
+          "price_category" : "GENERAL ADMISSION",
+          "price" : 50,
+          "tickets_in_group" : 300,
+          "tickets_assigned" : 0,
+          "ticket_assignment_id" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 300,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
         }
       ]
     },
@@ -615,69 +410,43 @@ end;
       "ticket_assignments" :
       [
         {
-          "ticket_group_id" : 958,
-          "price_category" : "BACKSTAGE-ALL ACCESS",
+          "ticket_group_id" : 2321,
+          "price_category" : "SPONSOR",
           "price" : 150,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 100,
-          "ticket_assignment_id" : 168,
-          "assigned_to_others" : 500,
-          "max_available" : 143,
-          "min_assignment" : 96,
-          "sold_by_reseller" : 96,
-          "sold_by_venue" : 1357
-        },
-        {
-          "ticket_group_id" : 959,
-          "price_category" : "VIP",
-          "price" : 100,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 100,
-          "ticket_assignment_id" : 172,
-          "assigned_to_others" : 400,
-          "max_available" : 119,
-          "min_assignment" : 91,
-          "sold_by_reseller" : 91,
-          "sold_by_venue" : 1481
-        },
-        {
-          "ticket_group_id" : 960,
-          "price_category" : "EARLYBIRD DISCOUNT",
-          "price" : 40,
-          "tickets_in_group" : 2000,
+          "tickets_in_group" : 50,
           "tickets_assigned" : 0,
           "ticket_assignment_id" : 0,
-          "assigned_to_others" : 500,
-          "max_available" : 57,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 1443
+          "sold_by_venue" : 0
         },
         {
-          "ticket_group_id" : 961,
-          "price_category" : "RESERVED SEATING",
-          "price" : 75,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 100,
-          "ticket_assignment_id" : 184,
-          "assigned_to_others" : 300,
-          "max_available" : 126,
-          "min_assignment" : 98,
-          "sold_by_reseller" : 98,
-          "sold_by_venue" : 1574
+          "ticket_group_id" : 2322,
+          "price_category" : "VIP",
+          "price" : 80,
+          "tickets_in_group" : 50,
+          "tickets_assigned" : 0,
+          "ticket_assignment_id" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
         },
         {
-          "ticket_group_id" : 962,
+          "ticket_group_id" : 2323,
           "price_category" : "GENERAL ADMISSION",
           "price" : 50,
-          "tickets_in_group" : 12000,
-          "tickets_assigned" : 500,
-          "ticket_assignment_id" : 190,
-          "assigned_to_others" : 2500,
-          "max_available" : 7255,
-          "min_assignment" : 468,
-          "sold_by_reseller" : 468,
-          "sold_by_venue" : 2245
+          "tickets_in_group" : 300,
+          "tickets_assigned" : 0,
+          "ticket_assignment_id" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 300,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
         }
       ]
     },
@@ -688,69 +457,43 @@ end;
       "ticket_assignments" :
       [
         {
-          "ticket_group_id" : 958,
-          "price_category" : "BACKSTAGE-ALL ACCESS",
+          "ticket_group_id" : 2321,
+          "price_category" : "SPONSOR",
           "price" : 150,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 100,
-          "ticket_assignment_id" : 171,
-          "assigned_to_others" : 500,
-          "max_available" : 143,
-          "min_assignment" : 97,
-          "sold_by_reseller" : 97,
-          "sold_by_venue" : 1357
+          "tickets_in_group" : 50,
+          "tickets_assigned" : 0,
+          "ticket_assignment_id" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
         },
         {
-          "ticket_group_id" : 959,
+          "ticket_group_id" : 2322,
           "price_category" : "VIP",
-          "price" : 100,
-          "tickets_in_group" : 2000,
+          "price" : 80,
+          "tickets_in_group" : 50,
           "tickets_assigned" : 0,
           "ticket_assignment_id" : 0,
-          "assigned_to_others" : 500,
-          "max_available" : 19,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 1481
+          "sold_by_venue" : 0
         },
         {
-          "ticket_group_id" : 960,
-          "price_category" : "EARLYBIRD DISCOUNT",
-          "price" : 40,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 100,
-          "ticket_assignment_id" : 179,
-          "assigned_to_others" : 400,
-          "max_available" : 157,
-          "min_assignment" : 98,
-          "sold_by_reseller" : 98,
-          "sold_by_venue" : 1443
-        },
-        {
-          "ticket_group_id" : 961,
-          "price_category" : "RESERVED SEATING",
-          "price" : 75,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 0,
-          "ticket_assignment_id" : 0,
-          "assigned_to_others" : 400,
-          "max_available" : 26,
-          "min_assignment" : 0,
-          "sold_by_reseller" : 0,
-          "sold_by_venue" : 1574
-        },
-        {
-          "ticket_group_id" : 962,
+          "ticket_group_id" : 2323,
           "price_category" : "GENERAL ADMISSION",
           "price" : 50,
-          "tickets_in_group" : 12000,
-          "tickets_assigned" : 500,
-          "ticket_assignment_id" : 187,
-          "assigned_to_others" : 2500,
-          "max_available" : 7255,
-          "min_assignment" : 497,
-          "sold_by_reseller" : 497,
-          "sold_by_venue" : 2245
+          "tickets_in_group" : 300,
+          "tickets_assigned" : 0,
+          "ticket_assignment_id" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 300,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
         }
       ]
     },
@@ -761,69 +504,43 @@ end;
       "ticket_assignments" :
       [
         {
-          "ticket_group_id" : 958,
-          "price_category" : "BACKSTAGE-ALL ACCESS",
+          "ticket_group_id" : 2321,
+          "price_category" : "SPONSOR",
           "price" : 150,
-          "tickets_in_group" : 2000,
+          "tickets_in_group" : 50,
           "tickets_assigned" : 0,
           "ticket_assignment_id" : 0,
-          "assigned_to_others" : 600,
-          "max_available" : 43,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 1357
+          "sold_by_venue" : 0
         },
         {
-          "ticket_group_id" : 959,
+          "ticket_group_id" : 2322,
           "price_category" : "VIP",
-          "price" : 100,
-          "tickets_in_group" : 2000,
+          "price" : 80,
+          "tickets_in_group" : 50,
           "tickets_assigned" : 0,
           "ticket_assignment_id" : 0,
-          "assigned_to_others" : 500,
-          "max_available" : 19,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 1481
+          "sold_by_venue" : 0
         },
         {
-          "ticket_group_id" : 960,
-          "price_category" : "EARLYBIRD DISCOUNT",
-          "price" : 40,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 0,
-          "ticket_assignment_id" : 0,
-          "assigned_to_others" : 500,
-          "max_available" : 57,
-          "min_assignment" : 0,
-          "sold_by_reseller" : 0,
-          "sold_by_venue" : 1443
-        },
-        {
-          "ticket_group_id" : 961,
-          "price_category" : "RESERVED SEATING",
-          "price" : 75,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 0,
-          "ticket_assignment_id" : 0,
-          "assigned_to_others" : 400,
-          "max_available" : 26,
-          "min_assignment" : 0,
-          "sold_by_reseller" : 0,
-          "sold_by_venue" : 1574
-        },
-        {
-          "ticket_group_id" : 962,
+          "ticket_group_id" : 2323,
           "price_category" : "GENERAL ADMISSION",
           "price" : 50,
-          "tickets_in_group" : 12000,
-          "tickets_assigned" : 500,
-          "ticket_assignment_id" : 189,
-          "assigned_to_others" : 2500,
-          "max_available" : 7255,
-          "min_assignment" : 477,
-          "sold_by_reseller" : 477,
-          "sold_by_venue" : 2245
+          "tickets_in_group" : 300,
+          "tickets_assigned" : 0,
+          "ticket_assignment_id" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 300,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
         }
       ]
     },
@@ -834,73 +551,147 @@ end;
       "ticket_assignments" :
       [
         {
-          "ticket_group_id" : 958,
-          "price_category" : "BACKSTAGE-ALL ACCESS",
+          "ticket_group_id" : 2321,
+          "price_category" : "SPONSOR",
           "price" : 150,
-          "tickets_in_group" : 2000,
+          "tickets_in_group" : 50,
           "tickets_assigned" : 0,
           "ticket_assignment_id" : 0,
-          "assigned_to_others" : 600,
-          "max_available" : 43,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 1357
+          "sold_by_venue" : 0
         },
         {
-          "ticket_group_id" : 959,
+          "ticket_group_id" : 2322,
           "price_category" : "VIP",
-          "price" : 100,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 100,
-          "ticket_assignment_id" : 173,
-          "assigned_to_others" : 400,
-          "max_available" : 119,
-          "min_assignment" : 93,
-          "sold_by_reseller" : 93,
-          "sold_by_venue" : 1481
-        },
-        {
-          "ticket_group_id" : 960,
-          "price_category" : "EARLYBIRD DISCOUNT",
-          "price" : 40,
-          "tickets_in_group" : 2000,
+          "price" : 80,
+          "tickets_in_group" : 50,
           "tickets_assigned" : 0,
           "ticket_assignment_id" : 0,
-          "assigned_to_others" : 500,
-          "max_available" : 57,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 1443
+          "sold_by_venue" : 0
         },
         {
-          "ticket_group_id" : 961,
-          "price_category" : "RESERVED SEATING",
-          "price" : 75,
-          "tickets_in_group" : 2000,
-          "tickets_assigned" : 0,
-          "ticket_assignment_id" : 0,
-          "assigned_to_others" : 400,
-          "max_available" : 26,
-          "min_assignment" : 0,
-          "sold_by_reseller" : 0,
-          "sold_by_venue" : 1574
-        },
-        {
-          "ticket_group_id" : 962,
+          "ticket_group_id" : 2323,
           "price_category" : "GENERAL ADMISSION",
           "price" : 50,
-          "tickets_in_group" : 12000,
+          "tickets_in_group" : 300,
           "tickets_assigned" : 0,
           "ticket_assignment_id" : 0,
-          "assigned_to_others" : 3000,
-          "max_available" : 6755,
+          "assigned_to_others" : 0,
+          "max_available" : 300,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 2245
+          "sold_by_venue" : 0
+        }
+      ]
+    },
+    {
+      "reseller_id" : 12,
+      "reseller_name" : "Easy Tickets",
+      "reseller_email" : "ticket.sales@EasyTickets.com",
+      "ticket_assignments" :
+      [
+        {
+          "ticket_group_id" : 2321,
+          "price_category" : "SPONSOR",
+          "price" : 150,
+          "tickets_in_group" : 50,
+          "tickets_assigned" : 0,
+          "ticket_assignment_id" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
+        },
+        {
+          "ticket_group_id" : 2322,
+          "price_category" : "VIP",
+          "price" : 80,
+          "tickets_in_group" : 50,
+          "tickets_assigned" : 0,
+          "ticket_assignment_id" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
+        },
+        {
+          "ticket_group_id" : 2323,
+          "price_category" : "GENERAL ADMISSION",
+          "price" : 50,
+          "tickets_in_group" : 300,
+          "tickets_assigned" : 0,
+          "ticket_assignment_id" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 300,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
+        }
+      ]
+    },
+    {
+      "reseller_id" : 41,
+      "reseller_name" : "Ticket Factory",
+      "reseller_email" : "ticket.sales@TicketFactory.com",
+      "ticket_assignments" :
+      [
+        {
+          "ticket_group_id" : 2321,
+          "price_category" : "SPONSOR",
+          "price" : 150,
+          "tickets_in_group" : 50,
+          "tickets_assigned" : 0,
+          "ticket_assignment_id" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
+        },
+        {
+          "ticket_group_id" : 2322,
+          "price_category" : "VIP",
+          "price" : 80,
+          "tickets_in_group" : 50,
+          "tickets_assigned" : 0,
+          "ticket_assignment_id" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 50,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
+        },
+        {
+          "ticket_group_id" : 2323,
+          "price_category" : "GENERAL ADMISSION",
+          "price" : 50,
+          "tickets_in_group" : 300,
+          "tickets_assigned" : 0,
+          "ticket_assignment_id" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 300,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
         }
       ]
     }
   ]
 }
+
+
+PL/SQL procedure successfully completed.
+
+
+
 
 */

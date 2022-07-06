@@ -3,13 +3,12 @@
 set serveroutput on;
 
 declare
+    l_venue_id number;
     l_event_series_id number;
 begin
 
-    select max(e.event_id) into l_event_series_id 
-    from events e
-    where e.event_name = 'Hometown Hockey League';
-
+    l_venue_id := events_api.get_venue_id(p_venue_name => 'City Stadium');
+    l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => 'Hometown Hockey League');
 
     events_test_data_api.create_event_series_ticket_sales(l_event_series_id);
 

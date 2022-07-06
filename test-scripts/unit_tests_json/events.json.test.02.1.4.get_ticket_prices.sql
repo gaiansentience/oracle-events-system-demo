@@ -1,68 +1,59 @@
 set serveroutput on;
 declare
-v_json_doc varchar2(32000);
-v_event_id number := 16;
+    l_json_doc varchar2(32000);
+    l_venue_id number;
+    l_event_id number;
 begin
 
-   v_json_doc := events_json_api.get_event_ticket_prices(
-                                           p_event_id => v_event_id,
+    l_venue_id := events_api.get_venue_id(p_venue_name => 'Another Roadside Attraction');
+    l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'New Years Mischief');
+
+
+    l_json_doc := events_json_api.get_event_ticket_prices(
+                                           p_event_id => l_event_id,
                                            p_formatted => true);
 
-   dbms_output.put_line(v_json_doc);
+    dbms_output.put_line(l_json_doc);
 
 end;
 --reply format example
 /*
+
 {
-  "venue_id" : 1,
-  "venue_name" : "City Stadium",
-  "event_id" : 16,
-  "event_name" : "The Specials",
-  "event_date" : "2022-07-08T16:07:19",
-  "event_tickets_available" : 20000,
+  "venue_id" : 41,
+  "venue_name" : "Another Roadside Attraction",
+  "event_id" : 581,
+  "event_name" : "New Years Mischief",
+  "event_date" : "2023-12-31T20:00:00",
+  "event_tickets_available" : 400,
   "ticket_groups" :
   [
     {
-      "ticket_group_id" : 958,
-      "price_category" : "BACKSTAGE-ALL ACCESS",
-      "price" : 150,
-      "tickets_available" : 2500,
-      "tickets_sold" : 1929,
-      "tickets_remaining" : 571
-    },
-    {
-      "ticket_group_id" : 959,
+      "ticket_group_id" : 2322,
       "price_category" : "VIP",
-      "price" : 100,
-      "tickets_available" : 2500,
-      "tickets_sold" : 1952,
-      "tickets_remaining" : 548
+      "price" : 80,
+      "tickets_available" : 50,
+      "tickets_sold" : 0,
+      "tickets_remaining" : 50
     },
     {
-      "ticket_group_id" : 960,
-      "price_category" : "EARLYBIRD DISCOUNT",
-      "price" : 40,
-      "tickets_available" : 2000,
-      "tickets_sold" : 1928,
-      "tickets_remaining" : 72
-    },
-    {
-      "ticket_group_id" : 961,
-      "price_category" : "RESERVED SEATING",
-      "price" : 75,
-      "tickets_available" : 3000,
-      "tickets_sold" : 1963,
-      "tickets_remaining" : 1037
-    },
-    {
-      "ticket_group_id" : 962,
+      "ticket_group_id" : 2323,
       "price_category" : "GENERAL ADMISSION",
       "price" : 50,
-      "tickets_available" : 10000,
-      "tickets_sold" : 5123,
-      "tickets_remaining" : 4877
+      "tickets_available" : 300,
+      "tickets_sold" : 0,
+      "tickets_remaining" : 300
+    },
+    {
+      "ticket_group_id" : 2321,
+      "price_category" : "SPONSOR",
+      "price" : 150,
+      "tickets_available" : 50,
+      "tickets_sold" : 0,
+      "tickets_remaining" : 50
     }
   ]
 }
+
 
 */

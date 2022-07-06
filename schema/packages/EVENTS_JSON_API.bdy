@@ -1159,17 +1159,24 @@ as
         p_customer_id out number
     )
     is
-        l_customer_email customers.customer_email%type;
-        l_customer_name customers.customer_name%type;
+        r_customer customers%rowtype;
     begin
         
-        l_customer_email := o_request.get_string('customer_email');
-        l_customer_name := o_request.get_string('customer_name');
-        --validate customer by email, set v_customer_id if found, else create    
-        events_api.create_customer(
-            p_customer_name => l_customer_name,
-            p_customer_email => l_customer_email,
-            p_customer_id => p_customer_id);
+        r_customer.customer_email := o_request.get_string('customer_email');
+        r_customer.customer_name := o_request.get_string('customer_name');
+        --validate customer by email, set v_customer_id if found, else create  
+        
+        p_customer_id := events_api.get_customer_id(r_customer.customer_email);
+        if p_customer_id = 0 then
+            --need to create customer, if name was not specified use email for name
+            if r_customer.customer_name is null then
+                r_customer.customer_name := r_customer.customer_email;
+            end if;
+            events_api.create_customer(
+                p_customer_name => r_customer.customer_name,
+                p_customer_email => r_customer.customer_email,
+                p_customer_id => p_customer_id);
+        end if;
    
         o_request.put('customer_id', p_customer_id);
     
@@ -1373,7 +1380,7 @@ as
         for group_index in 0..a_groups.get_size - 1 loop        
             o_group := json_object_t(a_groups.get(group_index));
 
-            l_purchase.price_category := o_group.get_number('price_category');
+            l_purchase.price_category := o_group.get_string('price_category');
             l_purchase.tickets_requested := o_group.get_number('tickets_requested');
             l_purchase.price_requested := o_group.get_number('price');                    
             l_total_tickets_requested := l_total_tickets_requested + l_purchase.tickets_requested;
@@ -1434,7 +1441,7 @@ as
         for group_index in 0..a_groups.get_size - 1 loop        
             o_group := json_object_t(a_groups.get(group_index));
         
-            l_purchase.price_category := o_group.get_number('price_category');
+            l_purchase.price_category := o_group.get_string('price_category');
             l_purchase.tickets_requested := o_group.get_number('tickets_requested');
             l_purchase.price_requested := o_group.get_number('price');                    
             l_total_tickets_requested := l_total_tickets_requested + l_purchase.tickets_requested;

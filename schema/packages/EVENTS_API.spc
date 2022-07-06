@@ -2,6 +2,11 @@ create or replace package events_api
 authid current_user
 as 
 
+    function get_venue_id
+    (
+        p_venue_name in varchar2
+    ) return number;
+
     procedure create_venue
     (
         p_venue_name in varchar2,
@@ -15,6 +20,11 @@ as
     (
         p_venues out sys_refcursor
     );
+    
+    function get_reseller_id
+    (
+        p_reseller_name in varchar2
+    ) return number;
       
     procedure create_reseller
     (
@@ -40,6 +50,18 @@ as
         p_customer_email in varchar2,
         p_customer_id out number
     );   
+    
+    function get_event_id
+    (
+        p_venue_id in number,
+        p_event_name in varchar2
+    ) return number;
+    
+    function get_event_series_id
+    (
+        p_venue_id in number,
+        p_event_name in varchar2        
+    ) return number;
     
     procedure create_event
     (

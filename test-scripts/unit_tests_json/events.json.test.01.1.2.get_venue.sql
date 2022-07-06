@@ -1,13 +1,15 @@
 --get venue information as a json document
 set serveroutput on;
 declare
-  v_json_doc varchar2(4000);
-  v_venue_id number := 1;
+    v_json_doc varchar2(4000);
+    v_venue_id number;
 begin
 
-   v_json_doc := events_json_api.get_venue(p_venue_id => v_venue_id, p_formatted => true);
+    v_venue_id := events_api.get_venue_id(p_venue_name => 'City Stadium');
+
+    v_json_doc := events_json_api.get_venue(p_venue_id => v_venue_id, p_formatted => true);
    
-   dbms_output.put_line(v_json_doc);
+    dbms_output.put_line(v_json_doc);
 
  end;
 

@@ -4,17 +4,14 @@ declare
     l_customer_id number;
     l_venue_id number;
     l_event_series_id number;
-
-  p_customer_id number;
-  p_event_id number := 1;
-  l_xml xmltype;
+    l_xml xmltype;
 begin
-    l_customer_id := events_api.get_customer_id(l_customer_email);
-    
-    select venue_id into l_venue_id from venues where venue_name = 'The Pink Pony Revue';
-    select max(event_series_id) into l_event_series_id from events where event_name = 'Cool Jazz Evening';
 
-    l_xml := events_xml_api.get_customer_event_series_tickets(p_customer_id => l_customer_id,p_event_series_id => l_event_series_id, p_formatted => true);
+    l_venue_id := events_api.get_venue_id(p_venue_name => 'The Pink Pony Revue');
+    l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => 'Cool Jazz Evening');
+    l_customer_id := events_api.get_customer_id(p_customer_email => l_customer_email);
+
+    l_xml := events_xml_api.get_customer_event_series_tickets(p_customer_id => l_customer_id, p_event_series_id => l_event_series_id, p_formatted => true);
 
     dbms_output.put_line(l_xml.getclobval());
 
@@ -37,13 +34,13 @@ end;
     <event_name>Cool Jazz Evening</event_name>
     <first_event_date>2023-05-04</first_event_date>
     <last_event_date>2023-08-24</last_event_date>
-    <series_tickets_purchased>170</series_tickets_purchased>
+    <series_tickets>170</series_tickets>
   </event_series>
   <events>
     <event>
       <event_id>562</event_id>
       <event_date>2023-05-04</event_date>
-      <event_tickets_purchased>10</event_tickets_purchased>
+      <event_tickets>10</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
           <ticket_group_id>2284</ticket_group_id>
@@ -86,7 +83,7 @@ end;
     <event>
       <event_id>563</event_id>
       <event_date>2023-05-11</event_date>
-      <event_tickets_purchased>10</event_tickets_purchased>
+      <event_tickets>10</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
           <ticket_group_id>2285</ticket_group_id>
@@ -129,7 +126,7 @@ end;
     <event>
       <event_id>564</event_id>
       <event_date>2023-05-18</event_date>
-      <event_tickets_purchased>10</event_tickets_purchased>
+      <event_tickets>10</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
           <ticket_group_id>2286</ticket_group_id>
@@ -172,7 +169,7 @@ end;
     <event>
       <event_id>565</event_id>
       <event_date>2023-05-25</event_date>
-      <event_tickets_purchased>10</event_tickets_purchased>
+      <event_tickets>10</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
           <ticket_group_id>2287</ticket_group_id>
@@ -215,7 +212,7 @@ end;
     <event>
       <event_id>566</event_id>
       <event_date>2023-06-01</event_date>
-      <event_tickets_purchased>10</event_tickets_purchased>
+      <event_tickets>10</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
           <ticket_group_id>2288</ticket_group_id>
@@ -258,7 +255,7 @@ end;
     <event>
       <event_id>567</event_id>
       <event_date>2023-06-08</event_date>
-      <event_tickets_purchased>10</event_tickets_purchased>
+      <event_tickets>10</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
           <ticket_group_id>2289</ticket_group_id>
@@ -301,7 +298,7 @@ end;
     <event>
       <event_id>568</event_id>
       <event_date>2023-06-15</event_date>
-      <event_tickets_purchased>10</event_tickets_purchased>
+      <event_tickets>10</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
           <ticket_group_id>2290</ticket_group_id>
@@ -344,7 +341,7 @@ end;
     <event>
       <event_id>569</event_id>
       <event_date>2023-06-22</event_date>
-      <event_tickets_purchased>10</event_tickets_purchased>
+      <event_tickets>10</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
           <ticket_group_id>2291</ticket_group_id>
@@ -387,7 +384,7 @@ end;
     <event>
       <event_id>570</event_id>
       <event_date>2023-06-29</event_date>
-      <event_tickets_purchased>10</event_tickets_purchased>
+      <event_tickets>10</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
           <ticket_group_id>2292</ticket_group_id>
@@ -430,7 +427,7 @@ end;
     <event>
       <event_id>571</event_id>
       <event_date>2023-07-06</event_date>
-      <event_tickets_purchased>10</event_tickets_purchased>
+      <event_tickets>10</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
           <ticket_group_id>2293</ticket_group_id>
@@ -473,7 +470,7 @@ end;
     <event>
       <event_id>572</event_id>
       <event_date>2023-07-13</event_date>
-      <event_tickets_purchased>10</event_tickets_purchased>
+      <event_tickets>10</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
           <ticket_group_id>2294</ticket_group_id>
@@ -516,7 +513,7 @@ end;
     <event>
       <event_id>573</event_id>
       <event_date>2023-07-20</event_date>
-      <event_tickets_purchased>10</event_tickets_purchased>
+      <event_tickets>10</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
           <ticket_group_id>2295</ticket_group_id>
@@ -559,7 +556,7 @@ end;
     <event>
       <event_id>574</event_id>
       <event_date>2023-07-27</event_date>
-      <event_tickets_purchased>10</event_tickets_purchased>
+      <event_tickets>10</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
           <ticket_group_id>2296</ticket_group_id>
@@ -602,7 +599,7 @@ end;
     <event>
       <event_id>575</event_id>
       <event_date>2023-08-03</event_date>
-      <event_tickets_purchased>10</event_tickets_purchased>
+      <event_tickets>10</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
           <ticket_group_id>2297</ticket_group_id>
@@ -645,7 +642,7 @@ end;
     <event>
       <event_id>576</event_id>
       <event_date>2023-08-10</event_date>
-      <event_tickets_purchased>10</event_tickets_purchased>
+      <event_tickets>10</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
           <ticket_group_id>2298</ticket_group_id>
@@ -688,7 +685,7 @@ end;
     <event>
       <event_id>577</event_id>
       <event_date>2023-08-17</event_date>
-      <event_tickets_purchased>10</event_tickets_purchased>
+      <event_tickets>10</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
           <ticket_group_id>2299</ticket_group_id>
@@ -731,7 +728,7 @@ end;
     <event>
       <event_id>578</event_id>
       <event_date>2023-08-24</event_date>
-      <event_tickets_purchased>10</event_tickets_purchased>
+      <event_tickets>10</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
           <ticket_group_id>2300</ticket_group_id>
@@ -773,5 +770,6 @@ end;
     </event>
   </events>
 </customer_tickets>
+
 
 */

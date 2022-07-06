@@ -5,8 +5,8 @@ declare
     l_xml xmltype;
 begin
 
-    select venue_id into l_venue_id from venues where venue_name = 'The Pink Pony Revue';    
-    select max(event_series_id) into l_event_series_id from events where venue_id = l_venue_id and event_name = 'Cool Jazz Evening';
+    l_venue_id := events_api.get_venue_id(p_venue_name => 'The Pink Pony Revue');
+    l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => 'Cool Jazz Evening');
 
     l_xml := events_xml_api.get_event_series_tickets_available_venue(p_event_series_id => l_event_series_id, p_formatted => true);
 

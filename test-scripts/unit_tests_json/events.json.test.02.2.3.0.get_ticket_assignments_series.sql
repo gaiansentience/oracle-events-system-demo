@@ -1,14 +1,16 @@
 set serveroutput on;
 declare
-  p_event_series_id number := 13;
-  v_json_doc CLOB;
+    l_json_doc clob;
+    l_venue_id number;
+    l_event_series_id number;
 begin
 
-  v_json_doc := events_json_api.get_ticket_assignments_series(
-                                          p_event_series_id => p_event_series_id,
-                                          p_formatted => true);
+    l_venue_id := events_api.get_venue_id(p_venue_name => 'City Stadium');
+    l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => 'Monster Truck Smashup');
 
-  dbms_output.put_line(v_json_doc);
+    l_json_doc := events_json_api.get_ticket_assignments_series(p_event_series_id => l_event_series_id, p_formatted => true);
+
+    dbms_output.put_line(l_json_doc);
 
 end;
 --reply format example
@@ -19,7 +21,7 @@ end;
   "venue_name" : "City Stadium",
   "organizer_email" : "Erin.Johanson@CityStadium.com",
   "organizer_name" : "Erin Johanson",
-  "event_series_id" : 13,
+  "event_series_id" : 41,
   "event_name" : "Monster Truck Smashup",
   "first_event_date" : "2023-06-07T19:00:00",
   "last_event_date" : "2023-08-30T19:00:00",
@@ -33,37 +35,37 @@ end;
       "ticket_assignments" :
       [
         {
-          "price_category" : "VIP PIT ACCESS",
-          "price" : 500,
-          "tickets_in_group" : 500,
-          "tickets_assigned" : 0,
-          "assigned_to_others" : 100,
-          "max_available" : 26,
-          "min_assignment" : 0,
-          "sold_by_reseller" : 0,
-          "sold_by_venue" : 374
-        },
-        {
           "price_category" : "RESERVED SEATING",
           "price" : 350,
           "tickets_in_group" : 4500,
           "tickets_assigned" : 0,
-          "assigned_to_others" : 3000,
-          "max_available" : 924,
+          "assigned_to_others" : 0,
+          "max_available" : 4500,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 576
+          "sold_by_venue" : 0
         },
         {
           "price_category" : "GENERAL ADMISSION",
           "price" : 200,
           "tickets_in_group" : 5000,
           "tickets_assigned" : 0,
-          "assigned_to_others" : 3000,
-          "max_available" : 1374,
+          "assigned_to_others" : 0,
+          "max_available" : 5000,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 626
+          "sold_by_venue" : 0
+        },
+        {
+          "price_category" : "VIP PIT ACCESS",
+          "price" : 500,
+          "tickets_in_group" : 500,
+          "tickets_assigned" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 500,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
         }
       ]
     },
@@ -74,37 +76,37 @@ end;
       "ticket_assignments" :
       [
         {
-          "price_category" : "VIP PIT ACCESS",
-          "price" : 500,
-          "tickets_in_group" : 500,
-          "tickets_assigned" : 0,
-          "assigned_to_others" : 100,
-          "max_available" : 26,
-          "min_assignment" : 0,
-          "sold_by_reseller" : 0,
-          "sold_by_venue" : 374
-        },
-        {
           "price_category" : "RESERVED SEATING",
           "price" : 350,
           "tickets_in_group" : 4500,
           "tickets_assigned" : 0,
-          "assigned_to_others" : 3000,
-          "max_available" : 924,
+          "assigned_to_others" : 0,
+          "max_available" : 4500,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 576
+          "sold_by_venue" : 0
         },
         {
           "price_category" : "GENERAL ADMISSION",
           "price" : 200,
           "tickets_in_group" : 5000,
           "tickets_assigned" : 0,
-          "assigned_to_others" : 3000,
-          "max_available" : 1374,
+          "assigned_to_others" : 0,
+          "max_available" : 5000,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 626
+          "sold_by_venue" : 0
+        },
+        {
+          "price_category" : "VIP PIT ACCESS",
+          "price" : 500,
+          "tickets_in_group" : 500,
+          "tickets_assigned" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 500,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
         }
       ]
     },
@@ -115,37 +117,37 @@ end;
       "ticket_assignments" :
       [
         {
-          "price_category" : "VIP PIT ACCESS",
-          "price" : 500,
-          "tickets_in_group" : 500,
-          "tickets_assigned" : 50,
-          "assigned_to_others" : 50,
-          "max_available" : 76,
-          "min_assignment" : 0,
-          "sold_by_reseller" : 0,
-          "sold_by_venue" : 374
-        },
-        {
           "price_category" : "RESERVED SEATING",
           "price" : 350,
           "tickets_in_group" : 4500,
-          "tickets_assigned" : 1000,
-          "assigned_to_others" : 2000,
-          "max_available" : 1924,
+          "tickets_assigned" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 4500,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 576
+          "sold_by_venue" : 0
         },
         {
           "price_category" : "GENERAL ADMISSION",
           "price" : 200,
           "tickets_in_group" : 5000,
-          "tickets_assigned" : 1000,
-          "assigned_to_others" : 2000,
-          "max_available" : 2374,
+          "tickets_assigned" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 5000,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 626
+          "sold_by_venue" : 0
+        },
+        {
+          "price_category" : "VIP PIT ACCESS",
+          "price" : 500,
+          "tickets_in_group" : 500,
+          "tickets_assigned" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 500,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
         }
       ]
     },
@@ -156,37 +158,37 @@ end;
       "ticket_assignments" :
       [
         {
-          "price_category" : "VIP PIT ACCESS",
-          "price" : 500,
-          "tickets_in_group" : 500,
-          "tickets_assigned" : 0,
-          "assigned_to_others" : 100,
-          "max_available" : 26,
-          "min_assignment" : 0,
-          "sold_by_reseller" : 0,
-          "sold_by_venue" : 374
-        },
-        {
           "price_category" : "RESERVED SEATING",
           "price" : 350,
           "tickets_in_group" : 4500,
           "tickets_assigned" : 0,
-          "assigned_to_others" : 3000,
-          "max_available" : 924,
+          "assigned_to_others" : 0,
+          "max_available" : 4500,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 576
+          "sold_by_venue" : 0
         },
         {
           "price_category" : "GENERAL ADMISSION",
           "price" : 200,
           "tickets_in_group" : 5000,
           "tickets_assigned" : 0,
-          "assigned_to_others" : 3000,
-          "max_available" : 1374,
+          "assigned_to_others" : 0,
+          "max_available" : 5000,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 626
+          "sold_by_venue" : 0
+        },
+        {
+          "price_category" : "VIP PIT ACCESS",
+          "price" : 500,
+          "tickets_in_group" : 500,
+          "tickets_assigned" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 500,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
         }
       ]
     },
@@ -197,37 +199,37 @@ end;
       "ticket_assignments" :
       [
         {
-          "price_category" : "VIP PIT ACCESS",
-          "price" : 500,
-          "tickets_in_group" : 500,
-          "tickets_assigned" : 0,
-          "assigned_to_others" : 100,
-          "max_available" : 26,
-          "min_assignment" : 0,
-          "sold_by_reseller" : 0,
-          "sold_by_venue" : 374
-        },
-        {
           "price_category" : "RESERVED SEATING",
           "price" : 350,
           "tickets_in_group" : 4500,
           "tickets_assigned" : 0,
-          "assigned_to_others" : 3000,
-          "max_available" : 924,
+          "assigned_to_others" : 0,
+          "max_available" : 4500,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 576
+          "sold_by_venue" : 0
         },
         {
           "price_category" : "GENERAL ADMISSION",
           "price" : 200,
           "tickets_in_group" : 5000,
           "tickets_assigned" : 0,
-          "assigned_to_others" : 3000,
-          "max_available" : 1374,
+          "assigned_to_others" : 0,
+          "max_available" : 5000,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 626
+          "sold_by_venue" : 0
+        },
+        {
+          "price_category" : "VIP PIT ACCESS",
+          "price" : 500,
+          "tickets_in_group" : 500,
+          "tickets_assigned" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 500,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
         }
       ]
     },
@@ -238,37 +240,37 @@ end;
       "ticket_assignments" :
       [
         {
-          "price_category" : "VIP PIT ACCESS",
-          "price" : 500,
-          "tickets_in_group" : 500,
-          "tickets_assigned" : 0,
-          "assigned_to_others" : 100,
-          "max_available" : 26,
-          "min_assignment" : 0,
-          "sold_by_reseller" : 0,
-          "sold_by_venue" : 374
-        },
-        {
           "price_category" : "RESERVED SEATING",
           "price" : 350,
           "tickets_in_group" : 4500,
           "tickets_assigned" : 0,
-          "assigned_to_others" : 3000,
-          "max_available" : 924,
+          "assigned_to_others" : 0,
+          "max_available" : 4500,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 576
+          "sold_by_venue" : 0
         },
         {
           "price_category" : "GENERAL ADMISSION",
           "price" : 200,
           "tickets_in_group" : 5000,
           "tickets_assigned" : 0,
-          "assigned_to_others" : 3000,
-          "max_available" : 1374,
+          "assigned_to_others" : 0,
+          "max_available" : 5000,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 626
+          "sold_by_venue" : 0
+        },
+        {
+          "price_category" : "VIP PIT ACCESS",
+          "price" : 500,
+          "tickets_in_group" : 500,
+          "tickets_assigned" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 500,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
         }
       ]
     },
@@ -279,37 +281,37 @@ end;
       "ticket_assignments" :
       [
         {
-          "price_category" : "VIP PIT ACCESS",
-          "price" : 500,
-          "tickets_in_group" : 500,
-          "tickets_assigned" : 0,
-          "assigned_to_others" : 100,
-          "max_available" : 26,
-          "min_assignment" : 0,
-          "sold_by_reseller" : 0,
-          "sold_by_venue" : 374
-        },
-        {
           "price_category" : "RESERVED SEATING",
           "price" : 350,
           "tickets_in_group" : 4500,
           "tickets_assigned" : 0,
-          "assigned_to_others" : 3000,
-          "max_available" : 924,
+          "assigned_to_others" : 0,
+          "max_available" : 4500,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 576
+          "sold_by_venue" : 0
         },
         {
           "price_category" : "GENERAL ADMISSION",
           "price" : 200,
           "tickets_in_group" : 5000,
           "tickets_assigned" : 0,
-          "assigned_to_others" : 3000,
-          "max_available" : 1374,
+          "assigned_to_others" : 0,
+          "max_available" : 5000,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 626
+          "sold_by_venue" : 0
+        },
+        {
+          "price_category" : "VIP PIT ACCESS",
+          "price" : 500,
+          "tickets_in_group" : 500,
+          "tickets_assigned" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 500,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
         }
       ]
     },
@@ -320,37 +322,37 @@ end;
       "ticket_assignments" :
       [
         {
-          "price_category" : "VIP PIT ACCESS",
-          "price" : 500,
-          "tickets_in_group" : 500,
-          "tickets_assigned" : 0,
-          "assigned_to_others" : 100,
-          "max_available" : 26,
-          "min_assignment" : 0,
-          "sold_by_reseller" : 0,
-          "sold_by_venue" : 374
-        },
-        {
           "price_category" : "RESERVED SEATING",
           "price" : 350,
           "tickets_in_group" : 4500,
           "tickets_assigned" : 0,
-          "assigned_to_others" : 3000,
-          "max_available" : 924,
+          "assigned_to_others" : 0,
+          "max_available" : 4500,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 576
+          "sold_by_venue" : 0
         },
         {
           "price_category" : "GENERAL ADMISSION",
           "price" : 200,
           "tickets_in_group" : 5000,
           "tickets_assigned" : 0,
-          "assigned_to_others" : 3000,
-          "max_available" : 1374,
+          "assigned_to_others" : 0,
+          "max_available" : 5000,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 626
+          "sold_by_venue" : 0
+        },
+        {
+          "price_category" : "VIP PIT ACCESS",
+          "price" : 500,
+          "tickets_in_group" : 500,
+          "tickets_assigned" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 500,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
         }
       ]
     },
@@ -361,37 +363,37 @@ end;
       "ticket_assignments" :
       [
         {
-          "price_category" : "VIP PIT ACCESS",
-          "price" : 500,
-          "tickets_in_group" : 500,
-          "tickets_assigned" : 50,
-          "assigned_to_others" : 50,
-          "max_available" : 76,
-          "min_assignment" : 0,
-          "sold_by_reseller" : 0,
-          "sold_by_venue" : 374
-        },
-        {
           "price_category" : "RESERVED SEATING",
           "price" : 350,
           "tickets_in_group" : 4500,
-          "tickets_assigned" : 1000,
-          "assigned_to_others" : 2000,
-          "max_available" : 1924,
+          "tickets_assigned" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 4500,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 576
+          "sold_by_venue" : 0
         },
         {
           "price_category" : "GENERAL ADMISSION",
           "price" : 200,
           "tickets_in_group" : 5000,
-          "tickets_assigned" : 1000,
-          "assigned_to_others" : 2000,
-          "max_available" : 2374,
+          "tickets_assigned" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 5000,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 626
+          "sold_by_venue" : 0
+        },
+        {
+          "price_category" : "VIP PIT ACCESS",
+          "price" : 500,
+          "tickets_in_group" : 500,
+          "tickets_assigned" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 500,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
         }
       ]
     },
@@ -402,37 +404,37 @@ end;
       "ticket_assignments" :
       [
         {
-          "price_category" : "VIP PIT ACCESS",
-          "price" : 500,
-          "tickets_in_group" : 500,
-          "tickets_assigned" : 0,
-          "assigned_to_others" : 100,
-          "max_available" : 26,
-          "min_assignment" : 0,
-          "sold_by_reseller" : 0,
-          "sold_by_venue" : 374
-        },
-        {
           "price_category" : "RESERVED SEATING",
           "price" : 350,
           "tickets_in_group" : 4500,
           "tickets_assigned" : 0,
-          "assigned_to_others" : 3000,
-          "max_available" : 924,
+          "assigned_to_others" : 0,
+          "max_available" : 4500,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 576
+          "sold_by_venue" : 0
         },
         {
           "price_category" : "GENERAL ADMISSION",
           "price" : 200,
           "tickets_in_group" : 5000,
           "tickets_assigned" : 0,
-          "assigned_to_others" : 3000,
-          "max_available" : 1374,
+          "assigned_to_others" : 0,
+          "max_available" : 5000,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 626
+          "sold_by_venue" : 0
+        },
+        {
+          "price_category" : "VIP PIT ACCESS",
+          "price" : 500,
+          "tickets_in_group" : 500,
+          "tickets_assigned" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 500,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
         }
       ]
     },
@@ -443,37 +445,37 @@ end;
       "ticket_assignments" :
       [
         {
-          "price_category" : "VIP PIT ACCESS",
-          "price" : 500,
-          "tickets_in_group" : 500,
-          "tickets_assigned" : 0,
-          "assigned_to_others" : 100,
-          "max_available" : 26,
-          "min_assignment" : 0,
-          "sold_by_reseller" : 0,
-          "sold_by_venue" : 374
-        },
-        {
           "price_category" : "RESERVED SEATING",
           "price" : 350,
           "tickets_in_group" : 4500,
           "tickets_assigned" : 0,
-          "assigned_to_others" : 3000,
-          "max_available" : 924,
+          "assigned_to_others" : 0,
+          "max_available" : 4500,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 576
+          "sold_by_venue" : 0
         },
         {
           "price_category" : "GENERAL ADMISSION",
           "price" : 200,
           "tickets_in_group" : 5000,
           "tickets_assigned" : 0,
-          "assigned_to_others" : 3000,
-          "max_available" : 1374,
+          "assigned_to_others" : 0,
+          "max_available" : 5000,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 626
+          "sold_by_venue" : 0
+        },
+        {
+          "price_category" : "VIP PIT ACCESS",
+          "price" : 500,
+          "tickets_in_group" : 500,
+          "tickets_assigned" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 500,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
         }
       ]
     },
@@ -484,37 +486,119 @@ end;
       "ticket_assignments" :
       [
         {
-          "price_category" : "VIP PIT ACCESS",
-          "price" : 500,
-          "tickets_in_group" : 500,
-          "tickets_assigned" : 0,
-          "assigned_to_others" : 100,
-          "max_available" : 26,
-          "min_assignment" : 0,
-          "sold_by_reseller" : 0,
-          "sold_by_venue" : 374
-        },
-        {
           "price_category" : "RESERVED SEATING",
           "price" : 350,
           "tickets_in_group" : 4500,
-          "tickets_assigned" : 1000,
-          "assigned_to_others" : 2000,
-          "max_available" : 1924,
+          "tickets_assigned" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 4500,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 576
+          "sold_by_venue" : 0
         },
         {
           "price_category" : "GENERAL ADMISSION",
           "price" : 200,
           "tickets_in_group" : 5000,
-          "tickets_assigned" : 1000,
-          "assigned_to_others" : 2000,
-          "max_available" : 2374,
+          "tickets_assigned" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 5000,
           "min_assignment" : 0,
           "sold_by_reseller" : 0,
-          "sold_by_venue" : 626
+          "sold_by_venue" : 0
+        },
+        {
+          "price_category" : "VIP PIT ACCESS",
+          "price" : 500,
+          "tickets_in_group" : 500,
+          "tickets_assigned" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 500,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
+        }
+      ]
+    },
+    {
+      "reseller_id" : 12,
+      "reseller_name" : "Easy Tickets",
+      "reseller_email" : "ticket.sales@EasyTickets.com",
+      "ticket_assignments" :
+      [
+        {
+          "price_category" : "RESERVED SEATING",
+          "price" : 350,
+          "tickets_in_group" : 4500,
+          "tickets_assigned" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 4500,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
+        },
+        {
+          "price_category" : "GENERAL ADMISSION",
+          "price" : 200,
+          "tickets_in_group" : 5000,
+          "tickets_assigned" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 5000,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
+        },
+        {
+          "price_category" : "VIP PIT ACCESS",
+          "price" : 500,
+          "tickets_in_group" : 500,
+          "tickets_assigned" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 500,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
+        }
+      ]
+    },
+    {
+      "reseller_id" : 41,
+      "reseller_name" : "Ticket Factory",
+      "reseller_email" : "ticket.sales@TicketFactory.com",
+      "ticket_assignments" :
+      [
+        {
+          "price_category" : "RESERVED SEATING",
+          "price" : 350,
+          "tickets_in_group" : 4500,
+          "tickets_assigned" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 4500,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
+        },
+        {
+          "price_category" : "GENERAL ADMISSION",
+          "price" : 200,
+          "tickets_in_group" : 5000,
+          "tickets_assigned" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 5000,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
+        },
+        {
+          "price_category" : "VIP PIT ACCESS",
+          "price" : 500,
+          "tickets_in_group" : 500,
+          "tickets_assigned" : 0,
+          "assigned_to_others" : 0,
+          "max_available" : 500,
+          "min_assignment" : 0,
+          "sold_by_reseller" : 0,
+          "sold_by_venue" : 0
         }
       ]
     }

@@ -1,47 +1,32 @@
 set serveroutput on;
 declare
    v_json_doc varchar2(32000);
-   v_event_id number := 10;
 begin
 v_json_doc := 
 '
 {
-  "venue_id" : 1,
-  "venue_name" : "City Stadium",
-  "event_id" : 16,
-  "event_name" : "The Specials",
-  "event_tickets_available" : 20000,
+  "venue_id" : 41,
+  "venue_name" : "Another Roadside Attraction",
+  "event_id" : 581,
+  "event_name" : "New Years Mischief",
+  "event_date" : "2023-12-31T20:00:00",
+  "event_tickets_available" : 400,
   "ticket_groups" :
   [
     {
-      "ticket_group_id" : 958,
-      "price_category" : "BACKSTAGE-ALL ACCESS",
+      "price_category" : "SPONSOR",
       "price" : 150,
-      "tickets_available" : 2500
+      "tickets_available" : 50
     },
     {
-      "ticket_group_id" : 959,
       "price_category" : "VIP",
-      "price" : 100,
-      "tickets_available" : 2500
+      "price" : 80,
+      "tickets_available" : 50
     },
     {
-      "ticket_group_id" : 960,
-      "price_category" : "EARLYBIRD DISCOUNT",
-      "price" : 40,
-      "tickets_available" : 2000
-    },
-    {
-      "ticket_group_id" : 961,
-      "price_category" : "RESERVED SEATING",
-      "price" : 75,
-      "tickets_available" : 3000
-    },
-    {
-      "ticket_group_id" : 962,
       "price_category" : "GENERAL ADMISSION",
       "price" : 50,
-      "tickets_available" : 10000
+      "tickets_available" : 300
     }
   ]
 }
@@ -59,50 +44,35 @@ end;
 --reply for successful update/creation
 /*
 {
-  "venue_id" : 1,
-  "venue_name" : "City Stadium",
-  "event_id" : 16,
-  "event_name" : "The Specials",
-  "event_tickets_available" : 20000,
+  "venue_id" : 41,
+  "venue_name" : "Another Roadside Attraction",
+  "event_id" : 581,
+  "event_name" : "New Years Mischief",
+  "event_date" : "2023-12-31T20:00:00",
+  "event_tickets_available" : 400,
   "ticket_groups" :
   [
     {
-      "price_category" : "BACKSTAGE-ALL ACCESS",
+      "price_category" : "SPONSOR",
       "price" : 150,
-      "tickets_available" : 2500,
-      "ticket_group_id" : 958,
+      "tickets_available" : 50,
+      "ticket_group_id" : 2321,
       "status_code" : "SUCCESS",
       "status_message" : "Created/updated ticket group"
     },
     {
       "price_category" : "VIP",
-      "price" : 100,
-      "tickets_available" : 2500,
-      "ticket_group_id" : 959,
-      "status_code" : "SUCCESS",
-      "status_message" : "Created/updated ticket group"
-    },
-    {
-      "price_category" : "EARLYBIRD DISCOUNT",
-      "price" : 40,
-      "tickets_available" : 2000,
-      "ticket_group_id" : 960,
-      "status_code" : "SUCCESS",
-      "status_message" : "Created/updated ticket group"
-    },
-    {
-      "price_category" : "RESERVED SEATING",
-      "price" : 75,
-      "tickets_available" : 2000,
-      "ticket_group_id" : 961,
+      "price" : 80,
+      "tickets_available" : 50,
+      "ticket_group_id" : 2322,
       "status_code" : "SUCCESS",
       "status_message" : "Created/updated ticket group"
     },
     {
       "price_category" : "GENERAL ADMISSION",
       "price" : 50,
-      "tickets_available" : 10000,
-      "ticket_group_id" : 962,
+      "tickets_available" : 300,
+      "ticket_group_id" : 2323,
       "status_code" : "SUCCESS",
       "status_message" : "Created/updated ticket group"
     }
@@ -110,8 +80,5 @@ end;
   "request_status" : "SUCCESS",
   "request_errors" : 0
 }
-
-
-PL/SQL procedure successfully completed.
 
 */

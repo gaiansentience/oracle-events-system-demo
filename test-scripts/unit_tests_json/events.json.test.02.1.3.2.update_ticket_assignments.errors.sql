@@ -4,19 +4,28 @@ declare
    v_event_id number := 10;
 begin
 v_json_doc := 
-'{
-  "event_id" : 10,
+'
+{
+  "venue_id" : 41,
+  "venue_name" : "Another Roadside Attraction",
+  "event_id" : 581,
+  "event_name" : "New Years Mischief",
   "ticket_resellers" :
   [
     {
-      "reseller_id" : 2,
-      "reseller_name" : "MaxTix",
+      "reseller_id" : 21,
+      "reseller_name" : "New Wave Tickets",
       "ticket_assignments" :
       [
         {
-          "ticket_group_id" : 942,
+          "ticket_group_id" : 2322,
+          "price_category" : "VIP",
+          "tickets_assigned" : 10
+        },
+        {
+          "ticket_group_id" : 2323,
           "price_category" : "GENERAL ADMISSION",
-          "tickets_assigned" : 10000
+          "tickets_assigned" : 500
         }
       ]
     },
@@ -26,43 +35,19 @@ v_json_doc :=
       "ticket_assignments" :
       [
         {
-          "ticket_group_id" : 942,
-          "price_category" : "GENERAL ADMISSION",
-          "tickets_assigned" : 1000
+          "ticket_group_id" : 2321,
+          "price_category" : "SPONSOR",
+          "tickets_assigned" : 10
         },
         {
-          "ticket_group_id" : 941,
-          "price_category" : "RESERVED SEATING",
-          "tickets_assigned" : 100
-        }
-      ]
-    },
-    {
-      "reseller_id" : 5,
-      "reseller_name" : "The Source",
-      "ticket_assignments" :
-      [
-        {
-          "ticket_group_id" : 942,
-          "price_category" : "GENERAL ADMISSION",
-          "tickets_assigned" : 100
-        },
-        {
-          "ticket_group_id" : 939,
+          "ticket_group_id" : 2322,
           "price_category" : "VIP",
-          "tickets_assigned" : 10000
-        }
-      ]
-    },
-    {
-      "reseller_id" : 7,
-      "reseller_name" : "Ticket Time",
-      "ticket_assignments" :
-      [
+          "tickets_assigned" : 150
+        },
         {
-          "ticket_group_id" : 940,
-          "price_category" : "EARLYBIRD DISCOUNT",
-          "tickets_assigned" : 25000
+          "ticket_group_id" : 2323,
+          "price_category" : "GENERAL ADMISSION",
+          "tickets_assigned" : 50
         }
       ]
     },
@@ -72,14 +57,16 @@ v_json_doc :=
       "ticket_assignments" :
       [
         {
-          "ticket_group_id" : 942,
+          "ticket_group_id" : 2323,
           "price_category" : "GENERAL ADMISSION",
-          "tickets_assigned" : 100
+          "tickets_assigned" : 5000
         }
       ]
     }
   ]
-}';
+}
+
+';
 
 
 events_json_api.update_ticket_assignments(p_json_doc => v_json_doc);
@@ -94,21 +81,32 @@ end;
 --reply for update with errors
 /*
 {
-  "event_id" : 10,
+  "venue_id" : 41,
+  "venue_name" : "Another Roadside Attraction",
+  "event_id" : 581,
+  "event_name" : "New Years Mischief",
   "ticket_resellers" :
   [
     {
-      "reseller_id" : 2,
-      "reseller_name" : "MaxTix",
+      "reseller_id" : 21,
+      "reseller_name" : "New Wave Tickets",
       "ticket_assignments" :
       [
         {
-          "ticket_group_id" : 942,
+          "ticket_group_id" : 2322,
+          "price_category" : "VIP",
+          "tickets_assigned" : 10,
+          "ticket_assignment_id" : 9901,
+          "status_code" : "SUCCESS",
+          "status_message" : "created/updated ticket group assignment"
+        },
+        {
+          "ticket_group_id" : 2323,
           "price_category" : "GENERAL ADMISSION",
-          "tickets_assigned" : 10000,
+          "tickets_assigned" : 500,
           "ticket_assignment_id" : 0,
           "status_code" : "ERROR",
-          "status_message" : "ORA-20100: Cannot assign 10000 tickets for  GENERAL ADMISSION to reseller, maximum available are 7300"
+          "status_message" : "ORA-20100: Cannot assign 500 tickets for  GENERAL ADMISSION to reseller, maximum available are 200"
         }
       ],
       "reseller_status" : "ERRORS",
@@ -120,62 +118,28 @@ end;
       "ticket_assignments" :
       [
         {
-          "ticket_group_id" : 942,
-          "price_category" : "GENERAL ADMISSION",
-          "tickets_assigned" : 1000,
-          "ticket_assignment_id" : 267,
+          "ticket_group_id" : 2321,
+          "price_category" : "SPONSOR",
+          "tickets_assigned" : 10,
+          "ticket_assignment_id" : 9903,
           "status_code" : "SUCCESS",
           "status_message" : "created/updated ticket group assignment"
         },
         {
-          "ticket_group_id" : 941,
-          "price_category" : "RESERVED SEATING",
-          "tickets_assigned" : 100,
-          "ticket_assignment_id" : 256,
-          "status_code" : "SUCCESS",
-          "status_message" : "created/updated ticket group assignment"
-        }
-      ],
-      "reseller_status" : "SUCCESS",
-      "reseller_errors" : 0
-    },
-    {
-      "reseller_id" : 5,
-      "reseller_name" : "The Source",
-      "ticket_assignments" :
-      [
-        {
-          "ticket_group_id" : 942,
-          "price_category" : "GENERAL ADMISSION",
-          "tickets_assigned" : 100,
-          "ticket_assignment_id" : 269,
-          "status_code" : "SUCCESS",
-          "status_message" : "created/updated ticket group assignment"
-        },
-        {
-          "ticket_group_id" : 939,
+          "ticket_group_id" : 2322,
           "price_category" : "VIP",
-          "tickets_assigned" : 10000,
+          "tickets_assigned" : 150,
           "ticket_assignment_id" : 0,
           "status_code" : "ERROR",
-          "status_message" : "ORA-20100: Cannot assign 10000 tickets for  VIP to reseller, maximum available are 500"
-        }
-      ],
-      "reseller_status" : "ERRORS",
-      "reseller_errors" : 1
-    },
-    {
-      "reseller_id" : 7,
-      "reseller_name" : "Ticket Time",
-      "ticket_assignments" :
-      [
+          "status_message" : "ORA-20100: Cannot assign 150 tickets for  VIP to reseller, maximum available are 40"
+        },
         {
-          "ticket_group_id" : 940,
-          "price_category" : "EARLYBIRD DISCOUNT",
-          "tickets_assigned" : 25000,
-          "ticket_assignment_id" : 0,
-          "status_code" : "ERROR",
-          "status_message" : "ORA-20100: Cannot assign 25000 tickets for  EARLYBIRD DISCOUNT to reseller, maximum available are 1000"
+          "ticket_group_id" : 2323,
+          "price_category" : "GENERAL ADMISSION",
+          "tickets_assigned" : 50,
+          "ticket_assignment_id" : 9905,
+          "status_code" : "SUCCESS",
+          "status_message" : "created/updated ticket group assignment"
         }
       ],
       "reseller_status" : "ERRORS",
@@ -187,19 +151,24 @@ end;
       "ticket_assignments" :
       [
         {
-          "ticket_group_id" : 942,
+          "ticket_group_id" : 2323,
           "price_category" : "GENERAL ADMISSION",
-          "tickets_assigned" : 100,
-          "ticket_assignment_id" : 274,
-          "status_code" : "SUCCESS",
-          "status_message" : "created/updated ticket group assignment"
+          "tickets_assigned" : 5000,
+          "ticket_assignment_id" : 0,
+          "status_code" : "ERROR",
+          "status_message" : "ORA-20100: Cannot assign 5000 tickets for  GENERAL ADMISSION to reseller, maximum available are 200"
         }
       ],
-      "reseller_status" : "SUCCESS",
-      "reseller_errors" : 0
+      "reseller_status" : "ERRORS",
+      "reseller_errors" : 1
     }
   ],
   "request_status" : "ERRORS",
   "request_errors" : 3
 }
+
+
+PL/SQL procedure successfully completed.
+
+
 */

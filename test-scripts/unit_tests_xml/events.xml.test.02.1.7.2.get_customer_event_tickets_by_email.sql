@@ -1,11 +1,13 @@
 set serveroutput on;
 declare
     l_customer_email varchar2(50) := 'James.Kirk@example.customer.com';
+    l_venue_id number;
     l_event_id number;
     l_xml xmltype;
 begin
 
-    select event_id into l_event_id from events where event_name = 'Evangeline Thorpe';
+    l_venue_id := events_api.get_venue_id(p_venue_name => 'The Pink Pony Revue');
+    l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'Evangeline Thorpe');
 
     l_xml := events_xml_api.get_customer_event_tickets_by_email(p_customer_email => l_customer_email, p_event_id => l_event_id, p_formatted => true);
 
@@ -14,7 +16,6 @@ begin
 end;
 
 /*
-
 <customer_tickets>
   <customer>
     <customer_id>3961</customer_id>
@@ -29,7 +30,7 @@ end;
     <event_id>561</event_id>
     <event_name>Evangeline Thorpe</event_name>
     <event_date>2023-05-01</event_date>
-    <event_tickets_purchased>6</event_tickets_purchased>
+    <event_tickets>6</event_tickets>
     <event_ticket_purchases>
       <ticket_purchase>
         <ticket_group_id>2282</ticket_group_id>
@@ -50,10 +51,5 @@ end;
     </event_ticket_purchases>
   </event>
 </customer_tickets>
-
-
-
-PL/SQL procedure successfully completed.
-
 
 */

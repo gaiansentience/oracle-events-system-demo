@@ -8,7 +8,7 @@ begin
 
    v_json_doc := 
 '{
-  "customer_name" : "Andi Warenko",
+  "customer_name" : "Andi Warenkov",
   "customer_email" : "Andi.Warenko@example.customer.com"
 }';
 
@@ -22,19 +22,19 @@ begin
 {
   "customer_name" : "Andi Warenko",
   "customer_email" : "Andi.Warenko@example.customer.com",
-  "customer_id" : 1041,
+  "customer_id" : 4981,
   "status_code" : "SUCCESS",
   "status_message" : "Created customer"
 }
-*/
 
-/*  reply document for duplicate existing customer email
-    --??should this give current customer id for the email?
+--if email exists then customer id is returned
+--if existing customer and name is different name is updated
 {
-  "customer_name" : "Andi Warenko",
+  "customer_name" : "Andi Warenkov",
   "customer_email" : "Andi.Warenko@example.customer.com",
-  "customer_id" : 0,
-  "status_code" : "ERROR",
-  "status_message" : "ORA-00001: unique constraint (CUSTOMERS_U_CUSTOMER_EMAIL) violated"
+  "customer_id" : 4981,
+  "status_code" : "SUCCESS",
+  "status_message" : "Created customer"
 }
+
 */

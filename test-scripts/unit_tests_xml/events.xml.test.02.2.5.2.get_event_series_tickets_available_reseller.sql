@@ -1,14 +1,14 @@
 set serveroutput on;
 declare
     l_venue_id number;
-    l_event_series_id number := 15;
+    l_event_series_id number;
     l_reseller_id number;
     l_xml xmltype;
 begin
 
-    select venue_id into l_venue_id from venues where venue_name = 'The Pink Pony Revue';    
-    select max(event_series_id) into l_event_series_id from events where venue_id = l_venue_id and event_name = 'Cool Jazz Evening';
-    select reseller_id into l_reseller_id from resellers where reseller_name = 'Old School';
+    l_venue_id := events_api.get_venue_id(p_venue_name => 'The Pink Pony Revue');
+    l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => 'Cool Jazz Evening');
+    l_reseller_id := events_api.get_reseller_id(p_reseller_name => 'Old School');
 
     l_xml := events_xml_api.get_event_series_tickets_available_reseller(p_event_series_id => l_event_series_id, p_reseller_id => l_reseller_id, p_formatted => true);
 
@@ -38,7 +38,7 @@ end;
         <reseller>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-          <tickets_available>255</tickets_available>
+          <tickets_available>187</tickets_available>
           <events_available>17</events_available>
           <events_sold_out>0</events_sold_out>
         </reseller>
@@ -51,7 +51,7 @@ end;
         <reseller>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-          <tickets_available>850</tickets_available>
+          <tickets_available>748</tickets_available>
           <events_available>17</events_available>
           <events_sold_out>0</events_sold_out>
         </reseller>
@@ -59,6 +59,7 @@ end;
     </ticket_group>
   </ticket_groups>
 </event_series_ticket_availability>
+
 
 
 */

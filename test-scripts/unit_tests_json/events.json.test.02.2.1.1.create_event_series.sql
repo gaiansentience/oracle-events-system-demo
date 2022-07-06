@@ -7,6 +7,7 @@ begin
    v_json_doc := 
 '{
   "venue_id" : 1,
+  "venue_name" : "City Stadium",
   "event_name" : "Monster Truck Smashup",
   "event_start_date" : "2023-06-01T19:00:00",
   "event_end_date" : "2023-09-01T19:00:00",
@@ -21,8 +22,10 @@ begin
 end;
 
 /*  reply document for success
+
 {
   "venue_id" : 1,
+  "venue_name" : "City Stadium",
   "event_name" : "Monster Truck Smashup",
   "event_start_date" : "2023-06-01T19:00:00",
   "event_end_date" : "2023-09-01T19:00:00",
@@ -30,87 +33,93 @@ end;
   "tickets_available" : 10000,
   "request_status_code" : "SUCCESS",
   "request_status_message" : "13 events for (Monster Truck Smashup) created successfully. 0 events could not be created because of conflicts with existing events.",
-  "event_series_id" : 13,
+  "event_series_id" : 41,
   "event_series_details" :
   [
     {
-      "event_id" : 430,
+      "event_id" : 582,
       "event_date" : "2023-06-07T19:00:00",
       "status_code" : "SUCCESS",
       "status_message" : "Event Created"
     },
     {
-      "event_id" : 431,
+      "event_id" : 583,
       "event_date" : "2023-06-14T19:00:00",
       "status_code" : "SUCCESS",
       "status_message" : "Event Created"
     },
     {
-      "event_id" : 432,
+      "event_id" : 584,
       "event_date" : "2023-06-21T19:00:00",
       "status_code" : "SUCCESS",
       "status_message" : "Event Created"
     },
     {
-      "event_id" : 433,
+      "event_id" : 585,
       "event_date" : "2023-06-28T19:00:00",
       "status_code" : "SUCCESS",
       "status_message" : "Event Created"
     },
     {
-      "event_id" : 434,
+      "event_id" : 586,
       "event_date" : "2023-07-05T19:00:00",
       "status_code" : "SUCCESS",
       "status_message" : "Event Created"
     },
     {
-      "event_id" : 435,
+      "event_id" : 587,
       "event_date" : "2023-07-12T19:00:00",
       "status_code" : "SUCCESS",
       "status_message" : "Event Created"
     },
     {
-      "event_id" : 436,
+      "event_id" : 588,
       "event_date" : "2023-07-19T19:00:00",
       "status_code" : "SUCCESS",
       "status_message" : "Event Created"
     },
     {
-      "event_id" : 437,
+      "event_id" : 589,
       "event_date" : "2023-07-26T19:00:00",
       "status_code" : "SUCCESS",
       "status_message" : "Event Created"
     },
     {
-      "event_id" : 438,
+      "event_id" : 590,
       "event_date" : "2023-08-02T19:00:00",
       "status_code" : "SUCCESS",
       "status_message" : "Event Created"
     },
     {
-      "event_id" : 439,
+      "event_id" : 591,
       "event_date" : "2023-08-09T19:00:00",
       "status_code" : "SUCCESS",
       "status_message" : "Event Created"
     },
     {
-      "event_id" : 440,
+      "event_id" : 592,
       "event_date" : "2023-08-16T19:00:00",
       "status_code" : "SUCCESS",
       "status_message" : "Event Created"
     },
     {
-      "event_id" : 441,
+      "event_id" : 593,
       "event_date" : "2023-08-23T19:00:00",
       "status_code" : "SUCCESS",
       "status_message" : "Event Created"
     },
     {
-      "event_id" : 442,
+      "event_id" : 594,
       "event_date" : "2023-08-30T19:00:00",
       "status_code" : "SUCCESS",
       "status_message" : "Event Created"
     }
   ]
 }
+
+
+PL/SQL procedure successfully completed.
+
+
+
 */

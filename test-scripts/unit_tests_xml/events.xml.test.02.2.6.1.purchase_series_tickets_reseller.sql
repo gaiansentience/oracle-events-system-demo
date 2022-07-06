@@ -1,7 +1,8 @@
 set serveroutput on;
 declare
-  p_xml_doc xmltype;
-  l_xml varchar2(4000);
+    p_xml_doc xmltype;
+    l_xml varchar2(4000);
+    l_customer_id number;
 begin
 
 l_xml := 
@@ -39,6 +40,13 @@ l_xml :=
 </ticket_purchase_request>
 ';
     p_xml_doc := xmltype(l_xml);
+    
+    l_customer_id := events_api.get_customer_id(p_customer_email => 'Gary.Walsh@example.customer.com');
+    
+    delete from tickets t where t.ticket_sales_id in (select ts.ticket_sales_id from ticket_sales ts where ts.customer_id = l_customer_id);
+    delete from ticket_sales ts where ts.customer_id = l_customer_id;
+    commit;
+    
 
     events_xml_api.purchase_tickets_reseller_series(p_xml_doc => p_xml_doc);
 
@@ -96,5 +104,10 @@ end;
   <total_purchase_amount>5950</total_purchase_amount>
   <purchase_disclaimer>All Ticket Sales Are Final.</purchase_disclaimer>
 </ticket_purchase_request>
+
+
+
+PL/SQL procedure successfully completed.
+
 
 */

@@ -4,7 +4,7 @@ declare
     l_xml xmltype;
 begin
 
-    select venue_id into l_venue_id from venues where venue_name = 'The Pink Pony Revue';
+    l_venue_id := events_api.get_venue_id(p_venue_name => 'The Pink Pony Revue');
 
     l_xml := events_xml_api.get_venue_events(p_venue_id => l_venue_id,p_formatted => true);
 

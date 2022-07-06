@@ -7,15 +7,16 @@ set serveroutput on;
 declare
     l_reseller_id number;
     l_event_id number;
+    l_venue_id number;
     type r_assign is record(price_category varchar2(50), ticket_group_id number, quantity number, assignment_id number);
     type t_assign is table of r_assign index by pls_integer;
     l_assign t_assign;
     
 begin
 
-select reseller_id into l_reseller_id from resellers where reseller_name = 'Old School';
-
-select event_id into l_event_id from events where event_name = 'The New Toys';
+    l_reseller_id := events_api.get_reseller_id(p_reseller_name => 'Old School');
+    l_venue_id := events_api.get_venue_id(p_venue_name => 'City Stadium');
+    l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'The New Toys');
 
 l_assign(1).price_category := 'GENERAL ADMISSION';
 l_assign(1).quantity := 20000;

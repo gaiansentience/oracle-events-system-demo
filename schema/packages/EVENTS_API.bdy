@@ -54,6 +54,27 @@ as
             --do not raise errors from logging routine
             rollback;
     end log_error;
+    
+    function get_venue_id
+    (
+        p_venue_name in varchar2
+    ) return number
+    is
+        l_venue_id number;
+    begin
+        
+        select v.venue_id
+        into l_venue_id
+        from venues v
+        where upper(v.venue_name) = upper(p_venue_name);
+        
+        return l_venue_id;
+        
+    exception
+        when others then
+            log_error(sqlerrm, sqlcode,'get_venue_id');
+            raise;                                
+    end get_venue_id;
 
     procedure create_venue
     (
@@ -116,6 +137,27 @@ as
             vs.venue_name;
     
     end show_venues_summary;
+
+    function get_reseller_id
+    (
+        p_reseller_name in varchar2
+    ) return number
+    is
+        l_reseller_id number;
+    begin
+        
+        select r.reseller_id
+        into l_reseller_id
+        from resellers r
+        where upper(r.reseller_name) = upper(p_reseller_name);
+        
+        return l_reseller_id;
+        
+    exception
+        when others then
+            log_error(sqlerrm, sqlcode,'get_reseller_id');
+            raise;                        
+    end get_reseller_id;
    
     procedure create_reseller
     (
@@ -224,11 +266,11 @@ as
             into v_customer_id;
         
         else
-        
-            update event_system.customers
-            set customer_name = p_customer_name
-            where customer_id = v_customer_id;
-            
+            if p_customer_name is not null then
+                update event_system.customers
+                set customer_name = p_customer_name
+                where customer_id = v_customer_id;
+            end if;
         end if;
         
         commit;
@@ -240,6 +282,55 @@ as
             log_error(sqlerrm, sqlcode,'create_customer');
             raise;
     end create_customer;
+
+    function get_event_id
+    (
+        p_venue_id in number,
+        p_event_name in varchar2
+    ) return number
+    is
+        l_event_id number;
+    begin
+        
+        select e.event_id
+        into l_event_id
+        from events e
+        where 
+            e.venue_id = p_venue_id
+            and upper(e.event_name) = upper(p_event_name);
+        
+        return l_event_id;
+    
+    exception
+        when others then
+            log_error(sqlerrm, sqlcode,'get_event_id');
+            raise;        
+    end get_event_id;
+
+    function get_event_series_id
+    (
+        p_venue_id in number,
+        p_event_name in varchar2
+    ) return number
+    is
+        l_event_series_id number;
+    begin
+        
+        select max(e.event_series_id)
+        into l_event_series_id
+        from events e
+        where 
+            e.venue_id = p_venue_id
+            and upper(e.event_name) = upper(p_event_name);
+        
+        return l_event_series_id;
+    
+    exception
+        when others then
+            log_error(sqlerrm, sqlcode,'get_event_series_id');
+            raise;                
+    end get_event_series_id;
+
    
     procedure verify_event_capacity
     (

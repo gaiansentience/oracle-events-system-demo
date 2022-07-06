@@ -3,6 +3,7 @@ set serveroutput on;
 declare
     v_old_school_id     number;
     v_tickets_r_us_id number;
+    v_venue_id number;
     v_event_series_id number;
 
     type r_assign is record(reseller_id number, reseller_name varchar2(100),price_category ticket_groups.price_category%type, tickets number);
@@ -12,20 +13,18 @@ declare
     v_status_message varchar2(4000);
 begin
 
-    select reseller_id into v_old_school_id from resellers where reseller_name = 'Old School';
-    select reseller_id into v_tickets_r_us_id from resellers where reseller_name = 'Tickets R Us';
+    v_venue_id := events_api.get_venue_id(p_venue_name => 'City Stadium');
+    v_event_series_id := events_api.get_event_series_id(p_venue_id => v_venue_id, p_event_name => 'Hometown Hockey League');
 
+    v_old_school_id := events_api.get_reseller_id(p_reseller_name => 'Old School');
+    v_tickets_r_us_id := events_api.get_reseller_id(p_reseller_name => 'Tickets R Us');
+    
     v_assign(1) := r_assign(v_old_school_id, 'Old School','GENERAL ADMISSION', 1000);
     v_assign(2) := r_assign(v_old_school_id, 'Old School', 'VIP', 250);
     v_assign(3) := r_assign(v_old_school_id, 'Old School', 'EARLY PURCHASE DISCOUNT', 250);
     v_assign(4) := r_assign(v_tickets_r_us_id, 'Tickets R Us', 'GENERAL ADMISSION', 1000);
     v_assign(5) := r_assign(v_tickets_r_us_id, 'Tickets R Us', 'VIP', 250);
     v_assign(6) := r_assign(v_tickets_r_us_id, 'Tickets R Us', 'EARLY PURCHASE DISCOUNT', 250);
-
-    select max(event_series_id) 
-    into v_event_series_id 
-    from events 
-    where event_name = 'Hometown Hockey League';
   
     for i in 1..v_assign.count loop
         events_api.create_ticket_assignment_event_series(
