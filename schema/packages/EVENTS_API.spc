@@ -16,6 +16,15 @@ as
         p_venue_id out number
     );
     
+    procedure update_venue
+    (
+        p_venue_id in number,
+        p_venue_name in varchar2,
+        p_organizer_name in varchar2,
+        p_organizer_email in varchar2,   
+        p_max_event_capacity in number  
+    );    
+    
     procedure show_venues_summary
     (
         p_venues out sys_refcursor
@@ -33,7 +42,15 @@ as
         p_commission_percent in number default 0.10,
         p_reseller_id out number
     );
-
+    
+    procedure update_reseller
+    (
+        p_reseller_id in number,    
+        p_reseller_name in varchar2,
+        p_reseller_email in varchar2,
+        p_commission_percent in number default 0.10    
+    );
+    
     procedure show_resellers
     (
         p_resellers out sys_refcursor
@@ -50,6 +67,13 @@ as
         p_customer_email in varchar2,
         p_customer_id out number
     );   
+    
+    procedure update_customer
+    (
+        p_customer_id in number,
+        p_customer_name in varchar2,
+        p_customer_email in varchar2
+    );
     
     function get_event_id
     (
@@ -421,6 +445,86 @@ as
         p_customer_email in varchar2,
         p_event_series_id in number,
         p_tickets out sys_refcursor
+    );
+      
+    --use to replace customer lost tickets
+    --update ticket status to REISSUED and add R to the serial code
+    --raise error if customer is not the original purchaser
+    --raise error if ticket status is REISSUED or VALIDATED
+    procedure reissue_ticket
+    (
+        p_customer_id in number,
+        p_ticket_serial_code in varchar2
+    );
+    
+    procedure reissue_ticket_using_email
+    (
+        p_customer_email in varchar2,
+        p_ticket_serial_code in varchar2
+    );
+
+    type r_ticket_reissue_request is record
+        (
+            customer_id customers.customer_id%type,
+            customer_email customers.customer_email%type,
+            serial_code tickets.serial_code%type, 
+            status varchar2(20), 
+            status_message varchar2(4000)
+        );
+    
+    type t_ticket_reissues is table of r_ticket_reissue_request index by pls_integer;
+
+    procedure reissue_tickets
+    (
+        p_tickets in out t_ticket_reissues
+    );
+
+    procedure reissue_tickets_using_email
+    (
+        p_tickets in out t_ticket_reissues
+    );
+
+    --validate that the ticket has been used for event entry
+    --raise error if ticket was sold for a different event
+    --raise error if ticket status is not ISSUED or REISSUED
+    --raise error if ticket status is already VALIDATED
+    --set valid ticket status to VALIDATED
+    procedure validate_ticket
+    (
+        p_event_id in number,
+        p_ticket_serial_code in varchar2
+    );
+
+    type r_ticket_validation_request is record
+        (
+            event_id events.event_id%type, 
+            serial_code tickets.serial_code%type, 
+            status varchar2(20), 
+            status_message varchar2(4000)
+        );
+    
+    type t_ticket_validations is table of r_ticket_validation_request index by pls_integer;
+    
+    procedure validate_tickets
+    (
+        p_tickets in out t_ticket_validations
+    );
+    
+    --used to verify that the ticket was used to enter the event
+    --verify that the ticket status is VALIDATED
+    --raise error for any other status
+    procedure verify_ticket_validation
+    (
+        p_serial_code in varchar2
+    );
+    
+    --used to enter restricted areas like RESERVED SEATING, VIP, etc
+    --verify that the ticket serial number was purchased in the ticket group
+    --raise error if ticket is not part of the ticket group
+    procedure verify_ticket_restricted_access
+    (
+        p_ticket_group_id in number,
+        p_serial_code in varchar2
     );
 
 end events_api;

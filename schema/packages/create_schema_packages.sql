@@ -1,6 +1,9 @@
---create package api for the events system
 prompt creating api packages for events b2b system
 prompt views need to be deployed before running this script
+prompt creating error logging package
+@@error_api.spc;
+@@error_api.bdy;
+prompt creating core business logic api package
 @@events_api.spc;
 @@Events_Api.bdy;
 prompt creating reporting api package

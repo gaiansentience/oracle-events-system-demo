@@ -6,4 +6,5 @@ drop package events_json_api;
 drop package events_test_data_api;
 drop package events_report_api;
 drop package events_api;
+drop package error_api;
 prompt api packages dropped

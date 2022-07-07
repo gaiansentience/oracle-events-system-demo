@@ -27,7 +27,12 @@ as
     (
         p_json_doc in out nocopy varchar2
     );
-    
+
+    procedure update_reseller
+    (
+        p_json_doc in out nocopy varchar2
+    );
+
     function get_all_venues
     (
         p_formatted in boolean default false
@@ -43,7 +48,22 @@ as
     (
         p_json_doc in out nocopy varchar2
     );
+
+    procedure update_venue
+    (
+        p_json_doc in out nocopy varchar2
+    );
     
+    procedure create_customer
+    (
+        p_json_doc in out nocopy varchar2
+    );
+
+    procedure update_customer
+    (
+        p_json_doc in out nocopy varchar2
+    );
+        
     function get_venue_events
     (
         p_venue_id in number,
@@ -72,11 +92,6 @@ as
         p_formatted in boolean default false   
     ) return varchar2;
     
-    procedure create_customer
-    (
-        p_json_doc in out nocopy varchar2
-    );
-
     function get_ticket_groups
     (
         p_event_id in number,

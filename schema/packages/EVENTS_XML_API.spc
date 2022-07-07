@@ -26,6 +26,11 @@ as
         p_xml_doc in out nocopy xmltype
     );
 
+    procedure update_reseller
+    (
+        p_xml_doc in out nocopy xmltype
+    );
+
     function get_all_venues
     (
         p_formatted in boolean default false
@@ -38,6 +43,38 @@ as
     ) return xmltype;
 
     procedure create_venue
+    (
+        p_xml_doc in out nocopy xmltype
+    );
+
+    procedure update_venue
+    (
+        p_xml_doc in out nocopy xmltype
+    );
+
+/*
+<create_customer>
+  <customer>
+    <**customer_id>4</customer_id>
+    <customer_name>Kathy Barry</customer_name>
+    <customer_email>Kathy.Barry@example.customer.com</customer_email>
+  </customer>
+</create_customer>    
+*/
+    procedure create_customer
+    (
+        p_xml_doc in out nocopy xmltype
+    );
+/*
+<update_customer>
+  <customer>
+    <customer_id>4</customer_id>
+    <customer_name>Kathy Barry</customer_name>
+    <customer_email>Kathy.Barry@example.customer.com</customer_email>
+  </customer>
+</update_customer>    
+*/
+    procedure update_customer
     (
         p_xml_doc in out nocopy xmltype
     );
@@ -69,11 +106,6 @@ as
         p_event_id in number,
         p_formatted in boolean default false   
     ) return xmltype;
-
-    procedure create_customer
-    (
-        p_xml_doc in out nocopy xmltype
-    );
 
     function get_ticket_groups
     (

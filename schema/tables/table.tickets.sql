@@ -18,4 +18,6 @@ create table tickets(
 
 create index tickets_idx_ticket_sales_id on tickets (ticket_sales_id);
 
-create index tickets_idx_serial_code on tickets (serial_code);
+create index tickets_idx1 on tickets (serial_code, ticket_sales_id, status);
+
+create unique index tickets_u_serial_code on tickets(serial_code);

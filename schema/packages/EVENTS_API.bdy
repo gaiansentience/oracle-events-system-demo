@@ -23,36 +23,14 @@ as
         p_locale in varchar2
     )
     is
-        pragma autonomous_transaction;
     begin
-
-        insert into event_system.error_log
-        (
-            os_user_name,
-            db_user_name,
-            db_session_id,
-            error_locale,
-            error_code,
-            error_message,
-            error_date
-        )
-        values
-        (
-            g_os_user,
-            g_db_user,
-            g_db_sid,
-            p_locale,
-            p_error_code,
-            p_error_message,
-            sysdate
-        );
-      
-        commit;
+    
+        --route to error api package
+        error_api.log_error(
+            p_error_message => p_error_message, 
+            p_error_code => p_error_code, 
+            p_locale => 'EVENTS_API.' || p_locale);
    
-    exception
-        when others then
-            --do not raise errors from logging routine
-            rollback;
     end log_error;
     
     function get_venue_id
@@ -76,6 +54,26 @@ as
             raise;                                
     end get_venue_id;
 
+    procedure validate_venue_record
+    (
+        p_venue in venues%rowtype
+    )
+    is
+    begin
+
+        case
+            when p_venue.venue_name is null then
+                raise_application_error(-20100, 'Missing venue name, cannot create or update venue');
+            when p_venue.organizer_name is null then
+                raise_application_error(-20100, 'Missing organizer name, cannot create or update venue');         
+            when p_venue.organizer_email is null then
+                raise_application_error(-20100, 'Missing organizer email, cannot create or update venue');
+            when p_venue.max_event_capacity is null then
+                raise_application_error(-20100, 'Missing event capacity, cannot create or update venue');      
+        end case;
+        
+    end validate_venue_record;
+
     procedure create_venue
     (
         p_venue_name in varchar2,
@@ -85,7 +83,15 @@ as
         p_venue_id out number
     )
     is
+        r_venue venues%rowtype;
     begin
+    
+        r_venue.venue_name := p_venue_name;
+        r_venue.organizer_name := p_organizer_name;
+        r_venue.organizer_email := p_organizer_email;
+        r_venue.max_event_capacity := p_max_event_capacity;
+        
+        validate_venue_record(p_venue => r_venue);
     
         insert into event_system.venues
         (
@@ -96,10 +102,10 @@ as
         )
         values
         (
-            p_venue_name, 
-            p_organizer_name, 
-            p_organizer_email, 
-            p_max_event_capacity
+            r_venue.venue_name, 
+            r_venue.organizer_name, 
+            r_venue.organizer_email, 
+            r_venue.max_event_capacity
         )
         returning venue_id 
         into p_venue_id;
@@ -111,6 +117,41 @@ as
             log_error(sqlerrm, sqlcode,'create_venue');
             raise;
     end create_venue;
+
+    procedure update_venue
+    (
+        p_venue_id in number,
+        p_venue_name in varchar2,
+        p_organizer_name in varchar2,
+        p_organizer_email in varchar2,   
+        p_max_event_capacity in number  
+    )
+    is
+        r_venue venues%rowtype;
+    begin
+
+        r_venue.venue_name := p_venue_name;
+        r_venue.organizer_name := p_organizer_name;
+        r_venue.organizer_email := p_organizer_email;
+        r_venue.max_event_capacity := p_max_event_capacity;
+        
+        validate_venue_record(p_venue => r_venue);
+    
+        update event_system.venues v
+        set
+            v.venue_name = r_venue.venue_name,
+            v.organizer_name = r_venue.organizer_name,
+            v.organizer_email = r_venue.organizer_email,
+            v.max_event_capacity = r_venue.max_event_capacity
+        where v.venue_id = p_venue_id;
+        
+        commit;
+        
+    exception
+        when others then
+            log_error(sqlerrm, sqlcode, 'update_venue');
+            raise;    
+    end update_venue;
 
     procedure show_venues_summary
     (
@@ -158,6 +199,23 @@ as
             log_error(sqlerrm, sqlcode,'get_reseller_id');
             raise;                        
     end get_reseller_id;
+    
+    procedure validate_reseller_record
+    (
+        p_reseller in resellers%rowtype
+    )
+    is
+    begin
+        case    
+            when p_reseller.reseller_name is null then
+                raise_application_error(-20100, 'Missing reseller name, cannot create or update reseller.');
+            when p_reseller.reseller_email is null then
+                raise_application_error(-20100, 'Missing reseller email, cannot create or update reseller.');
+            when p_reseller.commission_percent is null then
+                raise_application_error(-20100, 'Missing reseller commission, cannot create or update reseller.');      
+        end case;
+
+    end validate_reseller_record;
    
     procedure create_reseller
     (
@@ -167,7 +225,14 @@ as
         p_reseller_id out number
     )
     is
+        r_reseller resellers%rowtype;
     begin
+    
+        r_reseller.reseller_name := p_reseller_name;
+        r_reseller.reseller_email := p_reseller_email;
+        r_reseller.commission_percent := p_commission_percent;
+        
+        validate_reseller_record(r_reseller);
     
         insert into event_system.resellers
         (
@@ -177,9 +242,9 @@ as
         )
         values
         (
-            p_reseller_name,
-            p_reseller_email,
-            p_commission_percent
+            r_reseller.reseller_name,
+            r_reseller.reseller_email,
+            r_reseller.commission_percent
         )
         returning reseller_id 
         into p_reseller_id;
@@ -191,6 +256,38 @@ as
             log_error(sqlerrm, sqlcode,'create_reseller');
             raise;
     end create_reseller;
+
+    procedure update_reseller
+    (
+        p_reseller_id in number,    
+        p_reseller_name in varchar2,
+        p_reseller_email in varchar2,
+        p_commission_percent in number default 0.10    
+    )
+    is
+        r_reseller resellers%rowtype;
+    begin
+
+        r_reseller.reseller_name := p_reseller_name;
+        r_reseller.reseller_email := p_reseller_email;
+        r_reseller.commission_percent := p_commission_percent;
+        
+        validate_reseller_record(r_reseller);
+    
+        update event_system.resellers r
+        set 
+            r.reseller_name = r_reseller.reseller_name,
+            r.reseller_email = r_reseller.reseller_email,
+            r.commission_percent = r_reseller.commission_percent
+        where r.reseller_id = p_reseller_id;
+        
+        commit;
+        
+    exception
+        when others then
+            log_error(sqlerrm, sqlcode, 'update_reseller');
+            raise;
+    end update_reseller;
 
     procedure show_resellers
     (
@@ -222,10 +319,8 @@ as
     
         select customer_id
         into v_customer_id
-        from 
-            event_system.customers c
-        where 
-            upper(c.customer_email) = upper(p_customer_email);
+        from event_system.customers c
+        where upper(c.customer_email) = upper(p_customer_email);
         
         return v_customer_id;
     
@@ -237,6 +332,21 @@ as
             raise;
     end get_customer_id;
 
+    procedure validate_customer_record
+    (
+        p_customer in customers%rowtype
+    )
+    is
+    begin
+        case    
+            when p_customer.customer_name is null then
+                raise_application_error(-20100, 'Missing name, cannot create or update customer');
+            when p_customer.customer_email is null then
+                raise_application_error(-20100, 'Missing email, cannot create or update customer');         
+        end case;
+    
+    end validate_customer_record;
+
     procedure create_customer
     (
         p_customer_name in varchar2,
@@ -244,13 +354,16 @@ as
         p_customer_id out number
     )
     is
-        v_customer_id number;
+        r_customer customers%rowtype;
     begin
     
         --check to see if the email is already registered to a customer
-        v_customer_id := get_customer_id(p_customer_email);
+        p_customer_id := get_customer_id(p_customer_email);
+        r_customer.customer_name := p_customer_name;
+        r_customer.customer_email := p_customer_email;
+        validate_customer_record(p_customer => r_customer);
         
-        if v_customer_id = 0 then
+        if p_customer_id = 0 then
         
             insert into event_system.customers
             (
@@ -259,29 +372,55 @@ as
             )
             values
             (
-                p_customer_name,
-                p_customer_email
+                r_customer.customer_name,
+                r_customer.customer_email
             )
             returning customer_id 
-            into v_customer_id;
+            into p_customer_id;
         
         else
-            if p_customer_name is not null then
-                update event_system.customers
-                set customer_name = p_customer_name
-                where customer_id = v_customer_id;
+            if r_customer.customer_name is not null then
+                update event_system.customers c
+                set c.customer_name = r_customer.customer_name
+                where customer_id = p_customer_id;
             end if;
         end if;
         
         commit;
-        
-        p_customer_id := v_customer_id;
-    
+            
     exception
         when others then
             log_error(sqlerrm, sqlcode,'create_customer');
             raise;
     end create_customer;
+
+    procedure update_customer
+    (
+        p_customer_id in number,
+        p_customer_name in varchar2,
+        p_customer_email in varchar2
+    )
+    is
+        r_customer customers%rowtype;
+    begin
+    
+        r_customer.customer_name := p_customer_name;
+        r_customer.customer_email := p_customer_email;
+        validate_customer_record(p_customer => r_customer);
+    
+        update event_system.customers c
+        set 
+            c.customer_name = r_customer.customer_name,
+            c.customer_email = r_customer.customer_email
+        where c.customer_id = p_customer_id;
+        
+        commit;
+    
+    exception
+        when others then
+            log_error(sqlerrm, sqlcode, 'update_customer');
+            raise;
+    end update_customer;
 
     function get_event_id
     (
@@ -331,6 +470,25 @@ as
             raise;                
     end get_event_series_id;
 
+    function get_event_series_id
+    (
+        p_event_id in number
+    ) return number
+    is
+        l_event_series_id number;
+    begin
+    
+        select e.event_series_id
+        into l_event_series_id
+        from event_system.events e
+        where e.event_id = p_event_id;
+    
+        return l_event_series_id;
+    exception
+        when others then
+            return null;
+    end get_event_series_id;
+   
    
     procedure verify_event_capacity
     (
@@ -378,21 +536,16 @@ as
 
     procedure create_event
     (
-        p_venue_id in number,   
-        p_event_name in varchar2,
-        p_event_date in date,
-        p_tickets_available in number,
-        p_event_series_id in number,
-        p_event_id out number
+        p_event in out events%rowtype
     )
     is
     begin
 
         --check that the venue can handle the event
-        verify_event_capacity(p_venue_id, p_tickets_available);
+        verify_event_capacity(p_event.venue_id, p_event.tickets_available);
         
         --check that the event does not conflict with an existing event
-        verify_event_date_free(p_venue_id, p_event_date);
+        verify_event_date_free(p_event.venue_id, p_event.event_date);
         
         insert into event_system.events
             (
@@ -404,14 +557,14 @@ as
             )
         values
             (
-            p_venue_id,
-            p_event_name,
-            p_event_date,
-            p_tickets_available,
-            p_event_series_id
+            p_event.venue_id,
+            p_event.event_name,
+            p_event.event_date,
+            p_event.tickets_available,
+            p_event.event_series_id
             )
         returning event_id 
-        into p_event_id;
+        into p_event.event_id;
         
         commit;
 
@@ -431,16 +584,17 @@ as
         p_event_id out number
     )
     is
+        r_event events%rowtype;
     begin
     
-        create_event(
-            p_venue_id => p_venue_id, 
-            p_event_name => p_event_name, 
-            p_event_date => p_event_date, 
-            p_tickets_available => p_tickets_available, 
-            p_event_series_id => null, 
-            p_event_id => p_event_id);
+        r_event.venue_id := p_venue_id;
+        r_event.event_name := p_event_name;
+        r_event.event_date := p_event_date;
+        r_event.tickets_available := p_tickets_available;
+        r_event.event_series_id := null;
     
+        create_event(p_event => r_event);
+                
     end create_event;
 
     procedure create_weekly_event
@@ -470,58 +624,54 @@ as
             where to_char(the_date,'fmDAY', 'NLS_DATE_LANGUAGE=American') = upper(p_event_day)
             order by the_date;
         
-        v_event_series_id number := event_series_id_seq.nextval;
         i_event number := 0;
-        r_event events_api.r_series_event;
-        
+        r_series_event events_api.r_series_event;
+        l_event events%rowtype;
         v_success_count number := 0;
         v_conflict_count number := 0;
         v_conflict_dates varchar2(32000);
         v_status varchar2(4000);
         v_success_dates varchar2(32000);
     begin
-
+        l_event.venue_id := p_venue_id;
+        l_event.event_name := p_event_name;
+        l_event.tickets_available := p_tickets_available;
+        l_event.event_series_id := event_series_id_seq.nextval;
+        
         for r in d loop
             i_event := i_event + 1;
-            r_event.event_date := r.the_date;
-            r_event.event_id := 0;
-            r_event.status_code := null;
-            r_event.status_message := null;
-
+            r_series_event.event_date := r.the_date;
+            l_event.event_date := r.the_date;
             begin
-                create_event(
-                    p_venue_id => p_venue_id, 
-                    p_event_name => p_event_name, 
-                    p_event_date => r.the_date, 
-                    p_tickets_available => p_tickets_available, 
-                    p_event_series_id => v_event_series_id, 
-                    p_event_id => r_event.event_id);
-                    
-                r_event.status_code := 'SUCCESS';
-                r_event.status_message := 'Event Created';
+                create_event(p_event => l_event);
+                
+                r_series_event.event_id := l_event.event_id;    
+                r_series_event.status_code := 'SUCCESS';
+                r_series_event.status_message := 'Event Created';
                 v_success_count := v_success_count + 1;
                 v_success_dates := v_success_dates || to_char(r.the_date,'MM/DD/YYYY') || ', ';
             exception
                 when others then
-                    r_event.status_code := 'ERROR';
-                    r_event.status_message := sqlerrm;
+                    r_series_event.status_code := 'ERROR';
+                    r_series_event.status_message := sqlerrm;
+                    r_series_event.event_id := 0;
                     log_error(sqlerrm, sqlcode, 'create_weekly_event:  adding weekly event');
                     v_conflict_count := v_conflict_count + 1;
-                    v_conflict_dates := v_conflict_dates || to_char(r.the_date,'MM/DD/YYYY') || ', ';
+                    --v_conflict_dates := v_conflict_dates || to_char(r.the_date,'MM/DD/YYYY') || ', ';
             end;
             
-            p_status_details(i_event) := r_event;
+            p_status_details(i_event) := r_series_event;
 
         end loop;
 
         v_success_dates := rtrim(v_success_dates,', ');
-        v_conflict_dates := rtrim(v_conflict_dates,', ');
+        --v_conflict_dates := rtrim(v_conflict_dates,', ');
         p_status_code := case when v_conflict_count > 0 then 'ERRORS' else 'SUCCESS' end;
         v_status := v_success_count || ' events for (' || p_event_name || ') created successfully. ';
         v_status := v_status || v_conflict_count || ' events could not be created because of conflicts with existing events.';
         --v_status := v_status || '  Conflicting dates are: ' || v_conflict_dates || '.';
         p_status_message := v_status;
-        p_event_series_id := case when v_success_count > 0 then v_event_series_id else 0 end ;
+        p_event_series_id := case when v_success_count > 0 then l_event.event_series_id else 0 end ;
 
     exception
         when others then
@@ -931,26 +1081,7 @@ as
         when no_data_found then
             return 'Ticket category not found';
     end get_ticket_group_category;
-    
-    function get_event_series_id
-    (
-        p_event_id in number
-    ) return number
-    is
-        l_event_series_id number;
-    begin
-    
-        select e.event_series_id
-        into l_event_series_id
-        from event_system.events e
-        where e.event_id = p_event_id;
-    
-        return l_event_series_id;
-    exception
-        when others then
-            return null;
-    end get_event_series_id;
-    
+        
     function get_ticket_group_event_series_id
     (
         p_ticket_group_id in number
@@ -965,8 +1096,7 @@ as
             event_system.events e
             join event_system.ticket_groups tg
                 on e.event_id = tg.event_id
-        where
-            tg.ticket_group_id = p_ticket_group_id;
+        where tg.ticket_group_id = p_ticket_group_id;
     
         return l_event_series_id;
     exception
@@ -988,16 +1118,17 @@ as
     is
         l_event_series_id number;
     begin
+        
         l_event_series_id := get_event_series_id(p_event_id);
         case
-            when l_event_series_id is not null and not g_processing_event_series then
-                raise_application_error(-20100, 'Event is part of a series, must use event series methods');
-            when l_event_series_id is null and g_processing_event_series then
+            when g_processing_event_series and l_event_series_id is null then
                 raise_application_error(-20100, 'Event is not part of a series, cannot use event series methods');
-            else
+            when not g_processing_event_series and l_event_series_id is not null then
                 null;
+                --leave this commented to allow customizing individual events in a series
+                --raise_application_error(-20100, 'Event is part of a series, must use event series methods');
         end case;
-
+        
         ticket_group_available(p_event_id, p_price_category, p_tickets);
         
         if not ticket_group_exists(p_event_id, p_price_category) then
@@ -1268,15 +1399,17 @@ as
     is
         l_event_series_id number;
     begin
+    
         l_event_series_id := get_ticket_group_event_series_id(p_ticket_group_id);
+        --l_event_series_id := get_event_series_id(p_event_id);
         case
-            when l_event_series_id is not null and not g_processing_event_series then
-                raise_application_error(-20100, 'Event is part of a series, must use event series methods');
-            when l_event_series_id is null and g_processing_event_series then
+            when g_processing_event_series and l_event_series_id is null then
                 raise_application_error(-20100, 'Event is not part of a series, cannot use event series methods');
-            else
+            when not g_processing_event_series and l_event_series_id is not null then
                 null;
-        end case;        
+                --leave this commented to allow customizing individual events in a series
+                --raise_application_error(-20100, 'Event is part of a series, must use event series methods');
+        end case;
 
         verify_ticket_assignment(p_reseller_id, p_ticket_group_id, p_number_tickets);
         
@@ -2359,8 +2492,252 @@ as
         show_customer_event_series_tickets(v_customer_id, p_event_series_id, p_tickets);
     
     end show_customer_event_series_tickets_by_email;
+                
+    procedure reissue_ticket
+    (
+        p_customer_id in number,
+        p_ticket_serial_code in varchar2
+    )
+    is
+        l_status tickets.status%type;
+        l_customer_id number;
+    begin
+        
+        select t.status, ts.customer_id
+        into l_status, l_customer_id
+        from 
+            tickets t 
+            join ticket_sales ts 
+                on t.ticket_sales_id = ts.ticket_sales_id
+        where t.serial_code = upper(p_ticket_serial_code);
+        
+        if l_customer_id <> p_customer_id then
+            raise_application_error(-20100, 'Tickets can only be reissued to original customer who purchased tickets, cannot reissue.');
+        end if;
+        
+        if l_status = 'ISSUED' then
+        
+            update tickets t
+            set t.status = 'REISSUED', t.serial_code = t.serial_code || 'R'
+            where
+                t.serial_code = upper(p_ticket_serial_code);
+            
+            commit;
+        
+        else
+        
+            if l_status = 'REISSUED' then
+                raise_application_error(-20100, 'Ticket has already been reissued, cannot reissue twice.');
+            elsif l_status = 'VALIDATED' then
+                raise_application_error(-20100, 'Ticket has been validated for event entry, cannot reissue.');
+            end if;
+            
+        end if;
+        
+    exception
+        when others then
+            log_error(sqlerrm, sqlcode, 'reissue_ticket');
+            raise;
+    end reissue_ticket;
+    
+    procedure reissue_ticket_using_email
+    (
+        p_customer_email in varchar2,
+        p_ticket_serial_code in varchar2
+    )
+    is
+        l_customer_id customers.customer_id%type;
+    begin
+        l_customer_id := get_customer_id(p_customer_email => p_customer_email);
+        reissue_ticket(p_customer_id => l_customer_id, p_ticket_serial_code => p_ticket_serial_code);
+    end reissue_ticket_using_email;    
+    
+    procedure reissue_tickets
+    (
+        p_tickets in out t_ticket_reissues
+    )
+    is
+    begin
+ 
+        for i in 1..p_tickets.count loop
+            
+            begin
+                reissue_ticket(p_customer_id => p_tickets(i).customer_id, p_ticket_serial_code => p_tickets(i).serial_code);
+                p_tickets(i).status := 'SUCCESS';
+                p_tickets(i).status_message := 'Reissued ticket serial code.  Previous ticket is unusable for event.  Please reprint ticket.';
+            exception
+                when others then
+                    p_tickets(i).status := 'ERROR';
+                    p_tickets(i).status_message := sqlerrm;
+            end;
+        
+        end loop;
+    
+    end reissue_tickets;
 
-
+    procedure reissue_tickets_using_email
+    (
+        p_tickets in out t_ticket_reissues
+    )
+    is
+    begin
+ 
+        for i in 1..p_tickets.count loop
+            
+            begin
+                reissue_ticket_using_email(p_customer_email => p_tickets(i).customer_email, p_ticket_serial_code => p_tickets(i).serial_code);
+                p_tickets(i).status := 'SUCCESS';
+                p_tickets(i).status_message := 'Reissued ticket serial code.  Previous ticket is unusable for event.  Please reprint ticket.';
+            exception
+                when others then
+                    p_tickets(i).status := 'ERROR';
+                    p_tickets(i).status_message := sqlerrm;
+            end;
+        
+        end loop;
+    
+    end reissue_tickets_using_email;
+        
+    procedure validate_ticket
+    (
+        p_event_id in number,
+        p_ticket_serial_code in varchar2
+    )
+    is
+        i number;
+        l_status tickets.status%type;
+        l_event_id number;
+    begin
+    
+        select count(*)
+        into i
+        from
+            event_system.ticket_groups tg
+            join event_system.ticket_sales ts
+                on tg.ticket_group_id = ts.ticket_group_id
+            join event_system.tickets t
+                on ts.ticket_sales_id = t.ticket_sales_id
+            where
+                tg.event_id = p_event_id
+                and t.serial_code = upper(p_ticket_serial_code)
+                and t.status in ('ISSUED', 'REISSUED');
+                
+        if i = 1 then
+            
+            --ticket is valid for the event and has not already been used for entry, update status to validated
+            update tickets t
+            set t.status = 'VALIDATED'
+            where t.serial_code = upper(p_ticket_serial_code);
+            
+            commit;
+            
+        else
+        
+            select t.status, tg.event_id
+            into l_status, l_event_id
+            from
+                tickets t 
+                join ticket_sales ts 
+                    on t.ticket_sales_id = ts.ticket_sales_id
+                join ticket_groups tg 
+                    on ts.ticket_group_id = tg.ticket_group_id
+            where
+                t.serial_code = upper(p_ticket_serial_code);
+        
+            if l_event_id <> p_event_id then
+                raise_application_error(-20100, 'Ticket is for a different event, cannot validate.');
+            elsif l_status = 'VALIDATED' then
+                raise_application_error(-20100, 'Ticket has already been used for event entry, cannot revalidate.');
+            end if;
+                
+        end if;
+    
+    exception
+        when no_data_found then
+            log_error('TICKET SERIAL CODE (' || p_ticket_serial_code || ') NOT FOUND FOR EVENT_ID ' || p_event_id, sqlcode, 'validate_ticket');
+            raise_application_error(-20100, 'Ticket serial code not found for event, cannot validate');
+        when others then
+            log_error(sqlerrm, sqlcode, 'validate_ticket');
+            raise;
+    end validate_ticket;
+    
+    procedure validate_tickets
+    (
+        p_tickets in out t_ticket_validations
+    )
+    is
+    begin
+    
+        for i in 1..p_tickets.count loop
+            
+            begin
+                validate_ticket(p_event_id => p_tickets(i).event_id, p_ticket_serial_code => p_tickets(i).serial_code);
+                p_tickets(i).status := 'SUCCESS';
+                p_tickets(i).status_message := 'Validated Ticket';
+            exception
+                when others then
+                    p_tickets(i).status := 'ERROR';
+                    p_tickets(i).status_message := sqlerrm;
+            end;
+        
+        end loop;
+        
+    end validate_tickets;
+    
+    procedure verify_ticket_validation
+    (
+        p_serial_code in varchar2
+    )
+    is
+        l_status tickets.status%type;
+    begin
+    
+        select t.status
+        into l_status
+        from tickets t
+        where t.serial_code = p_serial_code;
+        
+        if l_status <> 'VALIDATED' then
+            raise_application_error(-20100, 'Ticket has not been validated for event entry.');
+        end if;
+        
+    exception
+        when others then
+            log_error('SERIAL CODE ' || p_serial_code || ': ' || sqlerrm, sqlcode, 'verify_ticket_validation');
+            raise;
+    end verify_ticket_validation;
+    
+    procedure verify_ticket_restricted_access
+    (
+        p_ticket_group_id in number,
+        p_serial_code in varchar2
+    )
+    is
+        i number;
+        l_price_category ticket_groups.price_category%type;
+    begin
+    
+        select count(*)
+        into i
+        from 
+            tickets t 
+            join ticket_sales ts
+                on t.ticket_sales_id = ts.ticket_sales_id
+        where
+            ts.ticket_group_id = p_ticket_group_id
+            and t.serial_code = upper(p_serial_code);
+            
+        if i <> 1 then
+            l_price_category := get_ticket_group_category(p_ticket_group_id => p_ticket_group_id);
+            raise_application_error(-20100, 'Ticket is not valid for ' || l_price_category);
+        end if;
+    
+    exception
+        when others then
+            log_error('SERIAL CODE ' || p_serial_code || ': ' || sqlerrm, sqlcode, 'verify_ticket_restricted_access');
+            raise;    
+    end verify_ticket_restricted_access;
+        
 --package initialization
 begin
     initialize;

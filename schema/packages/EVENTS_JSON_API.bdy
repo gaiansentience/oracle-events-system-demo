@@ -104,6 +104,21 @@ as
             return get_json_error_doc(sqlcode, sqlerrm, 'get_reseller');
     end get_reseller;
 
+    procedure parse_reseller
+    (
+        p_source in out nocopy json_object_t,
+        p_reseller out resellers%rowtype
+    )
+    is
+    begin
+    
+        p_reseller.reseller_id := p_source.get_number('reseller_id');
+        p_reseller.reseller_name := p_source.get_string('reseller_name');
+        p_reseller.reseller_email := p_source.get_string('reseller_email');
+        p_reseller.commission_percent := p_source.get_number('commission_percent');
+    
+    end parse_reseller;
+    
     procedure create_reseller
     (
         p_json_doc in out nocopy varchar2
@@ -116,35 +131,27 @@ as
     begin
 
         o_request := json_object_t.parse(p_json_doc);
-        r_reseller.reseller_name := o_request.get_string('reseller_name');
-        r_reseller.reseller_email := o_request.get_string('reseller_email');
-        r_reseller.commission_percent := o_request.get_number('commission_percent');
+        parse_reseller(p_source => o_request, p_reseller => r_reseller);        
         r_reseller.reseller_id := 0;
         
-        case
-            when r_reseller.reseller_name is null then
+        begin     
+        
+            events_api.create_reseller(
+                r_reseller.reseller_name, 
+                r_reseller.reseller_email, 
+                r_reseller.commission_percent, 
+                r_reseller.reseller_id);
+                
+            l_status_code := 'SUCCESS';
+            l_status_message := 'Created reseller';
+        exception
+            when others then
                 l_status_code := 'ERROR';
-                l_status_message := 'Missing reseller name, cannot create reseller';
-            when r_reseller.reseller_email is null then
-                l_status_code := 'ERROR';
-                l_status_message := 'Missing reseller email, cannot create reseller';
-            when r_reseller.commission_percent is null then
-                l_status_code := 'ERROR';
-                l_status_message := 'Missing reseller commission, cannot create reseller';      
-            else
-                begin         
-                    events_api.create_reseller(r_reseller.reseller_name, r_reseller.reseller_email, r_reseller.commission_percent, r_reseller.reseller_id);
-                    l_status_code := 'SUCCESS';
-                    l_status_message := 'Created reseller';
-                exception
-                    when others then
-                        l_status_code := 'ERROR';
-                        l_status_message := sqlerrm;
-                end;
-        end case;
+                l_status_message := sqlerrm;
+        end;
         
         o_request.put('reseller_id', r_reseller.reseller_id);
-        o_request.put('status_code',l_status_code);
+        o_request.put('status_code', l_status_code);
         o_request.put('status_message', l_status_message);
         
         p_json_doc := o_request.to_string; 
@@ -153,6 +160,47 @@ as
         when others then
             p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'create_reseller');
     end create_reseller;
+
+    procedure update_reseller
+    (
+        p_json_doc in out nocopy varchar2
+    )
+    is
+        r_reseller event_system.resellers%rowtype;
+        o_request json_object_t;
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
+    begin
+
+        o_request := json_object_t.parse(p_json_doc);
+        parse_reseller(p_source => o_request, p_reseller => r_reseller);
+        
+        begin      
+        
+            events_api.update_reseller(
+                p_reseller_id => r_reseller.reseller_id,
+                p_reseller_name => r_reseller.reseller_name, 
+                p_reseller_email => r_reseller.reseller_email, 
+                p_commission_percent => r_reseller.commission_percent);
+                
+            l_status_code := 'SUCCESS';
+            l_status_message := 'Updated reseller';
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
+        
+        o_request.put('status_code', l_status_code);
+        o_request.put('status_message', l_status_message);
+        
+        p_json_doc := o_request.to_string; 
+
+    exception
+        when others then
+            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'update_reseller');
+    end update_reseller;
+
 
     function get_all_venues
     (
@@ -199,6 +247,22 @@ as
         when others then
             return get_json_error_doc(sqlcode, sqlerrm, 'get_venue');
     end get_venue;
+    
+    procedure parse_venue
+    (
+        p_source in out nocopy json_object_t,
+        p_venue out venues%rowtype
+    )
+    is
+    begin
+
+        p_venue.venue_id := p_source.get_number('venue_id');
+        p_venue.venue_name := p_source.get_string('venue_name');   
+        p_venue.organizer_name := p_source.get_string('organizer_name');
+        p_venue.organizer_email := p_source.get_string('organizer_email');
+        p_venue.max_event_capacity := p_source.get_number('max_event_capacity');
+    
+    end parse_venue;
 
     procedure create_venue
     (
@@ -212,36 +276,25 @@ as
     begin
 
         o_request := json_object_t.parse(p_json_doc);
-        r_venue.venue_name := o_request.get_string('venue_name');   
-        r_venue.organizer_name := o_request.get_string('organizer_name');
-        r_venue.organizer_email := o_request.get_string('organizer_email');
-        r_venue.max_event_capacity := o_request.get_number('max_event_capacity');
+        parse_venue(p_source => o_request, p_venue => r_venue);
         r_venue.venue_id := 0;
     
-        case
-            when r_venue.venue_name is null then
+        begin         
+        
+            events_api.create_venue(
+                p_venue_name => r_venue.venue_name, 
+                p_organizer_name => r_venue.organizer_name, 
+                p_organizer_email => r_venue.organizer_email, 
+                p_max_event_capacity => r_venue.max_event_capacity, 
+                p_venue_id => r_venue.venue_id);
+                
+                l_status_code := 'SUCCESS';
+                l_status_message := 'Created venue';
+        exception
+            when others then
                 l_status_code := 'ERROR';
-                l_status_message := 'Missing venue name, cannot create venue';
-            when r_venue.organizer_name is null then
-                l_status_code := 'ERROR';
-                l_status_message := 'Missing organizer name, cannot create venue';         
-            when r_venue.organizer_email is null then
-                l_status_code := 'ERROR';
-                l_status_message := 'Missing organizer email, cannot create venue';
-            when r_venue.max_event_capacity is null then
-                l_status_code := 'ERROR';
-                l_status_message := 'Missing event capacity, cannot create venue';      
-            else
-                begin         
-                    events_api.create_venue(r_venue.venue_name, r_venue.organizer_name, r_venue.organizer_email, r_venue.max_event_capacity, r_venue.venue_id);
-                        l_status_code := 'SUCCESS';
-                        l_status_message := 'Created venue';
-                exception
-                    when others then
-                        l_status_code := 'ERROR';
-                        l_status_message := sqlerrm;
-                end;
-        end case;
+                l_status_message := sqlerrm;
+        end;
 
         o_request.put('venue_id', r_venue.venue_id);
         o_request.put('status_code',l_status_code);
@@ -253,6 +306,141 @@ as
         when others then
             p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'create_venue');
     end create_venue;
+
+    procedure update_venue
+    (
+        p_json_doc in out nocopy varchar2
+    )
+    is
+        r_venue event_system.venues%rowtype;
+        o_request json_object_t;
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
+    begin
+
+        o_request := json_object_t.parse(p_json_doc);
+        parse_venue(p_source => o_request, p_venue => r_venue);
+    
+        begin         
+        
+            events_api.update_venue(
+                p_venue_id => r_venue.venue_id,
+                p_venue_name => r_venue.venue_name, 
+                p_organizer_name => r_venue.organizer_name, 
+                p_organizer_email => r_venue.organizer_email, 
+                p_max_event_capacity => r_venue.max_event_capacity);
+                
+                l_status_code := 'SUCCESS';
+                l_status_message := 'Updated venue';
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
+
+        o_request.put('status_code',l_status_code);
+        o_request.put('status_message', l_status_message);
+
+        p_json_doc := o_request.to_string; 
+
+    exception
+        when others then
+            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'update_venue');
+    end update_venue;
+
+    procedure parse_customer
+    (
+        p_source in out nocopy json_object_t,
+        p_customer out customers%rowtype
+    )
+    is
+    begin
+    
+        p_customer.customer_id := p_source.get_string('customer_id');    
+        p_customer.customer_name := p_source.get_string('customer_name');
+        p_customer.customer_email := p_source.get_string('customer_email');
+    
+    end parse_customer;
+    
+    procedure create_customer
+    (
+        p_json_doc in out nocopy varchar2
+    )
+    is
+        r_customer event_system.customers%rowtype;
+        o_request json_object_t;
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
+    begin
+        
+        o_request := json_object_t.parse(p_json_doc);
+        parse_customer(p_source => o_request, p_customer => r_customer);
+        r_customer.customer_id := 0;
+        
+        begin                  
+        
+            events_api.create_customer(
+                p_customer_name => r_customer.customer_name, 
+                p_customer_email => r_customer.customer_email, 
+                p_customer_id => r_customer.customer_id);
+                
+            l_status_code := 'SUCCESS';
+            l_status_message := 'Created customer';
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
+        
+        o_request.put('customer_id', r_customer.customer_id);
+        o_request.put('status_code', l_status_code);
+        o_request.put('status_message', l_status_message);
+        
+        p_json_doc := o_request.to_string; 
+
+    exception
+        when others then
+            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'create_customer');
+    end create_customer;
+    
+    procedure update_customer
+    (
+        p_json_doc in out nocopy varchar2
+    )
+    is
+        r_customer event_system.customers%rowtype;
+        o_request json_object_t;
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
+    begin
+        
+        o_request := json_object_t.parse(p_json_doc);
+        parse_customer(p_source => o_request, p_customer => r_customer);
+        
+        begin                  
+        
+            events_api.update_customer(
+                p_customer_id => r_customer.customer_id,
+                p_customer_name => r_customer.customer_name, 
+                p_customer_email => r_customer.customer_email);
+                
+            l_status_code := 'SUCCESS';
+            l_status_message := 'Created customer';
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
+        
+        o_request.put('status_code', l_status_code);
+        o_request.put('status_message', l_status_message);
+        
+        p_json_doc := o_request.to_string; 
+
+    exception
+        when others then
+            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'update_customer');
+    end update_customer;
 
     function get_venue_events
     (
@@ -445,53 +633,6 @@ as
         when others then
             return get_json_error_doc(sqlcode, sqlerrm, 'get_event');
     end get_event;
-
-    procedure create_customer
-    (
-        p_json_doc in out nocopy varchar2
-    )
-    is
-        r_customer event_system.customers%rowtype;
-        o_request json_object_t;
-        l_status_code varchar2(10);
-        l_status_message varchar2(4000);
-    begin
-        
-        o_request := json_object_t.parse(p_json_doc);
-        
-        r_customer.customer_name := o_request.get_string('customer_name');
-        r_customer.customer_email := o_request.get_string('customer_email');
-        r_customer.customer_id := 0;
-        
-        case
-            when r_customer.customer_name is null then
-                l_status_code := 'ERROR';
-                l_status_message := 'Missing name, cannot create customer';
-            when r_customer.customer_email is null then
-                l_status_code := 'ERROR';
-                l_status_message := 'Missing email, cannot create customer';         
-            else
-                begin                  
-                    events_api.create_customer(r_customer.customer_name, r_customer.customer_email, r_customer.customer_id);
-                    l_status_code := 'SUCCESS';
-                    l_status_message := 'Created customer';
-                exception
-                    when others then
-                        l_status_code := 'ERROR';
-                        l_status_message := sqlerrm;
-                end;
-        end case;
-        
-        o_request.put('customer_id', r_customer.customer_id);
-        o_request.put('status_code', l_status_code);
-        o_request.put('status_message', l_status_message);
-        
-        p_json_doc := o_request.to_string; 
-
-    exception
-        when others then
-            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'create_customer');
-    end create_customer;
 
     function get_ticket_groups
     (
