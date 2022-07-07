@@ -2493,7 +2493,7 @@ as
     
     end show_customer_event_series_tickets_by_email;
                 
-    procedure reissue_ticket
+    procedure ticket_reissue
     (
         p_customer_id in number,
         p_ticket_serial_code in varchar2
@@ -2536,11 +2536,11 @@ as
         
     exception
         when others then
-            log_error(sqlerrm, sqlcode, 'reissue_ticket');
+            log_error(sqlerrm, sqlcode, 'ticket_reissue');
             raise;
-    end reissue_ticket;
+    end ticket_reissue;
     
-    procedure reissue_ticket_using_email
+    procedure ticket_reissue_using_email
     (
         p_customer_email in varchar2,
         p_ticket_serial_code in varchar2
@@ -2549,10 +2549,10 @@ as
         l_customer_id customers.customer_id%type;
     begin
         l_customer_id := get_customer_id(p_customer_email => p_customer_email);
-        reissue_ticket(p_customer_id => l_customer_id, p_ticket_serial_code => p_ticket_serial_code);
-    end reissue_ticket_using_email;    
+        ticket_reissue(p_customer_id => l_customer_id, p_ticket_serial_code => p_ticket_serial_code);
+    end ticket_reissue_using_email;    
     
-    procedure reissue_tickets
+    procedure ticket_reissue_batch
     (
         p_tickets in out t_ticket_reissues
     )
@@ -2562,7 +2562,7 @@ as
         for i in 1..p_tickets.count loop
             
             begin
-                reissue_ticket(p_customer_id => p_tickets(i).customer_id, p_ticket_serial_code => p_tickets(i).serial_code);
+                ticket_reissue(p_customer_id => p_tickets(i).customer_id, p_ticket_serial_code => p_tickets(i).serial_code);
                 p_tickets(i).status := 'SUCCESS';
                 p_tickets(i).status_message := 'Reissued ticket serial code.  Previous ticket is unusable for event.  Please reprint ticket.';
             exception
@@ -2573,9 +2573,9 @@ as
         
         end loop;
     
-    end reissue_tickets;
+    end ticket_reissue_batch;
 
-    procedure reissue_tickets_using_email
+    procedure ticket_reissue_using_email_batch
     (
         p_tickets in out t_ticket_reissues
     )
@@ -2585,7 +2585,7 @@ as
         for i in 1..p_tickets.count loop
             
             begin
-                reissue_ticket_using_email(p_customer_email => p_tickets(i).customer_email, p_ticket_serial_code => p_tickets(i).serial_code);
+                ticket_reissue_using_email(p_customer_email => p_tickets(i).customer_email, p_ticket_serial_code => p_tickets(i).serial_code);
                 p_tickets(i).status := 'SUCCESS';
                 p_tickets(i).status_message := 'Reissued ticket serial code.  Previous ticket is unusable for event.  Please reprint ticket.';
             exception
@@ -2596,9 +2596,9 @@ as
         
         end loop;
     
-    end reissue_tickets_using_email;
+    end ticket_reissue_using_email_batch;
         
-    procedure validate_ticket
+    procedure ticket_validate
     (
         p_event_id in number,
         p_ticket_serial_code in varchar2
@@ -2654,37 +2654,14 @@ as
     
     exception
         when no_data_found then
-            log_error('TICKET SERIAL CODE (' || p_ticket_serial_code || ') NOT FOUND FOR EVENT_ID ' || p_event_id, sqlcode, 'validate_ticket');
+            log_error('TICKET SERIAL CODE (' || p_ticket_serial_code || ') NOT FOUND FOR EVENT_ID ' || p_event_id, sqlcode, 'ticket_validate');
             raise_application_error(-20100, 'Ticket serial code not found for event, cannot validate');
         when others then
-            log_error(sqlerrm, sqlcode, 'validate_ticket');
+            log_error(sqlerrm, sqlcode, 'ticket_validate');
             raise;
-    end validate_ticket;
-    
-    procedure validate_tickets
-    (
-        p_tickets in out t_ticket_validations
-    )
-    is
-    begin
-    
-        for i in 1..p_tickets.count loop
-            
-            begin
-                validate_ticket(p_event_id => p_tickets(i).event_id, p_ticket_serial_code => p_tickets(i).serial_code);
-                p_tickets(i).status := 'SUCCESS';
-                p_tickets(i).status_message := 'Validated Ticket';
-            exception
-                when others then
-                    p_tickets(i).status := 'ERROR';
-                    p_tickets(i).status_message := sqlerrm;
-            end;
+    end ticket_validate;
         
-        end loop;
-        
-    end validate_tickets;
-    
-    procedure verify_ticket_validation
+    procedure ticket_verify_validation
     (
         p_serial_code in varchar2
     )
@@ -2703,11 +2680,11 @@ as
         
     exception
         when others then
-            log_error('SERIAL CODE ' || p_serial_code || ': ' || sqlerrm, sqlcode, 'verify_ticket_validation');
+            log_error('SERIAL CODE ' || p_serial_code || ': ' || sqlerrm, sqlcode, 'ticket_verify_validation');
             raise;
-    end verify_ticket_validation;
+    end ticket_verify_validation;
     
-    procedure verify_ticket_restricted_access
+    procedure ticket_verify_restricted_access
     (
         p_ticket_group_id in number,
         p_serial_code in varchar2
@@ -2734,9 +2711,9 @@ as
     
     exception
         when others then
-            log_error('SERIAL CODE ' || p_serial_code || ': ' || sqlerrm, sqlcode, 'verify_ticket_restricted_access');
+            log_error('SERIAL CODE ' || p_serial_code || ': ' || sqlerrm, sqlcode, 'ticket_verify_restricted_access');
             raise;    
-    end verify_ticket_restricted_access;
+    end ticket_verify_restricted_access;
         
 --package initialization
 begin

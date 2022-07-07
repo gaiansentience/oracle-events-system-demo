@@ -451,13 +451,13 @@ as
     --update ticket status to REISSUED and add R to the serial code
     --raise error if customer is not the original purchaser
     --raise error if ticket status is REISSUED or VALIDATED
-    procedure reissue_ticket
+    procedure ticket_reissue
     (
         p_customer_id in number,
         p_ticket_serial_code in varchar2
     );
     
-    procedure reissue_ticket_using_email
+    procedure ticket_reissue_using_email
     (
         p_customer_email in varchar2,
         p_ticket_serial_code in varchar2
@@ -474,12 +474,12 @@ as
     
     type t_ticket_reissues is table of r_ticket_reissue_request index by pls_integer;
 
-    procedure reissue_tickets
+    procedure ticket_reissue_batch
     (
         p_tickets in out t_ticket_reissues
     );
 
-    procedure reissue_tickets_using_email
+    procedure ticket_reissue_using_email_batch
     (
         p_tickets in out t_ticket_reissues
     );
@@ -489,31 +489,16 @@ as
     --raise error if ticket status is not ISSUED or REISSUED
     --raise error if ticket status is already VALIDATED
     --set valid ticket status to VALIDATED
-    procedure validate_ticket
+    procedure ticket_validate
     (
         p_event_id in number,
         p_ticket_serial_code in varchar2
-    );
-
-    type r_ticket_validation_request is record
-        (
-            event_id events.event_id%type, 
-            serial_code tickets.serial_code%type, 
-            status varchar2(20), 
-            status_message varchar2(4000)
-        );
-    
-    type t_ticket_validations is table of r_ticket_validation_request index by pls_integer;
-    
-    procedure validate_tickets
-    (
-        p_tickets in out t_ticket_validations
     );
     
     --used to verify that the ticket was used to enter the event
     --verify that the ticket status is VALIDATED
     --raise error for any other status
-    procedure verify_ticket_validation
+    procedure ticket_verify_validation
     (
         p_serial_code in varchar2
     );
@@ -521,7 +506,7 @@ as
     --used to enter restricted areas like RESERVED SEATING, VIP, etc
     --verify that the ticket serial number was purchased in the ticket group
     --raise error if ticket is not part of the ticket group
-    procedure verify_ticket_restricted_access
+    procedure ticket_verify_restricted_access
     (
         p_ticket_group_id in number,
         p_serial_code in varchar2
