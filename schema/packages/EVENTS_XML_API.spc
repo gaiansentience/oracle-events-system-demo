@@ -78,6 +78,12 @@ as
     (
         p_xml_doc in out nocopy xmltype
     );
+    
+    function get_customer
+    (
+        p_customer_id in number,
+        p_formatted in boolean default false
+    ) return xmltype;
 
     function get_venue_events
     (

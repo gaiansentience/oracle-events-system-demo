@@ -63,6 +63,12 @@ as
     (
         p_json_doc in out nocopy varchar2
     );
+
+    function get_customer
+    (
+        p_customer_id in number,
+        p_formatted in boolean default false   
+    ) return varchar2;
         
     function get_venue_events
     (

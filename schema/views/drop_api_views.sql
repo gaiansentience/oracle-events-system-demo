@@ -31,4 +31,5 @@ drop view venue_reseller_performance_v;
 drop view venue_reseller_commission_v;
 drop view venues_v;
 drop view resellers_v;
+drop view customers_v;
 prompt views dropped

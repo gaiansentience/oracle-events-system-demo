@@ -451,7 +451,31 @@ as
             util_xmldom_helper.freeDoc;
             p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'update_customer');
     end update_customer;
-
+    
+    function get_customer
+    (
+        p_customer_id in number,
+        p_formatted in boolean default false   
+    ) return xmltype
+    is
+        l_xml xmltype;
+    begin
+    
+        select b.xml_doc 
+        into l_xml
+        from customers_v_xml b
+        where b.customer_id = p_customer_id;
+    
+        if p_formatted then
+            l_xml := format_xml_string(l_xml);
+        end if;
+        return l_xml;
+       
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_customer');
+    end get_customer;
+    
     function get_venue_events
     (
         p_venue_id in number,

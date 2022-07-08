@@ -152,6 +152,27 @@ as
             log_error(sqlerrm, sqlcode, 'update_venue');
             raise;    
     end update_venue;
+    
+    procedure show_venue
+    (
+        p_venue_id in number,
+        p_info out sys_refcursor
+    )
+    is
+    begin
+    
+        open p_info for
+        select
+            v.venue_id
+            ,v.venue_name
+            ,v.organizer_email
+            ,v.organizer_name
+            ,v.max_event_capacity
+            ,v.venue_scheduled_events
+        from event_system.venues_v v
+        where v.venue_id = p_venue_id;
+    
+    end show_venue;
 
     procedure show_venues_summary
     (
@@ -289,6 +310,26 @@ as
             raise;
     end update_reseller;
 
+    procedure show_reseller
+    (
+        p_reseller_id in number,
+        p_info out sys_refcursor
+    )
+    is
+    begin
+    
+        open p_info for
+        select
+            r.reseller_id,
+            r.reseller_name,
+            r.reseller_email,
+            r.commission_percent
+        from 
+            event_system.resellers_v r
+        where r.reseller_id = p_reseller_id;
+    
+    end show_reseller;
+
     procedure show_resellers
     (
         p_resellers out sys_refcursor
@@ -421,6 +462,24 @@ as
             log_error(sqlerrm, sqlcode, 'update_customer');
             raise;
     end update_customer;
+    
+    procedure show_customer
+    (
+        p_customer_id in number,
+        p_info out sys_refcursor
+    )
+    is
+    begin
+    
+        open p_info for
+        select
+            c.customer_id
+            ,c.customer_name
+            ,c.customer_email
+        from event_system.customers_v c
+        where c.customer_id = p_customer_id;
+        
+    end show_customer;
 
     function get_event_id
     (

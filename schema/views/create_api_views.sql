@@ -1,5 +1,5 @@
 prompt creating views for events api
-
+@@view.customers_v.sql;
 @@view.resellers_v.sql;
 @@view.venues_v.sql;
 @@view.venue_event_base_v.sql;

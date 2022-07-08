@@ -33,5 +33,5 @@ drop view events_v_xml;
 
 drop view all_resellers_v_xml;
 drop view resellers_v_xml;
-
+drop view customers_v_xml;    
 prompt xml views dropped

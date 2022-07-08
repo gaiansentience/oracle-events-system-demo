@@ -441,7 +441,31 @@ as
         when others then
             p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'update_customer');
     end update_customer;
-
+    
+    function get_customer
+    (
+        p_customer_id in number,
+        p_formatted in boolean default false   
+    ) return varchar2
+    is
+        l_json varchar2(4000);
+    begin
+    
+        select b.json_doc
+        into l_json
+        from customers_v_json b
+        where b.customer_id = p_customer_id;
+    
+        if p_formatted then
+            l_json := format_json_string(l_json);
+        end if;
+        return l_json;
+    
+    exception
+        when others then
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_customer');
+    end get_customer;
+    
     function get_venue_events
     (
         p_venue_id in number,

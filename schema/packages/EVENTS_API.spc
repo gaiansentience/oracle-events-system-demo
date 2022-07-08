@@ -25,6 +25,12 @@ as
         p_max_event_capacity in number  
     );    
     
+    procedure show_venue
+    (
+        p_venue_id in number,
+        p_info out sys_refcursor
+    );
+        
     procedure show_venues_summary
     (
         p_venues out sys_refcursor
@@ -51,6 +57,12 @@ as
         p_commission_percent in number default 0.10    
     );
     
+    procedure show_reseller
+    (
+        p_reseller_id in number,
+        p_info out sys_refcursor
+    );
+        
     procedure show_resellers
     (
         p_resellers out sys_refcursor
@@ -73,6 +85,12 @@ as
         p_customer_id in number,
         p_customer_name in varchar2,
         p_customer_email in varchar2
+    );
+    
+    procedure show_customer
+    (
+        p_customer_id in number,
+        p_info out sys_refcursor
     );
     
     function get_event_id

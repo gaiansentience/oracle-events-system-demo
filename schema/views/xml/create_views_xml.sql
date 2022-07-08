@@ -1,5 +1,7 @@
---create views for the events system
 prompt creating views for xml web services
+
+@@view.customers_v_xml.sql;
+
 @@view.all_resellers_v_xml.sql;
 @@view.resellers_v_xml.sql;
 
@@ -32,6 +34,5 @@ prompt creating views for xml web services
 @@view.customer_event_series_tickets_v_xml.sql;
 
 @verify_views\create_views_xml_verify.sql;
-
 prompt events system xml api views created
 

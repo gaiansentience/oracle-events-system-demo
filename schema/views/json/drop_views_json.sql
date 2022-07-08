@@ -31,5 +31,5 @@ drop view events_v_json;
 
 drop view all_resellers_v_json;
 drop view resellers_v_json;
-
+drop view customers_v_json;
 prompt json views dropped
