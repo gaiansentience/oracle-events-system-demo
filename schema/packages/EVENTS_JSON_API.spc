@@ -337,5 +337,9 @@ as
         p_formatted in boolean default false
     ) return clob;
 
+    --add methods to print tickets
+    
+    --add ticket methods (reissue, validate, verify_validation, verify_restricted_access)
+
 
 end events_json_api;

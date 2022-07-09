@@ -1,19 +1,18 @@
 create or replace package body events_api
 as
 
-    g_db_user varchar2(30);
-    g_os_user varchar2(100);
-    g_db_sid number;
     g_processing_event_series boolean := false;
+
+    c_ticket_status_issued constant varchar2(20) := 'ISSUED';
+    c_ticket_status_reissued constant varchar2(20) := 'REISSUED';
+    c_ticket_status_cancelled constant varchar2(20) := 'CANCELLED';
+    c_ticket_status_validated constant varchar2(20) := 'VALIDATED';
+    c_ticket_status_refunded constant varchar2(20) := 'REFUNDED';
 
     procedure initialize
     is
     begin
-
-        g_db_user := user;
-        g_os_user := sys_context('userenv', 'os_user');
-        g_db_sid := sys_context('userenv','sid');
-
+        null;
     end initialize;
 
     procedure log_error
@@ -1888,12 +1887,14 @@ as
             
         insert into event_system.tickets
         (
-            ticket_sales_id, 
-            serial_code
+            ticket_sales_id 
+            ,serial_code
+            ,status
         )
         select 
-            p_sale.ticket_sales_id, 
-            l_serialization || to_char(level,'fm0999')
+            p_sale.ticket_sales_id
+            ,l_serialization || to_char(level,'fm0999')
+            ,c_ticket_status_cancelled
         from dual 
         connect by level <= p_sale.ticket_quantity;
         
@@ -2551,7 +2552,10 @@ as
         show_customer_event_series_tickets(v_customer_id, p_event_series_id, p_tickets);
     
     end show_customer_event_series_tickets_by_email;
-                
+    
+    --add methods to print_tickets by ticket_sales_id
+    
+                               
     procedure ticket_reissue
     (
         p_customer_id in number,
@@ -2570,28 +2574,28 @@ as
                 on t.ticket_sales_id = ts.ticket_sales_id
         where t.serial_code = upper(p_ticket_serial_code);
         
-        if l_customer_id <> p_customer_id then
-            raise_application_error(-20100, 'Tickets can only be reissued to original customer who purchased tickets, cannot reissue.');
-        end if;
+        case
+            when l_customer_id <> p_customer_id then
+                raise_application_error(-20100, 'Tickets can only be reissued to original purchasing customer, cannot reissue.');
+            when l_status = c_ticket_status_issued then
         
-        if l_status = 'ISSUED' then
-        
-            update tickets t
-            set t.status = 'REISSUED', t.serial_code = t.serial_code || 'R'
-            where
-                t.serial_code = upper(p_ticket_serial_code);
+                update tickets t
+                set 
+                    t.status = c_ticket_status_reissued, 
+                    t.serial_code = t.serial_code || 'R'
+                where t.serial_code = upper(p_ticket_serial_code);
             
-            commit;
+                commit;
         
-        else
-        
-            if l_status = 'REISSUED' then
+            when l_status = c_ticket_status_reissued then
                 raise_application_error(-20100, 'Ticket has already been reissued, cannot reissue twice.');
-            elsif l_status = 'VALIDATED' then
+            when l_status = c_ticket_status_validated then
                 raise_application_error(-20100, 'Ticket has been validated for event entry, cannot reissue.');
-            end if;
-            
-        end if;
+            when l_status = c_ticket_status_cancelled then
+                raise_application_error(-20100, 'Ticket has been cancelled, cannot reissue.');
+            when l_status = c_ticket_status_refunded then
+                raise_application_error(-20100, 'Ticket has been refunded, cannot reissue.');                
+        end case;
         
     exception
         when others then
@@ -2607,8 +2611,12 @@ as
     is
         l_customer_id customers.customer_id%type;
     begin
+    
         l_customer_id := get_customer_id(p_customer_email => p_customer_email);
-        ticket_reissue(p_customer_id => l_customer_id, p_ticket_serial_code => p_ticket_serial_code);
+        ticket_reissue(
+            p_customer_id => l_customer_id, 
+            p_ticket_serial_code => p_ticket_serial_code);
+            
     end ticket_reissue_using_email;    
     
     procedure ticket_reissue_batch
@@ -2621,7 +2629,11 @@ as
         for i in 1..p_tickets.count loop
             
             begin
-                ticket_reissue(p_customer_id => p_tickets(i).customer_id, p_ticket_serial_code => p_tickets(i).serial_code);
+            
+                ticket_reissue(
+                    p_customer_id => p_tickets(i).customer_id, 
+                    p_ticket_serial_code => p_tickets(i).serial_code);
+                    
                 p_tickets(i).status := 'SUCCESS';
                 p_tickets(i).status_message := 'Reissued ticket serial code.  Previous ticket is unusable for event.  Please reprint ticket.';
             exception
@@ -2644,7 +2656,11 @@ as
         for i in 1..p_tickets.count loop
             
             begin
-                ticket_reissue_using_email(p_customer_email => p_tickets(i).customer_email, p_ticket_serial_code => p_tickets(i).serial_code);
+            
+                ticket_reissue_using_email(
+                    p_customer_email => p_tickets(i).customer_email, 
+                    p_ticket_serial_code => p_tickets(i).serial_code);
+                
                 p_tickets(i).status := 'SUCCESS';
                 p_tickets(i).status_message := 'Reissued ticket serial code.  Previous ticket is unusable for event.  Please reprint ticket.';
             exception
@@ -2656,7 +2672,7 @@ as
         end loop;
     
     end ticket_reissue_using_email_batch;
-        
+                
     procedure ticket_validate
     (
         p_event_id in number,
@@ -2679,13 +2695,13 @@ as
             where
                 tg.event_id = p_event_id
                 and t.serial_code = upper(p_ticket_serial_code)
-                and t.status in ('ISSUED', 'REISSUED');
+                and t.status in (c_ticket_status_issued, c_ticket_status_reissued);
                 
         if i = 1 then
             
             --ticket is valid for the event and has not already been used for entry, update status to validated
-            update tickets t
-            set t.status = 'VALIDATED'
+            update event_system.tickets t
+            set t.status = c_ticket_status_validated
             where t.serial_code = upper(p_ticket_serial_code);
             
             commit;
@@ -2695,19 +2711,25 @@ as
             select t.status, tg.event_id
             into l_status, l_event_id
             from
-                tickets t 
-                join ticket_sales ts 
-                    on t.ticket_sales_id = ts.ticket_sales_id
-                join ticket_groups tg 
-                    on ts.ticket_group_id = tg.ticket_group_id
-            where
-                t.serial_code = upper(p_ticket_serial_code);
+                event_system.ticket_groups tg 
+                join event_system.ticket_sales ts 
+                    on tg.ticket_group_id = ts.ticket_group_id
+                join event_system.tickets t 
+                    on ts.ticket_sales_id = t.ticket_sales_id
+            where t.serial_code = upper(p_ticket_serial_code);
         
-            if l_event_id <> p_event_id then
-                raise_application_error(-20100, 'Ticket is for a different event, cannot validate.');
-            elsif l_status = 'VALIDATED' then
-                raise_application_error(-20100, 'Ticket has already been used for event entry, cannot revalidate.');
-            end if;
+            case
+                when l_event_id <> p_event_id then
+                    raise_application_error(-20100, 'Ticket is for a different event, cannot validate.');
+                when l_status = c_ticket_status_validated then
+                    raise_application_error(-20100, 'Ticket has already been used for event entry, cannot revalidate.');
+                when l_status = c_ticket_status_cancelled then
+                    raise_application_error(-20100, 'Ticket has been cancelled.  Cannot validate.');      
+                when l_status = c_ticket_status_refunded then
+                    raise_application_error(-20100, 'Ticket has been refunded.  Cannot validate.');                          
+                else
+                    raise_application_error(-20100, 'Cannot validate ticket with serial code ' || p_ticket_serial_code || ' current status is ' || l_status);
+            end case;
                 
         end if;
     
@@ -2730,10 +2752,10 @@ as
     
         select t.status
         into l_status
-        from tickets t
-        where t.serial_code = p_serial_code;
+        from event_system.tickets t
+        where t.serial_code = upper(p_serial_code);
         
-        if l_status <> 'VALIDATED' then
+        if l_status <> c_ticket_status_validated then
             raise_application_error(-20100, 'Ticket has not been validated for event entry.');
         end if;
         
@@ -2756,12 +2778,13 @@ as
         select count(*)
         into i
         from 
-            tickets t 
-            join ticket_sales ts
+            event_system.tickets t 
+            join event_system.ticket_sales ts
                 on t.ticket_sales_id = ts.ticket_sales_id
         where
             ts.ticket_group_id = p_ticket_group_id
-            and t.serial_code = upper(p_serial_code);
+            and t.serial_code = upper(p_serial_code)
+            and t.status = c_ticket_status_validated;
             
         if i <> 1 then
             l_price_category := get_ticket_group_category(p_ticket_group_id => p_ticket_group_id);
@@ -2774,6 +2797,25 @@ as
             raise;    
     end ticket_verify_restricted_access;
         
+    procedure cancel_ticket
+    (
+        p_serial_code in varchar2
+    )
+    is
+    begin
+        
+        update event_system.tickets t
+        set t.status = c_ticket_status_cancelled
+        where t.serial_code = p_serial_code;
+        
+        commit;
+        
+    exception
+        when others then
+            log_error(sqlerrm, sqlcode, 'cancel_ticket');
+            raise;
+    end cancel_ticket;
+
 --package initialization
 begin
     initialize;

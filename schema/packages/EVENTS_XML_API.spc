@@ -369,5 +369,8 @@ as
         p_formatted in boolean default false
     ) return xmltype;
 
+    --add methods to print tickets
+    
+    --add ticket methods (reissue, validate, verify_validation, verify_restricted_access)
 
 end events_xml_api;

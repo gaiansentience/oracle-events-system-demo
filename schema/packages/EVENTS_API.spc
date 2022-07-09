@@ -505,7 +505,7 @@ as
     --validate that the ticket has been used for event entry
     --raise error if ticket was sold for a different event
     --raise error if ticket status is not ISSUED or REISSUED
-    --raise error if ticket status is already VALIDATED
+    --raise error if ticket status is already VALIDATED or CANCELLED
     --set valid ticket status to VALIDATED
     procedure ticket_validate
     (
@@ -523,10 +523,17 @@ as
     
     --used to enter restricted areas like RESERVED SEATING, VIP, etc
     --verify that the ticket serial number was purchased in the ticket group
-    --raise error if ticket is not part of the ticket group
+    --and that the ticket has been validated for entry (status = VALIDATED)
+    --raise error if ticket is not part of the ticket group or status is not validated
     procedure ticket_verify_restricted_access
     (
         p_ticket_group_id in number,
+        p_serial_code in varchar2
+    );
+
+    --set ticket status to cancelled
+    procedure cancel_ticket
+    (
         p_serial_code in varchar2
     );
 
