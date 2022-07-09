@@ -371,7 +371,8 @@ as
 
     --add methods to print tickets
     
-    --add ticket methods (reissue, validate, verify_validation, verify_restricted_access)
+    --add ticket methods (reissue)
+    
     procedure ticket_validate
     (
         p_xml_doc in out nocopy xmltype
@@ -387,5 +388,9 @@ as
         p_xml_doc in out nocopy xmltype
     );
     
+    procedure ticket_cancel
+    (
+        p_xml_doc in out nocopy xmltype
+    );
 
 end events_xml_api;

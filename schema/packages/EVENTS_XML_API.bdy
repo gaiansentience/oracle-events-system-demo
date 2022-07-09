@@ -1813,6 +1813,10 @@ as
             return get_xml_error_doc(sqlcode, sqlerrm, 'get_customer_event_series_tickets_by_email');
     end get_customer_event_series_tickets_by_email;
 
+--print tickets
+
+--ticket_reissue
+
     procedure ticket_validate
     (
         p_xml_doc in out nocopy xmltype
@@ -1850,6 +1854,20 @@ as
         when others then
             p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'ticket_verify_restricted_access');    
     end ticket_verify_restricted_access;
+    
+    procedure ticket_cancel
+    (
+        p_xml_doc in out nocopy xmltype
+    )
+    is
+    begin
+
+    null;
+    
+    exception
+        when others then
+            p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'ticket_cancel');
+    end ticket_cancel;
 
 
 begin

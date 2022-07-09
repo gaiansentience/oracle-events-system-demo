@@ -1741,6 +1741,10 @@ as
             return get_json_error_doc(sqlcode, sqlerrm, 'get_customer_event_series_tickets_by_email');
     end get_customer_event_series_tickets_by_email;
 
+--print tickets by ticket_sales_id
+
+--reissue tickets
+
     procedure ticket_validate
     (
         p_json_doc in out nocopy clob
@@ -1777,6 +1781,17 @@ as
             p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'ticket_verify_restricted_access');    
     end ticket_verify_restricted_access;
 
+    procedure ticket_cancel
+    (
+        p_json_doc in out nocopy clob
+    )
+    is
+    begin
+    null;
+    exception
+        when others then
+            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'ticket_cancel');
+    end ticket_cancel;
 
 begin
   null;

@@ -339,7 +339,8 @@ as
 
     --add methods to print tickets
     
-    --add ticket methods (reissue, validate, verify_validation, verify_restricted_access)
+    --add ticket methods (reissue)
+    
     procedure ticket_validate
     (
         p_json_doc in out nocopy clob
@@ -355,5 +356,9 @@ as
         p_json_doc in out nocopy clob
     );
     
+    procedure ticket_cancel
+    (
+        p_json_doc in out nocopy clob
+    );
 
 end events_json_api;
