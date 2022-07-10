@@ -3,7 +3,7 @@ with event_base as
 (
     select
         e.venue_id
-        ,count(*) as venue_scheduled_events
+        ,count(*) as events_scheduled
     from event_system.events e
     where e.event_date > trunc(sysdate)
     group by e.venue_id
@@ -14,7 +14,7 @@ select
     ,v.organizer_email
     ,v.organizer_name
     ,v.max_event_capacity
-    ,nvl(e.venue_scheduled_events, 0) as venue_scheduled_events
+    ,nvl(e.events_scheduled, 0) as events_scheduled
 from 
     event_system.venues v 
     left outer join event_base e 

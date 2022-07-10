@@ -3,6 +3,23 @@ authid current_user
 as
 --expose ref cursor procedures from events_api.[show]xxx procedures
 --use pipelined table functions to support applications that cannot use ref cursors
+    
+    type r_venue_info is record
+    (
+        venue_id            venues.venue_id%type
+        ,venue_name         venues.venue_name%type
+        ,organizer_name     venues.organizer_name%type
+        ,organizer_email    venues.organizer_email%type
+        ,max_event_capacity venues.max_event_capacity%type
+        ,events_scheduled   number    
+    );
+
+    type t_venue_info is table of r_venue_info;
+
+    function show_venue
+    (
+        p_venue_id in venues.venue_id%type
+    ) return t_venue_info pipelined;
 
     type r_venue_summary is record
     (
@@ -30,10 +47,29 @@ as
         ,reseller_email     resellers.reseller_email%type
         ,commission_percent resellers.commission_percent%type
     );
-    type t_resellers_info is table of r_reseller_info;
-    
+    type t_reseller_info is table of r_reseller_info;
+
+    function show_reseller
+    (
+        p_reseller_id in resellers.reseller_id%type
+    ) return t_reseller_info pipelined;
+
     function show_resellers 
-    return t_resellers_info pipelined;
+    return t_reseller_info pipelined;
+    
+    type r_customer_info is record
+    (
+        customer_id     customers.customer_id%type
+        ,customer_name  customers.customer_name%type
+        ,customer_email customers.customer_email%type
+    );
+    
+    type t_customer_info is table of r_customer_info;
+    
+    function show_customer
+    (
+        p_customer_id in customers.customer_id%type
+    ) return t_customer_info pipelined;
     
     type r_upcoming_event is record
     (

@@ -162,10 +162,10 @@ as
         select
             v.venue_id
             ,v.venue_name
-            ,v.organizer_email
             ,v.organizer_name
+            ,v.organizer_email
             ,v.max_event_capacity
-            ,v.venue_scheduled_events
+            ,v.events_scheduled
         from event_system.venues_v v
         where v.venue_id = p_venue_id;
     

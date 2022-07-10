@@ -1,6 +1,26 @@
 create or replace package body events_report_api
 as
 
+    function show_venue
+    (
+        p_venue_id in venues.venue_id%type
+    ) return t_venue_info pipelined
+    is
+        t_rows t_venue_info;
+        rc sys_refcursor;
+    begin
+    
+        events_api.show_venue(p_venue_id, rc);
+        fetch rc bulk collect into t_rows;
+        close rc;
+        
+        for i in 1..t_rows.count loop
+            pipe row(t_rows(i));
+        end loop;
+        return;
+    
+    end show_venue;
+
     function show_venues_summary 
     return t_venue_summary pipelined
     is
@@ -18,11 +38,31 @@ as
         return;
     
     end show_venues_summary;
-
-    function show_resellers 
-    return t_resellers_info pipelined
+    
+    function show_reseller
+    (
+        p_reseller_id in resellers.reseller_id%type
+    ) return t_reseller_info pipelined
     is
-        t_rows t_resellers_info;
+        t_rows t_reseller_info;
+        rc sys_refcursor;
+    begin
+    
+        events_api.show_reseller(p_reseller_id, rc);
+        fetch rc bulk collect into t_rows;
+        close rc;
+        
+        for i in 1..t_rows.count loop
+            pipe row(t_rows(i));
+        end loop;
+        return;
+    
+    end show_reseller;
+    
+    function show_resellers 
+    return t_reseller_info pipelined
+    is
+        t_rows t_reseller_info;
         rc sys_refcursor;
     begin
     
@@ -36,6 +76,26 @@ as
         return;
     
     end show_resellers;   
+    
+    function show_customer
+    (
+        p_customer_id in customers.customer_id%type
+    ) return t_customer_info pipelined
+    is
+        t_rows t_customer_info;
+        rc sys_refcursor;
+    begin
+    
+        events_api.show_customer(p_customer_id, rc);
+        fetch rc bulk collect into t_rows;
+        close rc;
+        
+        for i in 1..t_rows.count loop
+            pipe row(t_rows(i));
+        end loop;
+        return;
+    
+    end show_customer;
     
     function show_venue_upcoming_events
     (
