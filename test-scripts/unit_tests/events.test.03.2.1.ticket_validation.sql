@@ -47,6 +47,7 @@ fetch first 1 row only;
             dbms_output.put_line(sqlerrm);
     end;
     
+    l_status := events_api.get_ticket_status(p_serial_code => l_serial_code);
     dbms_output.put_line('before validation: serial code ' || l_serial_code || ' status ' || l_status);    
     events_api.ticket_validate(p_event_id => l_event_id, p_serial_code => l_serial_code);
     l_status := events_api.get_ticket_status(p_serial_code => l_serial_code);
@@ -56,6 +57,7 @@ fetch first 1 row only;
     update tickets t set t.status = 'REISSUED' where t.serial_code = upper(l_serial_code);
     commit;
 
+    l_status := events_api.get_ticket_status(p_serial_code => l_serial_code);
     dbms_output.put_line('before validation: serial code ' || l_serial_code || ' status ' || l_status);    
     events_api.ticket_validate(p_event_id => l_event_id, p_serial_code => l_serial_code);
     l_status := events_api.get_ticket_status(p_serial_code => l_serial_code);
@@ -83,9 +85,10 @@ before validation: serial code G2229C2640S55997D20220701161539Q0011I0001 status 
 after validation: serial code G2229C2640S55997D20220701161539Q0011I0001 status VALIDATED
 
 force the ticket status to REISSUED
-before validation: serial code G2229C2640S55997D20220701161539Q0011I0001 status VALIDATED
+before validation: serial code G2229C2640S55997D20220701161539Q0011I0001 status REISSUED
 after validation: serial code G2229C2640S55997D20220701161539Q0011I0001 status VALIDATED
 
 try to revalidate the ticket with status of VALIDATED
 ORA-20100: Ticket has already been used for event entry, cannot revalidate.
+
 */
