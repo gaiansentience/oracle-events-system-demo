@@ -2749,16 +2749,25 @@ as
     )
     is
         l_status tickets.status%type;
+        l_event_id number;
     begin
     
-        select t.status
-        into l_status
-        from event_system.tickets t
+        select t.status, tg.event_id
+        into l_status, l_event_id
+        from 
+            event_system.ticket_groups tg
+            join event_system.ticket_sales ts
+                on tg.ticket_group_id = ts.ticket_group_id
+            join event_system.tickets t
+                on ts.ticket_sales_id = t.ticket_sales_id
         where t.serial_code = upper(p_serial_code);
         
-        if l_status <> c_ticket_status_validated then
-            raise_application_error(-20100, 'Ticket has not been validated for event entry.');
-        end if;
+        case
+            when l_event_id <> p_event_id then
+                raise_application_error(-20100, 'Ticket is for different event, cannot verify.');
+            when l_status <> c_ticket_status_validated then
+                raise_application_error(-20100, 'Ticket has not been validated for event entry.');
+        end case;
         
     exception
         when others then
@@ -2804,13 +2813,30 @@ as
         p_serial_code in varchar2
     )
     is
+        l_event_id number;
     begin
+    
+        select tg.event_id
+        into l_event_id
+        from 
+            event_system.ticket_groups tg
+            join event_system.ticket_sales ts
+                on tg.ticket_group_id = ts.ticket_group_id
+            join event_system.tickets t
+                on ts.ticket_sales_id = t.ticket_sales_id
+        where t.serial_code = upper(p_serial_code);
         
-        update event_system.tickets t
-        set t.status = c_ticket_status_cancelled
-        where t.serial_code = p_serial_code;
+        if l_event_id <> p_event_id then
+            raise_application_error(-20100, 'Ticket is for different event, cannot cancel');
+        else
         
-        commit;
+            update event_system.tickets t
+            set t.status = c_ticket_status_cancelled
+            where t.serial_code = upper(p_serial_code);
+        
+            commit;
+        
+        end if;
         
     exception
         when others then

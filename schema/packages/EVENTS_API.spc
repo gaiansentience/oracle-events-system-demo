@@ -514,6 +514,7 @@ as
     );
     
     --used to verify that the ticket was used to enter the event
+    --raise error if ticket was sold for a different event
     --verify that the ticket status is VALIDATED
     --raise error for any other status
     procedure ticket_verify_validation
@@ -526,6 +527,7 @@ as
     --verify that the ticket serial number was purchased in the ticket group
     --and that the ticket has been validated for entry (status = VALIDATED)
     --raise error if ticket is not part of the ticket group or status is not validated
+    --raise error if ticket was sold for a different event
     procedure ticket_verify_restricted_access
     (
         p_ticket_group_id in number,
@@ -533,6 +535,7 @@ as
     );
 
     --set ticket status to cancelled
+    --raise error if ticket was sold for a different event
     procedure cancel_ticket
     (
         p_event_id in number,    
