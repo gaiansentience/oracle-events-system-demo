@@ -2830,7 +2830,7 @@ as
     exception
         when no_data_found then
             log_error('TICKET SERIAL CODE (' || p_serial_code || ') NOT FOUND FOR EVENT_ID ' || p_event_id, sqlcode, 'ticket_verify_validation');
-            raise_application_error(-20100, 'Ticket serial code not found for event, cannot validate');            
+            raise_application_error(-20100, 'Ticket serial code not found for event, cannot verify');            
         when others then
             log_error('SERIAL CODE ' || p_serial_code || ': ' || sqlerrm, sqlcode, 'ticket_verify_validation');
             raise;
