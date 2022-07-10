@@ -84,7 +84,6 @@ as
     is
         r_venue venues%rowtype;
     begin
-    
         r_venue.venue_name := p_venue_name;
         r_venue.organizer_name := p_organizer_name;
         r_venue.organizer_email := p_organizer_email;
@@ -128,7 +127,6 @@ as
     is
         r_venue venues%rowtype;
     begin
-
         r_venue.venue_name := p_venue_name;
         r_venue.organizer_name := p_organizer_name;
         r_venue.organizer_email := p_organizer_email;
@@ -192,10 +190,8 @@ as
             vs.last_event_date,
             vs.min_event_tickets,
             vs.max_event_tickets
-        from 
-            event_system.venues_summary_v vs
-        order by 
-            vs.venue_name;
+        from event_system.venues_summary_v vs
+        order by vs.venue_name;
     
     end show_venues_summary;
 
@@ -247,7 +243,6 @@ as
     is
         r_reseller resellers%rowtype;
     begin
-    
         r_reseller.reseller_name := p_reseller_name;
         r_reseller.reseller_email := p_reseller_email;
         r_reseller.commission_percent := p_commission_percent;
@@ -287,7 +282,6 @@ as
     is
         r_reseller resellers%rowtype;
     begin
-
         r_reseller.reseller_name := p_reseller_name;
         r_reseller.reseller_email := p_reseller_email;
         r_reseller.commission_percent := p_commission_percent;
@@ -323,8 +317,7 @@ as
             r.reseller_name,
             r.reseller_email,
             r.commission_percent
-        from 
-            event_system.resellers_v r
+        from event_system.resellers_v r
         where r.reseller_id = p_reseller_id;
     
     end show_reseller;
@@ -342,10 +335,8 @@ as
             r.reseller_name,
             r.reseller_email,
             r.commission_percent
-        from 
-            event_system.resellers r
-        order by 
-            r.reseller_name;
+        from event_system.resellers r
+        order by r.reseller_name;
     
     end show_resellers;
 
@@ -396,7 +387,6 @@ as
     is
         r_customer customers%rowtype;
     begin
-    
         --check to see if the email is already registered to a customer
         p_customer_id := get_customer_id(p_customer_email);
         r_customer.customer_name := p_customer_name;
@@ -443,7 +433,6 @@ as
     is
         r_customer customers%rowtype;
     begin
-    
         r_customer.customer_name := p_customer_name;
         r_customer.customer_email := p_customer_email;
         validate_customer_record(p_customer => r_customer);
