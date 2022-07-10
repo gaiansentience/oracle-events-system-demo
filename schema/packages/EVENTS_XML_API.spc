@@ -373,21 +373,72 @@ as
     
     --add ticket methods (reissue)
     
+    /*    
+    <ticket_validate>
+        <event>
+            <event_id>123</event_id>        
+        </event>
+        <ticket>
+            <serial_code>xyz</serial_code>
+        </ticket>
+        <**status_code>SUCCESS|ERROR</status_code>
+        <**status_message>VALIDATED|error message</status_message>        
+    </ticket_validate>
+    */
     procedure ticket_validate
     (
         p_xml_doc in out nocopy xmltype
     );
-
+    
+    /*
+    <ticket_verify_validation>
+        <event>????should the event id be an argument
+            <event_id>123</event_id>        
+        </event>
+        <ticket>
+            <serial_code>xyz</serial_code>
+        </ticket>
+        <**status_code>SUCCESS|ERROR</status_code>
+        <**status_message>VERIFIED|error message</status_message>        
+    </ticket_verify_validation>
+    */    
     procedure ticket_verify_validation
     (
         p_xml_doc in out nocopy xmltype
     );
-    
+
+    /*
+    <ticket_verify_restricted_access>
+        <*event>  event id is implied by ticket group..
+            <*event_id>123</event_id>        
+        </event>
+        <ticket_group>
+            <ticket_group_id>456</ticket_group_id>
+        </ticket_group>
+        <ticket>
+            <serial_code>xyz</serial_code>
+        </ticket>
+        <**status_code>SUCCESS|ERROR</status_code>
+        <**status_message>ACCESS VERIFIED|error message</status_message>
+    </ticket_verify_restricted_access>
+    */    
     procedure ticket_verify_restricted_access
     (
         p_xml_doc in out nocopy xmltype
     );
-    
+
+    /*
+    <ticket_cancel>
+        <event>????should the event id be an argument
+            <event_id>123</event_id>        
+        </event>    
+        <ticket>
+            <serial_code>xyz</serial_code>
+        </ticket>
+        <**status_code>SUCCESS|ERROR</status_code>
+        <**status_message>CANCELLED|error message</status_message>
+    </ticket_cancel>
+    */    
     procedure ticket_cancel
     (
         p_xml_doc in out nocopy xmltype

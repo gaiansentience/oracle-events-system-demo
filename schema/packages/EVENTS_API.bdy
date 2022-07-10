@@ -2744,6 +2744,7 @@ as
         
     procedure ticket_verify_validation
     (
+        p_event_id in number,    
         p_serial_code in varchar2
     )
     is
@@ -2799,6 +2800,7 @@ as
         
     procedure cancel_ticket
     (
+        p_event_id in number,    
         p_serial_code in varchar2
     )
     is

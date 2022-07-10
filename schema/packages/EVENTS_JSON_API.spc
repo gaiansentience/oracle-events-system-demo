@@ -341,21 +341,57 @@ as
     
     --add ticket methods (reissue)
     
+    /*
+    {
+        "event_id" : 123,
+        "serial_code" : "abc",
+        "**status_code" : "SUCCESS|ERROR",
+        "**status_message" : "VALIDATED|error message"
+    }    
+    */
     procedure ticket_validate
     (
         p_json_doc in out nocopy clob
     );
-
+    
+    /*
+    {
+        "action" : "ticket-verify-validation",
+        "event_id" : 123,  should be an argument
+        "serial_code" : "abc",
+        "**status_code" : "SUCCESS|ERROR",
+        "**status_message" : "VERIFIED|error message"
+    }        
+    */
     procedure ticket_verify_validation
     (
         p_json_doc in out nocopy clob
     );
     
+    /*
+    {
+        "action" : "ticket-verify-restricted-access",
+        "event_id" : 123,  optional, implied by ticket group id
+        "ticket_group_id" : 456,
+        "serial_code" : "abc",
+        "**status_code" : "SUCCESS|ERROR",
+        "**status_message" : "ACCESS VERIFIED|error message"        
+    }        
+    */
     procedure ticket_verify_restricted_access
     (
         p_json_doc in out nocopy clob
     );
     
+    /*
+    {
+        "action" : "ticket-cancel",
+        "event_id" : 123,  ???should be an argument
+        "serial_code" : "abc",
+        "**status_code" : "SUCCESS|ERROR",
+        "**status_message" : "CANCELLED|error message"        
+    }    
+    */    
     procedure ticket_cancel
     (
         p_json_doc in out nocopy clob
