@@ -414,6 +414,7 @@ as
         </event>
         <ticket_group>
             <ticket_group_id>456</ticket_group_id>
+            <price_category>VIP</price_cateogory>
         </ticket_group>
         <ticket>
             <serial_code>xyz</serial_code>

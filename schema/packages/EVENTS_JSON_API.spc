@@ -374,6 +374,7 @@ as
         "action" : "ticket-verify-restricted-access",
         "*event_id" : 123,  optional, implied by ticket group id
         "ticket_group_id" : 456,
+        "price_category" : "VIP",
         "serial_code" : "abc",
         "**status_code" : "SUCCESS|ERROR",
         "**status_message" : "ACCESS VERIFIED|error message"        
