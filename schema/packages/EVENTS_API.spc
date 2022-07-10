@@ -510,7 +510,7 @@ as
     procedure ticket_validate
     (
         p_event_id in number,
-        p_ticket_serial_code in varchar2
+        p_serial_code in varchar2
     );
     
     --used to verify that the ticket was used to enter the event
@@ -536,7 +536,7 @@ as
 
     --set ticket status to cancelled
     --raise error if ticket was sold for a different event
-    procedure cancel_ticket
+    procedure ticket_cancel
     (
         p_event_id in number,    
         p_serial_code in varchar2

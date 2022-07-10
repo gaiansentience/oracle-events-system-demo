@@ -2676,7 +2676,7 @@ as
     procedure ticket_validate
     (
         p_event_id in number,
-        p_ticket_serial_code in varchar2
+        p_serial_code in varchar2
     )
     is
         i number;
@@ -2694,7 +2694,7 @@ as
                 on ts.ticket_sales_id = t.ticket_sales_id
             where
                 tg.event_id = p_event_id
-                and t.serial_code = upper(p_ticket_serial_code)
+                and t.serial_code = upper(p_serial_code)
                 and t.status in (c_ticket_status_issued, c_ticket_status_reissued);
                 
         if i = 1 then
@@ -2702,7 +2702,7 @@ as
             --ticket is valid for the event and has not already been used for entry, update status to validated
             update event_system.tickets t
             set t.status = c_ticket_status_validated
-            where t.serial_code = upper(p_ticket_serial_code);
+            where t.serial_code = upper(p_serial_code);
             
             commit;
             
@@ -2716,7 +2716,7 @@ as
                     on tg.ticket_group_id = ts.ticket_group_id
                 join event_system.tickets t 
                     on ts.ticket_sales_id = t.ticket_sales_id
-            where t.serial_code = upper(p_ticket_serial_code);
+            where t.serial_code = upper(p_serial_code);
         
             case
                 when l_event_id <> p_event_id then
@@ -2728,14 +2728,14 @@ as
                 when l_status = c_ticket_status_refunded then
                     raise_application_error(-20100, 'Ticket has been refunded.  Cannot validate.');                          
                 else
-                    raise_application_error(-20100, 'Cannot validate ticket with serial code ' || p_ticket_serial_code || ' current status is ' || l_status);
+                    raise_application_error(-20100, 'Cannot validate ticket with serial code ' || p_serial_code || ' current status is ' || l_status);
             end case;
                 
         end if;
     
     exception
         when no_data_found then
-            log_error('TICKET SERIAL CODE (' || p_ticket_serial_code || ') NOT FOUND FOR EVENT_ID ' || p_event_id, sqlcode, 'ticket_validate');
+            log_error('TICKET SERIAL CODE (' || p_serial_code || ') NOT FOUND FOR EVENT_ID ' || p_event_id, sqlcode, 'ticket_validate');
             raise_application_error(-20100, 'Ticket serial code not found for event, cannot validate');
         when others then
             log_error(sqlerrm, sqlcode, 'ticket_validate');
@@ -2807,7 +2807,7 @@ as
             raise;    
     end ticket_verify_restricted_access;
         
-    procedure cancel_ticket
+    procedure ticket_cancel
     (
         p_event_id in number,    
         p_serial_code in varchar2
@@ -2840,9 +2840,9 @@ as
         
     exception
         when others then
-            log_error(sqlerrm, sqlcode, 'cancel_ticket');
+            log_error(sqlerrm, sqlcode, 'ticket_cancel');
             raise;
-    end cancel_ticket;
+    end ticket_cancel;
 
 --package initialization
 begin

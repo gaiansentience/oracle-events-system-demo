@@ -392,7 +392,7 @@ as
     
     /*
     <ticket_verify_validation>
-        <event>????should the event id be an argument
+        <event>
             <event_id>123</event_id>        
         </event>
         <ticket>
@@ -429,7 +429,7 @@ as
 
     /*
     <ticket_cancel>
-        <event>????should the event id be an argument
+        <event>
             <event_id>123</event_id>        
         </event>    
         <ticket>
@@ -445,3 +445,4 @@ as
     );
 
 end events_xml_api;
+ 

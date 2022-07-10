@@ -343,6 +343,7 @@ as
     
     /*
     {
+        "action" : "ticket-validate",
         "event_id" : 123,
         "serial_code" : "abc",
         "**status_code" : "SUCCESS|ERROR",
@@ -357,7 +358,7 @@ as
     /*
     {
         "action" : "ticket-verify-validation",
-        "event_id" : 123,  should be an argument
+        "event_id" : 123,
         "serial_code" : "abc",
         "**status_code" : "SUCCESS|ERROR",
         "**status_message" : "VERIFIED|error message"
@@ -371,7 +372,7 @@ as
     /*
     {
         "action" : "ticket-verify-restricted-access",
-        "event_id" : 123,  optional, implied by ticket group id
+        "*event_id" : 123,  optional, implied by ticket group id
         "ticket_group_id" : 456,
         "serial_code" : "abc",
         "**status_code" : "SUCCESS|ERROR",
@@ -386,7 +387,7 @@ as
     /*
     {
         "action" : "ticket-cancel",
-        "event_id" : 123,  ???should be an argument
+        "event_id" : 123,
         "serial_code" : "abc",
         "**status_code" : "SUCCESS|ERROR",
         "**status_message" : "CANCELLED|error message"        

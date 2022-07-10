@@ -1817,17 +1817,46 @@ as
 
 --ticket_reissue
 
+
     procedure ticket_validate
     (
         p_xml_doc in out nocopy xmltype
     )
     is
+        l_event_id events.event_id%type;
+        l_serial_code tickets.serial_code%type;
+        l_status_code varchar2(50);
+        l_status_message varchar2(4000);
+        nRequest dbms_xmldom.DOMnode;
     begin
+        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRequest);
 
-    null;
+        dbms_xslprocessor.valueof(nRequest, 'event/event_id/text()', l_event_id);
+        dbms_xslprocessor.valueof(nRequest, 'ticket/serial_code/text()', l_serial_code);
+
+        begin
+            
+            events_api.ticket_validate(
+                p_event_id => l_event_id,
+                p_serial_code => l_serial_code);
+                
+            l_status_code := 'SUCCESS';
+            l_status_message := 'VALIDATED';        
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
+
+        util_xmldom_helper.addTextNode(p_parent => nRequest, p_tag => 'status_code', p_data => l_status_code);
+        util_xmldom_helper.addTextNode(p_parent => nRequest, p_tag => 'status_message', p_data => l_status_message);
+                    
+        p_xml_doc := util_xmldom_helper.docToXMLtype;
+        util_xmldom_helper.freeDoc;
     
     exception
         when others then
+            util_xmldom_helper.freeDoc;
             p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'ticket_validate');
     end ticket_validate;
 
@@ -1836,10 +1865,40 @@ as
         p_xml_doc in out nocopy xmltype
     )
     is
+        l_event_id events.event_id%type;
+        l_serial_code tickets.serial_code%type;
+        l_status_code varchar2(50);
+        l_status_message varchar2(4000);
+        nRequest dbms_xmldom.DOMnode;
     begin
-    null;
+        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRequest);
+
+        dbms_xslprocessor.valueof(nRequest, 'event/event_id/text()', l_event_id);
+        dbms_xslprocessor.valueof(nRequest, 'ticket/serial_code/text()', l_serial_code);
+
+        begin
+            
+            events_api.ticket_verify_validation(
+                p_event_id => l_event_id,
+                p_serial_code => l_serial_code);
+                
+            l_status_code := 'SUCCESS';
+            l_status_message := 'VERIFIED';        
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
+
+        util_xmldom_helper.addTextNode(p_parent => nRequest, p_tag => 'status_code', p_data => l_status_code);
+        util_xmldom_helper.addTextNode(p_parent => nRequest, p_tag => 'status_message', p_data => l_status_message);
+                    
+        p_xml_doc := util_xmldom_helper.docToXMLtype;
+        util_xmldom_helper.freeDoc;
+
     exception
         when others then
+            util_xmldom_helper.freeDoc;
             p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'ticket_verify_validation');
     end ticket_verify_validation;
     
@@ -1848,27 +1907,84 @@ as
         p_xml_doc in out nocopy xmltype
     )
     is
+        l_ticket_group_id ticket_groups.ticket_group_id%type;
+        l_serial_code tickets.serial_code%type;
+        l_status_code varchar2(50);
+        l_status_message varchar2(4000);
+        nRequest dbms_xmldom.DOMnode;
     begin
-    null;
+        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRequest);
+
+        dbms_xslprocessor.valueof(nRequest, 'ticket_group/ticket_group_id/text()', l_ticket_group_id);
+        dbms_xslprocessor.valueof(nRequest, 'ticket/serial_code/text()', l_serial_code);
+
+        begin
+            
+            events_api.ticket_verify_restricted_access(
+                p_ticket_group_id => l_ticket_group_id,
+                p_serial_code => l_serial_code);
+                
+            l_status_code := 'SUCCESS';
+            l_status_message := 'ACCESS VERIFIED';        
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
+
+        util_xmldom_helper.addTextNode(p_parent => nRequest, p_tag => 'status_code', p_data => l_status_code);
+        util_xmldom_helper.addTextNode(p_parent => nRequest, p_tag => 'status_message', p_data => l_status_message);
+                    
+        p_xml_doc := util_xmldom_helper.docToXMLtype;
+        util_xmldom_helper.freeDoc;
+
     exception
         when others then
+            util_xmldom_helper.freeDoc;
             p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'ticket_verify_restricted_access');    
     end ticket_verify_restricted_access;
-    
+        
     procedure ticket_cancel
     (
         p_xml_doc in out nocopy xmltype
     )
     is
+        l_event_id events.event_id%type;
+        l_serial_code tickets.serial_code%type;
+        l_status_code varchar2(50);
+        l_status_message varchar2(4000);
+        nRequest dbms_xmldom.DOMnode;
     begin
+        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRequest);
 
-    null;
-    
+        dbms_xslprocessor.valueof(nRequest, 'event/event_id/text()', l_event_id);
+        dbms_xslprocessor.valueof(nRequest, 'ticket/serial_code/text()', l_serial_code);
+
+        begin
+            
+            events_api.ticket_cancel(
+                p_event_id => l_event_id,
+                p_serial_code => l_serial_code);
+                
+            l_status_code := 'SUCCESS';
+            l_status_message := 'CANCELLED';        
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
+        
+        util_xmldom_helper.addTextNode(p_parent => nRequest, p_tag => 'status_code', p_data => l_status_code);
+        util_xmldom_helper.addTextNode(p_parent => nRequest, p_tag => 'status_message', p_data => l_status_message);
+                    
+        p_xml_doc := util_xmldom_helper.docToXMLtype;
+        util_xmldom_helper.freeDoc;
+                    
     exception
         when others then
+            util_xmldom_helper.freeDoc;
             p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'ticket_cancel');
     end ticket_cancel;
-
 
 begin
   null;

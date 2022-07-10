@@ -1745,13 +1745,42 @@ as
 
 --reissue tickets
 
+
+
     procedure ticket_validate
     (
         p_json_doc in out nocopy clob
     )
     is
+        l_event_id events.event_id%type;
+        l_serial_code tickets.serial_code%type;
+        l_status_code varchar2(50);
+        l_status_message varchar2(4000);
+        o_request json_object_t;
     begin
-    null;
+        o_request := json_object_t.parse(p_json_doc);
+        l_event_id := o_request.get_number('event_id');
+        l_serial_code := o_request.get_string('serial_code');   
+
+        begin
+        
+            events_api.ticket_validate(
+                p_event_id => l_event_id,
+                p_serial_code => l_serial_code);
+            
+            l_status_code := 'SUCCESS';
+            l_status_message := 'VALIDATED';        
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
+
+        o_request.put('status_code', l_status_code);
+        o_request.put('status_message', l_status_message);
+
+        p_json_doc := o_request.to_clob; 
+
     exception
         when others then
             p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'ticket_validate');
@@ -1762,8 +1791,35 @@ as
         p_json_doc in out nocopy clob
     )
     is
+        l_event_id events.event_id%type;
+        l_serial_code tickets.serial_code%type;
+        l_status_code varchar2(50);
+        l_status_message varchar2(4000);
+        o_request json_object_t;
     begin
-    null;
+        o_request := json_object_t.parse(p_json_doc);
+        l_event_id := o_request.get_number('event_id');
+        l_serial_code := o_request.get_string('serial_code');   
+
+        begin
+            
+            events_api.ticket_verify_validation(
+                p_event_id => l_event_id,
+                p_serial_code => l_serial_code);
+                
+            l_status_code := 'SUCCESS';
+            l_status_message := 'VERIFIED';        
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
+
+        o_request.put('status_code', l_status_code);
+        o_request.put('status_message', l_status_message);
+
+        p_json_doc := o_request.to_clob; 
+
     exception
         when others then
             p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'ticket_verify_validation');    
@@ -1774,20 +1830,72 @@ as
         p_json_doc in out nocopy clob
     )
     is
+        l_ticket_group_id ticket_groups.ticket_group_id%type;
+        l_serial_code tickets.serial_code%type;
+        l_status_code varchar2(50);
+        l_status_message varchar2(4000);
+        o_request json_object_t;
     begin
-    null;
+        o_request := json_object_t.parse(p_json_doc);
+        l_ticket_group_id := o_request.get_number('ticket_group_id');
+        l_serial_code := o_request.get_string('serial_code');   
+
+        begin
+            
+            events_api.ticket_verify_restricted_access(
+                p_ticket_group_id => l_ticket_group_id,
+                p_serial_code => l_serial_code);
+                
+            l_status_code := 'SUCCESS';
+            l_status_message := 'ACCESS VERIFIED';        
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
+
+        o_request.put('status_code', l_status_code);
+        o_request.put('status_message', l_status_message);
+
+        p_json_doc := o_request.to_clob; 
     exception
         when others then
             p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'ticket_verify_restricted_access');    
     end ticket_verify_restricted_access;
-
+    
     procedure ticket_cancel
     (
         p_json_doc in out nocopy clob
     )
     is
+        l_event_id events.event_id%type;
+        l_serial_code tickets.serial_code%type;
+        l_status_code varchar2(50);
+        l_status_message varchar2(4000);
+        o_request json_object_t;
     begin
-    null;
+        o_request := json_object_t.parse(p_json_doc);
+        l_event_id := o_request.get_number('event_id');
+        l_serial_code := o_request.get_string('serial_code');   
+
+        begin
+            
+            events_api.ticket_cancel(
+                p_event_id => l_event_id,
+                p_serial_code => l_serial_code);
+                
+            l_status_code := 'SUCCESS';
+            l_status_message := 'CANCELLED';        
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
+
+        o_request.put('status_code', l_status_code);
+        o_request.put('status_message', l_status_message);
+
+        p_json_doc := o_request.to_clob; 
     exception
         when others then
             p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'ticket_cancel');
