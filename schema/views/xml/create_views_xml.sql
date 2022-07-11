@@ -6,6 +6,8 @@ prompt creating views for xml web services
 @@view.resellers_v_xml.sql;
 
 @@view.all_venues_v_xml.sql;
+@@view.all_venues_summary_v_xml.sql;
+
 @@view.venues_v_xml.sql;
 @@view.venues_summary_v_xml.sql;
 

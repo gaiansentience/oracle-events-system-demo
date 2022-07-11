@@ -8,8 +8,8 @@ with xml_base as
                 xmlforest(
                     v.venue_id            as "venue_id"
                     ,v.venue_name         as "venue_name"
-                    ,v.organizer_email    as "organizer_email"
                     ,v.organizer_name     as "organizer_name"
+                    ,v.organizer_email    as "organizer_email"
                     ,v.max_event_capacity as "max_event_capacity"
                 ) as "venue"
                 ,xmlforest(

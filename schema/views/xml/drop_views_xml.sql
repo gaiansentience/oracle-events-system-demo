@@ -24,6 +24,8 @@ drop view event_series_ticket_groups_v_xml;
 drop view event_ticket_groups_v_xml;
 
 drop view all_venues_v_xml;
+drop view all_venues_summary_v_xml;
+
 drop view venues_v_xml;
 drop view venues_summary_v_xml;
 

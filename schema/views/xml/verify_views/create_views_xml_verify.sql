@@ -25,6 +25,8 @@ prompt creating verification views for xml web services
 @@view.resellers_v_xml_verify.sql;
 
 @@view.all_venues_v_xml_verify.sql;
+@@view.all_venues_summary_v_xml_verify.sql;
+
 @@view.venues_v_xml_verify.sql;
 @@view.venues_summary_v_xml_verify.sql;
 

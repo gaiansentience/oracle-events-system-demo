@@ -1,17 +1,15 @@
-create or replace view venues_summary_v_xml_verify as
+create or replace view all_venues_summary_v_xml_verify as
 with base as
 (
     select
-        venue_id
-        ,xml_doc
-    from event_system.venues_summary_v_xml
+        xml_doc
+    from event_system.all_venues_summary_v_xml
     --workaround to force optimizer to materialize the xml and parse it
     --without workaround optimizer rewrite attempts to skip xmlagg and xmltable
     where rownum >= 1    
 )
 select 
-    b.venue_id
-    ,t.venue_id as venue_id_xml
+    t.venue_id
     ,t.venue_name
     ,t.organizer_name
     ,t.organizer_email
@@ -23,7 +21,7 @@ select
     ,t.max_event_tickets
 from 
     base b,
-    xmltable('/venue_summary' passing b.xml_doc 
+    xmltable('/all_venues_summary/venue_summary' passing b.xml_doc 
         columns
             venue_id            number        path 'venue/venue_id'
             ,venue_name         varchar2(100) path 'venue/venue_name'
