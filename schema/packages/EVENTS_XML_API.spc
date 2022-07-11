@@ -10,84 +10,6 @@ as
         p_xml_doc in xmltype
     ) return xmltype;
 
-    function get_all_resellers
-    (
-        p_formatted in boolean default false
-    ) return xmltype;
-    
-    function get_reseller
-    (
-        p_reseller_id in number,
-        p_formatted in boolean default false   
-    ) return xmltype;
-/*
-<create_reseller>
-  <reseller>
-    <reseller_name>New Wave Tickets</reseller_name>
-    <reseller_email>ticket.sales@NewWaveTickets.com</reseller_email>
-    <commission_percent>.1111</commission_percent>
-  </reseller>
-</create_reseller>
-*/
-    procedure create_reseller
-    (
-        p_xml_doc in out nocopy xmltype
-    );
-/*
-<update_reseller>
-  <reseller>
-    <reseller_id>21</reseller_id>
-    <reseller_name>New Wave Tickets</reseller_name>
-    <reseller_email>ticket.sales@NewWaveTickets.com</reseller_email>
-    <commission_percent>.1313</commission_percent>
-  </reseller>
-</update_reseller>
-*/
-    procedure update_reseller
-    (
-        p_xml_doc in out nocopy xmltype
-    );
-
-    function get_all_venues
-    (
-        p_formatted in boolean default false
-    ) return xmltype;
-    
-    function get_venue
-    (
-        p_venue_id in number,
-        p_formatted in boolean default false   
-    ) return xmltype;
-/*
-<create_venue>
-  <venue>
-    <venue_name>The Pink Pony Revue</venue_name>
-    <organizer_email>Julia.Stein@ThePinkPonyRevue.com</organizer_email>
-    <organizer_name>Julia Stein</organizer_name>
-    <max_event_capacity>200</max_event_capacity>
-  </venue>
-</create_venue>
-*/
-    procedure create_venue
-    (
-        p_xml_doc in out nocopy xmltype
-    );
-/*
-<update_venue>
-  <venue>
-    <venue_id>21</venue_id>
-    <venue_name>The Pink Pony Revue</venue_name>
-    <organizer_email>Julia.Stein@ThePinkPonyRevue.com</organizer_email>
-    <organizer_name>Julia Stein</organizer_name>
-    <max_event_capacity>350</max_event_capacity>
-  </venue>  
-</update_venue>
-*/
-    procedure update_venue
-    (
-        p_xml_doc in out nocopy xmltype
-    );
-
 /*
 <create_customer>
   <customer>
@@ -120,16 +42,84 @@ as
         p_formatted in boolean default false
     ) return xmltype;
 
-    function get_venue_events
+/*
+<create_reseller>
+  <reseller>
+    <reseller_name>New Wave Tickets</reseller_name>
+    <reseller_email>ticket.sales@NewWaveTickets.com</reseller_email>
+    <commission_percent>.1111</commission_percent>
+  </reseller>
+</create_reseller>
+*/
+    procedure create_reseller
+    (
+        p_xml_doc in out nocopy xmltype
+    );
+/*
+<update_reseller>
+  <reseller>
+    <reseller_id>21</reseller_id>
+    <reseller_name>New Wave Tickets</reseller_name>
+    <reseller_email>ticket.sales@NewWaveTickets.com</reseller_email>
+    <commission_percent>.1313</commission_percent>
+  </reseller>
+</update_reseller>
+*/
+    procedure update_reseller
+    (
+        p_xml_doc in out nocopy xmltype
+    );
+    
+    function get_reseller
+    (
+        p_reseller_id in number,
+        p_formatted in boolean default false   
+    ) return xmltype;
+
+    function get_all_resellers
+    (
+        p_formatted in boolean default false
+    ) return xmltype;
+    
+/*
+<create_venue>
+  <venue>
+    <venue_name>The Pink Pony Revue</venue_name>
+    <organizer_email>Julia.Stein@ThePinkPonyRevue.com</organizer_email>
+    <organizer_name>Julia Stein</organizer_name>
+    <max_event_capacity>200</max_event_capacity>
+  </venue>
+</create_venue>
+*/
+    procedure create_venue
+    (
+        p_xml_doc in out nocopy xmltype
+    );
+/*
+<update_venue>
+  <venue>
+    <venue_id>21</venue_id>
+    <venue_name>The Pink Pony Revue</venue_name>
+    <organizer_email>Julia.Stein@ThePinkPonyRevue.com</organizer_email>
+    <organizer_name>Julia Stein</organizer_name>
+    <max_event_capacity>350</max_event_capacity>
+  </venue>  
+</update_venue>
+*/
+    procedure update_venue
+    (
+        p_xml_doc in out nocopy xmltype
+    );
+
+    function get_venue
     (
         p_venue_id in number,
         p_formatted in boolean default false   
     ) return xmltype;
 
-    function get_venue_event_series
+    function get_all_venues
     (
-        p_venue_id in number,
-        p_formatted in boolean default false   
+        p_formatted in boolean default false
     ) return xmltype;
 
     procedure create_event
@@ -145,6 +135,18 @@ as
     function get_event
     (
         p_event_id in number,
+        p_formatted in boolean default false   
+    ) return xmltype;
+
+    function get_venue_events
+    (
+        p_venue_id in number,
+        p_formatted in boolean default false   
+    ) return xmltype;
+
+    function get_venue_event_series
+    (
+        p_venue_id in number,
         p_formatted in boolean default false   
     ) return xmltype;
 

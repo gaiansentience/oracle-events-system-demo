@@ -58,300 +58,6 @@ as
        
     end get_xml_error_doc;
 
-    function get_all_resellers
-    (
-        p_formatted in boolean default false
-    ) return xmltype
-    is
-        l_xml xmltype;
-    begin
-    
-        select b.xml_doc
-        into l_xml
-        from all_resellers_v_xml b;
-    
-        if p_formatted then
-            l_xml := format_xml_clob(l_xml);
-        end if;
-        return l_xml;
-    
-    exception
-        when others then
-            return get_xml_error_doc(sqlcode, sqlerrm, 'get_all_resellers');
-    end get_all_resellers;
-
-
-    function get_reseller
-    (
-        p_reseller_id in number,
-        p_formatted in boolean default false   
-    ) return xmltype
-    is
-        l_xml xmltype;
-    begin
-    
-        select b.xml_doc
-        into l_xml
-        from resellers_v_xml b
-        where b.reseller_id = p_reseller_id;
-    
-        if p_formatted then
-            l_xml := format_xml_string(l_xml);
-        end if;
-        return l_xml;
-    
-    exception
-        when others then
-            return get_xml_error_doc(sqlcode, sqlerrm, 'get_reseller');
-    end get_reseller;
-
-    procedure parse_reseller
-    (
-        p_source in out nocopy dbms_xmldom.DOMnode,
-        p_reseller out resellers%rowtype
-    )
-    is
-    begin
-    
-        dbms_xslprocessor.valueof(p_source, 'reseller_id/text()', p_reseller.reseller_id);
-        dbms_xslprocessor.valueof(p_source, 'reseller_name/text()', p_reseller.reseller_name);
-        dbms_xslprocessor.valueof(p_source, 'reseller_email/text()', p_reseller.reseller_email);
-        dbms_xslprocessor.valueof(p_source, 'commission_percent/text()', p_reseller.commission_percent);        
-    
-    end parse_reseller;
-
-    procedure create_reseller
-    (
-        p_xml_doc in out nocopy xmltype
-    )
-    is
-        r_reseller event_system.resellers%rowtype;
-        nRoot dbms_xmldom.DOMnode;
-        l_status_code varchar2(10);
-        l_status_message varchar2(4000);
-    begin
-    
-        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
-        parse_reseller(p_source => nRoot, p_reseller => r_reseller);
-        r_reseller.reseller_id := 0;
-        
-        begin         
-        
-            events_api.create_reseller(
-                p_reseller_name => r_reseller.reseller_name, 
-                p_reseller_email => r_reseller.reseller_email, 
-                p_commission_percent => r_reseller.commission_percent, 
-                p_reseller_id => r_reseller.reseller_id);
-                
-            l_status_code := 'SUCCESS';
-            l_status_message := 'Created reseller';
-        exception
-            when others then
-                l_status_code := 'ERROR';
-                l_status_message := sqlerrm;
-        end;
-        
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'reseller_id', p_data => r_reseller.reseller_id);
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_code', p_data => l_status_code);
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_message', p_data => l_status_message);
-        p_xml_doc := util_xmldom_helper.docToXMLtype;
-        util_xmldom_helper.freeDoc;
-        
-    exception
-        when others then
-            util_xmldom_helper.freeDoc;
-            p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'create_reseller');
-    end create_reseller;
-
-    procedure update_reseller
-    (
-        p_xml_doc in out nocopy xmltype
-    )
-    is
-        r_reseller event_system.resellers%rowtype;
-        nRoot dbms_xmldom.DOMnode;
-        l_status_code varchar2(10);
-        l_status_message varchar2(4000);
-    begin
-    
-        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
-        parse_reseller(p_source => nRoot, p_reseller => r_reseller);
-        
-        begin   
-        
-            events_api.update_reseller(
-                p_reseller_id => r_reseller.reseller_id,
-                p_reseller_name => r_reseller.reseller_name, 
-                p_reseller_email => r_reseller.reseller_email, 
-                p_commission_percent => r_reseller.commission_percent);
-                
-            l_status_code := 'SUCCESS';
-            l_status_message := 'Updated reseller';
-        exception
-            when others then
-                l_status_code := 'ERROR';
-                l_status_message := sqlerrm;
-        end;
-        
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_code', p_data => l_status_code);
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_message', p_data => l_status_message);
-        p_xml_doc := util_xmldom_helper.docToXMLtype;
-        util_xmldom_helper.freeDoc;
-        
-    exception
-        when others then
-            util_xmldom_helper.freeDoc;
-            p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'update_reseller');
-    end update_reseller;
-
-    function get_all_venues
-    (
-        p_formatted in boolean default false
-    ) return xmltype
-    is
-        l_xml xmltype;
-    begin
-    
-        select b.xml_doc
-        into l_xml
-        from all_venues_v_xml b;
-    
-        if p_formatted then
-            l_xml := format_xml_clob(l_xml);
-        end if;
-        return l_xml;
-    
-    exception
-        when others then
-            return get_xml_error_doc(sqlcode, sqlerrm, 'get_all_venues');
-    end get_all_venues;
-    
-    function get_venue
-    (
-        p_venue_id in number,
-        p_formatted in boolean default false   
-    ) return xmltype
-    is
-        l_xml xmltype;
-    begin
-    
-        select b.xml_doc 
-        into l_xml
-        from venues_v_xml b
-        where b.venue_id = p_venue_id;
-    
-        if p_formatted then
-            l_xml := format_xml_string(l_xml);
-        end if;
-        return l_xml;
-       
-    exception
-        when others then
-            return get_xml_error_doc(sqlcode, sqlerrm, 'get_venue');
-    end get_venue;
-    
-    procedure parse_venue
-    (
-        p_source in out nocopy dbms_xmldom.DOMnode,
-        p_venue out venues%rowtype
-    )
-    is
-    begin
-    
-        dbms_xslprocessor.valueof(p_source, 'venue_id/text()', p_venue.venue_id);
-        dbms_xslprocessor.valueof(p_source, 'venue_name/text()', p_venue.venue_name);
-        dbms_xslprocessor.valueof(p_source, 'organizer_name/text()', p_venue.organizer_name);
-        dbms_xslprocessor.valueof(p_source, 'organizer_email/text()', p_venue.organizer_email);  
-        dbms_xslprocessor.valueof(p_source, 'max_event_capacity/text()', p_venue.max_event_capacity);  
-        
-    end parse_venue;
-
-    procedure create_venue
-    (
-       p_xml_doc in out nocopy xmltype
-    )
-    is
-        r_venue event_system.venues%rowtype;
-        nRoot dbms_xmldom.DOMnode;
-       l_status_code varchar2(10);
-       l_status_message varchar2(4000);
-    begin
-    
-        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
-        parse_venue(p_source => nRoot, p_venue => r_venue);        
-        r_venue.venue_id := 0;
-
-        begin   
-        
-            events_api.create_venue(
-                p_venue_name => r_venue.venue_name, 
-                p_organizer_name => r_venue.organizer_name, 
-                p_organizer_email => r_venue.organizer_email, 
-                p_max_event_capacity => r_venue.max_event_capacity, 
-                p_venue_id => r_venue.venue_id);
-                
-            l_status_code := 'SUCCESS';
-            l_status_message := 'Created venue';
-        exception
-            when others then
-                l_status_code := 'ERROR';
-                l_status_message := sqlerrm;
-        end;
-        
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'venue_id', p_data => r_venue.venue_id);
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_code', p_data => l_status_code);
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_message', p_data => l_status_message);
-        p_xml_doc := util_xmldom_helper.docToXMLtype;
-        util_xmldom_helper.freeDoc;
-        
-    exception
-        when others then
-            util_xmldom_helper.freeDoc;
-            p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'create_venue');
-    end create_venue;
-
-    procedure update_venue
-    (
-       p_xml_doc in out nocopy xmltype
-    )
-    is
-        r_venue event_system.venues%rowtype;
-        nRoot dbms_xmldom.DOMnode;
-       l_status_code varchar2(10);
-       l_status_message varchar2(4000);
-    begin
-    
-        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
-        parse_venue(p_source => nRoot, p_venue => r_venue);
-        
-        begin   
-        
-            events_api.update_venue(
-                p_venue_id => r_venue.venue_id,
-                p_venue_name => r_venue.venue_name, 
-                p_organizer_name => r_venue.organizer_name, 
-                p_organizer_email => r_venue.organizer_email, 
-                p_max_event_capacity => r_venue.max_event_capacity);
-                
-            l_status_code := 'SUCCESS';
-            l_status_message := 'Updated venue';
-        exception
-            when others then
-                l_status_code := 'ERROR';
-                l_status_message := sqlerrm;
-        end;
-        
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_code', p_data => l_status_code);
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_message', p_data => l_status_message);
-        p_xml_doc := util_xmldom_helper.docToXMLtype;
-        util_xmldom_helper.freeDoc;
-        
-    exception
-        when others then
-            util_xmldom_helper.freeDoc;
-            p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'update_venue');
-    end update_venue;
-    
     procedure parse_customer
     (
         p_source in out nocopy dbms_xmldom.DOMnode,
@@ -475,10 +181,109 @@ as
         when others then
             return get_xml_error_doc(sqlcode, sqlerrm, 'get_customer');
     end get_customer;
-    
-    function get_venue_events
+
+    procedure parse_reseller
     (
-        p_venue_id in number,
+        p_source in out nocopy dbms_xmldom.DOMnode,
+        p_reseller out resellers%rowtype
+    )
+    is
+    begin
+    
+        dbms_xslprocessor.valueof(p_source, 'reseller_id/text()', p_reseller.reseller_id);
+        dbms_xslprocessor.valueof(p_source, 'reseller_name/text()', p_reseller.reseller_name);
+        dbms_xslprocessor.valueof(p_source, 'reseller_email/text()', p_reseller.reseller_email);
+        dbms_xslprocessor.valueof(p_source, 'commission_percent/text()', p_reseller.commission_percent);        
+    
+    end parse_reseller;
+
+    procedure create_reseller
+    (
+        p_xml_doc in out nocopy xmltype
+    )
+    is
+        r_reseller event_system.resellers%rowtype;
+        nRoot dbms_xmldom.DOMnode;
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
+    begin
+    
+        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
+        parse_reseller(p_source => nRoot, p_reseller => r_reseller);
+        r_reseller.reseller_id := 0;
+        
+        begin         
+        
+            events_api.create_reseller(
+                p_reseller_name => r_reseller.reseller_name, 
+                p_reseller_email => r_reseller.reseller_email, 
+                p_commission_percent => r_reseller.commission_percent, 
+                p_reseller_id => r_reseller.reseller_id);
+                
+            l_status_code := 'SUCCESS';
+            l_status_message := 'Created reseller';
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
+        
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'reseller_id', p_data => r_reseller.reseller_id);
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_code', p_data => l_status_code);
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_message', p_data => l_status_message);
+        p_xml_doc := util_xmldom_helper.docToXMLtype;
+        util_xmldom_helper.freeDoc;
+        
+    exception
+        when others then
+            util_xmldom_helper.freeDoc;
+            p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'create_reseller');
+    end create_reseller;
+
+    procedure update_reseller
+    (
+        p_xml_doc in out nocopy xmltype
+    )
+    is
+        r_reseller event_system.resellers%rowtype;
+        nRoot dbms_xmldom.DOMnode;
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
+    begin
+    
+        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
+        parse_reseller(p_source => nRoot, p_reseller => r_reseller);
+        
+        begin   
+        
+            events_api.update_reseller(
+                p_reseller_id => r_reseller.reseller_id,
+                p_reseller_name => r_reseller.reseller_name, 
+                p_reseller_email => r_reseller.reseller_email, 
+                p_commission_percent => r_reseller.commission_percent);
+                
+            l_status_code := 'SUCCESS';
+            l_status_message := 'Updated reseller';
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
+        
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_code', p_data => l_status_code);
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_message', p_data => l_status_message);
+        p_xml_doc := util_xmldom_helper.docToXMLtype;
+        util_xmldom_helper.freeDoc;
+        
+    exception
+        when others then
+            util_xmldom_helper.freeDoc;
+            p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'update_reseller');
+    end update_reseller;
+
+    function get_reseller
+    (
+        p_reseller_id in number,
         p_formatted in boolean default false   
     ) return xmltype
     is
@@ -487,8 +292,30 @@ as
     
         select b.xml_doc
         into l_xml
-        from venue_events_v_xml b
-        where b.venue_id = p_venue_id;
+        from resellers_v_xml b
+        where b.reseller_id = p_reseller_id;
+    
+        if p_formatted then
+            l_xml := format_xml_string(l_xml);
+        end if;
+        return l_xml;
+    
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_reseller');
+    end get_reseller;
+
+    function get_all_resellers
+    (
+        p_formatted in boolean default false
+    ) return xmltype
+    is
+        l_xml xmltype;
+    begin
+    
+        select b.xml_doc
+        into l_xml
+        from all_resellers_v_xml b;
     
         if p_formatted then
             l_xml := format_xml_clob(l_xml);
@@ -497,10 +324,112 @@ as
     
     exception
         when others then
-            return get_xml_error_doc(sqlcode, sqlerrm, 'get_venue_events');
-    end get_venue_events;
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_all_resellers');
+    end get_all_resellers;
+    
+    procedure parse_venue
+    (
+        p_source in out nocopy dbms_xmldom.DOMnode,
+        p_venue out venues%rowtype
+    )
+    is
+    begin
+    
+        dbms_xslprocessor.valueof(p_source, 'venue_id/text()', p_venue.venue_id);
+        dbms_xslprocessor.valueof(p_source, 'venue_name/text()', p_venue.venue_name);
+        dbms_xslprocessor.valueof(p_source, 'organizer_name/text()', p_venue.organizer_name);
+        dbms_xslprocessor.valueof(p_source, 'organizer_email/text()', p_venue.organizer_email);  
+        dbms_xslprocessor.valueof(p_source, 'max_event_capacity/text()', p_venue.max_event_capacity);  
+        
+    end parse_venue;
 
-    function get_venue_event_series
+    procedure create_venue
+    (
+       p_xml_doc in out nocopy xmltype
+    )
+    is
+        r_venue event_system.venues%rowtype;
+        nRoot dbms_xmldom.DOMnode;
+       l_status_code varchar2(10);
+       l_status_message varchar2(4000);
+    begin
+    
+        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
+        parse_venue(p_source => nRoot, p_venue => r_venue);        
+        r_venue.venue_id := 0;
+
+        begin   
+        
+            events_api.create_venue(
+                p_venue_name => r_venue.venue_name, 
+                p_organizer_name => r_venue.organizer_name, 
+                p_organizer_email => r_venue.organizer_email, 
+                p_max_event_capacity => r_venue.max_event_capacity, 
+                p_venue_id => r_venue.venue_id);
+                
+            l_status_code := 'SUCCESS';
+            l_status_message := 'Created venue';
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
+        
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'venue_id', p_data => r_venue.venue_id);
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_code', p_data => l_status_code);
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_message', p_data => l_status_message);
+        p_xml_doc := util_xmldom_helper.docToXMLtype;
+        util_xmldom_helper.freeDoc;
+        
+    exception
+        when others then
+            util_xmldom_helper.freeDoc;
+            p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'create_venue');
+    end create_venue;
+
+    procedure update_venue
+    (
+       p_xml_doc in out nocopy xmltype
+    )
+    is
+        r_venue event_system.venues%rowtype;
+        nRoot dbms_xmldom.DOMnode;
+       l_status_code varchar2(10);
+       l_status_message varchar2(4000);
+    begin
+    
+        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
+        parse_venue(p_source => nRoot, p_venue => r_venue);
+        
+        begin   
+        
+            events_api.update_venue(
+                p_venue_id => r_venue.venue_id,
+                p_venue_name => r_venue.venue_name, 
+                p_organizer_name => r_venue.organizer_name, 
+                p_organizer_email => r_venue.organizer_email, 
+                p_max_event_capacity => r_venue.max_event_capacity);
+                
+            l_status_code := 'SUCCESS';
+            l_status_message := 'Updated venue';
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
+        
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_code', p_data => l_status_code);
+        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_message', p_data => l_status_message);
+        p_xml_doc := util_xmldom_helper.docToXMLtype;
+        util_xmldom_helper.freeDoc;
+        
+    exception
+        when others then
+            util_xmldom_helper.freeDoc;
+            p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'update_venue');
+    end update_venue;
+
+    function get_venue
     (
         p_venue_id in number,
         p_formatted in boolean default false   
@@ -509,10 +438,32 @@ as
         l_xml xmltype;
     begin
     
+        select b.xml_doc 
+        into l_xml
+        from venues_v_xml b
+        where b.venue_id = p_venue_id;
+    
+        if p_formatted then
+            l_xml := format_xml_string(l_xml);
+        end if;
+        return l_xml;
+       
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_venue');
+    end get_venue;
+
+    function get_all_venues
+    (
+        p_formatted in boolean default false
+    ) return xmltype
+    is
+        l_xml xmltype;
+    begin
+    
         select b.xml_doc
         into l_xml
-        from venue_event_series_v_xml b
-        where b.venue_id = p_venue_id;
+        from all_venues_v_xml b;
     
         if p_formatted then
             l_xml := format_xml_clob(l_xml);
@@ -521,9 +472,9 @@ as
     
     exception
         when others then
-            return get_xml_error_doc(sqlcode, sqlerrm, 'get_venue_event_series');
-    end get_venue_event_series;
-
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_all_venues');
+    end get_all_venues;
+        
     procedure create_event
     (
         p_xml_doc in out nocopy xmltype
@@ -683,6 +634,54 @@ as
         when others then
             return get_xml_error_doc(sqlcode, sqlerrm, 'get_event');
     end get_event;
+
+    function get_venue_events
+    (
+        p_venue_id in number,
+        p_formatted in boolean default false   
+    ) return xmltype
+    is
+        l_xml xmltype;
+    begin
+    
+        select b.xml_doc
+        into l_xml
+        from venue_events_v_xml b
+        where b.venue_id = p_venue_id;
+    
+        if p_formatted then
+            l_xml := format_xml_clob(l_xml);
+        end if;
+        return l_xml;
+    
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_venue_events');
+    end get_venue_events;
+
+    function get_venue_event_series
+    (
+        p_venue_id in number,
+        p_formatted in boolean default false   
+    ) return xmltype
+    is
+        l_xml xmltype;
+    begin
+    
+        select b.xml_doc
+        into l_xml
+        from venue_event_series_v_xml b
+        where b.venue_id = p_venue_id;
+    
+        if p_formatted then
+            l_xml := format_xml_clob(l_xml);
+        end if;
+        return l_xml;
+    
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_venue_event_series');
+    end get_venue_event_series;
 
     function get_ticket_groups
     (

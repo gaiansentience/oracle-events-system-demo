@@ -58,296 +58,6 @@ as
        
     end get_json_error_doc;
 
-    function get_all_resellers
-    (
-        p_formatted in boolean default false
-    ) return clob
-    is
-        l_json clob;
-    begin
-    
-        select b.json_doc
-        into l_json
-        from all_resellers_v_json b;
-    
-        if p_formatted then
-            l_json := format_json_clob(l_json);
-        end if;
-        return l_json;
-    
-    exception
-        when others then
-            return get_json_error_doc(sqlcode, sqlerrm, 'get_all_resellers');
-    end get_all_resellers;
-
-    function get_reseller
-    (
-        p_reseller_id in number,
-        p_formatted in boolean default false   
-    ) return varchar2
-    is
-        l_json varchar2(4000);
-    begin
-    
-        select b.json_doc
-        into l_json
-        from resellers_v_json b
-        where b.reseller_id = p_reseller_id;
-    
-        if p_formatted then
-            l_json := format_json_string(l_json);
-        end if;
-        return l_json;
-    
-    exception
-        when others then
-            return get_json_error_doc(sqlcode, sqlerrm, 'get_reseller');
-    end get_reseller;
-
-    procedure parse_reseller
-    (
-        p_source in out nocopy json_object_t,
-        p_reseller out resellers%rowtype
-    )
-    is
-    begin
-    
-        p_reseller.reseller_id := p_source.get_number('reseller_id');
-        p_reseller.reseller_name := p_source.get_string('reseller_name');
-        p_reseller.reseller_email := p_source.get_string('reseller_email');
-        p_reseller.commission_percent := p_source.get_number('commission_percent');
-    
-    end parse_reseller;
-    
-    procedure create_reseller
-    (
-        p_json_doc in out nocopy varchar2
-    )
-    is
-        r_reseller event_system.resellers%rowtype;
-        o_request json_object_t;
-        l_status_code varchar2(10);
-        l_status_message varchar2(4000);
-    begin
-
-        o_request := json_object_t.parse(p_json_doc);
-        parse_reseller(p_source => o_request, p_reseller => r_reseller);        
-        r_reseller.reseller_id := 0;
-        
-        begin     
-        
-            events_api.create_reseller(
-                r_reseller.reseller_name, 
-                r_reseller.reseller_email, 
-                r_reseller.commission_percent, 
-                r_reseller.reseller_id);
-                
-            l_status_code := 'SUCCESS';
-            l_status_message := 'Created reseller';
-        exception
-            when others then
-                l_status_code := 'ERROR';
-                l_status_message := sqlerrm;
-        end;
-        
-        o_request.put('reseller_id', r_reseller.reseller_id);
-        o_request.put('status_code', l_status_code);
-        o_request.put('status_message', l_status_message);
-        
-        p_json_doc := o_request.to_string; 
-
-    exception
-        when others then
-            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'create_reseller');
-    end create_reseller;
-
-    procedure update_reseller
-    (
-        p_json_doc in out nocopy varchar2
-    )
-    is
-        r_reseller event_system.resellers%rowtype;
-        o_request json_object_t;
-        l_status_code varchar2(10);
-        l_status_message varchar2(4000);
-    begin
-
-        o_request := json_object_t.parse(p_json_doc);
-        parse_reseller(p_source => o_request, p_reseller => r_reseller);
-        
-        begin      
-        
-            events_api.update_reseller(
-                p_reseller_id => r_reseller.reseller_id,
-                p_reseller_name => r_reseller.reseller_name, 
-                p_reseller_email => r_reseller.reseller_email, 
-                p_commission_percent => r_reseller.commission_percent);
-                
-            l_status_code := 'SUCCESS';
-            l_status_message := 'Updated reseller';
-        exception
-            when others then
-                l_status_code := 'ERROR';
-                l_status_message := sqlerrm;
-        end;
-        
-        o_request.put('status_code', l_status_code);
-        o_request.put('status_message', l_status_message);
-        
-        p_json_doc := o_request.to_string; 
-
-    exception
-        when others then
-            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'update_reseller');
-    end update_reseller;
-
-
-    function get_all_venues
-    (
-        p_formatted in boolean default false
-    ) return clob
-    is
-        l_json clob;
-    begin
-    
-        select b.json_doc
-        into l_json
-        from all_venues_v_json b;
-    
-        if p_formatted then
-            l_json := format_json_clob(l_json);
-        end if;
-        return l_json;
-    
-    exception
-        when others then
-            return get_json_error_doc(sqlcode, sqlerrm, 'get_all_venues');
-    end get_all_venues;
-
-    function get_venue
-    (
-        p_venue_id in number,
-        p_formatted in boolean default false   
-    ) return varchar2
-    is
-        l_json varchar2(4000);
-    begin
-
-        select b.json_doc
-        into l_json
-        from venues_v_json b
-        where b.venue_id = p_venue_id;
-
-        if p_formatted then
-            l_json := format_json_string(l_json);
-        end if;
-        return l_json;
-   
-    exception
-        when others then
-            return get_json_error_doc(sqlcode, sqlerrm, 'get_venue');
-    end get_venue;
-    
-    procedure parse_venue
-    (
-        p_source in out nocopy json_object_t,
-        p_venue out venues%rowtype
-    )
-    is
-    begin
-
-        p_venue.venue_id := p_source.get_number('venue_id');
-        p_venue.venue_name := p_source.get_string('venue_name');   
-        p_venue.organizer_name := p_source.get_string('organizer_name');
-        p_venue.organizer_email := p_source.get_string('organizer_email');
-        p_venue.max_event_capacity := p_source.get_number('max_event_capacity');
-    
-    end parse_venue;
-
-    procedure create_venue
-    (
-        p_json_doc in out nocopy varchar2
-    )
-    is
-        r_venue event_system.venues%rowtype;
-        o_request json_object_t;
-        l_status_code varchar2(10);
-        l_status_message varchar2(4000);
-    begin
-
-        o_request := json_object_t.parse(p_json_doc);
-        parse_venue(p_source => o_request, p_venue => r_venue);
-        r_venue.venue_id := 0;
-    
-        begin         
-        
-            events_api.create_venue(
-                p_venue_name => r_venue.venue_name, 
-                p_organizer_name => r_venue.organizer_name, 
-                p_organizer_email => r_venue.organizer_email, 
-                p_max_event_capacity => r_venue.max_event_capacity, 
-                p_venue_id => r_venue.venue_id);
-                
-                l_status_code := 'SUCCESS';
-                l_status_message := 'Created venue';
-        exception
-            when others then
-                l_status_code := 'ERROR';
-                l_status_message := sqlerrm;
-        end;
-
-        o_request.put('venue_id', r_venue.venue_id);
-        o_request.put('status_code',l_status_code);
-        o_request.put('status_message', l_status_message);
-
-        p_json_doc := o_request.to_string; 
-
-    exception
-        when others then
-            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'create_venue');
-    end create_venue;
-
-    procedure update_venue
-    (
-        p_json_doc in out nocopy varchar2
-    )
-    is
-        r_venue event_system.venues%rowtype;
-        o_request json_object_t;
-        l_status_code varchar2(10);
-        l_status_message varchar2(4000);
-    begin
-
-        o_request := json_object_t.parse(p_json_doc);
-        parse_venue(p_source => o_request, p_venue => r_venue);
-    
-        begin         
-        
-            events_api.update_venue(
-                p_venue_id => r_venue.venue_id,
-                p_venue_name => r_venue.venue_name, 
-                p_organizer_name => r_venue.organizer_name, 
-                p_organizer_email => r_venue.organizer_email, 
-                p_max_event_capacity => r_venue.max_event_capacity);
-                
-                l_status_code := 'SUCCESS';
-                l_status_message := 'Updated venue';
-        exception
-            when others then
-                l_status_code := 'ERROR';
-                l_status_message := sqlerrm;
-        end;
-
-        o_request.put('status_code',l_status_code);
-        o_request.put('status_message', l_status_message);
-
-        p_json_doc := o_request.to_string; 
-
-    exception
-        when others then
-            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'update_venue');
-    end update_venue;
-
     procedure parse_customer
     (
         p_source in out nocopy json_object_t,
@@ -465,11 +175,131 @@ as
         when others then
             return get_json_error_doc(sqlcode, sqlerrm, 'get_customer');
     end get_customer;
-    
-    function get_venue_events
+
+    procedure parse_reseller
     (
-        p_venue_id in number,
+        p_source in out nocopy json_object_t,
+        p_reseller out resellers%rowtype
+    )
+    is
+    begin
+    
+        p_reseller.reseller_id := p_source.get_number('reseller_id');
+        p_reseller.reseller_name := p_source.get_string('reseller_name');
+        p_reseller.reseller_email := p_source.get_string('reseller_email');
+        p_reseller.commission_percent := p_source.get_number('commission_percent');
+    
+    end parse_reseller;
+    
+    procedure create_reseller
+    (
+        p_json_doc in out nocopy varchar2
+    )
+    is
+        r_reseller event_system.resellers%rowtype;
+        o_request json_object_t;
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
+    begin
+
+        o_request := json_object_t.parse(p_json_doc);
+        parse_reseller(p_source => o_request, p_reseller => r_reseller);        
+        r_reseller.reseller_id := 0;
+        
+        begin     
+        
+            events_api.create_reseller(
+                r_reseller.reseller_name, 
+                r_reseller.reseller_email, 
+                r_reseller.commission_percent, 
+                r_reseller.reseller_id);
+                
+            l_status_code := 'SUCCESS';
+            l_status_message := 'Created reseller';
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
+        
+        o_request.put('reseller_id', r_reseller.reseller_id);
+        o_request.put('status_code', l_status_code);
+        o_request.put('status_message', l_status_message);
+        
+        p_json_doc := o_request.to_string; 
+
+    exception
+        when others then
+            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'create_reseller');
+    end create_reseller;
+
+    procedure update_reseller
+    (
+        p_json_doc in out nocopy varchar2
+    )
+    is
+        r_reseller event_system.resellers%rowtype;
+        o_request json_object_t;
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
+    begin
+
+        o_request := json_object_t.parse(p_json_doc);
+        parse_reseller(p_source => o_request, p_reseller => r_reseller);
+        
+        begin      
+        
+            events_api.update_reseller(
+                p_reseller_id => r_reseller.reseller_id,
+                p_reseller_name => r_reseller.reseller_name, 
+                p_reseller_email => r_reseller.reseller_email, 
+                p_commission_percent => r_reseller.commission_percent);
+                
+            l_status_code := 'SUCCESS';
+            l_status_message := 'Updated reseller';
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
+        
+        o_request.put('status_code', l_status_code);
+        o_request.put('status_message', l_status_message);
+        
+        p_json_doc := o_request.to_string; 
+
+    exception
+        when others then
+            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'update_reseller');
+    end update_reseller;
+
+    function get_reseller
+    (
+        p_reseller_id in number,
         p_formatted in boolean default false   
+    ) return varchar2
+    is
+        l_json varchar2(4000);
+    begin
+    
+        select b.json_doc
+        into l_json
+        from resellers_v_json b
+        where b.reseller_id = p_reseller_id;
+    
+        if p_formatted then
+            l_json := format_json_string(l_json);
+        end if;
+        return l_json;
+    
+    exception
+        when others then
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_reseller');
+    end get_reseller;
+
+    function get_all_resellers
+    (
+        p_formatted in boolean default false
     ) return clob
     is
         l_json clob;
@@ -477,8 +307,7 @@ as
     
         select b.json_doc
         into l_json
-        from venue_events_v_json b
-        where b.venue_id = p_venue_id;
+        from all_resellers_v_json b;
     
         if p_formatted then
             l_json := format_json_clob(l_json);
@@ -487,13 +316,136 @@ as
     
     exception
         when others then
-            return get_json_error_doc(sqlcode, sqlerrm, 'get_venue_events');
-    end get_venue_events;
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_all_resellers');
+    end get_all_resellers;
 
-    function get_venue_event_series
+    procedure parse_venue
+    (
+        p_source in out nocopy json_object_t,
+        p_venue out venues%rowtype
+    )
+    is
+    begin
+
+        p_venue.venue_id := p_source.get_number('venue_id');
+        p_venue.venue_name := p_source.get_string('venue_name');   
+        p_venue.organizer_name := p_source.get_string('organizer_name');
+        p_venue.organizer_email := p_source.get_string('organizer_email');
+        p_venue.max_event_capacity := p_source.get_number('max_event_capacity');
+    
+    end parse_venue;
+
+    procedure create_venue
+    (
+        p_json_doc in out nocopy varchar2
+    )
+    is
+        r_venue event_system.venues%rowtype;
+        o_request json_object_t;
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
+    begin
+
+        o_request := json_object_t.parse(p_json_doc);
+        parse_venue(p_source => o_request, p_venue => r_venue);
+        r_venue.venue_id := 0;
+    
+        begin         
+        
+            events_api.create_venue(
+                p_venue_name => r_venue.venue_name, 
+                p_organizer_name => r_venue.organizer_name, 
+                p_organizer_email => r_venue.organizer_email, 
+                p_max_event_capacity => r_venue.max_event_capacity, 
+                p_venue_id => r_venue.venue_id);
+                
+                l_status_code := 'SUCCESS';
+                l_status_message := 'Created venue';
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
+
+        o_request.put('venue_id', r_venue.venue_id);
+        o_request.put('status_code',l_status_code);
+        o_request.put('status_message', l_status_message);
+
+        p_json_doc := o_request.to_string; 
+
+    exception
+        when others then
+            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'create_venue');
+    end create_venue;
+
+    procedure update_venue
+    (
+        p_json_doc in out nocopy varchar2
+    )
+    is
+        r_venue event_system.venues%rowtype;
+        o_request json_object_t;
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
+    begin
+
+        o_request := json_object_t.parse(p_json_doc);
+        parse_venue(p_source => o_request, p_venue => r_venue);
+    
+        begin         
+        
+            events_api.update_venue(
+                p_venue_id => r_venue.venue_id,
+                p_venue_name => r_venue.venue_name, 
+                p_organizer_name => r_venue.organizer_name, 
+                p_organizer_email => r_venue.organizer_email, 
+                p_max_event_capacity => r_venue.max_event_capacity);
+                
+                l_status_code := 'SUCCESS';
+                l_status_message := 'Updated venue';
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
+
+        o_request.put('status_code',l_status_code);
+        o_request.put('status_message', l_status_message);
+
+        p_json_doc := o_request.to_string; 
+
+    exception
+        when others then
+            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'update_venue');
+    end update_venue;
+
+    function get_venue
     (
         p_venue_id in number,
         p_formatted in boolean default false   
+    ) return varchar2
+    is
+        l_json varchar2(4000);
+    begin
+
+        select b.json_doc
+        into l_json
+        from venues_v_json b
+        where b.venue_id = p_venue_id;
+
+        if p_formatted then
+            l_json := format_json_string(l_json);
+        end if;
+        return l_json;
+   
+    exception
+        when others then
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_venue');
+    end get_venue;
+    
+    function get_all_venues
+    (
+        p_formatted in boolean default false
     ) return clob
     is
         l_json clob;
@@ -501,8 +453,7 @@ as
     
         select b.json_doc
         into l_json
-        from venue_event_series_v_json b
-        where b.venue_id = p_venue_id;
+        from all_venues_v_json b;
     
         if p_formatted then
             l_json := format_json_clob(l_json);
@@ -511,9 +462,9 @@ as
     
     exception
         when others then
-            return get_json_error_doc(sqlcode, sqlerrm, 'get_venue_event_series');
-    end get_venue_event_series;
-
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_all_venues');
+    end get_all_venues;
+    
     procedure create_event
     (
         p_json_doc in out nocopy varchar2
@@ -657,6 +608,54 @@ as
         when others then
             return get_json_error_doc(sqlcode, sqlerrm, 'get_event');
     end get_event;
+
+    function get_venue_events
+    (
+        p_venue_id in number,
+        p_formatted in boolean default false   
+    ) return clob
+    is
+        l_json clob;
+    begin
+    
+        select b.json_doc
+        into l_json
+        from venue_events_v_json b
+        where b.venue_id = p_venue_id;
+    
+        if p_formatted then
+            l_json := format_json_clob(l_json);
+        end if;
+        return l_json;
+    
+    exception
+        when others then
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_venue_events');
+    end get_venue_events;
+
+    function get_venue_event_series
+    (
+        p_venue_id in number,
+        p_formatted in boolean default false   
+    ) return clob
+    is
+        l_json clob;
+    begin
+    
+        select b.json_doc
+        into l_json
+        from venue_event_series_v_json b
+        where b.venue_id = p_venue_id;
+    
+        if p_formatted then
+            l_json := format_json_clob(l_json);
+        end if;
+        return l_json;
+    
+    exception
+        when others then
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_venue_event_series');
+    end get_venue_event_series;
 
     function get_ticket_groups
     (

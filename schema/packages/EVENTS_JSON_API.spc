@@ -12,48 +12,6 @@ as
         p_json_doc in varchar2
     ) return varchar2;
     
-    function get_all_resellers
-    (
-        p_formatted in boolean default false
-    ) return clob;
-    
-    function get_reseller
-    (
-        p_reseller_id in number,
-        p_formatted in boolean default false   
-    ) return varchar2;
-
-    procedure create_reseller
-    (
-        p_json_doc in out nocopy varchar2
-    );
-
-    procedure update_reseller
-    (
-        p_json_doc in out nocopy varchar2
-    );
-
-    function get_all_venues
-    (
-        p_formatted in boolean default false
-    ) return clob;
-    
-    function get_venue
-    (
-        p_venue_id in number,
-        p_formatted in boolean default false   
-    ) return varchar2;
-    
-    procedure create_venue
-    (
-        p_json_doc in out nocopy varchar2
-    );
-
-    procedure update_venue
-    (
-        p_json_doc in out nocopy varchar2
-    );
-    
     procedure create_customer
     (
         p_json_doc in out nocopy varchar2
@@ -69,17 +27,47 @@ as
         p_customer_id in number,
         p_formatted in boolean default false   
     ) return varchar2;
-        
-    function get_venue_events
+    
+    procedure create_reseller
     (
-        p_venue_id in number,
-        p_formatted in boolean default false   
-    ) return clob;
+        p_json_doc in out nocopy varchar2
+    );
 
-    function get_venue_event_series
+    procedure update_reseller
+    (
+        p_json_doc in out nocopy varchar2
+    );
+
+    function get_reseller
+    (
+        p_reseller_id in number,
+        p_formatted in boolean default false   
+    ) return varchar2;
+
+    function get_all_resellers
+    (
+        p_formatted in boolean default false
+    ) return clob;
+    
+    procedure create_venue
+    (
+        p_json_doc in out nocopy varchar2
+    );
+
+    procedure update_venue
+    (
+        p_json_doc in out nocopy varchar2
+    );
+
+    function get_venue
     (
         p_venue_id in number,
         p_formatted in boolean default false   
+    ) return varchar2;
+
+    function get_all_venues
+    (
+        p_formatted in boolean default false
     ) return clob;
     
     procedure create_event
@@ -97,6 +85,18 @@ as
         p_event_id in number,
         p_formatted in boolean default false   
     ) return varchar2;
+
+    function get_venue_events
+    (
+        p_venue_id in number,
+        p_formatted in boolean default false   
+    ) return clob;
+
+    function get_venue_event_series
+    (
+        p_venue_id in number,
+        p_formatted in boolean default false   
+    ) return clob;
     
     function get_ticket_groups
     (
