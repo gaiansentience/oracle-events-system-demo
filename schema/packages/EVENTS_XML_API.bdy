@@ -180,6 +180,25 @@ as
             return get_xml_error_doc(sqlcode, sqlerrm, 'get_customer');
     end get_customer;
 
+    function get_customer_id
+    (
+        p_customer_email in customers.customer_email%type,
+        p_formatted in boolean default false   
+    ) return xmltype
+    is
+        l_xml xmltype;
+        l_customer_id number;
+    begin
+    
+        l_customer_id := events_api.get_customer_id(p_customer_email => p_customer_email);
+        
+        return get_customer(p_customer_id => l_customer_id, p_formatted => p_formatted);
+       
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_customer_id');
+    end get_customer_id;
+
     procedure parse_reseller
     (
         p_source in out nocopy dbms_xmldom.DOMnode,

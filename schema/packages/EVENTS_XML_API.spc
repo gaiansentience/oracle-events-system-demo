@@ -42,6 +42,12 @@ as
         p_formatted in boolean default false
     ) return xmltype;
 
+    function get_customer_id
+    (
+        p_customer_email in customers.customer_email%type,
+        p_formatted in boolean default false
+    ) return xmltype;
+
 /*
 <create_reseller>
   <reseller>

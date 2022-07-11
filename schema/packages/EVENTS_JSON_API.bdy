@@ -182,7 +182,6 @@ as
         p_formatted in boolean default false   
     ) return varchar2
     is
-        l_json varchar2(4000);
         l_customer_id customers.customer_id%type;
     begin
     
