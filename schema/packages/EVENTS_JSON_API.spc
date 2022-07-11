@@ -97,11 +97,27 @@ as
         p_json_doc in out nocopy clob
     );
     
+    procedure update_event
+    (
+        p_json_doc in out nocopy varchar2
+    );
+
+    procedure update_event_series
+    (
+        p_json_doc in out nocopy varchar2
+    );
+
     function get_event
     (
         p_event_id in number,
         p_formatted in boolean default false   
     ) return varchar2;
+
+    function get_event_series
+    (
+        p_event_series_id in number,
+        p_formatted in boolean default false   
+    ) return clob;
 
     function get_venue_events
     (

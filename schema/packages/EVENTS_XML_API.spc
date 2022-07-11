@@ -143,8 +143,18 @@ as
     (
         p_xml_doc in out nocopy xmltype
     );
-
+    
     procedure create_weekly_event
+    (
+        p_xml_doc in out nocopy xmltype
+    );
+
+    procedure update_event
+    (
+        p_xml_doc in out nocopy xmltype
+    );
+
+    procedure update_event_series
     (
         p_xml_doc in out nocopy xmltype
     );
@@ -152,6 +162,12 @@ as
     function get_event
     (
         p_event_id in number,
+        p_formatted in boolean default false   
+    ) return xmltype;
+
+    function get_event_series
+    (
+        p_event_series_id in number,
         p_formatted in boolean default false   
     ) return xmltype;
 

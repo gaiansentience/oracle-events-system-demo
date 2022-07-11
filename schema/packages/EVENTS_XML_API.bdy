@@ -549,13 +549,16 @@ as
     is
         r_event event_system.events%rowtype;
         nRoot dbms_xmldom.DOMnode;
-        l_date_string varchar2(20);
+        nEvent dbms_xmldom.DOMnode;
+        l_date_string varchar2(50);
         l_date_mask varchar2(20) := 'yyyy-mm-dd';
         l_status_code varchar2(10);
         l_status_message varchar2(4000);
     begin
 
         util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
+        nEvent := dbms_xslprocessor.selectSingleNode(n => nRoot, pattern => '/create_event/event');        
+        
         
         dbms_xslprocessor.valueof(nRoot, 'venue/venue_id/text()', r_event.venue_id);
         dbms_xslprocessor.valueof(nRoot, 'event_name/text()', r_event.event_name);
@@ -606,7 +609,7 @@ as
             util_xmldom_helper.freeDoc;
             p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'create_event');
     end create_event;
-
+    
     procedure create_weekly_event
     (
         p_xml_doc in out nocopy xmltype
@@ -620,9 +623,10 @@ as
         l_tickets_available events.tickets_available%type;
         
         nRoot dbms_xmldom.DOMnode;
+        nEventSeries dbms_xmldom.DOMnode;
         nEventDetails dbms_xmldom.DOMnode;
         nEvent dbms_xmldom.DOMnode;
-        l_date_string varchar2(20);
+        l_date_string varchar2(50);
         l_date_mask varchar2(20) := 'yyyy-mm-dd';
         
         l_event_series_id number;        
@@ -632,6 +636,7 @@ as
     begin
 
         util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
+        nEventSeries := dbms_xslprocessor.selectSingleNode(n => nRoot, pattern => '/create_event_series/event_series');        
         
         dbms_xslprocessor.valueof(nRoot, 'venue/venue_id/text()', l_venue_id);
         dbms_xslprocessor.valueof(nRoot, 'event_name/text()', l_event_name);
@@ -675,8 +680,76 @@ as
 
     exception
         when others then
+            util_xmldom_helper.freeDoc;
             p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'create_weekly_event');
     end create_weekly_event;
+
+    procedure update_event
+    (
+        p_xml_doc in out nocopy xmltype
+    )
+    is
+        nRoot dbms_xmldom.DOMnode;
+        nEvent dbms_xmldom.DOMnode;
+        l_event_id events.event_series_id%type;
+        l_event_name events.event_name%type;
+        l_date_string varchar2(50);
+        l_date_mask varchar2(20) := 'yyyy-mm-dd';        
+        l_event_date events.event_date%type;
+        l_tickets_available events.tickets_available%type;
+        l_status_code varchar2(20);
+        l_status_message varchar2(4000);
+    begin
+
+        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
+        nEvent := dbms_xslprocessor.selectSingleNode(n => nRoot, pattern => '/update_event/event');        
+
+
+
+
+        util_xmldom_helper.addTextNode(p_parent => nEvent, p_tag => 'status_code', p_data => l_status_code);
+        util_xmldom_helper.addTextNode(p_parent => nEvent, p_tag => 'status_message', p_data => l_status_message);            
+        p_xml_doc := util_xmldom_helper.docToXMLtype;
+        util_xmldom_helper.freeDoc;
+
+    exception
+        when others then
+            util_xmldom_helper.freeDoc;
+            p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'update_event');
+    end update_event;
+
+    procedure update_event_series
+    (
+        p_xml_doc in out nocopy xmltype
+    )
+    is
+        nRoot dbms_xmldom.DOMnode;
+        nEventSeries dbms_xmldom.DOMnode;
+        l_event_series_id events.event_series_id%type;
+        l_event_name events.event_name%type;
+        l_tickets_available events.tickets_available%type;
+        l_status_code varchar2(20);
+        l_status_message varchar2(4000);
+    begin
+
+        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
+        nEventSeries := dbms_xslprocessor.selectSingleNode(n => nRoot, pattern => '/update_event_series/event_series');        
+    
+    
+    
+    
+    
+        util_xmldom_helper.addTextNode(p_parent => nEventSeries, p_tag => 'status_code', p_data => l_status_code);
+        util_xmldom_helper.addTextNode(p_parent => nEventSeries, p_tag => 'status_message', p_data => l_status_message);            
+    
+        p_xml_doc := util_xmldom_helper.docToXMLtype;
+        util_xmldom_helper.freeDoc;
+
+    exception
+        when others then
+            util_xmldom_helper.freeDoc;
+            p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'update_event_series');
+    end update_event_series;
 
     function get_event
     (
@@ -701,6 +774,30 @@ as
         when others then
             return get_xml_error_doc(sqlcode, sqlerrm, 'get_event');
     end get_event;
+
+    function get_event_series
+    (
+        p_event_series_id in number,
+        p_formatted in boolean default false   
+    ) return xmltype
+    is
+        l_xml xmltype;
+    begin
+/*
+        select b.xml_doc
+        into l_xml
+        from event_series_v_xml b
+        where b.event_series_id = p_event_series_id;
+*/    
+        if p_formatted then
+            l_xml := format_xml_clob(l_xml);
+        end if;
+        return l_xml;
+    
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_event_series');
+    end get_event_series;
 
     function get_venue_events
     (

@@ -647,6 +647,56 @@ as
         when others then
             p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'create_weekly_event');
     end create_weekly_event;
+    
+    procedure update_event
+    (
+        p_json_doc in out nocopy varchar2
+    )
+    is
+        o_request json_object_t;
+        l_event_id events.event_series_id%type;
+        l_event_name events.event_name%type;
+        l_event_date events.event_date%type;
+        l_tickets_available events.tickets_available%type;
+        l_status_code varchar2(20);
+        l_status_message varchar2(4000);
+    begin
+        o_request := json_object_t.parse(p_json_doc);
+
+
+
+        o_request.put('status_code', l_status_code);
+        o_request.put('status_message', l_status_message);    
+        p_json_doc := o_request.to_clob; 
+    
+    exception
+        when others then
+            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'update_event');
+    end update_event;
+
+    procedure update_event_series
+    (
+        p_json_doc in out nocopy varchar2
+    )
+    is
+        o_request json_object_t;
+        l_event_series_id events.event_series_id%type;
+        l_event_name events.event_name%type;
+        l_tickets_available events.tickets_available%type;
+        l_status_code varchar2(20);
+        l_status_message varchar2(4000);
+    begin
+        o_request := json_object_t.parse(p_json_doc);
+
+
+        o_request.put('status_code', l_status_code);
+        o_request.put('status_message', l_status_message);        
+        p_json_doc := o_request.to_clob; 
+    
+    exception
+        when others then
+            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'update_event_series');
+    end update_event_series;
 
     function get_event
     (
@@ -672,6 +722,31 @@ as
             return get_json_error_doc(sqlcode, sqlerrm, 'get_event');
     end get_event;
 
+    function get_event_series
+    (
+        p_event_series_id in number,
+        p_formatted in boolean default false   
+    ) return clob
+    is
+        l_json clob;
+    begin
+
+/*    
+        select b.json_doc
+        into l_json
+        from event_series_v_json b
+        where b.event_series_id = p_event_series_id;
+*/    
+        if p_formatted then
+            l_json := format_json_clob(l_json);
+        end if;
+        return l_json;
+    
+    exception
+        when others then
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_event_series');    
+    end get_event_series;
+    
     function get_venue_events
     (
         p_venue_id in number,
