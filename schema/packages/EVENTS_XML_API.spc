@@ -114,10 +114,21 @@ as
     function get_venue
     (
         p_venue_id in number,
-        p_formatted in boolean default false   
+        p_formatted in boolean default false
     ) return xmltype;
 
     function get_all_venues
+    (
+        p_formatted in boolean default false
+    ) return xmltype;
+
+    function get_venue_summary
+    (
+        p_venue_id in number,
+        p_formatted in boolean default false
+    ) return xmltype;
+
+    function get_all_venues_summary
     (
         p_formatted in boolean default false
     ) return xmltype;

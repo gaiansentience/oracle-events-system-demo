@@ -476,6 +476,52 @@ as
         when others then
             return get_xml_error_doc(sqlcode, sqlerrm, 'get_all_venues');
     end get_all_venues;
+
+    function get_venue_summary
+    (
+        p_venue_id in number,
+        p_formatted in boolean default false   
+    ) return xmltype
+    is
+        l_xml xmltype;
+    begin
+    
+        select b.xml_doc 
+        into l_xml
+        from venues_summary_v_xml b
+        where b.venue_id = p_venue_id;
+    
+        if p_formatted then
+            l_xml := format_xml_string(l_xml);
+        end if;
+        return l_xml;
+       
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_venue_summary');
+    end get_venue_summary;
+
+    function get_all_venues_summary
+    (
+        p_formatted in boolean default false
+    ) return xmltype
+    is
+        l_xml xmltype;
+    begin
+    
+        select b.xml_doc
+        into l_xml
+        from all_venues_summary_v_xml b;
+    
+        if p_formatted then
+            l_xml := format_xml_clob(l_xml);
+        end if;
+        return l_xml;
+    
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_all_venues_summary');
+    end get_all_venues_summary;
         
     procedure create_event
     (
