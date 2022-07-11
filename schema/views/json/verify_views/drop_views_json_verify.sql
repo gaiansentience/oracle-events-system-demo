@@ -25,6 +25,8 @@ drop view all_resellers_v_json_verify;
 drop view resellers_v_json_verify;
 
 drop view all_venues_v_json_verify;
+drop view all_venues_summary_v_json_verify;
+
 drop view venues_v_json_verify;
 drop view venues_summary_v_json_verify;
 

@@ -22,6 +22,8 @@ drop view event_series_ticket_groups_v_json;
 drop view event_ticket_groups_v_json;
 
 drop view all_venues_v_json;
+drop view all_venues_summary_v_json;
+
 drop view venues_v_json;
 drop view venues_summary_v_json;
 

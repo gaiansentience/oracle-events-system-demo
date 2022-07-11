@@ -6,6 +6,8 @@ prompt creating views for json web services
 @@view.resellers_v_json.sql;
 
 @@view.all_venues_v_json.sql;
+@@view.all_venues_summary_v_json.sql;
+
 @@view.venues_v_json.sql;
 @@view.venues_summary_v_json.sql;
 
