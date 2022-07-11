@@ -69,6 +69,9 @@ as
                 raise_application_error(-20100, 'Missing organizer email, cannot create or update venue');
             when p_venue.max_event_capacity is null then
                 raise_application_error(-20100, 'Missing event capacity, cannot create or update venue');      
+            else
+                --record is valid
+                null;
         end case;
         
     end validate_venue_record;
@@ -228,7 +231,10 @@ as
             when p_reseller.reseller_email is null then
                 raise_application_error(-20100, 'Missing reseller email, cannot create or update reseller.');
             when p_reseller.commission_percent is null then
-                raise_application_error(-20100, 'Missing reseller commission, cannot create or update reseller.');      
+                raise_application_error(-20100, 'Missing reseller commission, cannot create or update reseller.');     
+            else
+                --record is valid
+                null;
         end case;
 
     end validate_reseller_record;
@@ -373,7 +379,10 @@ as
             when p_customer.customer_name is null then
                 raise_application_error(-20100, 'Missing name, cannot create or update customer');
             when p_customer.customer_email is null then
-                raise_application_error(-20100, 'Missing email, cannot create or update customer');         
+                raise_application_error(-20100, 'Missing email, cannot create or update customer'); 
+            else
+                --record is valid
+                null;
         end case;
     
     end validate_customer_record;

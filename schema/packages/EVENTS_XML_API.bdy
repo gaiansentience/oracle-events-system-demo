@@ -334,7 +334,7 @@ as
                 p_max_event_capacity => r_venue.max_event_capacity);
                 
             l_status_code := 'SUCCESS';
-            l_status_message := 'Created venue';
+            l_status_message := 'Updated venue';
         exception
             when others then
                 l_status_code := 'ERROR';
@@ -423,7 +423,7 @@ as
     begin
     
         util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
-        nCustomer := dbms_xslprocessor.selectSingleNode(n => nRoot, pattern => '/create_customer/customer');
+        nCustomer := dbms_xslprocessor.selectSingleNode(n => nRoot, pattern => '/update_customer/customer');
         parse_customer(p_source => nCustomer, p_customer => r_customer);
     
         begin                  

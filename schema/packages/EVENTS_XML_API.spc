@@ -20,12 +20,29 @@ as
         p_reseller_id in number,
         p_formatted in boolean default false   
     ) return xmltype;
-
+/*
+<create_reseller>
+  <reseller>
+    <reseller_name>New Wave Tickets</reseller_name>
+    <reseller_email>ticket.sales@NewWaveTickets.com</reseller_email>
+    <commission_percent>.1111</commission_percent>
+  </reseller>
+</create_reseller>
+*/
     procedure create_reseller
     (
         p_xml_doc in out nocopy xmltype
     );
-
+/*
+<update_reseller>
+  <reseller>
+    <reseller_id>21</reseller_id>
+    <reseller_name>New Wave Tickets</reseller_name>
+    <reseller_email>ticket.sales@NewWaveTickets.com</reseller_email>
+    <commission_percent>.1313</commission_percent>
+  </reseller>
+</update_reseller>
+*/
     procedure update_reseller
     (
         p_xml_doc in out nocopy xmltype
@@ -41,12 +58,31 @@ as
         p_venue_id in number,
         p_formatted in boolean default false   
     ) return xmltype;
-
+/*
+<create_venue>
+  <venue>
+    <venue_name>The Pink Pony Revue</venue_name>
+    <organizer_email>Julia.Stein@ThePinkPonyRevue.com</organizer_email>
+    <organizer_name>Julia Stein</organizer_name>
+    <max_event_capacity>200</max_event_capacity>
+  </venue>
+</create_venue>
+*/
     procedure create_venue
     (
         p_xml_doc in out nocopy xmltype
     );
-
+/*
+<update_venue>
+  <venue>
+    <venue_id>21</venue_id>
+    <venue_name>The Pink Pony Revue</venue_name>
+    <organizer_email>Julia.Stein@ThePinkPonyRevue.com</organizer_email>
+    <organizer_name>Julia Stein</organizer_name>
+    <max_event_capacity>350</max_event_capacity>
+  </venue>  
+</update_venue>
+*/
     procedure update_venue
     (
         p_xml_doc in out nocopy xmltype
@@ -55,7 +91,6 @@ as
 /*
 <create_customer>
   <customer>
-    <**customer_id>4</customer_id>
     <customer_name>Kathy Barry</customer_name>
     <customer_email>Kathy.Barry@example.customer.com</customer_email>
   </customer>
