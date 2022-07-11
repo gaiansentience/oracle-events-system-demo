@@ -142,6 +142,8 @@ as
         p_event_name in varchar2        
     ) return number;
         
+    --raise error if event date is already past or venue has a conflicting event
+    --raise error if tickets available is > venue max event capacity
     procedure create_event
     (
         p_venue_id in number,   
@@ -151,6 +153,26 @@ as
         p_event_id out number
     );
     
+    --update event name, date and tickets available
+    --raise error if event date is already past or venue has a conflicting event
+    --raise error if tickets available is > venue max event capacity
+    --raise error if ticket sales are > requested tickets available
+    --raise error if all reseller assignments plus venue direct sales are > requested tickets available
+    --raise error if sum of currently defined ticket groups is > requested tickets available
+    procedure update_event
+    (
+        p_event_id in number,   
+        p_event_name in varchar2,
+        p_event_date in date,
+        p_tickets_available in number
+    );
+
+    procedure show_event
+    (
+        p_event_id in number,
+        p_event_info out sys_refcursor
+    );
+        
     type r_series_event is record
     (
         event_id        number
@@ -185,6 +207,25 @@ as
         p_tickets_available in number,
         p_event_series_id out number,
         p_status out varchar2
+    );
+
+    --update event name for events in the series that have not occurred
+    --update tickets_available for events in the series that have not occurred
+    --verify requested tickets available against venue max capacity
+    --raise error if any upcoming event has sales > requested tickets available
+    --raise error if any upcoming event has reseller_assignments + venue_sales > requested tickets available
+    --raise error if any upcoming event has sum of ticket groups defined > requested tickets available
+    procedure update_event_series
+    (
+        p_event_series_id in number,   
+        p_event_name in varchar2,
+        p_tickets_available in number
+    );
+
+    procedure show_event_series
+    (
+        p_event_series_id in number,
+        p_series_events out sys_refcursor
     );
 
     --show all planned events for the venue

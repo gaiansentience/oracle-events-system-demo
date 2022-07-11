@@ -152,6 +152,8 @@ as
     (
         venue_id           venues.venue_id%type
         ,venue_name        venues.venue_name%type
+        ,organizer_name    venues.organizer_name%type
+        ,organizer_email   venues.organizer_email%type
         ,event_id          events.event_id%type
         ,event_series_id   events.event_series_id%type
         ,event_name        events.event_name%type
@@ -161,6 +163,16 @@ as
     );
     
     type t_event_info is table of r_event_info;
+
+    function show_event
+    (
+        p_event_id in number
+    ) return t_event_info pipelined;
+    
+    function show_event_series
+    (
+        p_event_series_id in number
+    ) return t_event_info pipelined;
 
     --show all planned events for the venue
     function show_all_events

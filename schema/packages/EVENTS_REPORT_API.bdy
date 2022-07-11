@@ -194,6 +194,46 @@ as
         return;
     
     end show_venue_reseller_commissions;
+
+    function show_event
+    (
+        p_event_id in number
+    )  return t_event_info pipelined
+    is
+        t_rows t_event_info;
+        rc sys_refcursor;
+    begin
+    
+        events_api.show_event(p_event_id, rc);
+        fetch rc bulk collect into t_rows;
+        close rc;
+        
+        for i in 1..t_rows.count loop
+            pipe row(t_rows(i));
+        end loop;
+        return;
+
+    end show_event;
+
+    function show_event_series
+    (
+        p_event_series_id in number
+    )  return t_event_info pipelined
+    is
+        t_rows t_event_info;
+        rc sys_refcursor;
+    begin
+    
+        events_api.show_event_series(p_event_series_id, rc);
+        fetch rc bulk collect into t_rows;
+        close rc;
+        
+        for i in 1..t_rows.count loop
+            pipe row(t_rows(i));
+        end loop;
+        return;
+    
+    end show_event_series;
     
     function show_all_events
     (

@@ -685,7 +685,7 @@ as
     end get_event_series_id;
    
    
-    procedure verify_event_capacity
+    procedure verify_venue_event_capacity
     (
         p_venue_id in number,
         p_tickets in number
@@ -703,9 +703,9 @@ as
             raise_application_error(-20100, p_tickets || ' exceeds venue capacity of ' || v_capacity);
         end if;
     
-    end verify_event_capacity;
+    end verify_venue_event_capacity;
   
-    procedure verify_event_date_free
+    procedure verify_venue_event_date_free
     (
         p_venue_id in number,
         p_event_date in date
@@ -714,6 +714,10 @@ as
         v_count number;
         v_error_message varchar2(100);
     begin
+    
+        if p_event_date <= sysdate then
+            raise_application_error(-20100, 'Cannot schedule event for current date or past dates');
+        end if;
 
         select count(*) 
         into v_count
@@ -727,7 +731,7 @@ as
             raise_application_error(-20100, v_error_message);
         end if;
 
-    end verify_event_date_free;
+    end verify_venue_event_date_free;
 
     procedure create_event
     (
@@ -736,11 +740,9 @@ as
     is
     begin
 
-        --check that the venue can handle the event
-        verify_event_capacity(p_event.venue_id, p_event.tickets_available);
+        verify_venue_event_capacity(p_event.venue_id, p_event.tickets_available);
         
-        --check that the event does not conflict with an existing event
-        verify_event_date_free(p_event.venue_id, p_event.event_date);
+        verify_venue_event_date_free(p_event.venue_id, p_event.event_date);
         
         insert into event_system.events
             (
@@ -769,7 +771,6 @@ as
             raise;
     end create_event;
 
-
     procedure create_event
     (
         p_venue_id in number,   
@@ -791,6 +792,143 @@ as
         create_event(p_event => r_event);
                 
     end create_event;
+    
+    function get_event_venue_id
+    (
+        p_event_id in number
+    ) return number
+    is
+        l_venue_id number;
+    begin
+        
+        select e.venue_id
+        into l_venue_id
+        from event_system.events e
+        where e.event_id = p_event_id;
+        
+        return l_venue_id;
+        
+    end get_event_venue_id;
+    
+    procedure update_event
+    (
+        p_event_id in number,   
+        p_event_name in varchar2,
+        p_event_date in date,
+        p_tickets_available in number
+    )
+    is
+        l_venue_id number;
+        l_event_tickets_available number;
+        l_all_ticket_sales number;
+        l_venue_ticket_sales number;
+        l_ticket_assignments number;
+        l_assignments_and_venue_sales number;
+        l_ticket_groups number;
+        l_downsize_message varchar2(1000);
+    begin
+    
+        l_venue_id := get_event_venue_id(p_event_id => p_event_id);
+        
+        verify_venue_event_date_free(p_venue_id => l_venue_id, p_event_date => p_event_date);
+        
+        verify_venue_event_capacity(p_venue_id => l_venue_id, p_tickets => p_tickets_available);
+        
+        select e.tickets_available into l_event_tickets_available
+        from event_system.events e
+        where e.event_id = p_event_id;
+        
+        if l_event_tickets_available > p_tickets_available then
+            --downsizing event requested, check sales, assignments and groups
+            select sum(ts.ticket_quantity)
+            into l_all_ticket_sales
+            from 
+                event_system.ticket_groups tg
+                join event_system.ticket_sales ts
+                    on tg.ticket_group_id = ts.ticket_group_id
+            where tg.event_id = p_event_id;
+            
+            select sum(ta.tickets_assigned)
+            into l_ticket_assignments
+            from 
+                event_system.ticket_groups tg
+                join event_system.ticket_assignments ta
+                    on tg.ticket_group_id = ta.ticket_group_id
+            where tg.event_id = p_event_id;
+            
+            --need to consider direct venue sales as a virtual assignment
+            select sum(ts.ticket_quantity)
+            into l_venue_ticket_sales
+            from 
+                event_system.ticket_groups tg
+                join event_system.ticket_sales ts
+                    on tg.ticket_group_id = ts.ticket_group_id
+            where 
+                tg.event_id = p_event_id
+                and ts.reseller_id is null;
+            
+            l_assignments_and_venue_sales := l_ticket_assignments + l_venue_ticket_sales;
+            
+            select sum(tg.tickets_available)
+            into l_ticket_groups
+            from event_system.ticket_groups tg
+            where tg.event_id = p_event_id;
+            
+            l_downsize_message := 'Cannot downsize event to ' || p_tickets_available || '.  ';
+            case
+                when l_all_ticket_sales > p_tickets_available then
+                    raise_application_error(-20100, l_downsize_message || l_all_ticket_sales || ' tickets are already sold.');
+                when l_assignments_and_venue_sales > p_tickets_available then
+                    raise_application_error(-20100, l_downsize_message || l_ticket_assignments || ' tickets are assigned to resellers and ' || l_venue_ticket_sales || ' have been sold by venue.  Must change assignments first.');
+                when l_ticket_groups > p_tickets_available then
+                    raise_application_error(-20100, l_downsize_message || l_ticket_groups || ' tickets are defined in groups.  Must change ticket groups first.');
+                else
+                    --downsizing will not create issues
+                    null;
+            end case;
+                
+        end if;
+        
+        --passed all validation tests for the requested update
+        update event_system.events e
+        set
+            e.event_name = p_event_name
+            ,e.event_date = p_event_date
+            ,e.tickets_available = p_tickets_available
+        where e.event_id = p_event_id;
+        
+        commit;
+        
+    exception
+        when others then
+            log_error(sqlerrm, sqlcode,'update_event');
+            raise;    
+    end update_event;
+
+    procedure show_event
+    (
+        p_event_id in number,
+        p_event_info out sys_refcursor
+    )
+    is
+    begin
+    
+        open p_event_info for
+        select
+            ve.venue_id
+            ,ve.venue_name
+            ,ve.organizer_name
+            ,ve.organizer_email
+            ,ve.event_id
+            ,ve.event_series_id
+            ,ve.event_name
+            ,ve.event_date
+            ,ve.tickets_available
+            ,ve.tickets_remaining
+        from event_system.events_v ve
+        where ve.event_id = p_event_id;
+
+    end show_event;
 
     procedure create_weekly_event
     (
@@ -906,6 +1044,197 @@ as
             p_status := v_status_code || ' - ' || v_status_message;
             
     end create_weekly_event;
+    
+    function get_event_series_venue_id
+    (
+        p_event_series_id in number
+    ) return number
+    is
+        l_venue_id number;
+    begin
+        
+        select e.venue_id
+        into l_venue_id
+        from event_system.events e
+        where e.event_series_id = p_event_series_id
+        fetch first 1 row only;
+        
+        return l_venue_id;
+        
+    end get_event_series_venue_id;
+    
+    procedure update_event_series
+    (
+        p_event_series_id in number,   
+        p_event_name in varchar2,
+        p_tickets_available in number
+    )
+    is
+        l_venue_id number;
+        l_max_event_tickets_available number;
+        l_max_event_tickets_sold number;
+        l_max_event_assigned_and_venue_sales number;
+        l_max_event_ticket_groups number;
+        l_downsize_message varchar2(1000);
+    begin
+    
+        l_venue_id := get_event_series_venue_id(p_event_series_id => p_event_series_id);
+        verify_venue_event_capacity(p_venue_id => l_venue_id, p_tickets => p_tickets_available);
+        
+        --validate change in tickets available for all events in series that have not occurred
+        select max(e.tickets_available)
+        into l_max_event_tickets_available
+        from events e
+        where 
+            e.event_series_id = p_event_series_id
+            and e.event_date > sysdate;
+        
+        if p_tickets_available < l_max_event_tickets_available then
+            --requested downsizing of events in series, check sales, assignments and groups
+            --only verify events in series that have not already happened
+            
+            --validate requested size against max tickets sold per event
+            with event_ticket_sales as
+            (
+                select 
+                    e.event_series_id
+                    ,e.event_id
+                    ,sum(ts.ticket_quantity) as ticket_sales
+                from
+                    events e
+                    join ticket_groups tg
+                    on e.event_id = tg.event_id
+                    join ticket_sales ts
+                    on tg.ticket_group_id = ts.ticket_group_id
+                where e.event_date > sysdate
+                group by
+                    e.event_series_id
+                    ,e.event_id
+            )
+            select max(es.ticket_sales)
+            into l_max_event_tickets_sold
+            from event_ticket_sales es
+            where es.event_series_id = p_event_series_id;            
+            
+            --validate requested size against max assignments per event
+            --consider direct venue sales as a virtual assignment
+            with event_assignments as
+            (
+                select 
+                    e.event_series_id
+                    ,e.event_id
+                    ,sum(ta.tickets_assigned) as tickets_assigned
+                from
+                    events e
+                    join ticket_groups tg
+                    on e.event_id = tg.event_id
+                    join ticket_assignments ta
+                    on tg.ticket_group_id = ta.ticket_group_id
+                where e.event_date > sysdate
+                group by
+                    e.event_series_id
+                    ,e.event_id
+            ), assigned_and_venue_sales as
+            (
+                select 
+                    ea.event_series_id,
+                    ea.event_id,
+                    ea.tickets_assigned 
+                    + nvl(
+                        (select sum(ts.ticket_quantity)
+                        from 
+                            event_system.ticket_groups tg
+                            join event_system.ticket_sales ts
+                                on tg.ticket_group_id = ts.ticket_group_id
+                        where 
+                            tg.event_id = ea.event_id 
+                            and ts.reseller_id is null)
+                    , 0) as assigned_plus_venue_sales
+                from event_assignments ea
+            )
+            select max(ea.assigned_plus_venue_sales) 
+            into l_max_event_assigned_and_venue_sales 
+            from assigned_and_venue_sales ea
+            where ea.event_series_id = p_event_series_id;            
+            
+            --validate requested size against max ticket groups defined per event
+            with event_ticket_groups as
+            (
+                select 
+                    e.event_series_id
+                    ,e.event_id
+                    ,sum(tg.tickets_available) as tickets_available
+                from
+                    events e
+                    join ticket_groups tg
+                    on e.event_id = tg.event_id
+                where e.event_date > sysdate
+                group by
+                    e.event_series_id
+                    ,e.event_id
+            )
+            select max(ea.tickets_available) 
+            into l_max_event_ticket_groups
+            from event_ticket_groups ea
+            where ea.event_series_id = p_event_series_id;            
+            
+            l_downsize_message := 'Cannot downsize events in series to ' || p_tickets_available || '.  Modify events individually or change assignments and groups.  ';
+            case
+                when l_max_event_tickets_sold > p_tickets_available then
+                    raise_application_error(-20100, l_downsize_message || 'Some events have already sold ' || l_max_event_tickets_sold || ' tickets.');
+                when l_max_event_assigned_and_venue_sales > p_tickets_available then
+                    raise_application_error(-20100, l_downsize_message || 'Some events have reseller assignments and venue direct sales of ' || l_max_event_assigned_and_venue_sales || ' tickets.');
+                when l_max_event_ticket_groups > p_tickets_available then
+                    raise_application_error(-20100, l_downsize_message || 'Some events have ticket groups defined as ' || l_max_event_ticket_groups || '.  Modify ticket groups first.');
+                else
+                    --all events in the series can accept the downsizing without changes to setup
+                    null;
+            end case;
+            
+        end if;
+        
+        update event_system.events e
+        set
+            e.event_name = p_event_name
+            ,e.tickets_available = p_tickets_available
+        where 
+            e.event_series_id = p_event_series_id
+            and e.event_date > sysdate;
+        
+        commit;
+        
+    exception
+        when others then
+            log_error(sqlerrm, sqlcode,'update_event_series');
+            raise;    
+    end update_event_series;
+
+    procedure show_event_series
+    (
+        p_event_series_id in number,
+        p_series_events out sys_refcursor
+    )
+    is
+    begin
+    
+        open p_series_events for
+        select
+            ve.venue_id
+            ,ve.venue_name
+            ,ve.organizer_name
+            ,ve.organizer_email
+            ,ve.event_id
+            ,ve.event_series_id
+            ,ve.event_name
+            ,ve.event_date
+            ,ve.tickets_available
+            ,ve.tickets_remaining
+        from event_system.events_v ve
+        where ve.event_series_id = p_event_series_id
+        order by ve.event_date;
+        
+    end show_event_series;
+    
 
     --show all planned events for the venue
     --include total ticket sales to date
@@ -921,18 +1250,17 @@ as
         select
             ve.venue_id
             ,ve.venue_name
+            ,ve.organizer_name
+            ,ve.organizer_email
             ,ve.event_id
             ,ve.event_series_id
             ,ve.event_name
             ,ve.event_date
             ,ve.tickets_available
             ,ve.tickets_remaining
-        from
-            event_system.venue_events_v ve
-        where 
-            ve.venue_id = p_venue_id
-        order by
-            ve.event_date;
+        from event_system.venue_events_v ve
+        where ve.venue_id = p_venue_id
+        order by ve.event_date;
     
     end show_all_events;
 
@@ -950,18 +1278,17 @@ as
         select
             ve.venue_id
             ,ve.venue_name
+            ,ve.organizer_name
+            ,ve.organizer_email
             ,ve.event_id
             ,ve.event_series_id
             ,ve.event_name
             ,ve.event_date
             ,ve.tickets_available
             ,ve.tickets_remaining
-        from
-            event_system.venue_event_series_v ve
-        where 
-            ve.venue_id = p_venue_id
-        order by
-            ve.event_date;
+        from event_system.venue_event_series_v ve
+        where ve.venue_id = p_venue_id
+        order by ve.event_date;
     
     end show_all_event_series;
 
