@@ -1,7 +1,7 @@
 set serveroutput on;
 declare
     l_xml varchar2(4000);
-    p_xml_doc xmltype;
+    l_xml_doc xmltype;
 begin
 
 l_xml := 
@@ -14,11 +14,10 @@ l_xml :=
 </create_customer>    
 ';
 
-    p_xml_doc := xmltype(l_xml);
+    l_xml_doc := xmltype(l_xml);
 
-    events_xml_api.create_customer(p_xml_doc => p_xml_doc);
-
-    dbms_output.put_line(p_xml_doc.getclobval());
+    events_xml_api.create_customer(p_xml_doc => l_xml_doc);
+    dbms_output.put_line(l_xml_doc.getclobval());
 
 end;
 

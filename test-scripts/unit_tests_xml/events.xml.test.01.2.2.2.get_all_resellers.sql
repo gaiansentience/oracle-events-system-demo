@@ -12,6 +12,12 @@ end;
 /*
 <all_resellers>
   <reseller>
+    <reseller_id>21</reseller_id>
+    <reseller_name>New Wave Tickets</reseller_name>
+    <reseller_email>ticket.sales@NewWaveTickets.com</reseller_email>
+    <commission_percent>.1313</commission_percent>
+  </reseller>
+  <reseller>
     <reseller_id>1</reseller_id>
     <reseller_name>Events For You</reseller_name>
     <reseller_email>ticket.sales@EventsForYou.com</reseller_email>
@@ -80,8 +86,15 @@ end;
   <reseller>
     <reseller_id>12</reseller_id>
     <reseller_name>Easy Tickets</reseller_name>
-    <reseller_email>ticket.sales@EasyTickets.com</reseller_email>
-    <commission_percent>.11</commission_percent>
+    <reseller_email>tickets@EasyTickets.com</reseller_email>
+    <commission_percent>.0909</commission_percent>
+  </reseller>
+  <reseller>
+    <reseller_id>41</reseller_id>
+    <reseller_name>Ticket Factory</reseller_name>
+    <reseller_email>sales@TicketFactory.com</reseller_email>
+    <commission_percent>.125</commission_percent>
   </reseller>
 </all_resellers>
+
 */
