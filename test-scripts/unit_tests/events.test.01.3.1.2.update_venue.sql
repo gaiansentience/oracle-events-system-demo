@@ -1,24 +1,31 @@
---create a new venue
+--update information for a venue
 --the venue name must be set to a unique value
---error is raised if a second venue with the same name is added
+--error is raised if the venue is updated with the name of another venue
 --ORA-00001: unique constraint (TOPTAL.VENUES_U_NAME) violated
 set serveroutput on;
 declare
-  v_venue_name varchar2(100) := 'Roadside Cafe';
-  v_organizer_name varchar2(100) := 'Bill Styles';
-  v_organizer_email varchar2(100) := 'Bill.Styles@RoadsideCafe';
-  v_capacity number := 200;
-  v_venue_id number;
+    l_venue venues%rowtype;
 begin
 
-  events_api.create_venue(
-    p_venue_name => v_venue_name,
-    p_organizer_name => v_organizer_name,
-    p_organizer_email => v_organizer_email,
-    p_max_event_capacity => v_capacity,
-    p_venue_id => v_venue_id);
+    l_venue.venue_name := 'Roadside Cafe';
+    l_venue.organizer_name := 'Billy Styles';
+    l_venue.organizer_email := 'Billy.Styles@RoadsideCafe.com';
+    l_venue.max_event_capacity := 400;
     
-  dbms_output.put_line('venue created with id = ' || v_venue_id);
+    select v.venue_id into l_venue.venue_id
+    from venues v where v.venue_name = l_venue.venue_name;
+
+    events_api.update_venue(
+        p_venue_id => l_venue.venue_id,
+        p_venue_name => l_venue.venue_name,
+        p_organizer_name => l_venue.organizer_name,
+        p_organizer_email => l_venue.organizer_email,
+        p_max_event_capacity => l_venue.max_event_capacity);
+    
+    dbms_output.put_line('venue updated');
 
 end;
 
+/*
+venue updated
+*/

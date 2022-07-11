@@ -6,19 +6,20 @@
 --ORA-00001: unique constraint (RESELLERS_U_RESELLER_NAME) violated
 set serveroutput on;
 declare
-  v_name varchar2(100) := 'Easy Tickets';
-  v_email varchar2(100) := 'ticket.sales@EasyTickets.com';
-  v_commission number := 0.11;
-  v_reseller_id number;
+    l_reseller resellers%rowtype;
 begin
 
-  event_system.events_api.create_reseller(
-       p_reseller_name => v_name,
-       p_reseller_email => v_email,
-       p_commission_percent => v_commission,
-       p_reseller_id => v_reseller_id);
+    l_reseller.reseller_name := 'Easy Tickets';
+    l_reseller.reseller_email := 'ticket.sales@EasyTickets.com';
+    l_reseller.commission_percent := 0.11;
+
+    event_system.events_api.create_reseller(
+        p_reseller_name => l_reseller.reseller_name,
+        p_reseller_email => l_reseller.reseller_email,
+        p_commission_percent => l_reseller.commission_percent,
+        p_reseller_id => l_reseller.reseller_id);
     
-   dbms_output.put_line('reseller created with id = ' || v_reseller_id);
+    dbms_output.put_line('reseller created with id = ' || l_reseller.reseller_id);
 
 end;
 

@@ -5,4 +5,5 @@ select
 from events_report_api.show_customer(4941);
     
 
-select * from customers c where c.customer_email = 'Julius.Irving@example.customer.com';
+select * from customers c 
+where c.customer_email = 'Julius.Irving@example.customer.com';

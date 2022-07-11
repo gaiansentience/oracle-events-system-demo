@@ -2,7 +2,6 @@
 --if email is already in system customer_id for that email will be returned
 --if customer already exists customer name will be updated
 set serveroutput on;
-
 declare
     l_customer customers%rowtype;
 begin

@@ -3,5 +3,6 @@
 select
 *
 from 
-events_report_api.show_all_venues_summary()
-order by venue_name
+events_report_api.show_venue_summary(10);
+
+select * from venues v where venue_name = 'Roadside Cafe';

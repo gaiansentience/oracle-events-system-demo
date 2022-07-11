@@ -4,21 +4,25 @@
 --ORA-00001: unique constraint (TOPTAL.VENUES_U_NAME) violated
 set serveroutput on;
 declare
-  v_venue_name varchar2(100) := 'Roadside Cafe';
-  v_organizer_name varchar2(100) := 'Bill Styles';
-  v_organizer_email varchar2(100) := 'Bill.Styles@RoadsideCafe';
-  v_capacity number := 200;
-  v_venue_id number;
+    l_venue venues%rowtype;
 begin
 
-  events_api.create_venue(
-    p_venue_name => v_venue_name,
-    p_organizer_name => v_organizer_name,
-    p_organizer_email => v_organizer_email,
-    p_max_event_capacity => v_capacity,
-    p_venue_id => v_venue_id);
+    l_venue.venue_name := 'Roadside Cafe';
+    l_venue.organizer_name := 'Bill Styles';
+    l_venue.organizer_email := 'Bill.Styles#RoadsideCafe.com';
+    l_venue.max_event_capacity := 500;
+
+    events_api.create_venue(
+        p_venue_name => l_venue.venue_name,
+        p_organizer_name => l_venue.organizer_name,
+        p_organizer_email => l_venue.organizer_email,
+        p_max_event_capacity => l_venue.max_event_capacity,
+        p_venue_id => l_venue.venue_id);
     
-  dbms_output.put_line('venue created with id = ' || v_venue_id);
+  dbms_output.put_line('venue created with id = ' || l_venue.venue_id);
 
 end;
 
+/*
+venue created with id = 10
+*/
