@@ -3,42 +3,20 @@ authid current_user
 as
 --expose ref cursor procedures from events_api.[show]xxx procedures
 --use pipelined table functions to support applications that cannot use ref cursors
-    
-    type r_venue_info is record
-    (
-        venue_id            venues.venue_id%type
-        ,venue_name         venues.venue_name%type
-        ,organizer_name     venues.organizer_name%type
-        ,organizer_email    venues.organizer_email%type
-        ,max_event_capacity venues.max_event_capacity%type
-        ,events_scheduled   number    
-    );
 
-    type t_venue_info is table of r_venue_info;
-
-    function show_venue
+    type r_customer_info is record
     (
-        p_venue_id in venues.venue_id%type
-    ) return t_venue_info pipelined;
-
-    type r_venue_summary is record
-    (
-        venue_id            venues.venue_id%type
-        ,venue_name         venues.venue_name%type
-        ,organizer_name     venues.organizer_name%type
-        ,organizer_email    venues.organizer_email%type
-        ,max_event_capacity venues.max_event_capacity%type
-        ,events_scheduled   number
-        ,first_event_date   date
-        ,last_event_date    date
-        ,min_event_tickets  number
-        ,max_event_tickets  number
+        customer_id     customers.customer_id%type
+        ,customer_name  customers.customer_name%type
+        ,customer_email customers.customer_email%type
     );
     
-    type t_venue_summary is table of r_venue_summary;
+    type t_customer_info is table of r_customer_info;
     
-    function show_venues_summary 
-    return t_venue_summary pipelined;
+    function show_customer
+    (
+        p_customer_id in customers.customer_id%type
+    ) return t_customer_info pipelined;
 
     type r_reseller_info is record
     (
@@ -57,46 +35,50 @@ as
     function show_resellers 
     return t_reseller_info pipelined;
     
-    type r_customer_info is record
+    type r_venue_info is record
     (
-        customer_id     customers.customer_id%type
-        ,customer_name  customers.customer_name%type
-        ,customer_email customers.customer_email%type
+        venue_id            venues.venue_id%type
+        ,venue_name         venues.venue_name%type
+        ,organizer_name     venues.organizer_name%type
+        ,organizer_email    venues.organizer_email%type
+        ,max_event_capacity venues.max_event_capacity%type
+        ,events_scheduled   number    
+    );
+
+    type t_venue_info is table of r_venue_info;
+
+    function show_venue
+    (
+        p_venue_id in venues.venue_id%type
+    ) return t_venue_info pipelined;
+
+    function show_venues
+    return t_venue_info pipelined;
+
+    type r_venue_summary is record
+    (
+        venue_id            venues.venue_id%type
+        ,venue_name         venues.venue_name%type
+        ,organizer_name     venues.organizer_name%type
+        ,organizer_email    venues.organizer_email%type
+        ,max_event_capacity venues.max_event_capacity%type
+        ,events_scheduled   number
+        ,first_event_date   date
+        ,last_event_date    date
+        ,min_event_tickets  number
+        ,max_event_tickets  number
     );
     
-    type t_customer_info is table of r_customer_info;
+    type t_venue_summary is table of r_venue_summary;
     
-    function show_customer
+    function show_venue_summary
     (
-        p_customer_id in customers.customer_id%type
-    ) return t_customer_info pipelined;
-    
-    type r_upcoming_event is record
-    (
-        venue_id           venues.venue_id%type
-        ,venue_name        venues.venue_name%type
-        ,event_id          events.event_id%type
-        ,event_series_id   events.event_series_id%type
-        ,event_name        events.event_name%type
-        ,event_date        events.event_date%type
-        ,tickets_available events.tickets_available%type
-        ,tickets_remaining events.tickets_available%type
-    );
-    
-    type t_upcoming_events is table of r_upcoming_event;
+        p_venue_id in venues.venue_id%type    
+    ) return t_venue_summary pipelined;
 
-    --show all planned events for the venue
-    function show_venue_upcoming_events
-    (
-        p_venue_id in number
-    ) return t_upcoming_events pipelined;
-
-    --show all planned events for the venue
-    function show_venue_upcoming_event_series
-    (
-        p_venue_id in number
-    ) return t_upcoming_events pipelined;
-
+    function show_venues_summary 
+    return t_venue_summary pipelined;
+        
     type r_reseller_performance is record
     (
         venue_id               venues.venue_id%type
@@ -166,6 +148,31 @@ as
         p_reseller_id in number
     ) return t_reseller_commissions pipelined;
 
+    type r_event_info is record
+    (
+        venue_id           venues.venue_id%type
+        ,venue_name        venues.venue_name%type
+        ,event_id          events.event_id%type
+        ,event_series_id   events.event_series_id%type
+        ,event_name        events.event_name%type
+        ,event_date        events.event_date%type
+        ,tickets_available events.tickets_available%type
+        ,tickets_remaining events.tickets_available%type
+    );
+    
+    type t_event_info is table of r_event_info;
+
+    --show all planned events for the venue
+    function show_all_events
+    (
+        p_venue_id in number
+    ) return t_event_info pipelined;
+
+    --show all planned events for the venue
+    function show_all_event_series
+    (
+        p_venue_id in number
+    ) return t_event_info pipelined;
 
     type r_ticket_groups is record
     (

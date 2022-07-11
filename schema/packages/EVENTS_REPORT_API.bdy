@@ -1,16 +1,16 @@
 create or replace package body events_report_api
 as
 
-    function show_venue
+    function show_customer
     (
-        p_venue_id in venues.venue_id%type
-    ) return t_venue_info pipelined
+        p_customer_id in customers.customer_id%type
+    ) return t_customer_info pipelined
     is
-        t_rows t_venue_info;
+        t_rows t_customer_info;
         rc sys_refcursor;
     begin
     
-        events_api.show_venue(p_venue_id, rc);
+        events_api.show_customer(p_customer_id, rc);
         fetch rc bulk collect into t_rows;
         close rc;
         
@@ -19,26 +19,8 @@ as
         end loop;
         return;
     
-    end show_venue;
+    end show_customer;
 
-    function show_venues_summary 
-    return t_venue_summary pipelined
-    is
-        t_rows t_venue_summary;
-        rc sys_refcursor;
-    begin
-    
-        events_api.show_venues_summary(rc);
-        fetch rc bulk collect into t_rows;
-        close rc;
-        
-        for i in 1..t_rows.count loop
-            pipe row(t_rows(i));
-        end loop;
-        return;
-    
-    end show_venues_summary;
-    
     function show_reseller
     (
         p_reseller_id in resellers.reseller_id%type
@@ -77,16 +59,16 @@ as
     
     end show_resellers;   
     
-    function show_customer
+    function show_venue
     (
-        p_customer_id in customers.customer_id%type
-    ) return t_customer_info pipelined
+        p_venue_id in venues.venue_id%type
+    ) return t_venue_info pipelined
     is
-        t_rows t_customer_info;
+        t_rows t_venue_info;
         rc sys_refcursor;
     begin
     
-        events_api.show_customer(p_customer_id, rc);
+        events_api.show_venue(p_venue_id, rc);
         fetch rc bulk collect into t_rows;
         close rc;
         
@@ -95,38 +77,16 @@ as
         end loop;
         return;
     
-    end show_customer;
-    
-    function show_venue_upcoming_events
-    (
-        p_venue_id in number
-    )  return t_upcoming_events pipelined
-    is
-        t_rows t_upcoming_events;
-        rc sys_refcursor;
-    begin
-    
-        events_api.show_venue_upcoming_events(p_venue_id, rc);
-        fetch rc bulk collect into t_rows;
-        close rc;
-        
-        for i in 1..t_rows.count loop
-            pipe row(t_rows(i));
-        end loop;
-        return;
-    
-    end show_venue_upcoming_events;
+    end show_venue;
 
-    function show_venue_upcoming_event_series
-    (
-        p_venue_id in number
-    )  return t_upcoming_events pipelined
+    function show_venues
+    return t_venue_info pipelined
     is
-        t_rows t_upcoming_events;
+        t_rows t_venue_info;
         rc sys_refcursor;
     begin
     
-        events_api.show_venue_upcoming_event_series(p_venue_id, rc);
+        events_api.show_venues(rc);
         fetch rc bulk collect into t_rows;
         close rc;
         
@@ -135,7 +95,44 @@ as
         end loop;
         return;
     
-    end show_venue_upcoming_event_series;
+    end show_venues;
+
+    function show_venue_summary(
+        p_venue_id in venues.venue_id%type    
+    ) return t_venue_summary pipelined
+    is
+        t_rows t_venue_summary;
+        rc sys_refcursor;
+    begin
+    
+        events_api.show_venue_summary(p_venue_id, rc);
+        fetch rc bulk collect into t_rows;
+        close rc;
+        
+        for i in 1..t_rows.count loop
+            pipe row(t_rows(i));
+        end loop;
+        return;
+    
+    end show_venue_summary;
+    
+    function show_venues_summary
+    return t_venue_summary pipelined
+    is
+        t_rows t_venue_summary;
+        rc sys_refcursor;
+    begin
+    
+        events_api.show_venues_summary(rc);
+        fetch rc bulk collect into t_rows;
+        close rc;
+        
+        for i in 1..t_rows.count loop
+            pipe row(t_rows(i));
+        end loop;
+        return;
+    
+    end show_venues_summary;
 
     function show_venue_reseller_performance
     (
@@ -197,7 +194,47 @@ as
         return;
     
     end show_venue_reseller_commissions;
+    
+    function show_all_events
+    (
+        p_venue_id in number
+    )  return t_event_info pipelined
+    is
+        t_rows t_event_info;
+        rc sys_refcursor;
+    begin
+    
+        events_api.show_all_events(p_venue_id, rc);
+        fetch rc bulk collect into t_rows;
+        close rc;
+        
+        for i in 1..t_rows.count loop
+            pipe row(t_rows(i));
+        end loop;
+        return;
+    
+    end show_all_events;
 
+    function show_all_event_series
+    (
+        p_venue_id in number
+    )  return t_event_info pipelined
+    is
+        t_rows t_event_info;
+        rc sys_refcursor;
+    begin
+    
+        events_api.show_all_event_series(p_venue_id, rc);
+        fetch rc bulk collect into t_rows;
+        close rc;
+        
+        for i in 1..t_rows.count loop
+            pipe row(t_rows(i));
+        end loop;
+        return;
+    
+    end show_all_event_series;
+    
     function show_ticket_groups
     (
         p_event_id in number

@@ -2,40 +2,31 @@ create or replace package events_api
 authid current_user
 as 
 
-    function get_venue_id
+    function get_customer_id
     (
-        p_venue_name in varchar2
+        p_customer_email in varchar2
     ) return number;
-
-    procedure create_venue
+    
+    procedure create_customer
     (
-        p_venue_name in varchar2,
-        p_organizer_name in varchar2,
-        p_organizer_email in varchar2,   
-        p_max_event_capacity in number,
-        p_venue_id out number
+        p_customer_name in varchar2,
+        p_customer_email in varchar2,
+        p_customer_id out number
+    );   
+    
+    procedure update_customer
+    (
+        p_customer_id in number,
+        p_customer_name in varchar2,
+        p_customer_email in varchar2
     );
     
-    procedure update_venue
+    procedure show_customer
     (
-        p_venue_id in number,
-        p_venue_name in varchar2,
-        p_organizer_name in varchar2,
-        p_organizer_email in varchar2,   
-        p_max_event_capacity in number  
-    );    
-    
-    procedure show_venue
-    (
-        p_venue_id in number,
+        p_customer_id in number,
         p_info out sys_refcursor
     );
-        
-    procedure show_venues_summary
-    (
-        p_venues out sys_refcursor
-    );
-    
+
     function get_reseller_id
     (
         p_reseller_name in varchar2
@@ -67,44 +58,90 @@ as
     (
         p_resellers out sys_refcursor
     );
-    
-    function get_customer_id
+
+    function get_venue_id
     (
-        p_customer_email in varchar2
+        p_venue_name in varchar2
     ) return number;
-    
-    procedure create_customer
+
+    procedure create_venue
     (
-        p_customer_name in varchar2,
-        p_customer_email in varchar2,
-        p_customer_id out number
-    );   
-    
-    procedure update_customer
-    (
-        p_customer_id in number,
-        p_customer_name in varchar2,
-        p_customer_email in varchar2
+        p_venue_name in varchar2,
+        p_organizer_name in varchar2,
+        p_organizer_email in varchar2,   
+        p_max_event_capacity in number,
+        p_venue_id out number
     );
     
-    procedure show_customer
+    procedure update_venue
     (
-        p_customer_id in number,
+        p_venue_id in number,
+        p_venue_name in varchar2,
+        p_organizer_name in varchar2,
+        p_organizer_email in varchar2,   
+        p_max_event_capacity in number  
+    );    
+    
+    procedure show_venue
+    (
+        p_venue_id in number,
         p_info out sys_refcursor
     );
     
+    procedure show_venues
+    (
+        p_venues out sys_refcursor
+    );
+      
+    procedure show_venue_summary
+    (
+        p_venue_id in number,
+        p_summary out sys_refcursor
+    );
+                  
+    procedure show_venues_summary
+    (
+        p_venues out sys_refcursor
+    );
+                
+    --show ticket sales and ticket quantity for each reseller
+    --rank resellers by total sales amount
+    procedure show_venue_reseller_performance
+    (
+        p_venue_id in number,
+        p_reseller_sales out sys_refcursor
+    );
+
+    procedure show_event_reseller_performance
+    (
+        p_event_id in number,
+        p_reseller_sales out sys_refcursor
+    );
+
+    --show reseller commission report grouped by month and event
+    --?if date is specified show that month, otherwise show all months
+    --?if event is specified show that event only, otherwise show all events
+    procedure show_venue_reseller_commissions
+    (
+        p_venue_id in number,
+        p_reseller_id in number,
+        --?   p_month in date default null,
+        --?   p_event_id in number default null,
+        p_commissions out sys_refcursor
+    );
+            
     function get_event_id
     (
         p_venue_id in number,
         p_event_name in varchar2
     ) return number;
-    
+
     function get_event_series_id
     (
         p_venue_id in number,
         p_event_name in varchar2        
     ) return number;
-    
+        
     procedure create_event
     (
         p_venue_id in number,   
@@ -151,7 +188,7 @@ as
     );
 
     --show all planned events for the venue
-    procedure show_venue_upcoming_events
+    procedure show_all_events
     (
         p_venue_id in number,
         p_events out sys_refcursor
@@ -159,38 +196,12 @@ as
     
     --show all planned events that are part of an event series for the venue
     --include total ticket sales to date
-    procedure show_venue_upcoming_event_series
+    procedure show_all_event_series
     (
         p_venue_id in number,
         p_events out sys_refcursor
     );
     
-    --show ticket sales and ticket quantity for each reseller
-    --rank resellers by total sales amount
-    procedure show_venue_reseller_performance
-    (
-        p_venue_id in number,
-        p_reseller_sales out sys_refcursor
-    );
-
-    procedure show_event_reseller_performance
-    (
-        p_event_id in number,
-        p_reseller_sales out sys_refcursor
-    );
-
-    --show reseller commission report grouped by month and event
-    --?if date is specified show that month, otherwise show all months
-    --?if event is specified show that event only, otherwise show all events
-    procedure show_venue_reseller_commissions
-    (
-        p_venue_id in number,
-        p_reseller_id in number,
-        --?   p_month in date default null,
-        --?   p_event_id in number default null,
-        p_commissions out sys_refcursor
-    );
-
     --show currently defined ticket groups for an event
     --for each group include quantity and price
     --also include an UNDEFINED group to show how many more tickets could be assigned to groups

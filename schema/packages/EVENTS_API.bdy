@@ -31,131 +31,124 @@ as
             p_locale => 'EVENTS_API.' || p_locale);
    
     end log_error;
-    
-    function get_venue_id
+
+    function get_customer_id
     (
-        p_venue_name in varchar2
+        p_customer_email in varchar2
     ) return number
     is
-        l_venue_id number;
+        v_customer_id number;
     begin
+    
+        select customer_id
+        into v_customer_id
+        from event_system.customers c
+        where upper(c.customer_email) = upper(p_customer_email);
         
-        select v.venue_id
-        into l_venue_id
-        from venues v
-        where upper(v.venue_name) = upper(p_venue_name);
-        
-        return l_venue_id;
-        
+        return v_customer_id;
+    
     exception
+        when no_data_found then
+            return 0;
         when others then
-            log_error(sqlerrm, sqlcode,'get_venue_id');
-            raise;                                
-    end get_venue_id;
+            log_error(sqlerrm, sqlcode, 'get_customer_id');
+            raise;
+    end get_customer_id;
 
-    procedure validate_venue_record
+    procedure validate_customer_record
     (
-        p_venue in venues%rowtype
+        p_customer in customers%rowtype
     )
     is
     begin
-
-        case
-            when p_venue.venue_name is null then
-                raise_application_error(-20100, 'Missing venue name, cannot create or update venue');
-            when p_venue.organizer_name is null then
-                raise_application_error(-20100, 'Missing organizer name, cannot create or update venue');         
-            when p_venue.organizer_email is null then
-                raise_application_error(-20100, 'Missing organizer email, cannot create or update venue');
-            when p_venue.max_event_capacity is null then
-                raise_application_error(-20100, 'Missing event capacity, cannot create or update venue');      
+        case    
+            when p_customer.customer_name is null then
+                raise_application_error(-20100, 'Missing name, cannot create or update customer');
+            when p_customer.customer_email is null then
+                raise_application_error(-20100, 'Missing email, cannot create or update customer'); 
             else
                 --record is valid
                 null;
         end case;
-        
-    end validate_venue_record;
+    
+    end validate_customer_record;
 
-    procedure create_venue
+    procedure create_customer
     (
-        p_venue_name in varchar2,
-        p_organizer_name in varchar2,
-        p_organizer_email in varchar2,   
-        p_max_event_capacity in number,
-        p_venue_id out number
+        p_customer_name in varchar2,
+        p_customer_email in varchar2,
+        p_customer_id out number
     )
     is
-        r_venue venues%rowtype;
+        r_customer customers%rowtype;
     begin
-        r_venue.venue_name := p_venue_name;
-        r_venue.organizer_name := p_organizer_name;
-        r_venue.organizer_email := p_organizer_email;
-        r_venue.max_event_capacity := p_max_event_capacity;
+        --check to see if the email is already registered to a customer
+        p_customer_id := get_customer_id(p_customer_email);
+        r_customer.customer_name := p_customer_name;
+        r_customer.customer_email := p_customer_email;
+        validate_customer_record(p_customer => r_customer);
         
-        validate_venue_record(p_venue => r_venue);
-    
-        insert into event_system.venues
-        (
-            venue_name, 
-            organizer_name, 
-            organizer_email, 
-            max_event_capacity
-        )
-        values
-        (
-            r_venue.venue_name, 
-            r_venue.organizer_name, 
-            r_venue.organizer_email, 
-            r_venue.max_event_capacity
-        )
-        returning venue_id 
-        into p_venue_id;
+        if p_customer_id = 0 then
+        
+            insert into event_system.customers
+            (
+                customer_name,
+                customer_email
+            )
+            values
+            (
+                r_customer.customer_name,
+                r_customer.customer_email
+            )
+            returning customer_id 
+            into p_customer_id;
+        
+        else
+            if r_customer.customer_name is not null then
+                update event_system.customers c
+                set c.customer_name = r_customer.customer_name
+                where customer_id = p_customer_id;
+            end if;
+        end if;
         
         commit;
-    
+            
     exception
         when others then
-            log_error(sqlerrm, sqlcode,'create_venue');
+            log_error(sqlerrm, sqlcode,'create_customer');
             raise;
-    end create_venue;
+    end create_customer;
 
-    procedure update_venue
+    procedure update_customer
     (
-        p_venue_id in number,
-        p_venue_name in varchar2,
-        p_organizer_name in varchar2,
-        p_organizer_email in varchar2,   
-        p_max_event_capacity in number  
+        p_customer_id in number,
+        p_customer_name in varchar2,
+        p_customer_email in varchar2
     )
     is
-        r_venue venues%rowtype;
+        r_customer customers%rowtype;
     begin
-        r_venue.venue_name := p_venue_name;
-        r_venue.organizer_name := p_organizer_name;
-        r_venue.organizer_email := p_organizer_email;
-        r_venue.max_event_capacity := p_max_event_capacity;
-        
-        validate_venue_record(p_venue => r_venue);
+        r_customer.customer_name := p_customer_name;
+        r_customer.customer_email := p_customer_email;
+        validate_customer_record(p_customer => r_customer);
     
-        update event_system.venues v
-        set
-            v.venue_name = r_venue.venue_name,
-            v.organizer_name = r_venue.organizer_name,
-            v.organizer_email = r_venue.organizer_email,
-            v.max_event_capacity = r_venue.max_event_capacity
-        where v.venue_id = p_venue_id;
+        update event_system.customers c
+        set 
+            c.customer_name = r_customer.customer_name,
+            c.customer_email = r_customer.customer_email
+        where c.customer_id = p_customer_id;
         
         commit;
-        
+    
     exception
         when others then
-            log_error(sqlerrm, sqlcode, 'update_venue');
-            raise;    
-    end update_venue;
+            log_error(sqlerrm, sqlcode, 'update_customer');
+            raise;
+    end update_customer;
     
-    procedure show_venue
+    procedure show_customer
     (
-        p_venue_id in number,
+        p_customer_id in number,
         p_info out sys_refcursor
     )
     is
@@ -163,40 +156,13 @@ as
     
         open p_info for
         select
-            v.venue_id
-            ,v.venue_name
-            ,v.organizer_name
-            ,v.organizer_email
-            ,v.max_event_capacity
-            ,v.events_scheduled
-        from event_system.venues_v v
-        where v.venue_id = p_venue_id;
-    
-    end show_venue;
-
-    procedure show_venues_summary
-    (
-        p_venues out sys_refcursor
-    )
-    is
-    begin
-    
-        open p_venues for
-        select
-            vs.venue_id,
-            vs.venue_name,
-            vs.organizer_name,
-            vs.organizer_email,
-            vs.max_event_capacity,
-            vs.events_scheduled,
-            vs.first_event_date,
-            vs.last_event_date,
-            vs.min_event_tickets,
-            vs.max_event_tickets
-        from event_system.venues_summary_v vs
-        order by vs.venue_name;
-    
-    end show_venues_summary;
+            c.customer_id
+            ,c.customer_name
+            ,c.customer_email
+        from event_system.customers_v c
+        where c.customer_id = p_customer_id;
+        
+    end show_customer;
 
     function get_reseller_id
     (
@@ -346,123 +312,130 @@ as
     
     end show_resellers;
 
-    function get_customer_id
+    function get_venue_id
     (
-        p_customer_email in varchar2
+        p_venue_name in varchar2
     ) return number
     is
-        v_customer_id number;
+        l_venue_id number;
     begin
-    
-        select customer_id
-        into v_customer_id
-        from event_system.customers c
-        where upper(c.customer_email) = upper(p_customer_email);
         
-        return v_customer_id;
-    
+        select v.venue_id
+        into l_venue_id
+        from venues v
+        where upper(v.venue_name) = upper(p_venue_name);
+        
+        return l_venue_id;
+        
     exception
-        when no_data_found then
-            return 0;
         when others then
-            log_error(sqlerrm, sqlcode, 'get_customer_id');
-            raise;
-    end get_customer_id;
+            log_error(sqlerrm, sqlcode,'get_venue_id');
+            raise;                                
+    end get_venue_id;
 
-    procedure validate_customer_record
+    procedure validate_venue_record
     (
-        p_customer in customers%rowtype
+        p_venue in venues%rowtype
     )
     is
     begin
-        case    
-            when p_customer.customer_name is null then
-                raise_application_error(-20100, 'Missing name, cannot create or update customer');
-            when p_customer.customer_email is null then
-                raise_application_error(-20100, 'Missing email, cannot create or update customer'); 
+
+        case
+            when p_venue.venue_name is null then
+                raise_application_error(-20100, 'Missing venue name, cannot create or update venue');
+            when p_venue.organizer_name is null then
+                raise_application_error(-20100, 'Missing organizer name, cannot create or update venue');         
+            when p_venue.organizer_email is null then
+                raise_application_error(-20100, 'Missing organizer email, cannot create or update venue');
+            when p_venue.max_event_capacity is null then
+                raise_application_error(-20100, 'Missing event capacity, cannot create or update venue');      
             else
                 --record is valid
                 null;
         end case;
-    
-    end validate_customer_record;
+        
+    end validate_venue_record;
 
-    procedure create_customer
+    procedure create_venue
     (
-        p_customer_name in varchar2,
-        p_customer_email in varchar2,
-        p_customer_id out number
+        p_venue_name in varchar2,
+        p_organizer_name in varchar2,
+        p_organizer_email in varchar2,   
+        p_max_event_capacity in number,
+        p_venue_id out number
     )
     is
-        r_customer customers%rowtype;
+        r_venue venues%rowtype;
     begin
-        --check to see if the email is already registered to a customer
-        p_customer_id := get_customer_id(p_customer_email);
-        r_customer.customer_name := p_customer_name;
-        r_customer.customer_email := p_customer_email;
-        validate_customer_record(p_customer => r_customer);
+        r_venue.venue_name := p_venue_name;
+        r_venue.organizer_name := p_organizer_name;
+        r_venue.organizer_email := p_organizer_email;
+        r_venue.max_event_capacity := p_max_event_capacity;
         
-        if p_customer_id = 0 then
-        
-            insert into event_system.customers
-            (
-                customer_name,
-                customer_email
-            )
-            values
-            (
-                r_customer.customer_name,
-                r_customer.customer_email
-            )
-            returning customer_id 
-            into p_customer_id;
-        
-        else
-            if r_customer.customer_name is not null then
-                update event_system.customers c
-                set c.customer_name = r_customer.customer_name
-                where customer_id = p_customer_id;
-            end if;
-        end if;
-        
-        commit;
-            
-    exception
-        when others then
-            log_error(sqlerrm, sqlcode,'create_customer');
-            raise;
-    end create_customer;
-
-    procedure update_customer
-    (
-        p_customer_id in number,
-        p_customer_name in varchar2,
-        p_customer_email in varchar2
-    )
-    is
-        r_customer customers%rowtype;
-    begin
-        r_customer.customer_name := p_customer_name;
-        r_customer.customer_email := p_customer_email;
-        validate_customer_record(p_customer => r_customer);
+        validate_venue_record(p_venue => r_venue);
     
-        update event_system.customers c
-        set 
-            c.customer_name = r_customer.customer_name,
-            c.customer_email = r_customer.customer_email
-        where c.customer_id = p_customer_id;
+        insert into event_system.venues
+        (
+            venue_name, 
+            organizer_name, 
+            organizer_email, 
+            max_event_capacity
+        )
+        values
+        (
+            r_venue.venue_name, 
+            r_venue.organizer_name, 
+            r_venue.organizer_email, 
+            r_venue.max_event_capacity
+        )
+        returning venue_id 
+        into p_venue_id;
         
         commit;
     
     exception
         when others then
-            log_error(sqlerrm, sqlcode, 'update_customer');
+            log_error(sqlerrm, sqlcode,'create_venue');
             raise;
-    end update_customer;
-    
-    procedure show_customer
+    end create_venue;
+
+    procedure update_venue
     (
-        p_customer_id in number,
+        p_venue_id in number,
+        p_venue_name in varchar2,
+        p_organizer_name in varchar2,
+        p_organizer_email in varchar2,   
+        p_max_event_capacity in number  
+    )
+    is
+        r_venue venues%rowtype;
+    begin
+        r_venue.venue_name := p_venue_name;
+        r_venue.organizer_name := p_organizer_name;
+        r_venue.organizer_email := p_organizer_email;
+        r_venue.max_event_capacity := p_max_event_capacity;
+        
+        validate_venue_record(p_venue => r_venue);
+    
+        update event_system.venues v
+        set
+            v.venue_name = r_venue.venue_name,
+            v.organizer_name = r_venue.organizer_name,
+            v.organizer_email = r_venue.organizer_email,
+            v.max_event_capacity = r_venue.max_event_capacity
+        where v.venue_id = p_venue_id;
+        
+        commit;
+        
+    exception
+        when others then
+            log_error(sqlerrm, sqlcode, 'update_venue');
+            raise;    
+    end update_venue;
+    
+    procedure show_venue
+    (
+        p_venue_id in number,
         p_info out sys_refcursor
     )
     is
@@ -470,13 +443,179 @@ as
     
         open p_info for
         select
-            c.customer_id
-            ,c.customer_name
-            ,c.customer_email
-        from event_system.customers_v c
-        where c.customer_id = p_customer_id;
-        
-    end show_customer;
+            v.venue_id
+            ,v.venue_name
+            ,v.organizer_name
+            ,v.organizer_email
+            ,v.max_event_capacity
+            ,v.events_scheduled
+        from event_system.venues_v v
+        where v.venue_id = p_venue_id;
+    
+    end show_venue;
+
+    procedure show_venues
+    (
+        p_venues out sys_refcursor
+    )
+    is
+    begin
+    
+        open p_venues for
+        select
+            v.venue_id
+            ,v.venue_name
+            ,v.organizer_name
+            ,v.organizer_email
+            ,v.max_event_capacity
+            ,v.events_scheduled
+        from event_system.venues_v v
+        order by v.venue_name;
+    
+    end show_venues;
+
+    procedure show_venue_summary
+    (
+        p_venue_id in number,
+        p_summary out sys_refcursor
+    )
+    is
+    begin
+    
+        open p_summary for
+        select
+            vs.venue_id,
+            vs.venue_name,
+            vs.organizer_name,
+            vs.organizer_email,
+            vs.max_event_capacity,
+            vs.events_scheduled,
+            vs.first_event_date,
+            vs.last_event_date,
+            vs.min_event_tickets,
+            vs.max_event_tickets
+        from event_system.venues_summary_v vs
+        where vs.venue_id = p_venue_id;
+    
+    end show_venue_summary;
+
+    procedure show_venues_summary
+    (
+        p_venues out sys_refcursor
+    )
+    is
+    begin
+    
+        open p_venues for
+        select
+            vs.venue_id,
+            vs.venue_name,
+            vs.organizer_name,
+            vs.organizer_email,
+            vs.max_event_capacity,
+            vs.events_scheduled,
+            vs.first_event_date,
+            vs.last_event_date,
+            vs.min_event_tickets,
+            vs.max_event_tickets
+        from event_system.venues_summary_v vs
+        order by vs.venue_name;
+    
+    end show_venues_summary;
+
+    --show ticket sales and ticket quantity for each reseller
+    --rank resellers by total sales amount
+    procedure show_venue_reseller_performance
+    (
+        p_venue_id in number,
+        p_reseller_sales out sys_refcursor
+    )
+    is
+    begin
+    
+        open p_reseller_sales for
+        select
+            rp.venue_id,
+            rp.venue_name,
+            rp.reseller_id,
+            rp.reseller_name,
+            rp.total_ticket_quantity,
+            rp.total_ticket_sales,
+            rp.rank_by_sales,
+            rp.rank_by_quantity
+        from event_system.venue_reseller_performance_v rp
+        where rp.venue_id = p_venue_id
+        order by
+            rp.rank_by_sales, 
+            rp.reseller_name;
+    
+    end show_venue_reseller_performance;
+
+    --show ticket sales and ticket quantity for each reseller
+    --rank resellers by total sales amount
+    procedure show_event_reseller_performance
+    (
+        p_event_id in number,
+        p_reseller_sales out sys_refcursor
+    )
+    is
+    begin
+    
+        open p_reseller_sales for
+        select
+            rp.venue_id,
+            rp.venue_name,
+            rp.event_id,
+            rp.event_name,
+            rp.event_date,
+            rp.reseller_id,
+            rp.reseller_name,
+            rp.total_ticket_quantity,
+            rp.total_ticket_sales,
+            rp.rank_by_sales,
+            rp.rank_by_quantity
+        from event_system.event_reseller_performance_v rp
+        where rp.event_id = p_event_id
+        order by
+            rp.rank_by_sales, 
+            rp.reseller_name;
+    
+    end show_event_reseller_performance;
+
+    --show reseller commission report grouped by month and event
+    --?if date is specified show that month, otherwise show all months
+    --?if event is specified show that event only, otherwise show all events
+    procedure show_venue_reseller_commissions
+    (
+        p_venue_id in number,
+        p_reseller_id in number,
+        --?   p_month in date default null,
+        --?   p_event_id in number default null,
+        p_commissions out sys_refcursor
+    )
+    is
+    begin
+    
+        open p_commissions for
+        select
+            rc.reseller_id,
+            rc.reseller_name,
+            rc.sales_month,
+            rc.sales_month_ending,
+            rc.event_id,
+            rc.event_name,
+            rc.total_sales,
+            rc.commission_percent,
+            rc.total_commission
+        from event_system.venue_reseller_commission_v rc
+        where 
+            rc.venue_id = p_venue_id
+            and rc.reseller_id = p_reseller_id
+        order by
+            rc.sales_month,
+            rc.event_name;
+    
+    end show_venue_reseller_commissions;
 
     function get_event_id
     (
@@ -770,7 +909,7 @@ as
 
     --show all planned events for the venue
     --include total ticket sales to date
-    procedure show_venue_upcoming_events
+    procedure show_all_events
     (
         p_venue_id in number,
         p_events out sys_refcursor
@@ -795,11 +934,11 @@ as
         order by
             ve.event_date;
     
-    end show_venue_upcoming_events;
+    end show_all_events;
 
     --show all planned events that are part of an event series for the venue
     --include total ticket sales to date
-    procedure show_venue_upcoming_event_series
+    procedure show_all_event_series
     (
         p_venue_id in number,
         p_events out sys_refcursor
@@ -824,107 +963,7 @@ as
         order by
             ve.event_date;
     
-    end show_venue_upcoming_event_series;
-
-
-    --show ticket sales and ticket quantity for each reseller
-    --rank resellers by total sales amount
-    procedure show_venue_reseller_performance
-    (
-        p_venue_id in number,
-        p_reseller_sales out sys_refcursor
-    )
-    is
-    begin
-    
-        open p_reseller_sales for
-        select
-            rp.venue_id,
-            rp.venue_name,
-            rp.reseller_id,
-            rp.reseller_name,
-            rp.total_ticket_quantity,
-            rp.total_ticket_sales,
-            rp.rank_by_sales,
-            rp.rank_by_quantity
-        from
-            event_system.venue_reseller_performance_v rp
-        where 
-            rp.venue_id = p_venue_id
-        order by
-            rp.rank_by_sales, 
-            rp.reseller_name;
-    
-    end show_venue_reseller_performance;
-
-    --show ticket sales and ticket quantity for each reseller
-    --rank resellers by total sales amount
-    procedure show_event_reseller_performance
-    (
-        p_event_id in number,
-        p_reseller_sales out sys_refcursor
-    )
-    is
-    begin
-    
-        open p_reseller_sales for
-        select
-            rp.venue_id,
-            rp.venue_name,
-            rp.event_id,
-            rp.event_name,
-            rp.event_date,
-            rp.reseller_id,
-            rp.reseller_name,
-            rp.total_ticket_quantity,
-            rp.total_ticket_sales,
-            rp.rank_by_sales,
-            rp.rank_by_quantity
-        from
-            event_system.event_reseller_performance_v rp
-        where 
-            rp.event_id = p_event_id
-        order by
-            rp.rank_by_sales, 
-            rp.reseller_name;
-    
-    end show_event_reseller_performance;
-
-    --show reseller commission report grouped by month and event
-    --?if date is specified show that month, otherwise show all months
-    --?if event is specified show that event only, otherwise show all events
-    procedure show_venue_reseller_commissions
-    (
-        p_venue_id in number,
-        p_reseller_id in number,
-        --?   p_month in date default null,
-        --?   p_event_id in number default null,
-        p_commissions out sys_refcursor
-    )
-    is
-    begin
-    
-        open p_commissions for
-        select
-            rc.reseller_id,
-            rc.reseller_name,
-            rc.sales_month,
-            rc.sales_month_ending,
-            rc.event_id,
-            rc.event_name,
-            rc.total_sales,
-            rc.commission_percent,
-            rc.total_commission
-        from 
-            event_system.venue_reseller_commission_v rc
-        where 
-            rc.venue_id = p_venue_id
-            and rc.reseller_id = p_reseller_id
-        order by
-            rc.sales_month,
-            rc.event_name;
-    
-    end show_venue_reseller_commissions;
+    end show_all_event_series;
 
     --show currently defined ticket groups for an event
     --for each group include quantity and price
