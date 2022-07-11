@@ -32,7 +32,7 @@ as
         p_reseller_id in resellers.reseller_id%type
     ) return t_reseller_info pipelined;
 
-    function show_resellers 
+    function show_all_resellers 
     return t_reseller_info pipelined;
     
     type r_venue_info is record
@@ -52,7 +52,7 @@ as
         p_venue_id in venues.venue_id%type
     ) return t_venue_info pipelined;
 
-    function show_venues
+    function show_all_venues
     return t_venue_info pipelined;
 
     type r_venue_summary is record
@@ -76,7 +76,7 @@ as
         p_venue_id in venues.venue_id%type    
     ) return t_venue_summary pipelined;
 
-    function show_venues_summary 
+    function show_all_venues_summary 
     return t_venue_summary pipelined;
         
     type r_reseller_performance is record

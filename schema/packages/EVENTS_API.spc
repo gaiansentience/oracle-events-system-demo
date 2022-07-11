@@ -54,7 +54,7 @@ as
         p_info out sys_refcursor
     );
         
-    procedure show_resellers
+    procedure show_all_resellers
     (
         p_resellers out sys_refcursor
     );
@@ -88,7 +88,7 @@ as
         p_info out sys_refcursor
     );
     
-    procedure show_venues
+    procedure show_all_venues
     (
         p_venues out sys_refcursor
     );
@@ -99,7 +99,7 @@ as
         p_summary out sys_refcursor
     );
                   
-    procedure show_venues_summary
+    procedure show_all_venues_summary
     (
         p_venues out sys_refcursor
     );

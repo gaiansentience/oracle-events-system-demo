@@ -41,14 +41,14 @@ as
     
     end show_reseller;
     
-    function show_resellers 
+    function show_all_resellers 
     return t_reseller_info pipelined
     is
         t_rows t_reseller_info;
         rc sys_refcursor;
     begin
     
-        events_api.show_resellers(rc);
+        events_api.show_all_resellers(rc);
         fetch rc bulk collect into t_rows;
         close rc;
         
@@ -57,7 +57,7 @@ as
         end loop;
         return;
     
-    end show_resellers;   
+    end show_all_resellers;   
     
     function show_venue
     (
@@ -79,14 +79,14 @@ as
     
     end show_venue;
 
-    function show_venues
+    function show_all_venues
     return t_venue_info pipelined
     is
         t_rows t_venue_info;
         rc sys_refcursor;
     begin
     
-        events_api.show_venues(rc);
+        events_api.show_all_venues(rc);
         fetch rc bulk collect into t_rows;
         close rc;
         
@@ -95,7 +95,7 @@ as
         end loop;
         return;
     
-    end show_venues;
+    end show_all_venues;
 
     function show_venue_summary(
         p_venue_id in venues.venue_id%type    
@@ -116,14 +116,14 @@ as
     
     end show_venue_summary;
     
-    function show_venues_summary
+    function show_all_venues_summary
     return t_venue_summary pipelined
     is
         t_rows t_venue_summary;
         rc sys_refcursor;
     begin
     
-        events_api.show_venues_summary(rc);
+        events_api.show_all_venues_summary(rc);
         fetch rc bulk collect into t_rows;
         close rc;
         
@@ -132,7 +132,7 @@ as
         end loop;
         return;
     
-    end show_venues_summary;
+    end show_all_venues_summary;
 
     function show_venue_reseller_performance
     (

@@ -65,11 +65,9 @@ as
     )
     is
     begin
-
         dbms_xslprocessor.valueof(p_source, 'customer_id/text()', p_customer.customer_id);
         dbms_xslprocessor.valueof(p_source, 'customer_name/text()', p_customer.customer_name);
         dbms_xslprocessor.valueof(p_source, 'customer_email/text()', p_customer.customer_email);
-    
     end parse_customer;
     
     procedure create_customer
@@ -189,12 +187,10 @@ as
     )
     is
     begin
-    
         dbms_xslprocessor.valueof(p_source, 'reseller_id/text()', p_reseller.reseller_id);
         dbms_xslprocessor.valueof(p_source, 'reseller_name/text()', p_reseller.reseller_name);
         dbms_xslprocessor.valueof(p_source, 'reseller_email/text()', p_reseller.reseller_email);
         dbms_xslprocessor.valueof(p_source, 'commission_percent/text()', p_reseller.commission_percent);        
-    
     end parse_reseller;
 
     procedure create_reseller
@@ -204,12 +200,14 @@ as
     is
         r_reseller event_system.resellers%rowtype;
         nRoot dbms_xmldom.DOMnode;
+        nReseller dbms_xmldom.DOMnode;
         l_status_code varchar2(10);
         l_status_message varchar2(4000);
     begin
     
         util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
-        parse_reseller(p_source => nRoot, p_reseller => r_reseller);
+        nReseller := dbms_xslprocessor.selectSingleNode(n => nRoot, pattern => '/create_reseller/reseller');
+        parse_reseller(p_source => nReseller, p_reseller => r_reseller);
         r_reseller.reseller_id := 0;
         
         begin         
@@ -228,9 +226,9 @@ as
                 l_status_message := sqlerrm;
         end;
         
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'reseller_id', p_data => r_reseller.reseller_id);
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_code', p_data => l_status_code);
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_message', p_data => l_status_message);
+        util_xmldom_helper.addTextNode(p_parent => nReseller, p_tag => 'reseller_id', p_data => r_reseller.reseller_id);
+        util_xmldom_helper.addTextNode(p_parent => nReseller, p_tag => 'status_code', p_data => l_status_code);
+        util_xmldom_helper.addTextNode(p_parent => nReseller, p_tag => 'status_message', p_data => l_status_message);
         p_xml_doc := util_xmldom_helper.docToXMLtype;
         util_xmldom_helper.freeDoc;
         
@@ -247,12 +245,14 @@ as
     is
         r_reseller event_system.resellers%rowtype;
         nRoot dbms_xmldom.DOMnode;
+        nReseller dbms_xmldom.DOMnode;
         l_status_code varchar2(10);
         l_status_message varchar2(4000);
     begin
     
         util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
-        parse_reseller(p_source => nRoot, p_reseller => r_reseller);
+        nReseller := dbms_xslprocessor.selectSingleNode(n => nRoot, pattern => '/update_reseller/reseller');
+        parse_reseller(p_source => nReseller, p_reseller => r_reseller);
         
         begin   
         
@@ -270,8 +270,8 @@ as
                 l_status_message := sqlerrm;
         end;
         
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_code', p_data => l_status_code);
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_message', p_data => l_status_message);
+        util_xmldom_helper.addTextNode(p_parent => nReseller, p_tag => 'status_code', p_data => l_status_code);
+        util_xmldom_helper.addTextNode(p_parent => nReseller, p_tag => 'status_message', p_data => l_status_message);
         p_xml_doc := util_xmldom_helper.docToXMLtype;
         util_xmldom_helper.freeDoc;
         
@@ -334,13 +334,11 @@ as
     )
     is
     begin
-    
         dbms_xslprocessor.valueof(p_source, 'venue_id/text()', p_venue.venue_id);
         dbms_xslprocessor.valueof(p_source, 'venue_name/text()', p_venue.venue_name);
         dbms_xslprocessor.valueof(p_source, 'organizer_name/text()', p_venue.organizer_name);
         dbms_xslprocessor.valueof(p_source, 'organizer_email/text()', p_venue.organizer_email);  
         dbms_xslprocessor.valueof(p_source, 'max_event_capacity/text()', p_venue.max_event_capacity);  
-        
     end parse_venue;
 
     procedure create_venue
@@ -350,12 +348,14 @@ as
     is
         r_venue event_system.venues%rowtype;
         nRoot dbms_xmldom.DOMnode;
-       l_status_code varchar2(10);
-       l_status_message varchar2(4000);
+        nVenue dbms_xmldom.DOMnode;
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
     begin
     
         util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
-        parse_venue(p_source => nRoot, p_venue => r_venue);        
+        nVenue := dbms_xslprocessor.selectSingleNode(n => nRoot, pattern => '/create_venue/venue');        
+        parse_venue(p_source => nVenue, p_venue => r_venue);        
         r_venue.venue_id := 0;
 
         begin   
@@ -375,9 +375,9 @@ as
                 l_status_message := sqlerrm;
         end;
         
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'venue_id', p_data => r_venue.venue_id);
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_code', p_data => l_status_code);
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_message', p_data => l_status_message);
+        util_xmldom_helper.addTextNode(p_parent => nVenue, p_tag => 'venue_id', p_data => r_venue.venue_id);
+        util_xmldom_helper.addTextNode(p_parent => nVenue, p_tag => 'status_code', p_data => l_status_code);
+        util_xmldom_helper.addTextNode(p_parent => nVenue, p_tag => 'status_message', p_data => l_status_message);
         p_xml_doc := util_xmldom_helper.docToXMLtype;
         util_xmldom_helper.freeDoc;
         
@@ -394,12 +394,14 @@ as
     is
         r_venue event_system.venues%rowtype;
         nRoot dbms_xmldom.DOMnode;
-       l_status_code varchar2(10);
-       l_status_message varchar2(4000);
+        nVenue dbms_xmldom.DOMnode;
+        l_status_code varchar2(10);
+        l_status_message varchar2(4000);
     begin
     
         util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
-        parse_venue(p_source => nRoot, p_venue => r_venue);
+        nVenue := dbms_xslprocessor.selectSingleNode(n => nRoot, pattern => '/update_venue/venue');                
+        parse_venue(p_source => nVenue, p_venue => r_venue);
         
         begin   
         
@@ -418,8 +420,8 @@ as
                 l_status_message := sqlerrm;
         end;
         
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_code', p_data => l_status_code);
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_message', p_data => l_status_message);
+        util_xmldom_helper.addTextNode(p_parent => nVenue, p_tag => 'status_code', p_data => l_status_code);
+        util_xmldom_helper.addTextNode(p_parent => nVenue, p_tag => 'status_message', p_data => l_status_message);
         p_xml_doc := util_xmldom_helper.docToXMLtype;
         util_xmldom_helper.freeDoc;
         

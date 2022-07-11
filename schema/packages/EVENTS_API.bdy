@@ -294,7 +294,7 @@ as
     
     end show_reseller;
 
-    procedure show_resellers
+    procedure show_all_resellers
     (
         p_resellers out sys_refcursor
     )
@@ -310,7 +310,7 @@ as
         from event_system.resellers r
         order by r.reseller_name;
     
-    end show_resellers;
+    end show_all_resellers;
 
     function get_venue_id
     (
@@ -454,7 +454,7 @@ as
     
     end show_venue;
 
-    procedure show_venues
+    procedure show_all_venues
     (
         p_venues out sys_refcursor
     )
@@ -472,7 +472,7 @@ as
         from event_system.venues_v v
         order by v.venue_name;
     
-    end show_venues;
+    end show_all_venues;
 
     procedure show_venue_summary
     (
@@ -499,7 +499,7 @@ as
     
     end show_venue_summary;
 
-    procedure show_venues_summary
+    procedure show_all_venues_summary
     (
         p_venues out sys_refcursor
     )
@@ -521,7 +521,7 @@ as
         from event_system.venues_summary_v vs
         order by vs.venue_name;
     
-    end show_venues_summary;
+    end show_all_venues_summary;
 
     --show ticket sales and ticket quantity for each reseller
     --rank resellers by total sales amount
