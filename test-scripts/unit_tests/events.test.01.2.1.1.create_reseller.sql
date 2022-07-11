@@ -5,7 +5,6 @@
 --ORA-00001: unique constraint (RESELLERS_U_RESELLER_EMAIL) violated
 --ORA-00001: unique constraint (RESELLERS_U_RESELLER_NAME) violated
 set serveroutput on;
-
 declare
   v_name varchar2(100) := 'Easy Tickets';
   v_email varchar2(100) := 'ticket.sales@EasyTickets.com';
@@ -22,3 +21,7 @@ begin
    dbms_output.put_line('reseller created with id = ' || v_reseller_id);
 
 end;
+
+/*
+reseller created with id = 12
+*/

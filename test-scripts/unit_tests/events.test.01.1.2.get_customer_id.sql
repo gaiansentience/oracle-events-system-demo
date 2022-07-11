@@ -6,7 +6,6 @@ declare
     v_customer customers%rowtype;
 begin
 
-    v_customer.customer_name := 'Julius Irving';
     v_customer.customer_email := 'Julius.Irving@example.customer.com';
     
     v_customer.customer_id := events_api.get_customer_id(v_customer.customer_email);
@@ -14,3 +13,7 @@ begin
     dbms_output.put_line('customer found with id = ' || v_customer.customer_id);
 
 end;
+
+/*
+customer found with id = 4941
+*/
