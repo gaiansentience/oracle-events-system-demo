@@ -4,13 +4,13 @@ with json_base as
     select
         v.venue_id,
         json_object(
-            'venue_id'                : v.venue_id
-            ,'venue_name'             : v.venue_name
-            ,'organizer_email'        : v.organizer_email
-            ,'organizer_name'         : v.organizer_name
-            ,'max_event_capacity'     : v.max_event_capacity
-            ,'venue_scheduled_events' : v.venue_scheduled_events
-            ,'venue_event_listing'    :
+            'venue_id'             : v.venue_id
+            ,'venue_name'          : v.venue_name
+            ,'organizer_name'      : v.organizer_name
+            ,'organizer_email'     : v.organizer_email
+            ,'max_event_capacity'  : v.max_event_capacity
+            ,'events_scheduled'    : v.events_scheduled
+            ,'venue_event_listing' :
                 (
                 select 
                     json_arrayagg(

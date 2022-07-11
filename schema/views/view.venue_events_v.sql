@@ -13,7 +13,7 @@ select
             es.venue_id = e.venue_id 
             and es.event_date > trunc(sysdate)
         )
-    ,0) as venue_scheduled_events
+    ,0) as events_scheduled
     ,e.event_id
     ,e.event_series_id
     ,e.event_name

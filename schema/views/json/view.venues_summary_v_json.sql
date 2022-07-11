@@ -6,8 +6,8 @@ with json_base as
         ,json_object(
             'venue_id'            : v.venue_id
             ,'venue_name'         : v.venue_name
-            ,'organizer_email'    : v.organizer_email
             ,'organizer_name'     : v.organizer_name
+            ,'organizer_email'    : v.organizer_email
             ,'max_event_capacity' : v.max_event_capacity
             ,'events_scheduled'   : v.events_scheduled
             ,'first_event_date'   : v.first_event_date

@@ -19,6 +19,8 @@ prompt creating verification views for json web services
 @@view.customer_event_series_tickets_v_json_verify.sql;
 @@view.customer_event_tickets_v_json_verify.sql;
 
+@@view.customers_v_json_verify.sql;
+
 @@view.all_resellers_v_json_verify.sql;
 @@view.resellers_v_json_verify.sql;
 

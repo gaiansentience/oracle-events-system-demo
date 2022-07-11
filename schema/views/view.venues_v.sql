@@ -11,8 +11,8 @@ with event_base as
 select
     v.venue_id
     ,v.venue_name
-    ,v.organizer_email
     ,v.organizer_name
+    ,v.organizer_email
     ,v.max_event_capacity
     ,nvl(e.events_scheduled, 0) as events_scheduled
 from 

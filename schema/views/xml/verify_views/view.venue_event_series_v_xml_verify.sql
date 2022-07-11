@@ -13,10 +13,10 @@ select
     b.venue_id
     ,v.venue_id as venue_id_xml
     ,v.venue_name
-    ,v.organizer_email
     ,v.organizer_name
+    ,v.organizer_email
     ,v.max_event_capacity
-    ,v.venue_scheduled_events
+    ,v.events_scheduled
     ,e.event_id
     ,e.event_series_id
     ,e.event_name
@@ -27,12 +27,12 @@ from
     base b,
     xmltable('/venue_events/venue' passing b.xml_doc 
         columns
-            venue_id                number        path 'venue_id'
-            ,venue_name             varchar2(100) path 'venue_name'
-            ,organizer_email        varchar2(100) path 'organizer_email'
-            ,organizer_name         varchar2(100) path 'organizer_name'
-            ,max_event_capacity     number        path 'max_event_capacity'
-            ,venue_scheduled_events number        path 'venue_scheduled_events'
+            venue_id            number        path 'venue_id'
+            ,venue_name         varchar2(100) path 'venue_name'
+            ,organizer_email    varchar2(100) path 'organizer_email'
+            ,organizer_name     varchar2(100) path 'organizer_name'
+            ,max_event_capacity number        path 'max_event_capacity'
+            ,events_scheduled   number        path 'events_scheduled'
     ) v,
     xmltable('/venue_events/venue_event_listing/event' passing b.xml_doc 
         columns

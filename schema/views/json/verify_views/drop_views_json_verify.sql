@@ -19,6 +19,8 @@ drop view event_ticket_prices_v_json_verify;
 drop view customer_event_series_tickets_v_json_verify;
 drop view customer_event_tickets_v_json_verify;
 
+drop view customers_v_json_verify;
+
 drop view all_resellers_v_json_verify;
 drop view resellers_v_json_verify;
 

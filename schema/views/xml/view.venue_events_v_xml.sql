@@ -6,12 +6,12 @@ with xml_base as
         ,xmlelement("venue_events"
             ,xmlelement("venue"
                 ,xmlforest(
-                    v.venue_id         as "venue_id"
-                    ,v.venue_name      as "venue_name"
-                    ,v.organizer_email as "organizer_email"
-                    ,v.organizer_name  as "organizer_name"
-                    ,v.max_event_capacity     as "max_event_capacity"
-                    ,v.venue_scheduled_events as "venue_scheduled_events"
+                    v.venue_id            as "venue_id"
+                    ,v.venue_name         as "venue_name"
+                    ,v.organizer_name     as "organizer_name"
+                    ,v.organizer_email    as "organizer_email"
+                    ,v.max_event_capacity as "max_event_capacity"
+                    ,v.events_scheduled   as "events_scheduled"
                 )
             )
             ,xmlelement("venue_event_listing"

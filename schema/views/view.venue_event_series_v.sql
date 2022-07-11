@@ -5,7 +5,7 @@ select
     ,e.organizer_name
     ,e.organizer_email
     ,e.max_event_capacity
-    ,e.venue_scheduled_events
+    ,e.events_scheduled
     ,e.event_id
     ,e.event_series_id
     ,e.event_name

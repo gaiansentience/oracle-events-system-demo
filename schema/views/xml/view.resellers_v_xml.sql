@@ -5,13 +5,13 @@ with xml_base as
         r.reseller_id
         ,xmlelement("reseller"
             ,xmlforest(
-                r.reseller_id     as "reseller_id"
-                ,r.reseller_name  as "reseller_name"
-                ,r.reseller_email as "reseller_email"
+                r.reseller_id         as "reseller_id"
+                ,r.reseller_name      as "reseller_name"
+                ,r.reseller_email     as "reseller_email"
                 ,r.commission_percent as "commission_percent"
             )
         ) as xml_doc
-    from event_system.resellers r
+    from event_system.resellers_v r
 )
 select
     b.reseller_id

@@ -13,7 +13,7 @@ select
     ,j.organizer_name
     ,j.organizer_email
     ,j.max_event_capacity
-    ,j.venue_scheduled_events
+    ,j.events_scheduled
     ,j.event_id
     ,j.event_series_id
     ,j.event_name
@@ -25,13 +25,13 @@ from
     json_table(b.json_doc
         columns
         (
-            venue_id                number        path '$.venue_id'
-            ,venue_name             varchar2(100) path '$.venue_name'
-            ,organizer_name         varchar2(100) path '$.organizer_name'
-            ,organizer_email        varchar2(100) path '$.organizer_email'
-            ,max_event_capacity     number        path '$.max_event_capacity'
-            ,venue_scheduled_events number        path '$.venue_scheduled_events'
-            ,nested                               path '$.venue_event_listing[*]'
+            venue_id            number        path '$.venue_id'
+            ,venue_name         varchar2(100) path '$.venue_name'
+            ,organizer_name     varchar2(100) path '$.organizer_name'
+            ,organizer_email    varchar2(100) path '$.organizer_email'
+            ,max_event_capacity number        path '$.max_event_capacity'
+            ,events_scheduled   number        path '$.events_scheduled'
+            ,nested                           path '$.venue_event_listing[*]'
                 columns
                 (
                     event_id           number        path event_id

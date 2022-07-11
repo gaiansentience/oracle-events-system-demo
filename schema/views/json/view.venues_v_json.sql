@@ -6,19 +6,12 @@ with json_base as
         ,json_object(
             'venue_id'                : v.venue_id
             ,'venue_name'             : v.venue_name
-            ,'organizer_email'        : v.organizer_email
             ,'organizer_name'         : v.organizer_name
+            ,'organizer_email'        : v.organizer_email
             ,'max_event_capacity'     : v.max_event_capacity
-            ,'venue_scheduled_events' : 
-                (
-                select count(*) 
-                from event_system.events e 
-                where 
-                    e.venue_id = v.venue_id 
-                    and e.event_date > trunc(sysdate)
-                )
+            ,'events_scheduled'       : v.events_scheduled 
         ) as json_doc
-    from event_system.venues v
+    from event_system.venues_v v
 )
 select
     b.venue_id

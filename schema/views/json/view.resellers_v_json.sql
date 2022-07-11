@@ -4,12 +4,12 @@ with json_base as
     select
         r.reseller_id
         ,json_object(
-            'reseller_id'     : r.reseller_id
-            ,'reseller_name'  : r.reseller_name
-            ,'reseller_email' : r.reseller_email
+            'reseller_id'         : r.reseller_id
+            ,'reseller_name'      : r.reseller_name
+            ,'reseller_email'     : r.reseller_email
             ,'commission_percent' : r.commission_percent
         ) as json_doc
-    from event_system.resellers r
+    from event_system.resellers_v r
 )
 select
     b.reseller_id
