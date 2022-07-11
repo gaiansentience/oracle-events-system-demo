@@ -8,7 +8,7 @@ begin
 
    v_json_doc := 
 '{
-  "customer_name" : "Andi Warenkov",
+  "customer_name" : "Andi Warenkovna",
   "customer_email" : "Andi.Warenko@example.customer.com"
 }';
 
@@ -22,7 +22,7 @@ begin
 {
   "customer_name" : "Andi Warenko",
   "customer_email" : "Andi.Warenko@example.customer.com",
-  "customer_id" : 4981,
+  "customer_id" : 5003,
   "status_code" : "SUCCESS",
   "status_message" : "Created customer"
 }
@@ -30,9 +30,9 @@ begin
 --if email exists then customer id is returned
 --if existing customer and name is different name is updated
 {
-  "customer_name" : "Andi Warenkov",
+  "customer_name" : "Andi Warenkovna",
   "customer_email" : "Andi.Warenko@example.customer.com",
-  "customer_id" : 4981,
+  "customer_id" : 5003,
   "status_code" : "SUCCESS",
   "status_message" : "Created customer"
 }

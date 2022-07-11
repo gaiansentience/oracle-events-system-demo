@@ -8,33 +8,23 @@ begin
 
    v_json_doc := 
 '{
-  "customer_name" : "Andi Warenkov",
+  "customer_id" : 5003,
+  "customer_name" : "Andrea Warenko",
   "customer_email" : "Andi.Warenko@example.customer.com"
 }';
 
-   events_json_api.create_customer(p_json_doc => v_json_doc);
-   
+   events_json_api.update_customer(p_json_doc => v_json_doc);
    dbms_output.put_line(events_json_api.format_json_string(v_json_doc));
 
  end;
 
 /*  reply document for success
 {
-  "customer_name" : "Andi Warenko",
+  "customer_id" : 5003,
+  "customer_name" : "Andrea Warenko",
   "customer_email" : "Andi.Warenko@example.customer.com",
-  "customer_id" : 4981,
   "status_code" : "SUCCESS",
-  "status_message" : "Created customer"
-}
-
---if email exists then customer id is returned
---if existing customer and name is different name is updated
-{
-  "customer_name" : "Andi Warenkov",
-  "customer_email" : "Andi.Warenko@example.customer.com",
-  "customer_id" : 4981,
-  "status_code" : "SUCCESS",
-  "status_message" : "Created customer"
+  "status_message" : "Updated customer"
 }
 
 */

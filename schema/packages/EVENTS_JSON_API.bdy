@@ -135,7 +135,7 @@ as
                 p_customer_email => r_customer.customer_email);
                 
             l_status_code := 'SUCCESS';
-            l_status_message := 'Created customer';
+            l_status_message := 'Updated customer';
         exception
             when others then
                 l_status_code := 'ERROR';
@@ -175,6 +175,24 @@ as
         when others then
             return get_json_error_doc(sqlcode, sqlerrm, 'get_customer');
     end get_customer;
+
+    function get_customer_id
+    (
+        p_customer_email in customers.customer_email%type,
+        p_formatted in boolean default false   
+    ) return varchar2
+    is
+        l_json varchar2(4000);
+        l_customer_id customers.customer_id%type;
+    begin
+    
+        l_customer_id := events_api.get_customer_id(p_customer_email => p_customer_email);
+        return get_customer(p_customer_id => l_customer_id, p_formatted => p_formatted);
+    
+    exception
+        when others then
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_customer_id');
+    end get_customer_id;
 
     procedure parse_reseller
     (
@@ -465,6 +483,53 @@ as
             return get_json_error_doc(sqlcode, sqlerrm, 'get_all_venues');
     end get_all_venues;
     
+    function get_venue_summary
+    (
+        p_venue_id in number,
+        p_formatted in boolean default false   
+    ) return varchar2
+    is
+        l_json varchar2(4000);
+    begin
+
+        select b.json_doc
+        into l_json
+        from venues_summary_v_json b
+        where b.venue_id = p_venue_id;
+
+        if p_formatted then
+            l_json := format_json_string(l_json);
+        end if;
+        return l_json;
+   
+    exception
+        when others then
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_venue_summary');
+    end get_venue_summary;
+    
+    function get_all_venues_summary
+    (
+        p_formatted in boolean default false
+    ) return clob
+    is
+        l_json clob;
+    begin
+    
+        select b.json_doc
+        into l_json
+        from all_venues_v_json b;
+        --from all_venues_summary_v_json b;
+        
+        if p_formatted then
+            l_json := format_json_clob(l_json);
+        end if;
+        return l_json;
+    
+    exception
+        when others then
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_all_venues_summary');
+    end get_all_venues_summary;
+
     procedure create_event
     (
         p_json_doc in out nocopy varchar2

@@ -5,17 +5,13 @@ declare
 begin
 
    v_json_doc :=
-'{
-  "reseller_name" : "Ticket Factory",
+'
+{
+  "reseller_name" : "xxxTicket Factory",
   "reseller_email" : "ticket.sales@TicketFactory.com",
   "commission_percent" : 0.09
-}';
-
-   v_json_doc :=
-'{
-  "reseller_name" : "Ticket Factory",
-  "reseller_email" : "ticket.sales@TicketFactory.com"
-}';
+}
+';
 
    events_json_api.create_reseller(p_json_doc => v_json_doc);
    
@@ -36,7 +32,7 @@ begin
   reply document for duplicate name
 {
   "reseller_name" : "Ticket Factory",
-  "reseller_email" : "ticket.sales@TicketFactory.com",
+  "reseller_email" : "xxticket.sales@TicketFactory.com",
   "commission_percent" : 0.09,
   "reseller_id" : 0,
   "status_code" : "ERROR",
@@ -46,7 +42,7 @@ begin
 
   reply document for duplicate email
 {
-  "reseller_name" : "xTicket Factory",
+  "reseller_name" : "xxxTicket Factory",
   "reseller_email" : "ticket.sales@TicketFactory.com",
   "commission_percent" : 0.09,
   "reseller_id" : 0,
@@ -60,7 +56,7 @@ begin
   "commission_percent" : 0.09,
   "reseller_id" : 0,
   "status_code" : "ERROR",
-  "status_message" : "Missing reseller name, cannot create reseller"
+  "status_message" : "ORA-20100: Missing reseller name, cannot create or update reseller."
 }
 
   reply document for missing email
@@ -69,7 +65,7 @@ begin
   "commission_percent" : 0.09,
   "reseller_id" : 0,
   "status_code" : "ERROR",
-  "status_message" : "Missing reseller email, cannot create reseller"
+  "status_message" : "ORA-20100: Missing reseller email, cannot create or update reseller."
 }
 
   reply document for missing commission
@@ -78,7 +74,7 @@ begin
   "reseller_email" : "ticket.sales@TicketFactory.com",
   "reseller_id" : 0,
   "status_code" : "ERROR",
-  "status_message" : "Missing reseller commission, cannot create reseller"
+  "status_message" : "ORA-20100: Missing reseller commission, cannot create or update reseller."
 }
 
 */

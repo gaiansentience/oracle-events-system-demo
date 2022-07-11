@@ -27,6 +27,12 @@ as
         p_customer_id in number,
         p_formatted in boolean default false   
     ) return varchar2;
+
+    function get_customer_id
+    (
+        p_customer_email in customers.customer_email%type,
+        p_formatted in boolean default false   
+    ) return varchar2;
     
     procedure create_reseller
     (
@@ -70,6 +76,17 @@ as
         p_formatted in boolean default false
     ) return clob;
     
+    function get_venue_summary
+    (
+        p_venue_id in number,
+        p_formatted in boolean default false   
+    ) return varchar2;
+
+    function get_all_venues_summary
+    (
+        p_formatted in boolean default false
+    ) return clob;
+
     procedure create_event
     (
         p_json_doc in out nocopy varchar2
