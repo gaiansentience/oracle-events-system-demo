@@ -517,8 +517,7 @@ as
     
         select b.json_doc
         into l_json
-        from all_venues_v_json b;
-        --from all_venues_summary_v_json b;
+        from all_venues_summary_v_json b;
         
         if p_formatted then
             l_json := format_json_clob(l_json);
