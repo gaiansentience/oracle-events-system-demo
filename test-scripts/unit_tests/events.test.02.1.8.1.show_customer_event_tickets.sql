@@ -2,10 +2,11 @@
 select
 *  
 from 
-events_report_api.show_customer_event_tickets(2640, 533);
+events_report_api.show_customer_event_tickets(2640, 602);
 
 
-  select * from events where event_name = 'The New Toys';
+  select * from events e join venues v on e.venue_id = v.venue_id
+  where v.venue_name = 'City Stadium' and e.event_name = 'The New Toys';
   
   select * from customers where customer_name = 'Harry Potter';
   

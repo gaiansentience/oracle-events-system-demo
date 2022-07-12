@@ -28,18 +28,18 @@ begin
     l_venue_id := events_api.get_venue_id(p_venue_name => 'City Stadium');
     l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => 'Hometown Hockey League');
 
-    l_reseller_id := events_api.get_reseller_id(p_reseller_name => 'Old School');
+    l_reseller_id := events_api.get_reseller_id(p_reseller_name => 'Tickets R Us');
 
 
-l_purchases(1).email := 'Jane.Wells@example.customer.com';
+l_purchases(1).email := 'Albert.Einstein@example.customer.com';
 l_purchases(1).price_category := 'GENERAL ADMISSION';
-l_purchases(1).quantity := 9;
-l_purchases(2).email := 'Jules.Miller@example.customer.com';
+l_purchases(1).quantity := 3;
+l_purchases(2).email := 'Jules.Potter@example.customer.com';
 l_purchases(2).price_category := 'EARLY PURCHASE DISCOUNT';
-l_purchases(2).quantity := 11;
-l_purchases(3).email := 'Harry.Potter@example.customer.com';
+l_purchases(2).quantity := 2;
+l_purchases(3).email := 'Harry.Miller@example.customer.com';
 l_purchases(3).price_category := 'VIP';
-l_purchases(3).quantity := 5;
+l_purchases(3).quantity := 2;
 
 for i in 1..l_purchases.count loop
 

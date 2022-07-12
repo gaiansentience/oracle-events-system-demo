@@ -169,10 +169,31 @@ as
         p_event_id in number
     ) return t_event_info pipelined;
     
+    type r_event_series_info is record
+    (
+        venue_id                      venues.venue_id%type
+        ,venue_name                   venues.venue_name%type
+        ,event_series_id              events.event_series_id%type
+        ,event_series_name            events.event_name%type
+        ,events_in_series             number
+        ,tickets_available_all_events number
+        ,tickets_remaining_all_events number
+        ,events_sold_out              number
+        ,events_still_available       number
+        ,event_id                     events.event_id%type
+        ,event_name                   events.event_name%type
+        ,event_date                   events.event_date%type
+        ,tickets_available            events.tickets_available%type
+        ,tickets_remaining            events.tickets_available%type
+    );
+    
+    type t_event_series_info is table of r_event_series_info;
+    
+    
     function show_event_series
     (
         p_event_series_id in number
-    ) return t_event_info pipelined;
+    ) return t_event_series_info pipelined;
 
     --show all planned events for the venue
     function show_all_events

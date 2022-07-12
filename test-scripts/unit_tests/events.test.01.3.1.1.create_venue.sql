@@ -24,5 +24,5 @@ begin
 end;
 
 /*
-venue created with id = 10
+venue created with id = 67
 */

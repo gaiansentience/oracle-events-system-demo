@@ -218,9 +218,9 @@ as
     function show_event_series
     (
         p_event_series_id in number
-    )  return t_event_info pipelined
+    )  return t_event_series_info pipelined
     is
-        t_rows t_event_info;
+        t_rows t_event_series_info;
         rc sys_refcursor;
     begin
     

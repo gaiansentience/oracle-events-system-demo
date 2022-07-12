@@ -24,5 +24,5 @@ begin
 end;
 
 /*
-reseller created with id = 12
+reseller created with id = 73
 */

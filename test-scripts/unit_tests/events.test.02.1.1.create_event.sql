@@ -7,11 +7,11 @@ set serveroutput on;
 declare
     l_venue_id number;
     l_name varchar2(100) := 'The New Toys';
-    l_date date := sysdate + 80;
-    l_tickets number := 15000;
+    l_date date := sysdate + 180;
+    l_tickets number := 10000;
     l_event_id number;
 begin
-    
+    l_date := next_day(l_date,'Friday');
     l_venue_id := events_api.get_venue_id(p_venue_name => 'City Stadium');
 
     events_api.create_event(
@@ -24,3 +24,7 @@ begin
     dbms_output.put_line('event created with id = ' || l_event_id);
 
 end;
+
+/*
+event created with id = 602
+*/

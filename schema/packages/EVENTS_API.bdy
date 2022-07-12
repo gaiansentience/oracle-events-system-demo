@@ -708,7 +708,9 @@ as
     procedure verify_venue_event_date_free
     (
         p_venue_id in number,
-        p_event_date in date
+        p_event_date in date,
+        p_updating_event in boolean default false,
+        p_update_event_id in number default null
     )
     is
         v_count number;
@@ -719,13 +721,27 @@ as
             raise_application_error(-20100, 'Cannot schedule event for current date or past dates');
         end if;
 
+        if not p_updating_event then
+        
         select count(*) 
         into v_count
         from event_system.events e 
         where 
             e.venue_id = p_venue_id 
             and trunc(e.event_date) = trunc(p_event_date);
-   
+
+        else
+
+        select count(*) 
+        into v_count
+        from event_system.events e 
+        where 
+            e.venue_id = p_venue_id 
+            and e.event_id <> p_update_event_id
+            and trunc(e.event_date) = trunc(p_event_date);
+        
+        end if;
+        
         if v_count > 0 then
             v_error_message := 'Cannot schedule event.  Venue already has event for ' || to_char(p_event_date,'MM/DD/YYYY');
             raise_application_error(-20100, v_error_message);
@@ -790,6 +806,8 @@ as
         r_event.event_series_id := null;
     
         create_event(p_event => r_event);
+        
+        p_event_id := r_event.event_id;
                 
     end create_event;
     
@@ -830,7 +848,11 @@ as
     
         l_venue_id := get_event_venue_id(p_event_id => p_event_id);
         
-        verify_venue_event_date_free(p_venue_id => l_venue_id, p_event_date => p_event_date);
+        verify_venue_event_date_free(
+            p_venue_id => l_venue_id, 
+            p_event_date => p_event_date,
+            p_updating_event => true,
+            p_update_event_id => p_event_id);
         
         verify_venue_event_capacity(p_venue_id => l_venue_id, p_tickets => p_tickets_available);
         
@@ -1221,15 +1243,19 @@ as
         select
             ve.venue_id
             ,ve.venue_name
-            ,ve.organizer_name
-            ,ve.organizer_email
-            ,ve.event_id
             ,ve.event_series_id
+            ,ve.event_series_name
+            ,ve.events_in_series
+            ,ve.tickets_available_all_events
+            ,ve.tickets_remaining_all_events
+            ,ve.events_sold_out
+            ,ve.events_still_available
+            ,ve.event_id
             ,ve.event_name
             ,ve.event_date
             ,ve.tickets_available
             ,ve.tickets_remaining
-        from event_system.events_v ve
+        from event_system.event_series_v ve
         where ve.event_series_id = p_event_series_id
         order by ve.event_date;
         
@@ -1549,6 +1575,10 @@ as
                 null;
                 --leave this commented to allow customizing individual events in a series
                 --raise_application_error(-20100, 'Event is part of a series, must use event series methods');
+            else
+                null;
+                --not processing event series and event series id is null
+                --or processing event series and event series id is not null
         end case;
         
         ticket_group_available(p_event_id, p_price_category, p_tickets);
@@ -1823,7 +1853,7 @@ as
     begin
     
         l_event_series_id := get_ticket_group_event_series_id(p_ticket_group_id);
-        --l_event_series_id := get_event_series_id(p_event_id);
+
         case
             when g_processing_event_series and l_event_series_id is null then
                 raise_application_error(-20100, 'Event is not part of a series, cannot use event series methods');
@@ -1831,6 +1861,10 @@ as
                 null;
                 --leave this commented to allow customizing individual events in a series
                 --raise_application_error(-20100, 'Event is part of a series, must use event series methods');
+            else
+                null;
+                --not processing event series and event series id is null
+                --or processing event series and event series id is not null
         end case;
 
         verify_ticket_assignment(p_reseller_id, p_ticket_group_id, p_number_tickets);

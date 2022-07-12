@@ -2,10 +2,9 @@
 select
 * 
 from
-events_report_api.show_event_series_ticket_prices(13);
+events_report_api.show_event_series_ticket_prices(61);
 
-select * from venues where venue_name = 'City Stadium';
-
-select max(event_series_id) from events where venue_id = 1 and event_series_id is not null and event_name = 'Hometown Hockey League';
+select max(event_series_id) from events e join venues v on e.venue_id = v.venue_id
+where v.venue_name = 'City Stadium' and e.event_series_id is not null and e.event_name = 'Hometown Hockey League';
 
 

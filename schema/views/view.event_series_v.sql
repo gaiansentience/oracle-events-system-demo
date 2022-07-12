@@ -24,7 +24,6 @@ select
     ,s.events_sold_out
     ,s.events_still_available
     ,e.event_id
-    ,e.event_series_id
     ,e.event_name
     ,e.event_date
     ,e.tickets_available

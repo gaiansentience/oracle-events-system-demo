@@ -10,7 +10,8 @@
 select
 *
 from
-events_report_api.show_ticket_groups(533);
+events_report_api.show_ticket_groups(602);
 
 
-select * from events where event_name = 'The New Toys';
+select * from events e join venues v on e.venue_id = v.venue_id
+where v.venue_name = 'City Stadium' and e.event_name = 'The New Toys';

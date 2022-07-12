@@ -24,6 +24,7 @@ begin
 
     l_groups(1) := r_group(0,'BACKSTAGE',150,1000);
     l_groups(2) := r_group(0,'GENERAL ADMISSION', 42, 10000);
+    l_groups(3) := r_group(0,'VIP', 77, 2500);
 
 
     for i in 1..l_groups.count loop
