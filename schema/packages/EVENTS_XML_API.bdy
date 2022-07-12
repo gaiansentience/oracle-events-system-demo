@@ -819,12 +819,12 @@ as
     is
         l_xml xmltype;
     begin
-/*
+
         select b.xml_doc
         into l_xml
         from event_series_v_xml b
         where b.event_series_id = p_event_series_id;
-*/    
+    
         if p_formatted then
             l_xml := format_xml_clob(l_xml);
         end if;
