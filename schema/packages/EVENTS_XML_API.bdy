@@ -728,7 +728,6 @@ as
                 l_status_message := sqlerrm;
         end;
 
-
         util_xmldom_helper.addTextNode(p_parent => nEvent, p_tag => 'status_code', p_data => l_status_code);
         util_xmldom_helper.addTextNode(p_parent => nEvent, p_tag => 'status_message', p_data => l_status_message);            
         p_xml_doc := util_xmldom_helper.docToXMLtype;
@@ -775,8 +774,7 @@ as
                 l_status_code := 'ERROR';
                 l_status_message := sqlerrm;
         end;
-    
-    
+        
         util_xmldom_helper.addTextNode(p_parent => nEventSeries, p_tag => 'status_code', p_data => l_status_code);
         util_xmldom_helper.addTextNode(p_parent => nEventSeries, p_tag => 'status_message', p_data => l_status_message);            
     

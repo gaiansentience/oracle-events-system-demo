@@ -13,7 +13,9 @@ prompt creating views for xml web services
 
 @@view.venue_event_series_v_xml.sql;
 @@view.venue_events_v_xml.sql;
+
 @@view.events_v_xml.sql;
+@@view.event_series_v_xml.sql;
 
 @@view.event_ticket_groups_v_xml.sql;
 @@view.event_series_ticket_groups_v_xml.sql;

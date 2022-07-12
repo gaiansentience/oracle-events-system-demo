@@ -663,7 +663,27 @@ as
     begin
         o_request := json_object_t.parse(p_json_doc);
 
+        l_event_id := o_request.get_string('event_id');   
+        l_event_name := o_request.get_string('event_name');
+        l_event_date := o_request.get_date('event_date');
+        l_tickets_available := o_request.get_number('tickets_available');
 
+        begin
+        
+            events_api.update_event
+                (p_event_id => l_event_id,
+                p_event_name => l_event_name,
+                p_event_date => l_event_date,
+                p_tickets_available => l_tickets_available);
+            
+            l_status_code := 'SUCCESS';
+            l_status_message := 'Event information updated';
+
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
 
         o_request.put('status_code', l_status_code);
         o_request.put('status_message', l_status_message);    
@@ -688,6 +708,24 @@ as
     begin
         o_request := json_object_t.parse(p_json_doc);
 
+        l_event_series_id := o_request.get_string('event_series_id');   
+        l_event_name := o_request.get_string('event_name');
+        l_tickets_available := o_request.get_number('tickets_available');
+
+        begin
+        
+            events_api.update_event_series(
+                p_event_series_id => l_event_series_id,
+                p_event_name => l_event_name,
+                p_tickets_available => l_tickets_available);
+                
+            l_status_code := 'SUCCESS';
+            l_status_message := 'All events in series that have not occurred have been updated.';
+        exception
+            when others then 
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
 
         o_request.put('status_code', l_status_code);
         o_request.put('status_message', l_status_message);        

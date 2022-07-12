@@ -32,6 +32,8 @@ prompt creating verification views for json web services
 
 @@view.venue_event_series_v_json_verify.sql;
 @@view.venue_events_v_json_verify.sql;
+
+@@view.event_series_v_json_verify.sql;
 @@view.events_v_json_verify.sql;
 
 prompt events system json verification views created

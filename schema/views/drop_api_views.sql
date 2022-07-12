@@ -21,6 +21,7 @@ drop view event_ticket_assignment_v;
 drop view event_series_ticket_groups_v;
 drop view event_ticket_groups_v;
 drop view events_v;
+drop view event_series_v;
 drop view venue_event_series_v;
 drop view venue_events_v;
 drop view venue_event_series_base_v;

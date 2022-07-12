@@ -32,6 +32,8 @@ prompt creating verification views for xml web services
 
 @@view.venue_event_series_v_xml_verify.sql;
 @@view.venue_events_v_xml_verify.sql;
+
+@@view.event_series_v_xml_verify.sql;
 @@view.events_v_xml_verify.sql;
 
 prompt events system xml verification views created

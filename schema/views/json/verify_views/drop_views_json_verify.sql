@@ -32,6 +32,8 @@ drop view venues_summary_v_json_verify;
 
 drop view venue_event_series_v_json_verify;
 drop view venue_events_v_json_verify;
+
+drop view event_series_v_json_verify;
 drop view events_v_json_verify;
 
 prompt json verification views dropped

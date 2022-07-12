@@ -31,9 +31,12 @@ drop view venues_summary_v_xml;
 
 drop view venue_event_series_v_xml;
 drop view venue_events_v_xml;
+
+drop view event_series_v_xml;
 drop view events_v_xml;
 
 drop view all_resellers_v_xml;
 drop view resellers_v_xml;
+
 drop view customers_v_xml;    
 prompt xml views dropped
