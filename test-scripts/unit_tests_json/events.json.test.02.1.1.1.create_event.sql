@@ -5,13 +5,15 @@ declare
 begin
 
    v_json_doc := 
-'{
+'
+{
   "venue_id" : 41,
   "venue_name" : "Another Roadside Attraction",
   "event_name" : "New Years Mischief",
   "event_date" : "2023-12-31T20:00:00",
   "tickets_available" : 400
-}';
+}
+';
 
    events_json_api.create_event(p_json_doc => v_json_doc);
    

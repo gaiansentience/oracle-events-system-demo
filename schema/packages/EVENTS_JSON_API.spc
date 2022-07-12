@@ -12,11 +12,24 @@ as
         p_json_doc in varchar2
     ) return varchar2;
     
+/*    
+{
+  "customer_name" : "Andi Warenkovna",
+  "customer_email" : "Andi.Warenko@example.customer.com"
+}    
+*/
     procedure create_customer
     (
         p_json_doc in out nocopy varchar2
     );
 
+/*
+{
+  "customer_id" : 5003,
+  "customer_name" : "Andrea Warenko",
+  "customer_email" : "Andi.Warenko@example.customer.com"
+}
+*/
     procedure update_customer
     (
         p_json_doc in out nocopy varchar2
@@ -33,12 +46,27 @@ as
         p_customer_email in customers.customer_email%type,
         p_formatted in boolean default false   
     ) return varchar2;
-    
+
+/*
+{
+  "reseller_name" : "Ticket Factory",
+  "reseller_email" : "ticket.sales@TicketFactory.com",
+  "commission_percent" : 0.09
+}
+*/
     procedure create_reseller
     (
         p_json_doc in out nocopy varchar2
     );
 
+/*
+{
+  "reseller_id" : 41,
+  "reseller_name" : "Ticket Factory",
+  "reseller_email" : "sales@TicketFactory.com",
+  "commission_percent" : 0.125
+}
+*/
     procedure update_reseller
     (
         p_json_doc in out nocopy varchar2
@@ -54,12 +82,29 @@ as
     (
         p_formatted in boolean default false
     ) return clob;
-    
+
+/*
+{
+  "venue_name" : "Another Roadside Attraction",
+  "organizer_name" : "Susie Brewer",
+  "organizer_email" : "Susie.Brewer@AnotherRoadsideAttraction.com",
+  "max_event_capacity" : 400
+}
+*/
     procedure create_venue
     (
         p_json_doc in out nocopy varchar2
     );
 
+/*
+{
+  "venue_id" : 41,
+  "venue_name" : "Another Roadside Attraction",
+  "organizer_name" : "Susan Brewer",
+  "organizer_email" : "Susan.Brewer@AnotherRoadsideAttraction.com",
+  "max_event_capacity" : 500
+}
+*/
     procedure update_venue
     (
         p_json_doc in out nocopy varchar2
@@ -87,21 +132,56 @@ as
         p_formatted in boolean default false
     ) return clob;
 
+/*
+{
+  "venue_id" : 41,
+  "*venue_name" : "Another Roadside Attraction",
+  "event_name" : "New Years Mischief",
+  "event_date" : "2023-12-31T20:00:00",
+  "tickets_available" : 400
+}
+*/
     procedure create_event
     (
         p_json_doc in out nocopy varchar2
     );
 
+/*
+{
+  "venue_id" : 1,
+  "venue_name" : "City Stadium",
+  "event_name" : "Monster Truck Smashup",
+  "event_start_date" : "2023-06-01T19:00:00",
+  "event_end_date" : "2023-09-01T19:00:00",
+  "event_day" : "Wednesday",
+  "tickets_available" : 10000
+}
+*/
     procedure create_weekly_event
     (
         p_json_doc in out nocopy clob
     );
-    
+
+/*
+{
+  "event_id" : 581,
+  "event_name" : "New Years Mischief",
+  "event_date" : "2023-12-31T20:00:00",
+  "tickets_available" : 400
+}
+*/
     procedure update_event
     (
         p_json_doc in out nocopy varchar2
     );
 
+/*
+{
+  "event_series_id" : 13,
+  "event_name" : "Monster Truck Smashup",
+  "tickets_available" : 10000
+}
+*/
     procedure update_event_series
     (
         p_json_doc in out nocopy varchar2

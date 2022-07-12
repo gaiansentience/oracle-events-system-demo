@@ -7,10 +7,12 @@ declare
 begin
 
    v_json_doc := 
-'{
+'
+{
   "customer_name" : "Andi Warenkovna",
   "customer_email" : "Andi.Warenko@example.customer.com"
-}';
+}
+';
 
    events_json_api.create_customer(p_json_doc => v_json_doc);
    

@@ -7,11 +7,13 @@ declare
 begin
 
    v_json_doc := 
-'{
+'
+{
   "customer_id" : 5003,
   "customer_name" : "Andrea Warenko",
   "customer_email" : "Andi.Warenko@example.customer.com"
-}';
+}
+';
 
    events_json_api.update_customer(p_json_doc => v_json_doc);
    dbms_output.put_line(events_json_api.format_json_string(v_json_doc));

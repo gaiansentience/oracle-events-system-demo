@@ -5,7 +5,8 @@ declare
 begin
 
    v_json_doc := 
-'{
+'
+{
   "venue_id" : 1,
   "venue_name" : "City Stadium",
   "event_name" : "Monster Truck Smashup",
@@ -13,7 +14,8 @@ begin
   "event_end_date" : "2023-09-01T19:00:00",
   "event_day" : "Wednesday",
   "tickets_available" : 10000
-}';
+}
+';
 
    events_json_api.create_weekly_event(p_json_doc => v_json_doc);
    

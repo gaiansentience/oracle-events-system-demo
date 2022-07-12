@@ -12,7 +12,8 @@ begin
   "organizer_name" : "Susan Brewer",
   "organizer_email" : "Susan.Brewer@AnotherRoadsideAttraction.com",
   "max_event_capacity" : 500
-}';
+}
+';
 
     events_json_api.update_venue(p_json_doc => l_json_doc);
     dbms_output.put_line(events_json_api.format_json_string(l_json_doc));
