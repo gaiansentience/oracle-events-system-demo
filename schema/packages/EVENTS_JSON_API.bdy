@@ -769,12 +769,12 @@ as
         l_json clob;
     begin
 
-/*    
+    
         select b.json_doc
         into l_json
         from event_series_v_json b
         where b.event_series_id = p_event_series_id;
-*/    
+    
         if p_formatted then
             l_json := format_json_clob(l_json);
         end if;
