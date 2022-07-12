@@ -139,21 +139,66 @@ as
         p_formatted in boolean default false
     ) return xmltype;
 
+/*
+<create_event>
+  <event>
+    <venue>
+      <venue_id>21</venue_id>
+      <venue_name>The Pink Pony Review</venue_name>
+    </venue>
+    <event_name>Evangeline Thorpe</event_name>
+    <event_date>2023-05-01</event_date>
+    <tickets_available>200</tickets_available>
+  </event>
+</create_event>
+*/
     procedure create_event
     (
         p_xml_doc in out nocopy xmltype
     );
-    
+/*
+<create_event_series>
+  <event_series>
+    <venue>
+      <venue_id>21</venue_id>
+      <venue_name>The Pink Pony Revue</venue_name>
+    </venue>
+    <event_name>Cool Jazz Evening</event_name>
+    <event_start_date>2023-05-01</event_start_date>
+    <event_end_date>2023-08-31</event_end_date>
+    <event_day>Thursday</event_day>
+    <tickets_available>200</tickets_available>
+  </event_series>
+</create_event_series>
+*/    
     procedure create_weekly_event
     (
         p_xml_doc in out nocopy xmltype
     );
 
+/*
+<update_event>
+  <event>
+    <event_name>Evangeline Thorpe</event_name>
+    <event_date>2023-05-01</event_date>
+    <tickets_available>200</tickets_available>
+  </event>
+</update_event>
+*/
     procedure update_event
     (
         p_xml_doc in out nocopy xmltype
     );
 
+/*
+<update_event_series>
+  <event_series>
+    <event_series_id>13</event_series_id>
+    <event_name>Cool Jazz Evening</event_name>
+    <tickets_available>200</tickets_available>
+  </event_series>
+</update_event_series>
+*/
     procedure update_event_series
     (
         p_xml_doc in out nocopy xmltype

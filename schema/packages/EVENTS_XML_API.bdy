@@ -541,7 +541,7 @@ as
         when others then
             return get_xml_error_doc(sqlcode, sqlerrm, 'get_all_venues_summary');
     end get_all_venues_summary;
-        
+               
     procedure create_event
     (
         p_xml_doc in out nocopy xmltype
@@ -560,12 +560,12 @@ as
         nEvent := dbms_xslprocessor.selectSingleNode(n => nRoot, pattern => '/create_event/event');        
         
         
-        dbms_xslprocessor.valueof(nRoot, 'venue/venue_id/text()', r_event.venue_id);
-        dbms_xslprocessor.valueof(nRoot, 'event_name/text()', r_event.event_name);
-        dbms_xslprocessor.valueof(nRoot, 'event_date/text()', l_date_string);
+        dbms_xslprocessor.valueof(nEvent, 'venue/venue_id/text()', r_event.venue_id);
+        dbms_xslprocessor.valueof(nEvent, 'event_name/text()', r_event.event_name);
+        dbms_xslprocessor.valueof(nEvent, 'event_date/text()', l_date_string);
         r_event.event_date := to_date(l_date_string, l_date_mask);  
         
-        dbms_xslprocessor.valueof(nRoot, 'tickets_available/text()', r_event.tickets_available);  
+        dbms_xslprocessor.valueof(nEvent, 'tickets_available/text()', r_event.tickets_available);  
         r_event.event_id := 0;
 
         case
@@ -598,9 +598,9 @@ as
                 end;
         end case;
 
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'event_id', p_data => r_event.event_id);
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_code', p_data => l_status_code);
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'status_message', p_data => l_status_message);
+        util_xmldom_helper.addTextNode(p_parent => nEvent, p_tag => 'event_id', p_data => r_event.event_id);
+        util_xmldom_helper.addTextNode(p_parent => nEvent, p_tag => 'status_code', p_data => l_status_code);
+        util_xmldom_helper.addTextNode(p_parent => nEvent, p_tag => 'status_message', p_data => l_status_message);
         p_xml_doc := util_xmldom_helper.docToXMLtype;
         util_xmldom_helper.freeDoc;
 
@@ -638,17 +638,17 @@ as
         util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
         nEventSeries := dbms_xslprocessor.selectSingleNode(n => nRoot, pattern => '/create_event_series/event_series');        
         
-        dbms_xslprocessor.valueof(nRoot, 'venue/venue_id/text()', l_venue_id);
-        dbms_xslprocessor.valueof(nRoot, 'event_name/text()', l_event_name);
+        dbms_xslprocessor.valueof(nEventSeries, 'venue/venue_id/text()', l_venue_id);
+        dbms_xslprocessor.valueof(nEventSeries, 'event_name/text()', l_event_name);
         
-        dbms_xslprocessor.valueof(nRoot, 'event_start_date/text()', l_date_string);
+        dbms_xslprocessor.valueof(nEventSeries, 'event_start_date/text()', l_date_string);
         l_event_start_date := to_date(l_date_string, l_date_mask);  
 
-        dbms_xslprocessor.valueof(nRoot, 'event_end_date/text()', l_date_string);
+        dbms_xslprocessor.valueof(nEventSeries, 'event_end_date/text()', l_date_string);
         l_event_end_date := to_date(l_date_string, l_date_mask);  
 
-        dbms_xslprocessor.valueof(nRoot, 'event_day/text()', l_event_day);          
-        dbms_xslprocessor.valueof(nRoot, 'tickets_available/text()', l_tickets_available);  
+        dbms_xslprocessor.valueof(nEventSeries, 'event_day/text()', l_event_day);          
+        dbms_xslprocessor.valueof(nEventSeries, 'tickets_available/text()', l_tickets_available);  
 
         events_api.create_weekly_event(
             p_venue_id => l_venue_id,   
@@ -662,9 +662,9 @@ as
             p_status_code => l_status_code,
             p_status_message => l_status_message);
 
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'event_series_id', p_data => l_event_series_id);
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'request_status_code', p_data => l_status_code);
-        util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'request_status_message', p_data => l_status_message);
+        util_xmldom_helper.addTextNode(p_parent => nEventSeries, p_tag => 'event_series_id', p_data => l_event_series_id);
+        util_xmldom_helper.addTextNode(p_parent => nEventSeries, p_tag => 'request_status_code', p_data => l_status_code);
+        util_xmldom_helper.addTextNode(p_parent => nEventSeries, p_tag => 'request_status_message', p_data => l_status_message);
         util_xmldom_helper.addNode(p_parent => nRoot, p_tag => 'event_series_details', p_node => nEventDetails);
         for i in 1..t_status_details.count loop
             util_xmldom_helper.addNode(p_parent => nEventDetails, p_tag => 'event', p_node => nEvent);
@@ -702,9 +702,31 @@ as
     begin
 
         util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
-        nEvent := dbms_xslprocessor.selectSingleNode(n => nRoot, pattern => '/update_event/event');        
+        nEvent := dbms_xslprocessor.selectSingleNode(n => nRoot, pattern => '/update_event/event');  
+        
+        dbms_xslprocessor.valueof(nEvent, 'event_id/text()', l_event_id);
+        dbms_xslprocessor.valueof(nEvent, 'event_name/text()', l_event_name);
+        dbms_xslprocessor.valueof(nEvent, 'event_date/text()', l_date_string);
+        l_event_date := to_date(l_date_string, l_date_mask);  
+        
+        dbms_xslprocessor.valueof(nEvent, 'tickets_available/text()', l_tickets_available);  
 
+        begin
+        
+            events_api.update_event
+                (p_event_id => l_event_id,
+                p_event_name => l_event_name,
+                p_event_date => l_event_date,
+                p_tickets_available => l_tickets_available);
+            
+            l_status_code := 'SUCCESS';
+            l_status_message := 'Event information updated';
 
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
 
 
         util_xmldom_helper.addTextNode(p_parent => nEvent, p_tag => 'status_code', p_data => l_status_code);
@@ -734,9 +756,25 @@ as
 
         util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRoot);
         nEventSeries := dbms_xslprocessor.selectSingleNode(n => nRoot, pattern => '/update_event_series/event_series');        
+
+        dbms_xslprocessor.valueof(nEventSeries, 'event_series_id/text()', l_event_series_id);    
+        dbms_xslprocessor.valueof(nEventSeries, 'event_name/text()', l_event_name);        
+        dbms_xslprocessor.valueof(nEventSeries, 'tickets_available/text()', l_tickets_available);  
     
-    
-    
+        begin
+        
+            events_api.update_event_series(
+                p_event_series_id => l_event_series_id,
+                p_event_name => l_event_name,
+                p_tickets_available => l_tickets_available);
+                
+            l_status_code := 'SUCCESS';
+            l_status_message := 'All events in series that have not occurred have been updated.';
+        exception
+            when others then 
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
     
     
         util_xmldom_helper.addTextNode(p_parent => nEventSeries, p_tag => 'status_code', p_data => l_status_code);
