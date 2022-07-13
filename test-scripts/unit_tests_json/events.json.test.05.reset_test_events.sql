@@ -3,7 +3,8 @@ declare
 
 v_event_name varchar2(100);
 v_venue_id number;
-
+v_reseller_id number;
+v_customer_id number;
 begin
 
 v_venue_id := events_api.get_venue_id(p_venue_name => 'Another Roadside Attraction');

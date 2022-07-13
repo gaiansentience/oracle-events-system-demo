@@ -1,31 +1,43 @@
 --create reseller using a json document
 set serveroutput on;
 declare
-  v_json_doc varchar2(4000);
+    l_json_doc varchar2(4000);
+    l_name resellers.reseller_name%type := 'Ticket Factory';
+    l_email resellers.reseller_email%type := 'sales@TicketFactory.com';
+    l_commission resellers.commission_percent%type := 0.125;
+    l_reseller_id number;
 begin
 
-   v_json_doc :=
+    l_reseller_id := events_api.get_reseller_id(p_reseller_name => l_name);
+
+l_json_doc :=
 '
 {
-  "reseller_id" : 41,
-  "reseller_name" : "Ticket Factory",
-  "reseller_email" : "sales@TicketFactory.com",
-  "commission_percent" : 0.125
+  "reseller_id" : $$RESELLER$$,
+  "reseller_name" : "$$NAME$$",
+  "reseller_email" : "$$EMAIL$$",
+  "commission_percent" : $$COMMISSION$$
 }
 ';
 
-   events_json_api.update_reseller(p_json_doc => v_json_doc);
-   dbms_output.put_line(events_json_api.format_json_string(v_json_doc));
+    l_json_doc := replace(l_json_doc,'$$RESELLER$$',l_reseller_id);
+    l_json_doc := replace(l_json_doc,'$$NAME$$',l_name);
+    l_json_doc := replace(l_json_doc,'$$EMAIL$$',l_email);
+    l_json_doc := replace(l_json_doc,'$$COMMISSION$$',l_commission);
+
+    events_json_api.update_reseller(p_json_doc => l_json_doc);
+    dbms_output.put_line(events_json_api.format_json_string(l_json_doc));
 
  end;
 
-/*  reply document for success
+/*
 {
-  "reseller_id" : 41,
-  "reseller_name" : "Ticket Factory Outlet",
+  "reseller_id" : 81,
+  "reseller_name" : "Ticket Factory",
   "reseller_email" : "sales@TicketFactory.com",
   "commission_percent" : 0.125,
   "status_code" : "SUCCESS",
   "status_message" : "Updated reseller"
 }
+
 */

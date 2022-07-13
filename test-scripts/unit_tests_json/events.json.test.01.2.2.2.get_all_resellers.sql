@@ -14,8 +14,8 @@ begin
   {
     "reseller_id" : 21,
     "reseller_name" : "New Wave Tickets",
-    "reseller_email" : "ticket.sales@NewWaveTickets.com",
-    "commission_percent" : 0.1111
+    "reseller_email" : "tickets@NewWaveTickets.com",
+    "commission_percent" : 0.1414
   },
   {
     "reseller_id" : 1,
@@ -84,10 +84,16 @@ begin
     "commission_percent" : 0.129
   },
   {
-    "reseller_id" : 12,
+    "reseller_id" : 73,
     "reseller_name" : "Easy Tickets",
-    "reseller_email" : "ticket.sales@EasyTickets.com",
-    "commission_percent" : 0.11
+    "reseller_email" : "tickets@EasyTickets.com",
+    "commission_percent" : 0.0909
+  },
+  {
+    "reseller_id" : 81,
+    "reseller_name" : "Ticket Factory",
+    "reseller_email" : "sales@TicketFactory.com",
+    "commission_percent" : 0.125
   }
 ]
 */
