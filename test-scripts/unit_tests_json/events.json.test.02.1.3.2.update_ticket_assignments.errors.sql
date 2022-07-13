@@ -1,14 +1,13 @@
 set serveroutput on;
 declare
-   v_json_doc clob;
-   v_event_id number := 10;
+    l_json_doc clob;
 begin
-v_json_doc := 
+l_json_doc := 
 '
 {
-  "venue_id" : 41,
+  "venue_id" : 81,
   "venue_name" : "Another Roadside Attraction",
-  "event_id" : 581,
+  "event_id" : 621,
   "event_name" : "New Years Mischief",
   "ticket_resellers" :
   [
@@ -18,12 +17,12 @@ v_json_doc :=
       "ticket_assignments" :
       [
         {
-          "ticket_group_id" : 2322,
+          "ticket_group_id" : 2442,
           "price_category" : "VIP",
           "tickets_assigned" : 10
         },
         {
-          "ticket_group_id" : 2323,
+          "ticket_group_id" : 2443,
           "price_category" : "GENERAL ADMISSION",
           "tickets_assigned" : 500
         }
@@ -35,17 +34,17 @@ v_json_doc :=
       "ticket_assignments" :
       [
         {
-          "ticket_group_id" : 2321,
+          "ticket_group_id" : 2441,
           "price_category" : "SPONSOR",
           "tickets_assigned" : 10
         },
         {
-          "ticket_group_id" : 2322,
+          "ticket_group_id" : 2442,
           "price_category" : "VIP",
           "tickets_assigned" : 150
         },
         {
-          "ticket_group_id" : 2323,
+          "ticket_group_id" : 2443,
           "price_category" : "GENERAL ADMISSION",
           "tickets_assigned" : 50
         }
@@ -57,33 +56,30 @@ v_json_doc :=
       "ticket_assignments" :
       [
         {
-          "ticket_group_id" : 2323,
+          "ticket_group_id" : 2443,
           "price_category" : "GENERAL ADMISSION",
-          "tickets_assigned" : 5000
+          "tickets_assigned" : 500
         }
       ]
     }
   ]
 }
-
 ';
 
 
-events_json_api.update_ticket_assignments(p_json_doc => v_json_doc);
---dbms_output.put_line(v_json_doc);
-
---output result in readable format
-dbms_output.put_line(events_json_api.format_json_clob(v_json_doc));
+    events_json_api.update_ticket_assignments(p_json_doc => l_json_doc);
+    dbms_output.put_line(events_json_api.format_json_clob(l_json_doc));
 
 
 end;
 
 --reply for update with errors
 /*
+
 {
-  "venue_id" : 41,
+  "venue_id" : 81,
   "venue_name" : "Another Roadside Attraction",
-  "event_id" : 581,
+  "event_id" : 621,
   "event_name" : "New Years Mischief",
   "ticket_resellers" :
   [
@@ -93,20 +89,20 @@ end;
       "ticket_assignments" :
       [
         {
-          "ticket_group_id" : 2322,
+          "ticket_group_id" : 2442,
           "price_category" : "VIP",
           "tickets_assigned" : 10,
-          "ticket_assignment_id" : 9901,
+          "ticket_assignment_id" : 10161,
           "status_code" : "SUCCESS",
           "status_message" : "created/updated ticket group assignment"
         },
         {
-          "ticket_group_id" : 2323,
+          "ticket_group_id" : 2443,
           "price_category" : "GENERAL ADMISSION",
           "tickets_assigned" : 500,
           "ticket_assignment_id" : 0,
           "status_code" : "ERROR",
-          "status_message" : "ORA-20100: Cannot assign 500 tickets for  GENERAL ADMISSION to reseller, maximum available are 200"
+          "status_message" : "ORA-20100: Cannot assign 500 tickets for  GENERAL ADMISSION to reseller, maximum available are 100"
         }
       ],
       "reseller_status" : "ERRORS",
@@ -118,26 +114,26 @@ end;
       "ticket_assignments" :
       [
         {
-          "ticket_group_id" : 2321,
+          "ticket_group_id" : 2441,
           "price_category" : "SPONSOR",
           "tickets_assigned" : 10,
-          "ticket_assignment_id" : 9903,
+          "ticket_assignment_id" : 10163,
           "status_code" : "SUCCESS",
           "status_message" : "created/updated ticket group assignment"
         },
         {
-          "ticket_group_id" : 2322,
+          "ticket_group_id" : 2442,
           "price_category" : "VIP",
           "tickets_assigned" : 150,
           "ticket_assignment_id" : 0,
           "status_code" : "ERROR",
-          "status_message" : "ORA-20100: Cannot assign 150 tickets for  VIP to reseller, maximum available are 40"
+          "status_message" : "ORA-20100: Cannot assign 150 tickets for  VIP to reseller, maximum available are 90"
         },
         {
-          "ticket_group_id" : 2323,
+          "ticket_group_id" : 2443,
           "price_category" : "GENERAL ADMISSION",
           "tickets_assigned" : 50,
-          "ticket_assignment_id" : 9905,
+          "ticket_assignment_id" : 10165,
           "status_code" : "SUCCESS",
           "status_message" : "created/updated ticket group assignment"
         }
@@ -151,12 +147,12 @@ end;
       "ticket_assignments" :
       [
         {
-          "ticket_group_id" : 2323,
+          "ticket_group_id" : 2443,
           "price_category" : "GENERAL ADMISSION",
-          "tickets_assigned" : 5000,
+          "tickets_assigned" : 500,
           "ticket_assignment_id" : 0,
           "status_code" : "ERROR",
-          "status_message" : "ORA-20100: Cannot assign 5000 tickets for  GENERAL ADMISSION to reseller, maximum available are 200"
+          "status_message" : "ORA-20100: Cannot assign 500 tickets for  GENERAL ADMISSION to reseller, maximum available are 100"
         }
       ],
       "reseller_status" : "ERRORS",
@@ -166,9 +162,6 @@ end;
   "request_status" : "ERRORS",
   "request_errors" : 3
 }
-
-
-PL/SQL procedure successfully completed.
 
 
 */

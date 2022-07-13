@@ -11,6 +11,10 @@ v_venue_id := events_api.get_venue_id(p_venue_name => 'Another Roadside Attracti
 v_event_name := 'New Years Mischief';
 events_test_data_api.delete_venue_events_by_name(v_venue_id, v_event_name);
 
+v_event_name := 'New Years Mischief 2022';
+events_test_data_api.delete_venue_events_by_name(v_venue_id, v_event_name);
+
+
 --delete events for Hometown Hockey League
 v_venue_id := events_api.get_venue_id(p_venue_name => 'City Stadium');
 v_event_name := 'Monster Truck Smashup';

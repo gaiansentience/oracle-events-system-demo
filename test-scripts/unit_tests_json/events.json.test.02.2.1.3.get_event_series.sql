@@ -3,154 +3,123 @@ set serveroutput on;
 declare
     l_json_doc clob;
     l_venue_id number;
+    l_venue_name venues.venue_name%type := 'City Stadium';    
+    l_event_series_id number;
+    l_event_name events.event_name%type := 'Monster Truck Smashup';
 begin
 
-    l_venue_id := events_api.get_venue_id(p_venue_name => 'City Stadium');
-    l_json_doc := events_json_api.get_venue_event_series(p_venue_id => l_venue_id, p_formatted => true);
-   
+    l_venue_id := events_api.get_venue_id(p_venue_name => l_venue_name);
+    l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
+
+    l_json_doc := events_json_api.get_event_series(p_event_series_id => l_event_series_id, p_formatted => true);   
     dbms_output.put_line(l_json_doc);
 
  end;
 
 /*
 
-
 {
   "venue_id" : 1,
   "venue_name" : "City Stadium",
-  "organizer_email" : "Erin.Johanson@CityStadium.com",
-  "organizer_name" : "Erin Johanson",
-  "max_event_capacity" : 20000,
-  "venue_scheduled_events" : 33,
-  "venue_event_listing" :
+  "event_series_id" : 81,
+  "event_series_name" : "Monster Truck Smashup",
+  "events_in_series" : 13,
+  "tickets_available_all_events" : 130000,
+  "tickets_remaining_all_events" : 130000,
+  "events_sold_out" : 0,
+  "events_still_available" : 13,
+  "series_events" :
   [
     {
-      "event_id" : 534,
-      "event_series_id" : 13,
-      "event_name" : "Hometown Hockey League",
-      "event_date" : "2022-08-06T16:30:07",
-      "tickets_available" : 5000,
-      "tickets_remaining" : 19
+      "event_id" : 623,
+      "event_name" : "Monster Truck Smashup",
+      "event_date" : "2023-06-07T19:00:00",
+      "tickets_available" : 10000,
+      "tickets_remaining" : 10000
     },
     {
-      "event_id" : 535,
-      "event_series_id" : 13,
-      "event_name" : "Hometown Hockey League",
-      "event_date" : "2022-08-13T16:30:07",
-      "tickets_available" : 5000,
-      "tickets_remaining" : 26
+      "event_id" : 624,
+      "event_name" : "Monster Truck Smashup",
+      "event_date" : "2023-06-14T19:00:00",
+      "tickets_available" : 10000,
+      "tickets_remaining" : 10000
     },
     {
-      "event_id" : 536,
-      "event_series_id" : 13,
-      "event_name" : "Hometown Hockey League",
-      "event_date" : "2022-08-20T16:30:07",
-      "tickets_available" : 5000,
-      "tickets_remaining" : 20
+      "event_id" : 625,
+      "event_name" : "Monster Truck Smashup",
+      "event_date" : "2023-06-21T19:00:00",
+      "tickets_available" : 10000,
+      "tickets_remaining" : 10000
     },
     {
-      "event_id" : 537,
-      "event_series_id" : 13,
-      "event_name" : "Hometown Hockey League",
-      "event_date" : "2022-08-27T16:30:07",
-      "tickets_available" : 5000,
-      "tickets_remaining" : 19
+      "event_id" : 626,
+      "event_name" : "Monster Truck Smashup",
+      "event_date" : "2023-06-28T19:00:00",
+      "tickets_available" : 10000,
+      "tickets_remaining" : 10000
     },
     {
-      "event_id" : 538,
-      "event_series_id" : 13,
-      "event_name" : "Hometown Hockey League",
-      "event_date" : "2022-09-03T16:30:07",
-      "tickets_available" : 5000,
-      "tickets_remaining" : 23
+      "event_id" : 627,
+      "event_name" : "Monster Truck Smashup",
+      "event_date" : "2023-07-05T19:00:00",
+      "tickets_available" : 10000,
+      "tickets_remaining" : 10000
     },
     {
-      "event_id" : 539,
-      "event_series_id" : 13,
-      "event_name" : "Hometown Hockey League",
-      "event_date" : "2022-09-10T16:30:07",
-      "tickets_available" : 5000,
-      "tickets_remaining" : 33
+      "event_id" : 628,
+      "event_name" : "Monster Truck Smashup",
+      "event_date" : "2023-07-12T19:00:00",
+      "tickets_available" : 10000,
+      "tickets_remaining" : 10000
     },
     {
-      "event_id" : 540,
-      "event_series_id" : 13,
-      "event_name" : "Hometown Hockey League",
-      "event_date" : "2022-09-17T16:30:07",
-      "tickets_available" : 5000,
-      "tickets_remaining" : 26
+      "event_id" : 629,
+      "event_name" : "Monster Truck Smashup",
+      "event_date" : "2023-07-19T19:00:00",
+      "tickets_available" : 10000,
+      "tickets_remaining" : 10000
     },
     {
-      "event_id" : 541,
-      "event_series_id" : 13,
-      "event_name" : "Hometown Hockey League",
-      "event_date" : "2022-09-24T16:30:07",
-      "tickets_available" : 5000,
-      "tickets_remaining" : 24
+      "event_id" : 630,
+      "event_name" : "Monster Truck Smashup",
+      "event_date" : "2023-07-26T19:00:00",
+      "tickets_available" : 10000,
+      "tickets_remaining" : 10000
     },
     {
-      "event_id" : 542,
-      "event_series_id" : 13,
-      "event_name" : "Hometown Hockey League",
-      "event_date" : "2022-10-22T16:30:07",
-      "tickets_available" : 5000,
-      "tickets_remaining" : 17
+      "event_id" : 631,
+      "event_name" : "Monster Truck Smashup",
+      "event_date" : "2023-08-02T19:00:00",
+      "tickets_available" : 10000,
+      "tickets_remaining" : 10000
     },
     {
-      "event_id" : 543,
-      "event_series_id" : 13,
-      "event_name" : "Hometown Hockey League",
-      "event_date" : "2022-10-29T16:30:07",
-      "tickets_available" : 5000,
-      "tickets_remaining" : 22
+      "event_id" : 632,
+      "event_name" : "Monster Truck Smashup",
+      "event_date" : "2023-08-09T19:00:00",
+      "tickets_available" : 10000,
+      "tickets_remaining" : 10000
     },
     {
-      "event_id" : 544,
-      "event_series_id" : 13,
-      "event_name" : "Hometown Hockey League",
-      "event_date" : "2022-11-12T16:30:07",
-      "tickets_available" : 5000,
-      "tickets_remaining" : 23
+      "event_id" : 633,
+      "event_name" : "Monster Truck Smashup",
+      "event_date" : "2023-08-16T19:00:00",
+      "tickets_available" : 10000,
+      "tickets_remaining" : 10000
     },
     {
-      "event_id" : 545,
-      "event_series_id" : 13,
-      "event_name" : "Hometown Hockey League",
-      "event_date" : "2022-11-26T16:30:07",
-      "tickets_available" : 5000,
-      "tickets_remaining" : 29
+      "event_id" : 634,
+      "event_name" : "Monster Truck Smashup",
+      "event_date" : "2023-08-23T19:00:00",
+      "tickets_available" : 10000,
+      "tickets_remaining" : 10000
     },
     {
-      "event_id" : 546,
-      "event_series_id" : 13,
-      "event_name" : "Hometown Hockey League",
-      "event_date" : "2022-12-03T16:30:07",
-      "tickets_available" : 5000,
-      "tickets_remaining" : 41
-    },
-    {
-      "event_id" : 547,
-      "event_series_id" : 13,
-      "event_name" : "Hometown Hockey League",
-      "event_date" : "2022-12-10T16:30:07",
-      "tickets_available" : 5000,
-      "tickets_remaining" : 26
-    },
-    {
-      "event_id" : 548,
-      "event_series_id" : 13,
-      "event_name" : "Hometown Hockey League",
-      "event_date" : "2022-12-17T16:30:07",
-      "tickets_available" : 5000,
-      "tickets_remaining" : 32
-    },
-    {
-      "event_id" : 549,
-      "event_series_id" : 13,
-      "event_name" : "Hometown Hockey League",
-      "event_date" : "2022-12-24T16:30:07",
-      "tickets_available" : 5000,
-      "tickets_remaining" : 25
+      "event_id" : 635,
+      "event_name" : "Monster Truck Smashup",
+      "event_date" : "2023-08-30T19:00:00",
+      "tickets_available" : 10000,
+      "tickets_remaining" : 10000
     }
   ]
 }

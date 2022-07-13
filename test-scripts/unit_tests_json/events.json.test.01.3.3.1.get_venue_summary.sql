@@ -14,11 +14,11 @@ begin
 
 /*
 {
-  "venue_id" : 41,
+  "venue_id" : 81,
   "venue_name" : "Another Roadside Attraction",
   "organizer_name" : "Susie Brewer",
   "organizer_email" : "Susie.Brewer@AnotherRoadsideAttraction.com",
-  "max_event_capacity" : 400,
+  "max_event_capacity" : 500,
   "events_scheduled" : 1,
   "first_event_date" : "2023-12-31T20:00:00",
   "last_event_date" : "2023-12-31T20:00:00",

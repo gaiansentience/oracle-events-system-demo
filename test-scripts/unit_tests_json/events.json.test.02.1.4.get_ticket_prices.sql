@@ -20,40 +20,38 @@ end;
 /*
 
 {
-  "venue_id" : 41,
+  "venue_id" : 81,
   "venue_name" : "Another Roadside Attraction",
-  "event_id" : 581,
+  "event_id" : 621,
   "event_name" : "New Years Mischief",
   "event_date" : "2023-12-31T20:00:00",
   "event_tickets_available" : 400,
   "ticket_groups" :
   [
     {
-      "ticket_group_id" : 2322,
+      "ticket_group_id" : 2442,
       "price_category" : "VIP",
       "price" : 80,
-      "tickets_available" : 50,
+      "tickets_available" : 100,
       "tickets_sold" : 0,
-      "tickets_remaining" : 50
+      "tickets_remaining" : 100
     },
     {
-      "ticket_group_id" : 2323,
+      "ticket_group_id" : 2443,
       "price_category" : "GENERAL ADMISSION",
       "price" : 50,
-      "tickets_available" : 300,
+      "tickets_available" : 200,
       "tickets_sold" : 0,
-      "tickets_remaining" : 300
+      "tickets_remaining" : 200
     },
     {
-      "ticket_group_id" : 2321,
+      "ticket_group_id" : 2441,
       "price_category" : "SPONSOR",
       "price" : 150,
-      "tickets_available" : 50,
+      "tickets_available" : 100,
       "tickets_sold" : 0,
-      "tickets_remaining" : 50
+      "tickets_remaining" : 100
     }
   ]
 }
-
-
 */

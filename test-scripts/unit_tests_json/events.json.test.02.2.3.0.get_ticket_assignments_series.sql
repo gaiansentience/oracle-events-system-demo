@@ -2,26 +2,26 @@ set serveroutput on;
 declare
     l_json_doc clob;
     l_venue_id number;
+    l_venue_name venues.venue_name%type := 'City Stadium';    
     l_event_series_id number;
+    l_event_name events.event_name%type := 'Monster Truck Smashup';
 begin
 
-    l_venue_id := events_api.get_venue_id(p_venue_name => 'City Stadium');
-    l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => 'Monster Truck Smashup');
+    l_venue_id := events_api.get_venue_id(p_venue_name => l_venue_name);
+    l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
 
     l_json_doc := events_json_api.get_ticket_assignments_series(p_event_series_id => l_event_series_id, p_formatted => true);
-
     dbms_output.put_line(l_json_doc);
 
 end;
 --reply format example
 /*
-
 {
   "venue_id" : 1,
   "venue_name" : "City Stadium",
   "organizer_email" : "Erin.Johanson@CityStadium.com",
   "organizer_name" : "Erin Johanson",
-  "event_series_id" : 41,
+  "event_series_id" : 81,
   "event_name" : "Monster Truck Smashup",
   "first_event_date" : "2023-06-07T19:00:00",
   "last_event_date" : "2023-08-30T19:00:00",
@@ -31,7 +31,7 @@ end;
     {
       "reseller_id" : 21,
       "reseller_name" : "New Wave Tickets",
-      "reseller_email" : "ticket.sales@NewWaveTickets.com",
+      "reseller_email" : "tickets@NewWaveTickets.com",
       "ticket_assignments" :
       [
         {
@@ -521,9 +521,9 @@ end;
       ]
     },
     {
-      "reseller_id" : 12,
+      "reseller_id" : 73,
       "reseller_name" : "Easy Tickets",
-      "reseller_email" : "ticket.sales@EasyTickets.com",
+      "reseller_email" : "tickets@EasyTickets.com",
       "ticket_assignments" :
       [
         {
@@ -562,9 +562,9 @@ end;
       ]
     },
     {
-      "reseller_id" : 41,
+      "reseller_id" : 81,
       "reseller_name" : "Ticket Factory",
-      "reseller_email" : "ticket.sales@TicketFactory.com",
+      "reseller_email" : "sales@TicketFactory.com",
       "ticket_assignments" :
       [
         {
@@ -607,6 +607,8 @@ end;
 
 
 PL/SQL procedure successfully completed.
+
+
 
 
 */

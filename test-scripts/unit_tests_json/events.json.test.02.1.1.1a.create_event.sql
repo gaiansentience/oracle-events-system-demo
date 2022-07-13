@@ -4,9 +4,9 @@ declare
     l_json_doc varchar2(4000);
     l_venue_id number;
     l_venue_name venues.venue_name%type := 'Another Roadside Attraction';
-    l_event_name events.event_name%type := 'New Years Mischief';
-    l_event_date varchar2(50) := '2023-12-31T20:00:00';
-    l_tickets number := 4000;
+    l_event_name events.event_name%type := 'New Years Mischief 2022';
+    l_event_date varchar2(50) := '2022-12-31T20:00:00';
+    l_tickets number := 400;
 begin
 
     l_venue_id := events_api.get_venue_id(p_venue_name => l_venue_name);
@@ -37,20 +37,19 @@ l_json_doc :=
 {
   "venue_id" : 81,
   "venue_name" : "Another Roadside Attraction",
-  "event_name" : "New Years Mischief",
-  "event_date" : "2023-12-31T20:00:00",
+  "event_name" : "New Years Mischief 2022",
+  "event_date" : "2022-12-31T20:00:00",
   "tickets_available" : 400,
-  "event_id" : 621,
+  "event_id" : 622,
   "status_code" : "SUCCESS",
   "status_message" : "Created event"
 }
 
-
-  reply document for scheduling conflict
+reply for scheduling conflict
 {
   "venue_id" : 81,
   "venue_name" : "Another Roadside Attraction",
-  "event_name" : "New Years Mischief",
+  "event_name" : "New Years Mischief 2022",
   "event_date" : "2023-12-31T20:00:00",
   "tickets_available" : 400,
   "event_id" : 0,
@@ -58,17 +57,6 @@ l_json_doc :=
   "status_message" : "ORA-20100: Cannot schedule event.  Venue already has event for 12/31/2023"
 }
 
-reply document for exceeding venue capacity
-{
-  "venue_id" : 81,
-  "venue_name" : "Another Roadside Attraction",
-  "event_name" : "New Years Mischief",
-  "event_date" : "2023-12-31T20:00:00",
-  "tickets_available" : 4000,
-  "event_id" : 0,
-  "status_code" : "ERROR",
-  "status_message" : "ORA-20100: 4000 exceeds venue capacity of 500"
-}
 
 
 

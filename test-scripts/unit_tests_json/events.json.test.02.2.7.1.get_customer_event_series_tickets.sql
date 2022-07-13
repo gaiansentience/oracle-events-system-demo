@@ -2,19 +2,19 @@
 set serveroutput on;
 declare
     l_json_doc clob;
-    l_venue_id number;
-    l_event_series_id number;
     l_customer_id number;
     l_customer_email varchar2(100) := 'Albert.Einstein@example.customer.com';
+    l_venue_id number;
+    l_venue_name venues.venue_name%type := 'City Stadium';    
+    l_event_series_id number;
+    l_event_name events.event_name%type := 'Monster Truck Smashup';    
 begin
 
-    l_venue_id := events_api.get_venue_id(p_venue_name => 'City Stadium');
-    l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => 'Monster Truck Smashup');
+    l_venue_id := events_api.get_venue_id(p_venue_name => l_venue_name);
+    l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
     l_customer_id := events_api.get_customer_id(p_customer_email => l_customer_email);
 
-
-    l_json_doc := events_json_api.get_customer_event_series_tickets(p_customer_id => l_customer_id, p_event_series_id => l_event_series_id, p_formatted => true);
-   
+    l_json_doc := events_json_api.get_customer_event_series_tickets(p_customer_id => l_customer_id, p_event_series_id => l_event_series_id, p_formatted => true);   
     dbms_output.put_line(l_json_doc);
 
  end;
@@ -26,7 +26,7 @@ begin
   "customer_email" : "Albert.Einstein@example.customer.com",
   "venue_id" : 1,
   "venue_name" : "City Stadium",
-  "event_series_id" : 41,
+  "event_series_id" : 81,
   "event_name" : "Monster Truck Smashup",
   "first_event_date" : "2023-06-07T19:00:00",
   "last_event_date" : "2023-08-30T19:00:00",
@@ -34,338 +34,338 @@ begin
   "events" :
   [
     {
-      "event_id" : 582,
+      "event_id" : 623,
       "event_date" : "2023-06-07T19:00:00",
       "event_tickets" : 7,
       "event_ticket_purchases" :
       [
         {
-          "ticket_group_id" : 2337,
+          "ticket_group_id" : 2457,
           "price_category" : "GENERAL ADMISSION",
-          "ticket_sales_id" : 71213,
+          "ticket_sales_id" : 80231,
           "ticket_quantity" : 5,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         },
         {
-          "ticket_group_id" : 2350,
+          "ticket_group_id" : 2470,
           "price_category" : "VIP PIT ACCESS",
-          "ticket_sales_id" : 71226,
+          "ticket_sales_id" : 80244,
           "ticket_quantity" : 2,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         }
       ]
     },
     {
-      "event_id" : 583,
+      "event_id" : 624,
       "event_date" : "2023-06-14T19:00:00",
       "event_tickets" : 7,
       "event_ticket_purchases" :
       [
         {
-          "ticket_group_id" : 2338,
+          "ticket_group_id" : 2458,
           "price_category" : "GENERAL ADMISSION",
-          "ticket_sales_id" : 71214,
+          "ticket_sales_id" : 80232,
           "ticket_quantity" : 5,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         },
         {
-          "ticket_group_id" : 2351,
+          "ticket_group_id" : 2471,
           "price_category" : "VIP PIT ACCESS",
-          "ticket_sales_id" : 71227,
+          "ticket_sales_id" : 80245,
           "ticket_quantity" : 2,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         }
       ]
     },
     {
-      "event_id" : 584,
+      "event_id" : 625,
       "event_date" : "2023-06-21T19:00:00",
       "event_tickets" : 7,
       "event_ticket_purchases" :
       [
         {
-          "ticket_group_id" : 2339,
+          "ticket_group_id" : 2459,
           "price_category" : "GENERAL ADMISSION",
-          "ticket_sales_id" : 71215,
+          "ticket_sales_id" : 80233,
           "ticket_quantity" : 5,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         },
         {
-          "ticket_group_id" : 2352,
+          "ticket_group_id" : 2472,
           "price_category" : "VIP PIT ACCESS",
-          "ticket_sales_id" : 71228,
+          "ticket_sales_id" : 80246,
           "ticket_quantity" : 2,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         }
       ]
     },
     {
-      "event_id" : 585,
+      "event_id" : 626,
       "event_date" : "2023-06-28T19:00:00",
       "event_tickets" : 7,
       "event_ticket_purchases" :
       [
         {
-          "ticket_group_id" : 2340,
+          "ticket_group_id" : 2460,
           "price_category" : "GENERAL ADMISSION",
-          "ticket_sales_id" : 71216,
+          "ticket_sales_id" : 80234,
           "ticket_quantity" : 5,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         },
         {
-          "ticket_group_id" : 2353,
+          "ticket_group_id" : 2473,
           "price_category" : "VIP PIT ACCESS",
-          "ticket_sales_id" : 71229,
+          "ticket_sales_id" : 80247,
           "ticket_quantity" : 2,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         }
       ]
     },
     {
-      "event_id" : 586,
+      "event_id" : 627,
       "event_date" : "2023-07-05T19:00:00",
       "event_tickets" : 7,
       "event_ticket_purchases" :
       [
         {
-          "ticket_group_id" : 2341,
+          "ticket_group_id" : 2461,
           "price_category" : "GENERAL ADMISSION",
-          "ticket_sales_id" : 71217,
+          "ticket_sales_id" : 80235,
           "ticket_quantity" : 5,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         },
         {
-          "ticket_group_id" : 2354,
+          "ticket_group_id" : 2474,
           "price_category" : "VIP PIT ACCESS",
-          "ticket_sales_id" : 71230,
+          "ticket_sales_id" : 80248,
           "ticket_quantity" : 2,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         }
       ]
     },
     {
-      "event_id" : 587,
+      "event_id" : 628,
       "event_date" : "2023-07-12T19:00:00",
       "event_tickets" : 7,
       "event_ticket_purchases" :
       [
         {
-          "ticket_group_id" : 2342,
+          "ticket_group_id" : 2462,
           "price_category" : "GENERAL ADMISSION",
-          "ticket_sales_id" : 71218,
+          "ticket_sales_id" : 80236,
           "ticket_quantity" : 5,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         },
         {
-          "ticket_group_id" : 2355,
+          "ticket_group_id" : 2475,
           "price_category" : "VIP PIT ACCESS",
-          "ticket_sales_id" : 71231,
+          "ticket_sales_id" : 80249,
           "ticket_quantity" : 2,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         }
       ]
     },
     {
-      "event_id" : 588,
+      "event_id" : 629,
       "event_date" : "2023-07-19T19:00:00",
       "event_tickets" : 7,
       "event_ticket_purchases" :
       [
         {
-          "ticket_group_id" : 2343,
+          "ticket_group_id" : 2463,
           "price_category" : "GENERAL ADMISSION",
-          "ticket_sales_id" : 71219,
+          "ticket_sales_id" : 80237,
           "ticket_quantity" : 5,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         },
         {
-          "ticket_group_id" : 2356,
+          "ticket_group_id" : 2476,
           "price_category" : "VIP PIT ACCESS",
-          "ticket_sales_id" : 71232,
+          "ticket_sales_id" : 80250,
           "ticket_quantity" : 2,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         }
       ]
     },
     {
-      "event_id" : 589,
+      "event_id" : 630,
       "event_date" : "2023-07-26T19:00:00",
       "event_tickets" : 7,
       "event_ticket_purchases" :
       [
         {
-          "ticket_group_id" : 2344,
+          "ticket_group_id" : 2464,
           "price_category" : "GENERAL ADMISSION",
-          "ticket_sales_id" : 71220,
+          "ticket_sales_id" : 80238,
           "ticket_quantity" : 5,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         },
         {
-          "ticket_group_id" : 2357,
+          "ticket_group_id" : 2477,
           "price_category" : "VIP PIT ACCESS",
-          "ticket_sales_id" : 71233,
+          "ticket_sales_id" : 80251,
           "ticket_quantity" : 2,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         }
       ]
     },
     {
-      "event_id" : 590,
+      "event_id" : 631,
       "event_date" : "2023-08-02T19:00:00",
       "event_tickets" : 7,
       "event_ticket_purchases" :
       [
         {
-          "ticket_group_id" : 2345,
+          "ticket_group_id" : 2465,
           "price_category" : "GENERAL ADMISSION",
-          "ticket_sales_id" : 71221,
+          "ticket_sales_id" : 80239,
           "ticket_quantity" : 5,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         },
         {
-          "ticket_group_id" : 2358,
+          "ticket_group_id" : 2478,
           "price_category" : "VIP PIT ACCESS",
-          "ticket_sales_id" : 71234,
+          "ticket_sales_id" : 80252,
           "ticket_quantity" : 2,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         }
       ]
     },
     {
-      "event_id" : 591,
+      "event_id" : 632,
       "event_date" : "2023-08-09T19:00:00",
       "event_tickets" : 7,
       "event_ticket_purchases" :
       [
         {
-          "ticket_group_id" : 2346,
+          "ticket_group_id" : 2466,
           "price_category" : "GENERAL ADMISSION",
-          "ticket_sales_id" : 71222,
+          "ticket_sales_id" : 80240,
           "ticket_quantity" : 5,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         },
         {
-          "ticket_group_id" : 2359,
+          "ticket_group_id" : 2479,
           "price_category" : "VIP PIT ACCESS",
-          "ticket_sales_id" : 71235,
+          "ticket_sales_id" : 80253,
           "ticket_quantity" : 2,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         }
       ]
     },
     {
-      "event_id" : 592,
+      "event_id" : 633,
       "event_date" : "2023-08-16T19:00:00",
       "event_tickets" : 7,
       "event_ticket_purchases" :
       [
         {
-          "ticket_group_id" : 2347,
+          "ticket_group_id" : 2467,
           "price_category" : "GENERAL ADMISSION",
-          "ticket_sales_id" : 71223,
+          "ticket_sales_id" : 80241,
           "ticket_quantity" : 5,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         },
         {
-          "ticket_group_id" : 2360,
+          "ticket_group_id" : 2480,
           "price_category" : "VIP PIT ACCESS",
-          "ticket_sales_id" : 71236,
+          "ticket_sales_id" : 80254,
           "ticket_quantity" : 2,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         }
       ]
     },
     {
-      "event_id" : 593,
+      "event_id" : 634,
       "event_date" : "2023-08-23T19:00:00",
       "event_tickets" : 7,
       "event_ticket_purchases" :
       [
         {
-          "ticket_group_id" : 2348,
+          "ticket_group_id" : 2468,
           "price_category" : "GENERAL ADMISSION",
-          "ticket_sales_id" : 71224,
+          "ticket_sales_id" : 80242,
           "ticket_quantity" : 5,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         },
         {
-          "ticket_group_id" : 2361,
+          "ticket_group_id" : 2481,
           "price_category" : "VIP PIT ACCESS",
-          "ticket_sales_id" : 71237,
+          "ticket_sales_id" : 80255,
           "ticket_quantity" : 2,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         }
       ]
     },
     {
-      "event_id" : 594,
+      "event_id" : 635,
       "event_date" : "2023-08-30T19:00:00",
       "event_tickets" : 7,
       "event_ticket_purchases" :
       [
         {
-          "ticket_group_id" : 2349,
+          "ticket_group_id" : 2469,
           "price_category" : "GENERAL ADMISSION",
-          "ticket_sales_id" : 71225,
+          "ticket_sales_id" : 80243,
           "ticket_quantity" : 5,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         },
         {
-          "ticket_group_id" : 2362,
+          "ticket_group_id" : 2482,
           "price_category" : "VIP PIT ACCESS",
-          "ticket_sales_id" : 71238,
+          "ticket_sales_id" : 80256,
           "ticket_quantity" : 2,
-          "sales_date" : "2022-07-06T13:53:26",
+          "sales_date" : "2022-07-13T13:04:27",
           "reseller_id" : null,
           "reseller_name" : "VENUE DIRECT SALES"
         }
@@ -376,6 +376,7 @@ begin
 
 
 PL/SQL procedure successfully completed.
+
 
 
 */

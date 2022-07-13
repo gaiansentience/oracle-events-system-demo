@@ -1,15 +1,21 @@
 set serveroutput on;
 declare
-   v_json_doc clob;
+    l_json_doc clob;
+    l_venue_id number;
+    l_venue_name venues.venue_name%type := 'City Stadium';    
+    l_event_series_id number;
+    l_event_name events.event_name%type := 'Monster Truck Smashup';    
 begin
-v_json_doc := 
+
+    l_venue_id := events_api.get_venue_id(p_venue_name => l_venue_name);
+    l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
+
+
+l_json_doc := 
 '
 {
-  "venue_id" : 1,
-  "venue_name" : "City Stadium",
-  "event_series_id" : 41,
-  "event_name" : "Monster Truck Smashup",
-  "event_tickets_available" : 10000,
+  "event_series_id" : $$SERIES$$,
+  "event_name" : "$$NAME$$",
   "ticket_resellers" :
   [
     {
@@ -73,12 +79,11 @@ v_json_doc :=
 }
 ';
 
+    l_json_doc := replace(l_json_doc, '$$SERIES$$', l_event_series_id);
+    l_json_doc := replace(l_json_doc, '$$NAME$$', l_event_name);
 
-events_json_api.update_ticket_assignments_series(p_json_doc => v_json_doc);
---dbms_output.put_line(v_json_doc);
-
---output result in readable format
-dbms_output.put_line(events_json_api.format_json_clob(v_json_doc));
+    events_json_api.update_ticket_assignments_series(p_json_doc => l_json_doc);
+    dbms_output.put_line(events_json_api.format_json_clob(l_json_doc));
 
 
 end;
@@ -87,11 +92,8 @@ end;
 /*
 
 {
-  "venue_id" : 1,
-  "venue_name" : "City Stadium",
-  "event_series_id" : 41,
+  "event_series_id" : 81,
   "event_name" : "Monster Truck Smashup",
-  "event_tickets_available" : 10000,
   "ticket_resellers" :
   [
     {
@@ -182,6 +184,7 @@ end;
 
 
 PL/SQL procedure successfully completed.
+
 
 
 */

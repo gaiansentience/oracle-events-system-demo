@@ -1,14 +1,17 @@
 set serveroutput on;
 declare
     l_json_doc clob;
-    l_venue_id number;
-    l_event_series_id number;
+    l_reseller_name resellers.reseller_name%type := 'Maxtix';
     l_reseller_id number;
+    l_venue_id number;
+    l_venue_name venues.venue_name%type := 'City Stadium';    
+    l_event_series_id number;
+    l_event_name events.event_name%type := 'Monster Truck Smashup';    
 begin
 
-    l_venue_id := events_api.get_venue_id(p_venue_name => 'City Stadium');
-    l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => 'Monster Truck Smashup');
-    l_reseller_id := events_api.get_reseller_id(p_reseller_name => 'Maxtix');
+    l_venue_id := events_api.get_venue_id(p_venue_name => l_venue_name);
+    l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
+    l_reseller_id := events_api.get_reseller_id(p_reseller_name => l_reseller_name);
 
     l_json_doc := events_json_api.get_event_series_tickets_available_reseller(p_event_series_id => l_event_series_id, p_reseller_id => l_reseller_id, p_formatted => true);
 
@@ -17,10 +20,11 @@ begin
 end;
 --reply format example
 /*
+
 {
   "venue_id" : 1,
   "venue_name" : "City Stadium",
-  "event_series_id" : 41,
+  "event_series_id" : 81,
   "event_name" : "Monster Truck Smashup",
   "first_event_date" : "2023-06-07T19:00:00",
   "last_event_date" : "2023-08-30T19:00:00",
@@ -71,10 +75,5 @@ end;
     }
   ]
 }
-
-
-PL/SQL procedure successfully completed.
-
-
 
 */

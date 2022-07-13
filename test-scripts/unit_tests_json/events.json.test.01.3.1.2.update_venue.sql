@@ -2,18 +2,30 @@
 set serveroutput on;
 declare
     l_json_doc varchar2(4000);
+    l_venue_name venues.venue_name%type := 'Another Roadside Attraction';
+    l_organizer_name venues.organizer_name%type := 'Susan Brewer';
+    l_organizer_email venues.organizer_email%type := 'Susan.Brewer@AnotherRoadsideAttraction.com';
+    l_max_capacity venues.max_event_capacity%type := 500;
+    l_venue_id number;    
 begin
 
+    l_venue_id := events_api.get_venue_id(p_venue_name => l_venue_name);
     l_json_doc := 
 '
 {
-  "venue_id" : 41,
-  "venue_name" : "Another Roadside Attraction",
-  "organizer_name" : "Susan Brewer",
-  "organizer_email" : "Susan.Brewer@AnotherRoadsideAttraction.com",
-  "max_event_capacity" : 500
+  "venue_id" : $$VENUE_ID$$,
+  "venue_name" : "$$VENUE_NAME$$",
+  "organizer_name" : "$$ORGANIZER_NAME$$",
+  "organizer_email" : "$$ORGANIZER_EMAIL$$",
+  "max_event_capacity" : $$CAPACITY$$
 }
 ';
+
+    l_json_doc := replace(l_json_doc,'$$VENUE_ID$$', l_venue_id);
+    l_json_doc := replace(l_json_doc,'$$VENUE_NAME$$', l_venue_name);
+    l_json_doc := replace(l_json_doc,'$$ORGANIZER_NAME$$', l_organizer_name);
+    l_json_doc := replace(l_json_doc,'$$ORGANIZER_EMAIL$$', l_organizer_email);
+    l_json_doc := replace(l_json_doc,'$$CAPACITY$$', l_max_capacity);
 
     events_json_api.update_venue(p_json_doc => l_json_doc);
     dbms_output.put_line(events_json_api.format_json_string(l_json_doc));
@@ -22,7 +34,7 @@ begin
 
 /*  reply document for success
 {
-  "venue_id" : 41,
+  "venue_id" : 81,
   "venue_name" : "Another Roadside Attraction",
   "organizer_name" : "Susan Brewer",
   "organizer_email" : "Susan.Brewer@AnotherRoadsideAttraction.com",

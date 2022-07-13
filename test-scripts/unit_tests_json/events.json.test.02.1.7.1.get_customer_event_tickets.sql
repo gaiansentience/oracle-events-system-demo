@@ -24,9 +24,9 @@ begin
   "customer_id" : 529,
   "customer_name" : "Maggie Wayland",
   "customer_email" : "Maggie.Wayland@example.customer.com",
-  "venue_id" : 41,
+  "venue_id" : 81,
   "venue_name" : "Another Roadside Attraction",
-  "event_id" : 581,
+  "event_id" : 621,
   "event_series_id" : null,
   "event_name" : "New Years Mischief",
   "event_date" : "2023-12-31T20:00:00",
@@ -34,29 +34,25 @@ begin
   "event_ticket_purchases" :
   [
     {
-      "ticket_group_id" : 2322,
+      "ticket_group_id" : 2442,
       "price_category" : "VIP",
-      "ticket_sales_id" : 71141,
+      "ticket_sales_id" : 80201,
       "ticket_quantity" : 3,
-      "sales_date" : "2022-07-06T12:08:37",
+      "sales_date" : "2022-07-13T12:09:38",
       "reseller_id" : 3,
       "reseller_name" : "Old School"
     },
     {
-      "ticket_group_id" : 2323,
+      "ticket_group_id" : 2443,
       "price_category" : "GENERAL ADMISSION",
-      "ticket_sales_id" : 71142,
+      "ticket_sales_id" : 80202,
       "ticket_quantity" : 6,
-      "sales_date" : "2022-07-06T12:08:37",
+      "sales_date" : "2022-07-13T12:09:38",
       "reseller_id" : 3,
       "reseller_name" : "Old School"
     }
   ]
 }
-
-
-PL/SQL procedure successfully completed.
-
 
 
 */

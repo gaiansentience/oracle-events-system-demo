@@ -11,13 +11,13 @@ l_jdoc varchar2(4000) :=
   "ticket_groups" :
   [
     {
-      "ticket_group_id" : 2322,
+      "ticket_group_id" : 2442,
       "price_category" : "VIP",
       "price" : 80,
       "tickets_requested" : 3      
     },
     {
-      "ticket_group_id" : 2323,
+      "ticket_group_id" : 2443,
       "price_category" : "GENERAL ADMISSION",
       "price" : 50,
       "tickets_requested" : 6      
@@ -41,6 +41,7 @@ begin
 end;
 
 /*
+
 {
   "event_id" : 581,
   "event_name" : "New Years Mischief",
@@ -49,11 +50,11 @@ end;
   "ticket_groups" :
   [
     {
-      "ticket_group_id" : 2322,
+      "ticket_group_id" : 2442,
       "price" : 80,
       "tickets_requested" : 3,
       "price_category" : "VIP",
-      "ticket_sales_id" : 71143,
+      "ticket_sales_id" : 80203,
       "actual_price" : 80,
       "tickets_purchased" : 3,
       "purchase_amount" : 240,
@@ -61,11 +62,11 @@ end;
       "status_message" : "group tickets purchased"
     },
     {
-      "ticket_group_id" : 2323,
+      "ticket_group_id" : 2443,
       "price" : 50,
       "tickets_requested" : 6,
       "price_category" : "GENERAL ADMISSION",
-      "ticket_sales_id" : 71144,
+      "ticket_sales_id" : 80204,
       "actual_price" : 50,
       "tickets_purchased" : 6,
       "purchase_amount" : 300,
@@ -81,10 +82,4 @@ end;
   "total_purchase_amount" : 540,
   "purchase_disclaimer" : "All Ticket Sales Are Final."
 }
-
-
-PL/SQL procedure successfully completed.
-
-
-
 */
