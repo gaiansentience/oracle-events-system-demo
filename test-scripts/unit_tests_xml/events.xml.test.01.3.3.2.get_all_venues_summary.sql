@@ -69,8 +69,8 @@ end;
       <max_event_capacity>20000</max_event_capacity>
     </venue>
     <event_summary>
-      <events_scheduled>46</events_scheduled>
-      <first_event_date>2022-08-06</first_event_date>
+      <events_scheduled>47</events_scheduled>
+      <first_event_date>2022-08-13</first_event_date>
       <last_event_date>2023-08-30</last_event_date>
       <min_event_tickets>5000</min_event_tickets>
       <max_event_tickets>20000</max_event_tickets>
@@ -158,31 +158,15 @@ end;
   </venue_summary>
   <venue_summary>
     <venue>
-      <venue_id>21</venue_id>
-      <venue_name>The Pink Pony Revue</venue_name>
-      <organizer_name>Julia Stein</organizer_name>
-      <organizer_email>Julia.Stein@ThePinkPonyRevue.com</organizer_email>
-      <max_event_capacity>350</max_event_capacity>
-    </venue>
-    <event_summary>
-      <events_scheduled>18</events_scheduled>
-      <first_event_date>2023-05-01</first_event_date>
-      <last_event_date>2023-08-24</last_event_date>
-      <min_event_tickets>200</min_event_tickets>
-      <max_event_tickets>200</max_event_tickets>
-    </event_summary>
-  </venue_summary>
-  <venue_summary>
-    <venue>
-      <venue_id>41</venue_id>
+      <venue_id>81</venue_id>
       <venue_name>Another Roadside Attraction</venue_name>
       <organizer_name>Susan Brewer</organizer_name>
       <organizer_email>Susan.Brewer@AnotherRoadsideAttraction.com</organizer_email>
       <max_event_capacity>500</max_event_capacity>
     </venue>
     <event_summary>
-      <events_scheduled>1</events_scheduled>
-      <first_event_date>2023-12-31</first_event_date>
+      <events_scheduled>2</events_scheduled>
+      <first_event_date>2022-12-31</first_event_date>
       <last_event_date>2023-12-31</last_event_date>
       <min_event_tickets>400</min_event_tickets>
       <max_event_tickets>400</max_event_tickets>
@@ -190,7 +174,21 @@ end;
   </venue_summary>
   <venue_summary>
     <venue>
-      <venue_id>10</venue_id>
+      <venue_id>82</venue_id>
+      <venue_name>The Pink Pony Revue</venue_name>
+      <organizer_name>Julia Stone</organizer_name>
+      <organizer_email>Julia.Stone@ThePinkPonyRevue.com</organizer_email>
+      <max_event_capacity>400</max_event_capacity>
+    </venue>
+    <event_summary>
+      <events_scheduled>0</events_scheduled>
+      <min_event_tickets>0</min_event_tickets>
+      <max_event_tickets>0</max_event_tickets>
+    </event_summary>
+  </venue_summary>
+  <venue_summary>
+    <venue>
+      <venue_id>67</venue_id>
       <venue_name>Roadside Cafe</venue_name>
       <organizer_name>Billy Styles</organizer_name>
       <organizer_email>Billy.Styles@RoadsideCafe.com</organizer_email>
@@ -203,5 +201,11 @@ end;
     </event_summary>
   </venue_summary>
 </all_venues_summary>
+
+
+
+PL/SQL procedure successfully completed.
+
+
 
 */

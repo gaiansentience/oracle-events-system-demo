@@ -1,12 +1,14 @@
 set serveroutput on;
 declare
-    l_venue_id number;
+    l_xml xmltype;    
     l_event_series_id number;
-    l_xml xmltype;
+    l_event_name events.event_name%type := 'Cool Jazz Evening';
+    l_venue_id number;
+    l_venue_name venues.venue_name%type := 'The Pink Pony Revue';
 begin
 
-    l_venue_id := events_api.get_venue_id(p_venue_name => 'The Pink Pony Revue');
-    l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => 'Cool Jazz Evening');
+    l_venue_id := events_api.get_venue_id(p_venue_name => l_venue_name);
+    l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
         
     l_xml := events_xml_api.get_ticket_groups_series(p_event_series_id => l_event_series_id, p_formatted => true);
 
@@ -19,10 +21,10 @@ end;
 <event_series_ticket_groups>
   <event_series>
     <venue>
-      <venue_id>21</venue_id>
+      <venue_id>82</venue_id>
       <venue_name>The Pink Pony Revue</venue_name>
     </venue>
-    <event_series_id>21</event_series_id>
+    <event_series_id>82</event_series_id>
     <event_name>Cool Jazz Evening</event_name>
     <events_in_series>17</events_in_series>
     <first_event_date>2023-05-04</first_event_date>
@@ -40,15 +42,15 @@ end;
   </ticket_groups>
 </event_series_ticket_groups>
 
---AFTER CREATING TICKET GROUPS
 
+--AFTER CREATING TICKET GROUPS
 <event_series_ticket_groups>
   <event_series>
     <venue>
-      <venue_id>21</venue_id>
+      <venue_id>82</venue_id>
       <venue_name>The Pink Pony Revue</venue_name>
     </venue>
-    <event_series_id>21</event_series_id>
+    <event_series_id>82</event_series_id>
     <event_name>Cool Jazz Evening</event_name>
     <events_in_series>17</events_in_series>
     <first_event_date>2023-05-04</first_event_date>
@@ -72,6 +74,7 @@ end;
     </ticket_group>
   </ticket_groups>
 </event_series_ticket_groups>
+
 
 
 */

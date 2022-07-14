@@ -13,19 +13,22 @@ end;
 /*
 <venue_summary>
   <venue>
-    <venue_id>21</venue_id>
+    <venue_id>82</venue_id>
     <venue_name>The Pink Pony Revue</venue_name>
-    <organizer_name>Julia Stein</organizer_name>
-    <organizer_email>Julia.Stein@ThePinkPonyRevue.com</organizer_email>
-    <max_event_capacity>350</max_event_capacity>
+    <organizer_name>Julia Stone</organizer_name>
+    <organizer_email>Julia.Stone@ThePinkPonyRevue.com</organizer_email>
+    <max_event_capacity>400</max_event_capacity>
   </venue>
   <event_summary>
-    <events_scheduled>18</events_scheduled>
-    <first_event_date>2023-05-01</first_event_date>
-    <last_event_date>2023-08-24</last_event_date>
-    <min_event_tickets>200</min_event_tickets>
-    <max_event_tickets>200</max_event_tickets>
+    <events_scheduled>0</events_scheduled>
+    <min_event_tickets>0</min_event_tickets>
+    <max_event_tickets>0</max_event_tickets>
   </event_summary>
 </venue_summary>
+
+
+
+PL/SQL procedure successfully completed.
+
 
 */

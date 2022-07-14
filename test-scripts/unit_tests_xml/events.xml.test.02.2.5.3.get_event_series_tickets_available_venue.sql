@@ -1,12 +1,14 @@
 set serveroutput on;
 declare
-    l_venue_id number;
-    l_event_series_id number := 15;
     l_xml xmltype;
+    l_event_series_id number;
+    l_event_name events.event_name%type := 'Cool Jazz Evening';
+    l_venue_id number;
+    l_venue_name venues.venue_name%type := 'The Pink Pony Revue';
 begin
 
-    l_venue_id := events_api.get_venue_id(p_venue_name => 'The Pink Pony Revue');
-    l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => 'Cool Jazz Evening');
+    l_venue_id := events_api.get_venue_id(p_venue_name => l_venue_name);
+    l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
 
     l_xml := events_xml_api.get_event_series_tickets_available_venue(p_event_series_id => l_event_series_id, p_formatted => true);
 
@@ -19,10 +21,10 @@ end;
   <ticket_sources>VENUE DIRECT SALES</ticket_sources>
   <event_series>
     <venue>
-      <venue_id>21</venue_id>
+      <venue_id>82</venue_id>
       <venue_name>The Pink Pony Revue</venue_name>
     </venue>
-    <event_series_id>21</event_series_id>
+    <event_series_id>82</event_series_id>
     <event_name>Cool Jazz Evening</event_name>
     <first_event_date>2023-05-04</first_event_date>
     <last_event_date>2023-08-24</last_event_date>
@@ -47,6 +49,18 @@ end;
       <ticket_resellers>
         <reseller>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
+          <tickets_available>2125</tickets_available>
+          <events_available>17</events_available>
+          <events_sold_out>0</events_sold_out>
+        </reseller>
+      </ticket_resellers>
+    </ticket_group>
+    <ticket_group>
+      <price_category>SPONSOR</price_category>
+      <price>150</price>
+      <ticket_resellers>
+        <reseller>
+          <reseller_name>VENUE DIRECT SALES</reseller_name>
           <tickets_available>850</tickets_available>
           <events_available>17</events_available>
           <events_sold_out>0</events_sold_out>
@@ -55,5 +69,11 @@ end;
     </ticket_group>
   </ticket_groups>
 </event_series_ticket_availability>
+
+
+
+PL/SQL procedure successfully completed.
+
+
 
 */

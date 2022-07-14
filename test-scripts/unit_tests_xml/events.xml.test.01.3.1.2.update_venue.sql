@@ -8,7 +8,7 @@ l_xml :=
 '
 <update_venue>
   <venue>
-    <venue_id>21</venue_id>
+    <venue_id>82</venue_id>
     <venue_name>The Pink Pony Revue</venue_name>
     <organizer_name>Julia Stone</organizer_name>
     <organizer_email>Julia.Stone@ThePinkPonyRevue.com</organizer_email>
@@ -26,7 +26,7 @@ end;
 /*
 <update_venue>
   <venue>
-    <venue_id>21</venue_id>
+    <venue_id>82</venue_id>
     <venue_name>The Pink Pony Revue</venue_name>
     <organizer_name>Julia Stone</organizer_name>
     <organizer_email>Julia.Stone@ThePinkPonyRevue.com</organizer_email>

@@ -8,8 +8,8 @@ l_xml :=
 '
 <create_customer>
   <customer>
-    <customer_name>Edward Scissorfoot</customer_name>
-    <customer_email>Edward.Scissorfoot@example.customer.com</customer_email>
+    <customer_name>Bilbo Baggins</customer_name>
+    <customer_email>Bilbo.Baggins@example.customer.com</customer_email>
   </customer>
 </create_customer>    
 ';
@@ -24,11 +24,12 @@ end;
 /*
 <create_customer>
   <customer>
-    <customer_name>Edward Scissorfoot</customer_name>
-    <customer_email>Edward.Scissorfoot@example.customer.com</customer_email>
-    <customer_id>4961</customer_id>
+    <customer_name>Bilbo Baggins</customer_name>
+    <customer_email>Bilbo.Baggins@example.customer.com</customer_email>
+    <customer_id>5042</customer_id>
     <status_code>SUCCESS</status_code>
     <status_message>Created customer</status_message>
   </customer>
 </create_customer>
+
 */

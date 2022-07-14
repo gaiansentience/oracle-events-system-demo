@@ -40,7 +40,7 @@ end;
     <organizer_name>Erin Johanson</organizer_name>
     <organizer_email>Erin.Johanson@CityStadium.com</organizer_email>
     <max_event_capacity>20000</max_event_capacity>
-    <events_scheduled>46</events_scheduled>
+    <events_scheduled>47</events_scheduled>
   </venue>
   <venue>
     <venue_id>2</venue_id>
@@ -83,23 +83,23 @@ end;
     <events_scheduled>16</events_scheduled>
   </venue>
   <venue>
-    <venue_id>21</venue_id>
-    <venue_name>The Pink Pony Revue</venue_name>
-    <organizer_name>Julia Stein</organizer_name>
-    <organizer_email>Julia.Stein@ThePinkPonyRevue.com</organizer_email>
-    <max_event_capacity>350</max_event_capacity>
-    <events_scheduled>18</events_scheduled>
-  </venue>
-  <venue>
-    <venue_id>41</venue_id>
+    <venue_id>81</venue_id>
     <venue_name>Another Roadside Attraction</venue_name>
     <organizer_name>Susan Brewer</organizer_name>
     <organizer_email>Susan.Brewer@AnotherRoadsideAttraction.com</organizer_email>
     <max_event_capacity>500</max_event_capacity>
-    <events_scheduled>1</events_scheduled>
+    <events_scheduled>2</events_scheduled>
   </venue>
   <venue>
-    <venue_id>10</venue_id>
+    <venue_id>82</venue_id>
+    <venue_name>The Pink Pony Revue</venue_name>
+    <organizer_name>Julia Stone</organizer_name>
+    <organizer_email>Julia.Stone@ThePinkPonyRevue.com</organizer_email>
+    <max_event_capacity>400</max_event_capacity>
+    <events_scheduled>0</events_scheduled>
+  </venue>
+  <venue>
+    <venue_id>67</venue_id>
     <venue_name>Roadside Cafe</venue_name>
     <organizer_name>Billy Styles</organizer_name>
     <organizer_email>Billy.Styles@RoadsideCafe.com</organizer_email>

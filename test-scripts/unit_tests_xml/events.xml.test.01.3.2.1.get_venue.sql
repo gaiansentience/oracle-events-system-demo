@@ -12,11 +12,12 @@ end;
 
 /*
 <venue>
-  <venue_id>21</venue_id>
+  <venue_id>82</venue_id>
   <venue_name>The Pink Pony Revue</venue_name>
   <organizer_name>Julia Stone</organizer_name>
   <organizer_email>Julia.Stone@ThePinkPonyRevue.com</organizer_email>
   <max_event_capacity>400</max_event_capacity>
-  <events_scheduled>18</events_scheduled>
+  <events_scheduled>0</events_scheduled>
 </venue>
+
 */

@@ -1,3 +1,5 @@
+--after updating events in series to a capacity of 400 tickets
+--create a new ticket group for sponsors and adjust general admission
 set serveroutput on;
 declare
     l_xml varchar2(4000);
@@ -29,9 +31,14 @@ l_xml :=
       <tickets_available>50</tickets_available>
     </ticket_group>
     <ticket_group>
+      <price_category>SPONSOR</price_category>
+      <price>150</price>
+      <tickets_available>50</tickets_available>
+    </ticket_group>
+    <ticket_group>
       <price_category>GENERAL ADMISSION</price_category>
       <price>50</price>
-      <tickets_available>150</tickets_available>
+      <tickets_available>300</tickets_available>
     </ticket_group>
   </ticket_groups>
 </event_series_ticket_groups>
@@ -52,12 +59,12 @@ end;
 /*
 <event_series_ticket_groups>
   <event_series>
-    <venue>
-      <venue_id>82</venue_id>
-      <venue_name>The Pink Pony Revue</venue_name>
+    <venue note="optional-not parsed, only included for testing clarity">
+      <venue_id note="optional-not parsed, only included for testing clarity">82</venue_id>
+      <venue_name note="optional-not parsed, only included for testing clarity">The Pink Pony Revue</venue_name>
     </venue>
     <event_series_id>82</event_series_id>
-    <event_name>Cool Jazz Evening</event_name>
+    <event_name note="optional-not parsed, only included for testing clarity">Cool Jazz Evening</event_name>
   </event_series>
   <ticket_groups>
     <ticket_group>
@@ -68,9 +75,16 @@ end;
       <status_message>Ticket group (VIP) created for 17 events in series</status_message>
     </ticket_group>
     <ticket_group>
+      <price_category>SPONSOR</price_category>
+      <price>150</price>
+      <tickets_available>50</tickets_available>
+      <status_code>SUCCESS</status_code>
+      <status_message>Ticket group (SPONSOR) created for 17 events in series</status_message>
+    </ticket_group>
+    <ticket_group>
       <price_category>GENERAL ADMISSION</price_category>
       <price>50</price>
-      <tickets_available>150</tickets_available>
+      <tickets_available>300</tickets_available>
       <status_code>SUCCESS</status_code>
       <status_message>Ticket group (GENERAL ADMISSION) created for 17 events in series</status_message>
     </ticket_group>

@@ -1,14 +1,16 @@
 set serveroutput on;
 declare
-    l_customer_email varchar2(50) := 'Gary.Walsh@example.customer.com';
-    l_customer_id number;
-    l_venue_id number;
-    l_event_series_id number;
     l_xml xmltype;
+    l_customer_email varchar2(50) := 'Gary.Walsh@example.customer.com';
+    l_customer_id number;    
+    l_event_series_id number;
+    l_event_name events.event_name%type := 'Cool Jazz Evening';
+    l_venue_id number;
+    l_venue_name venues.venue_name%type := 'The Pink Pony Revue';    
 begin
 
-    l_venue_id := events_api.get_venue_id(p_venue_name => 'The Pink Pony Revue');
-    l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => 'Cool Jazz Evening');
+    l_venue_id := events_api.get_venue_id(p_venue_name => l_venue_name);
+    l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
     l_customer_id := events_api.get_customer_id(p_customer_email => l_customer_email);
 
     l_xml := events_xml_api.get_customer_event_series_tickets(p_customer_id => l_customer_id, p_event_series_id => l_event_series_id, p_formatted => true);
@@ -19,6 +21,7 @@ end;
 
 
 /*
+
 <customer_tickets>
   <customer>
     <customer_id>3633</customer_id>
@@ -27,742 +30,436 @@ end;
   </customer>
   <event_series>
     <venue>
-      <venue_id>21</venue_id>
+      <venue_id>82</venue_id>
       <venue_name>The Pink Pony Revue</venue_name>
     </venue>
-    <event_series_id>21</event_series_id>
+    <event_series_id>82</event_series_id>
     <event_name>Cool Jazz Evening</event_name>
     <first_event_date>2023-05-04</first_event_date>
     <last_event_date>2023-08-24</last_event_date>
-    <series_tickets>170</series_tickets>
+    <series_tickets>119</series_tickets>
   </event_series>
   <events>
     <event>
-      <event_id>562</event_id>
+      <event_id>637</event_id>
       <event_date>2023-05-04</event_date>
-      <event_tickets>10</event_tickets>
+      <event_tickets>7</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
-          <ticket_group_id>2284</ticket_group_id>
+          <ticket_group_id>2486</ticket_group_id>
           <price_category>VIP</price_category>
-          <ticket_sales_id>71025</ticket_sales_id>
+          <ticket_sales_id>80257</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
         <ticket_purchase>
-          <ticket_group_id>2284</ticket_group_id>
-          <price_category>VIP</price_category>
-          <ticket_sales_id>71059</ticket_sales_id>
-          <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2301</ticket_group_id>
+          <ticket_group_id>2503</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71042</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2301</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71076</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <ticket_sales_id>80274</ticket_sales_id>
+          <ticket_quantity>5</ticket_quantity>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
       </event_ticket_purchases>
     </event>
     <event>
-      <event_id>563</event_id>
+      <event_id>638</event_id>
       <event_date>2023-05-11</event_date>
-      <event_tickets>10</event_tickets>
+      <event_tickets>7</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
-          <ticket_group_id>2285</ticket_group_id>
+          <ticket_group_id>2487</ticket_group_id>
           <price_category>VIP</price_category>
-          <ticket_sales_id>71026</ticket_sales_id>
+          <ticket_sales_id>80258</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
         <ticket_purchase>
-          <ticket_group_id>2285</ticket_group_id>
-          <price_category>VIP</price_category>
-          <ticket_sales_id>71060</ticket_sales_id>
-          <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2302</ticket_group_id>
+          <ticket_group_id>2504</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71043</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2302</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71077</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <ticket_sales_id>80275</ticket_sales_id>
+          <ticket_quantity>5</ticket_quantity>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
       </event_ticket_purchases>
     </event>
     <event>
-      <event_id>564</event_id>
+      <event_id>639</event_id>
       <event_date>2023-05-18</event_date>
-      <event_tickets>10</event_tickets>
+      <event_tickets>7</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
-          <ticket_group_id>2286</ticket_group_id>
+          <ticket_group_id>2488</ticket_group_id>
           <price_category>VIP</price_category>
-          <ticket_sales_id>71027</ticket_sales_id>
+          <ticket_sales_id>80259</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
         <ticket_purchase>
-          <ticket_group_id>2286</ticket_group_id>
-          <price_category>VIP</price_category>
-          <ticket_sales_id>71061</ticket_sales_id>
-          <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2303</ticket_group_id>
+          <ticket_group_id>2505</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71044</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2303</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71078</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <ticket_sales_id>80276</ticket_sales_id>
+          <ticket_quantity>5</ticket_quantity>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
       </event_ticket_purchases>
     </event>
     <event>
-      <event_id>565</event_id>
+      <event_id>640</event_id>
       <event_date>2023-05-25</event_date>
-      <event_tickets>10</event_tickets>
+      <event_tickets>7</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
-          <ticket_group_id>2287</ticket_group_id>
+          <ticket_group_id>2489</ticket_group_id>
           <price_category>VIP</price_category>
-          <ticket_sales_id>71028</ticket_sales_id>
+          <ticket_sales_id>80260</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
         <ticket_purchase>
-          <ticket_group_id>2287</ticket_group_id>
-          <price_category>VIP</price_category>
-          <ticket_sales_id>71062</ticket_sales_id>
-          <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2304</ticket_group_id>
+          <ticket_group_id>2506</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71045</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2304</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71079</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <ticket_sales_id>80277</ticket_sales_id>
+          <ticket_quantity>5</ticket_quantity>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
       </event_ticket_purchases>
     </event>
     <event>
-      <event_id>566</event_id>
+      <event_id>641</event_id>
       <event_date>2023-06-01</event_date>
-      <event_tickets>10</event_tickets>
+      <event_tickets>7</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
-          <ticket_group_id>2288</ticket_group_id>
+          <ticket_group_id>2490</ticket_group_id>
           <price_category>VIP</price_category>
-          <ticket_sales_id>71029</ticket_sales_id>
+          <ticket_sales_id>80261</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
         <ticket_purchase>
-          <ticket_group_id>2288</ticket_group_id>
-          <price_category>VIP</price_category>
-          <ticket_sales_id>71063</ticket_sales_id>
-          <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2305</ticket_group_id>
+          <ticket_group_id>2507</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71046</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2305</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71080</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <ticket_sales_id>80278</ticket_sales_id>
+          <ticket_quantity>5</ticket_quantity>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
       </event_ticket_purchases>
     </event>
     <event>
-      <event_id>567</event_id>
+      <event_id>642</event_id>
       <event_date>2023-06-08</event_date>
-      <event_tickets>10</event_tickets>
+      <event_tickets>7</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
-          <ticket_group_id>2289</ticket_group_id>
+          <ticket_group_id>2491</ticket_group_id>
           <price_category>VIP</price_category>
-          <ticket_sales_id>71030</ticket_sales_id>
+          <ticket_sales_id>80262</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
         <ticket_purchase>
-          <ticket_group_id>2289</ticket_group_id>
-          <price_category>VIP</price_category>
-          <ticket_sales_id>71064</ticket_sales_id>
-          <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2306</ticket_group_id>
+          <ticket_group_id>2508</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71047</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2306</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71081</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <ticket_sales_id>80279</ticket_sales_id>
+          <ticket_quantity>5</ticket_quantity>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
       </event_ticket_purchases>
     </event>
     <event>
-      <event_id>568</event_id>
+      <event_id>643</event_id>
       <event_date>2023-06-15</event_date>
-      <event_tickets>10</event_tickets>
+      <event_tickets>7</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
-          <ticket_group_id>2290</ticket_group_id>
+          <ticket_group_id>2492</ticket_group_id>
           <price_category>VIP</price_category>
-          <ticket_sales_id>71031</ticket_sales_id>
+          <ticket_sales_id>80263</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
         <ticket_purchase>
-          <ticket_group_id>2290</ticket_group_id>
-          <price_category>VIP</price_category>
-          <ticket_sales_id>71065</ticket_sales_id>
-          <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2307</ticket_group_id>
+          <ticket_group_id>2509</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71048</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2307</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71082</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <ticket_sales_id>80280</ticket_sales_id>
+          <ticket_quantity>5</ticket_quantity>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
       </event_ticket_purchases>
     </event>
     <event>
-      <event_id>569</event_id>
+      <event_id>644</event_id>
       <event_date>2023-06-22</event_date>
-      <event_tickets>10</event_tickets>
+      <event_tickets>7</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
-          <ticket_group_id>2291</ticket_group_id>
+          <ticket_group_id>2493</ticket_group_id>
           <price_category>VIP</price_category>
-          <ticket_sales_id>71032</ticket_sales_id>
+          <ticket_sales_id>80264</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
         <ticket_purchase>
-          <ticket_group_id>2291</ticket_group_id>
-          <price_category>VIP</price_category>
-          <ticket_sales_id>71066</ticket_sales_id>
-          <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2308</ticket_group_id>
+          <ticket_group_id>2510</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71049</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2308</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71083</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <ticket_sales_id>80281</ticket_sales_id>
+          <ticket_quantity>5</ticket_quantity>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
       </event_ticket_purchases>
     </event>
     <event>
-      <event_id>570</event_id>
+      <event_id>645</event_id>
       <event_date>2023-06-29</event_date>
-      <event_tickets>10</event_tickets>
+      <event_tickets>7</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
-          <ticket_group_id>2292</ticket_group_id>
+          <ticket_group_id>2494</ticket_group_id>
           <price_category>VIP</price_category>
-          <ticket_sales_id>71033</ticket_sales_id>
+          <ticket_sales_id>80265</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
         <ticket_purchase>
-          <ticket_group_id>2292</ticket_group_id>
-          <price_category>VIP</price_category>
-          <ticket_sales_id>71067</ticket_sales_id>
-          <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2309</ticket_group_id>
+          <ticket_group_id>2511</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71050</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2309</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71084</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <ticket_sales_id>80282</ticket_sales_id>
+          <ticket_quantity>5</ticket_quantity>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
       </event_ticket_purchases>
     </event>
     <event>
-      <event_id>571</event_id>
+      <event_id>646</event_id>
       <event_date>2023-07-06</event_date>
-      <event_tickets>10</event_tickets>
+      <event_tickets>7</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
-          <ticket_group_id>2293</ticket_group_id>
+          <ticket_group_id>2495</ticket_group_id>
           <price_category>VIP</price_category>
-          <ticket_sales_id>71034</ticket_sales_id>
+          <ticket_sales_id>80266</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
         <ticket_purchase>
-          <ticket_group_id>2293</ticket_group_id>
-          <price_category>VIP</price_category>
-          <ticket_sales_id>71068</ticket_sales_id>
-          <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2310</ticket_group_id>
+          <ticket_group_id>2512</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71051</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2310</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71085</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <ticket_sales_id>80283</ticket_sales_id>
+          <ticket_quantity>5</ticket_quantity>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
       </event_ticket_purchases>
     </event>
     <event>
-      <event_id>572</event_id>
+      <event_id>647</event_id>
       <event_date>2023-07-13</event_date>
-      <event_tickets>10</event_tickets>
+      <event_tickets>7</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
-          <ticket_group_id>2294</ticket_group_id>
+          <ticket_group_id>2496</ticket_group_id>
           <price_category>VIP</price_category>
-          <ticket_sales_id>71035</ticket_sales_id>
+          <ticket_sales_id>80267</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
         <ticket_purchase>
-          <ticket_group_id>2294</ticket_group_id>
-          <price_category>VIP</price_category>
-          <ticket_sales_id>71069</ticket_sales_id>
-          <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2311</ticket_group_id>
+          <ticket_group_id>2513</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71052</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2311</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71086</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <ticket_sales_id>80284</ticket_sales_id>
+          <ticket_quantity>5</ticket_quantity>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
       </event_ticket_purchases>
     </event>
     <event>
-      <event_id>573</event_id>
+      <event_id>648</event_id>
       <event_date>2023-07-20</event_date>
-      <event_tickets>10</event_tickets>
+      <event_tickets>7</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
-          <ticket_group_id>2295</ticket_group_id>
+          <ticket_group_id>2497</ticket_group_id>
           <price_category>VIP</price_category>
-          <ticket_sales_id>71036</ticket_sales_id>
+          <ticket_sales_id>80268</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
         <ticket_purchase>
-          <ticket_group_id>2295</ticket_group_id>
-          <price_category>VIP</price_category>
-          <ticket_sales_id>71070</ticket_sales_id>
-          <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2312</ticket_group_id>
+          <ticket_group_id>2514</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71053</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2312</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71087</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <ticket_sales_id>80285</ticket_sales_id>
+          <ticket_quantity>5</ticket_quantity>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
       </event_ticket_purchases>
     </event>
     <event>
-      <event_id>574</event_id>
+      <event_id>649</event_id>
       <event_date>2023-07-27</event_date>
-      <event_tickets>10</event_tickets>
+      <event_tickets>7</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
-          <ticket_group_id>2296</ticket_group_id>
+          <ticket_group_id>2498</ticket_group_id>
           <price_category>VIP</price_category>
-          <ticket_sales_id>71037</ticket_sales_id>
+          <ticket_sales_id>80269</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
         <ticket_purchase>
-          <ticket_group_id>2296</ticket_group_id>
-          <price_category>VIP</price_category>
-          <ticket_sales_id>71071</ticket_sales_id>
-          <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2313</ticket_group_id>
+          <ticket_group_id>2515</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71054</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2313</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71088</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <ticket_sales_id>80286</ticket_sales_id>
+          <ticket_quantity>5</ticket_quantity>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
       </event_ticket_purchases>
     </event>
     <event>
-      <event_id>575</event_id>
+      <event_id>650</event_id>
       <event_date>2023-08-03</event_date>
-      <event_tickets>10</event_tickets>
+      <event_tickets>7</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
-          <ticket_group_id>2297</ticket_group_id>
+          <ticket_group_id>2499</ticket_group_id>
           <price_category>VIP</price_category>
-          <ticket_sales_id>71038</ticket_sales_id>
+          <ticket_sales_id>80270</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
         <ticket_purchase>
-          <ticket_group_id>2297</ticket_group_id>
-          <price_category>VIP</price_category>
-          <ticket_sales_id>71072</ticket_sales_id>
-          <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2314</ticket_group_id>
+          <ticket_group_id>2516</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71055</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2314</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71089</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <ticket_sales_id>80287</ticket_sales_id>
+          <ticket_quantity>5</ticket_quantity>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
       </event_ticket_purchases>
     </event>
     <event>
-      <event_id>576</event_id>
+      <event_id>651</event_id>
       <event_date>2023-08-10</event_date>
-      <event_tickets>10</event_tickets>
+      <event_tickets>7</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
-          <ticket_group_id>2298</ticket_group_id>
+          <ticket_group_id>2500</ticket_group_id>
           <price_category>VIP</price_category>
-          <ticket_sales_id>71039</ticket_sales_id>
+          <ticket_sales_id>80271</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
         <ticket_purchase>
-          <ticket_group_id>2298</ticket_group_id>
-          <price_category>VIP</price_category>
-          <ticket_sales_id>71073</ticket_sales_id>
-          <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2315</ticket_group_id>
+          <ticket_group_id>2517</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71056</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2315</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71090</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <ticket_sales_id>80288</ticket_sales_id>
+          <ticket_quantity>5</ticket_quantity>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
       </event_ticket_purchases>
     </event>
     <event>
-      <event_id>577</event_id>
+      <event_id>652</event_id>
       <event_date>2023-08-17</event_date>
-      <event_tickets>10</event_tickets>
+      <event_tickets>7</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
-          <ticket_group_id>2299</ticket_group_id>
+          <ticket_group_id>2501</ticket_group_id>
           <price_category>VIP</price_category>
-          <ticket_sales_id>71040</ticket_sales_id>
+          <ticket_sales_id>80272</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
         <ticket_purchase>
-          <ticket_group_id>2299</ticket_group_id>
-          <price_category>VIP</price_category>
-          <ticket_sales_id>71074</ticket_sales_id>
-          <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2316</ticket_group_id>
+          <ticket_group_id>2518</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71057</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2316</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71091</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <ticket_sales_id>80289</ticket_sales_id>
+          <ticket_quantity>5</ticket_quantity>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
       </event_ticket_purchases>
     </event>
     <event>
-      <event_id>578</event_id>
+      <event_id>653</event_id>
       <event_date>2023-08-24</event_date>
-      <event_tickets>10</event_tickets>
+      <event_tickets>7</event_tickets>
       <event_ticket_purchases>
         <ticket_purchase>
-          <ticket_group_id>2300</ticket_group_id>
+          <ticket_group_id>2502</ticket_group_id>
           <price_category>VIP</price_category>
-          <ticket_sales_id>71041</ticket_sales_id>
+          <ticket_sales_id>80273</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
         <ticket_purchase>
-          <ticket_group_id>2300</ticket_group_id>
-          <price_category>VIP</price_category>
-          <ticket_sales_id>71075</ticket_sales_id>
-          <ticket_quantity>2</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2317</ticket_group_id>
+          <ticket_group_id>2519</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71058</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
-          <reseller_id>3</reseller_id>
-          <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
-          <ticket_group_id>2317</ticket_group_id>
-          <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>71092</ticket_sales_id>
-          <ticket_quantity>3</ticket_quantity>
-          <sales_date>2022-07-04</sales_date>
+          <ticket_sales_id>80290</ticket_sales_id>
+          <ticket_quantity>5</ticket_quantity>
+          <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
         </ticket_purchase>
@@ -770,6 +467,10 @@ end;
     </event>
   </events>
 </customer_tickets>
+
+
+
+PL/SQL procedure successfully completed.
 
 
 */

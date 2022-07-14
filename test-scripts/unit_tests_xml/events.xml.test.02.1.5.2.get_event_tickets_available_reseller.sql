@@ -1,16 +1,16 @@
 set serveroutput on;
 declare
-    l_event_id number;
+    l_event_series_id number;
     l_venue_id number;    
     l_reseller_id number;
     l_xml xmltype;
 begin
 
     l_venue_id := events_api.get_venue_id(p_venue_name => 'The Pink Pony Revue');
-    l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'Evangeline Thorpe');
+    l_event_series_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'Cool Jazz Evening');
     l_reseller_id := events_api.get_reseller_id(p_reseller_name => 'Old School');
     
-    l_xml := events_xml_api.get_event_tickets_available_reseller(p_event_id => l_event_id, p_reseller_id => l_reseller_id, p_formatted => true);
+    l_xml := events_xml_api.get_event_series_tickets_available_reseller(p_event_series_id => l_event_series_id, p_reseller_id => l_reseller_id, p_formatted => true);
 
     dbms_output.put_line(l_xml.getclobval());
 

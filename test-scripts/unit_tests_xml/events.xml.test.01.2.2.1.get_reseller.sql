@@ -13,9 +13,10 @@ end;
 
 /*
 <reseller>
-  <reseller_id>21</reseller_id>
+  <reseller_id>82</reseller_id>
   <reseller_name>New Wave Tickets</reseller_name>
-  <reseller_email>tickets@NewWaveTickets.com</reseller_email>
-  <commission_percent>.1414</commission_percent>
+  <reseller_email>sales@NewWaveTickets.com</reseller_email>
+  <commission_percent>.1111</commission_percent>
 </reseller>
+
 */

@@ -28,9 +28,10 @@ end;
     <reseller_name>New Wave Tickets</reseller_name>
     <reseller_email>sales@NewWaveTickets.com</reseller_email>
     <commission_percent>.1111</commission_percent>
-    <reseller_id>21</reseller_id>
+    <reseller_id>82</reseller_id>
     <status_code>SUCCESS</status_code>
     <status_message>Created reseller</status_message>
   </reseller>
 </create_reseller>
+
 */

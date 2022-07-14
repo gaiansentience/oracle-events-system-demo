@@ -16,7 +16,7 @@ v_event_name := 'Cool Jazz Evening';
 events_test_data_api.delete_venue_events_by_name(v_venue_id, v_event_name);
 
 --delete test customers created
-v_customer_id := events_api.get_customer_id('Edward.Scissorfoot@example.customer.com');
+v_customer_id := events_api.get_customer_id('Bilbo.Baggins@example.customer.com');
 events_test_data_api.delete_customer_data(v_customer_id);
 
 --delete test reseller created
