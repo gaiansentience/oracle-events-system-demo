@@ -485,36 +485,7 @@ as
         return;
     
     end show_event_series_tickets_available_venue;
-        
-    procedure generate_serialized_tickets
-    (
-        p_sale in event_system.ticket_sales%rowtype
-    )
-    is
-        l_serialization tickets.serial_code%type;
-    begin
-        l_serialization := 
-            'G' || to_char(p_sale.ticket_group_id)
-            || 'C' || to_char(p_sale.customer_id)
-            || 'S' || to_char(p_sale.ticket_sales_id)
-            || 'D' || to_char(p_sale.sales_date,'YYYYMMDDHH24MISS')
-            || 'Q' || to_char(p_sale.ticket_quantity,'fm0999') || 'I';
             
-        insert into event_system.tickets
-        (
-            ticket_sales_id 
-            ,serial_code
-            ,status
-        )
-        select 
-            p_sale.ticket_sales_id
-            ,l_serialization || to_char(level,'fm0999')
-            ,events_api.c_ticket_status_cancelled
-        from dual 
-        connect by level <= p_sale.ticket_quantity;
-        
-    end generate_serialized_tickets;
-    
     procedure create_ticket_sale
     (
         p_sale in out event_system.ticket_sales%rowtype
@@ -545,7 +516,7 @@ as
         returning ticket_sales_id 
         into p_sale.ticket_sales_id;
         
-        generate_serialized_tickets(p_sale => p_sale);
+        event_tickets_api.generate_serialized_tickets(p_sale => p_sale);
             
         commit;
     

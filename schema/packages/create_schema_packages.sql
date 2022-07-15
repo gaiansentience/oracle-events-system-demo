@@ -10,8 +10,14 @@ prompt creating core business logic api packages
 @@reseller_api.bdy;
 @@venue_api.spc;
 @@venue_api.bdy;
+
 @@events_api.spc;
 @@Events_Api.bdy;
+
+@@event_tickets_api.spc;
+@@event_tickets_api.bdy;
+@@event_sales_api.spc;
+@@event_sales_api.bdy;
 prompt creating reporting api package
 @@events_report_api.spc;
 @@events_report_api.bdy;

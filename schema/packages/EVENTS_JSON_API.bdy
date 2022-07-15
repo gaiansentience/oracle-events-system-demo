@@ -1940,7 +1940,7 @@ as
 
         begin
         
-            events_api.ticket_validate(
+            event_tickets_api.ticket_validate(
                 p_event_id => l_event_id,
                 p_serial_code => l_serial_code);
             
@@ -1979,7 +1979,7 @@ as
 
         begin
             
-            events_api.ticket_verify_validation(
+            event_tickets_api.ticket_verify_validation(
                 p_event_id => l_event_id,
                 p_serial_code => l_serial_code);
                 
@@ -2018,7 +2018,7 @@ as
 
         begin
             
-            events_api.ticket_verify_restricted_access(
+            event_tickets_api.ticket_verify_restricted_access(
                 p_ticket_group_id => l_ticket_group_id,
                 p_serial_code => l_serial_code);
                 
@@ -2056,7 +2056,7 @@ as
 
         begin
             
-            events_api.ticket_cancel(
+            event_tickets_api.ticket_cancel(
                 p_event_id => l_event_id,
                 p_serial_code => l_serial_code);
                 

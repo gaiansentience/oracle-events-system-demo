@@ -15,9 +15,9 @@ declare
     l_other_ticket_group_id number;
 begin
 
-    l_venue_id := events_api.get_venue_id(p_venue_name => 'City Stadium');
+    l_venue_id := venue_api.get_venue_id(p_venue_name => 'City Stadium');
     l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'The New Toys');
-    l_customer_id := events_api.get_customer_id(p_customer_email => l_customer_email);
+    l_customer_id := customer_api.get_customer_id(p_customer_email => l_customer_email);
 
 --get a specific ticket and its ticket group id
 select t.serial_code, et.ticket_group_id
@@ -31,17 +31,17 @@ fetch first 1 row only;
 
     update tickets t set t.status = 'VALIDATED' where t.serial_code = upper(l_serial_code);
     commit;
-    l_status := events_api.get_ticket_status(p_serial_code => l_serial_code);
+    l_status := event_tickets_api.get_ticket_status(p_serial_code => l_serial_code);
     dbms_output.put_line('before verify validation: serial code ' || l_serial_code || ' status ' || l_status);
-    events_api.ticket_verify_restricted_access(p_ticket_group_id => l_ticket_group_id, p_serial_code => l_serial_code);
+    event_tickets_api.ticket_verify_restricted_access(p_ticket_group_id => l_ticket_group_id, p_serial_code => l_serial_code);
     dbms_output.put_line('access verified');
 
     update tickets t set t.status = 'ISSUED' where t.serial_code = upper(l_serial_code);
     commit;
-    l_status := events_api.get_ticket_status(p_serial_code => l_serial_code);
+    l_status := event_tickets_api.get_ticket_status(p_serial_code => l_serial_code);
     dbms_output.put_line('before verify validation: serial code ' || l_serial_code || ' status ' || l_status);
     begin
-        events_api.ticket_verify_restricted_access(p_ticket_group_id => l_ticket_group_id, p_serial_code => l_serial_code);
+        event_tickets_api.ticket_verify_restricted_access(p_ticket_group_id => l_ticket_group_id, p_serial_code => l_serial_code);
     exception
         when others then
             dbms_output.put_line(sqlerrm);
@@ -53,7 +53,7 @@ fetch first 1 row only;
     fetch first 1 row only;
     dbms_output.put_line('try to verify access for another ticket group');
     begin
-        events_api.ticket_verify_restricted_access(p_ticket_group_id => l_other_ticket_group_id, p_serial_code => l_serial_code);    
+        event_tickets_api.ticket_verify_restricted_access(p_ticket_group_id => l_other_ticket_group_id, p_serial_code => l_serial_code);    
     exception
         when others then
             dbms_output.put_line(sqlerrm);
@@ -61,7 +61,7 @@ fetch first 1 row only;
 
     dbms_output.put_line('try to verify access for an invalid ticket serial code');
     begin
-        events_api.ticket_verify_restricted_access(p_ticket_group_id => l_ticket_group_id, p_serial_code => l_serial_code || 'xxxx');    
+        event_tickets_api.ticket_verify_restricted_access(p_ticket_group_id => l_ticket_group_id, p_serial_code => l_serial_code || 'xxxx');    
     exception
         when others then
             dbms_output.put_line(sqlerrm);
@@ -69,7 +69,7 @@ fetch first 1 row only;
 
     dbms_output.put_line('try to verify access for an invalid ticket group id');
     begin
-        events_api.ticket_verify_restricted_access(p_ticket_group_id => l_ticket_group_id + 999, p_serial_code => l_serial_code);    
+        event_tickets_api.ticket_verify_restricted_access(p_ticket_group_id => l_ticket_group_id + 999, p_serial_code => l_serial_code);    
     exception
         when others then
             dbms_output.put_line(sqlerrm);
