@@ -10,7 +10,7 @@ declare
     l_tickets number := 200;
 begin
 
-    l_venue_id := events_api.get_venue_id(p_venue_name => l_venue_name);
+    l_venue_id := venue_api.get_venue_id(p_venue_name => l_venue_name);
 
 l_xml := 
 '

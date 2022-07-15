@@ -8,7 +8,7 @@ declare
     l_nonpurchase_customer varchar2(50) := 'James.Kirk@example.customer.com';
 begin
 
-    l_venue_id := events_api.get_venue_id(p_venue_name => 'Another Roadside Attraction');
+    l_venue_id := venue_api.get_venue_id(p_venue_name => 'Another Roadside Attraction');
     l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'New Years Mischief');
     
     l_json_doc := events_json_api.get_customer_event_tickets_by_email(p_customer_email => l_customer_email, p_event_id => l_event_id, p_formatted => true);   

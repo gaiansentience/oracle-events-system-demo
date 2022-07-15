@@ -7,9 +7,9 @@ declare
     l_xml xmltype;
 begin
 
-    l_venue_id := events_api.get_venue_id(p_venue_name => 'The Pink Pony Revue');
+    l_venue_id := venue_api.get_venue_id(p_venue_name => 'The Pink Pony Revue');
     l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'Evangeline Thorpe');
-    l_customer_id := events_api.get_customer_id(p_customer_email => l_customer_email);
+    l_customer_id := customer_api.get_customer_id(p_customer_email => l_customer_email);
     
     l_xml := events_xml_api.get_customer_event_tickets(p_customer_id => l_customer_id, p_event_id => l_event_id, p_formatted => true);
 

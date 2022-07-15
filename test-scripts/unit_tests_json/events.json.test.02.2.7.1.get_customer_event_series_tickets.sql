@@ -10,7 +10,7 @@ declare
     l_event_name events.event_name%type := 'Monster Truck Smashup';    
 begin
 
-    l_venue_id := events_api.get_venue_id(p_venue_name => l_venue_name);
+    l_venue_id := venue_api.get_venue_id(p_venue_name => l_venue_name);
     l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
     l_customer_id := customer_api.get_customer_id(p_customer_email => l_customer_email);
 

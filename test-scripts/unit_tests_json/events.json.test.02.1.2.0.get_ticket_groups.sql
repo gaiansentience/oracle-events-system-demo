@@ -5,7 +5,7 @@ declare
     l_venue_id number;
 begin
 
-    l_venue_id := events_api.get_venue_id(p_venue_name => 'Another Roadside Attraction');
+    l_venue_id := venue_api.get_venue_id(p_venue_name => 'Another Roadside Attraction');
     l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'New Years Mischief');
 
     l_json_doc := events_json_api.get_ticket_groups(p_event_id => l_event_id, p_formatted => true);

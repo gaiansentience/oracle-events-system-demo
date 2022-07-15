@@ -12,9 +12,9 @@ declare
     l_other_price_category ticket_groups.price_category%type;
 begin
 
-    l_venue_id := events_api.get_venue_id(p_venue_name => 'Another Roadside Attraction');
+    l_venue_id := venue_api.get_venue_id(p_venue_name => 'Another Roadside Attraction');
     l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'New Years Mischief');
-    l_customer_id := events_api.get_customer_id(p_customer_email => l_customer_email);
+    l_customer_id := customer_api.get_customer_id(p_customer_email => l_customer_email);
 --get a specific ticket
 select t.serial_code, et.ticket_group_id, et.price_category
 into l_serial_code, l_ticket_group_id, l_price_category

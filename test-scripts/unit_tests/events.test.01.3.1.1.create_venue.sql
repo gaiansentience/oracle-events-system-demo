@@ -12,7 +12,7 @@ begin
     l_venue.organizer_email := 'Bill.Styles#RoadsideCafe.com';
     l_venue.max_event_capacity := 500;
 
-    events_api.create_venue(
+    venue_api.create_venue(
         p_venue_name => l_venue.venue_name,
         p_organizer_name => l_venue.organizer_name,
         p_organizer_email => l_venue.organizer_email,

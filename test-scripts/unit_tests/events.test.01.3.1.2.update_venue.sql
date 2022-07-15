@@ -12,10 +12,9 @@ begin
     l_venue.organizer_email := 'Billy.Styles@RoadsideCafe.com';
     l_venue.max_event_capacity := 400;
     
-    select v.venue_id into l_venue.venue_id
-    from venues v where v.venue_name = l_venue.venue_name;
+    l_venue.venue_id := venue_api.get_venue_id(p_venue_name => l_venue.venue_name);
 
-    events_api.update_venue(
+    venue_api.update_venue(
         p_venue_id => l_venue.venue_id,
         p_venue_name => l_venue.venue_name,
         p_organizer_name => l_venue.organizer_name,

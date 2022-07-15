@@ -3,5 +3,5 @@
 select
 *
 from 
-events_report_api.show_all_venues_summary()
+venue_api.show_all_venues_summary()
 order by venue_name;

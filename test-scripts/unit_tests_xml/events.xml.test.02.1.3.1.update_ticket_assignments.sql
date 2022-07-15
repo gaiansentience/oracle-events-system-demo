@@ -13,7 +13,7 @@ l_xml clob;
     l_reseller_name_2 resellers.reseller_name%type := 'Old School';
 
 begin
-    l_venue_id := events_api.get_venue_id(p_venue_name => l_venue_name);
+    l_venue_id := venue_api.get_venue_id(p_venue_name => l_venue_name);
     l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
     l_reseller_id_1 := reseller_api.get_reseller_id(p_reseller_name => l_reseller_name_1);
     l_reseller_id_2 := reseller_api.get_reseller_id(p_reseller_name => l_reseller_name_2);

@@ -3,7 +3,13 @@ prompt views need to be deployed before running this script
 prompt creating error logging package
 @@error_api.spc;
 @@error_api.bdy;
-prompt creating core business logic api package
+prompt creating core business logic api packages
+@@customer_api.spc;
+@@customer_api.bdy;
+@@reseller_api.spc;
+@@reseller_api.bdy;
+@@venue_api.spc;
+@@venue_api.bdy;
 @@events_api.spc;
 @@Events_Api.bdy;
 prompt creating reporting api package

@@ -16,7 +16,7 @@ declare
   v_status varchar2(4000);
 begin
 
-    v_venue_id := events_api.get_venue_id(p_venue_name => 'City Stadium');
+    v_venue_id := venue_api.get_venue_id(p_venue_name => 'City Stadium');
 
   events_api.create_weekly_event(
      p_venue_id => v_venue_id,

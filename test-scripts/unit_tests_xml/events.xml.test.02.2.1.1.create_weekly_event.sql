@@ -6,7 +6,7 @@ declare
     l_venue_name venues.venue_name%type := 'The Pink Pony Revue';
     l_event_name events.event_name%type := 'Cool Jazz Evening';
 begin
-    l_venue_id := events_api.get_venue_id(p_venue_name => l_venue_name);
+    l_venue_id := venue_api.get_venue_id(p_venue_name => l_venue_name);
 
 l_xml := 
 '

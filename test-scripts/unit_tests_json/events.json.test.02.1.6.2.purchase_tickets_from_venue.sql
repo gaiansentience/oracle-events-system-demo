@@ -28,7 +28,7 @@ l_jdoc varchar2(4000) :=
 
 begin
 
-    l_customer_id := events_api.get_customer_id(p_customer_email => 'John.Kirby@example.customer.com');
+    l_customer_id := customer_api.get_customer_id(p_customer_email => 'John.Kirby@example.customer.com');
     
     delete from tickets t where t.ticket_sales_id in (select ts.ticket_sales_id from ticket_sales ts where ts.customer_id = l_customer_id);
     delete from ticket_sales ts where ts.customer_id = l_customer_id;

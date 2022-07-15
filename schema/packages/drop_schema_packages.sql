@@ -5,6 +5,9 @@ drop package util_xmldom_helper;
 drop package events_json_api;
 drop package events_test_data_api;
 drop package events_report_api;
+drop package venue_api;
+drop package reseller_api;
+drop package customer_api;
 drop package events_api;
 drop package error_api;
 prompt api packages dropped

@@ -15,7 +15,7 @@ declare
     v_status_message varchar2(4000);
 begin
 
-    v_venue_id := events_api.get_venue_id(p_venue_name => 'City Stadium');
+    v_venue_id := venue_api.get_venue_id(p_venue_name => 'City Stadium');
     v_event_series_id := events_api.get_event_series_id(p_venue_id => v_venue_id, p_event_name => 'Hometown Hockey League');
 
     v_groups(1) := r_group('VIP',75,1000);

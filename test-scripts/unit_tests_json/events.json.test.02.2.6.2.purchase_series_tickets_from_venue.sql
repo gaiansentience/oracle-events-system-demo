@@ -10,9 +10,9 @@ declare
 
 begin
 
-    l_venue_id := events_api.get_venue_id(p_venue_name => l_venue_name);
+    l_venue_id := venue_api.get_venue_id(p_venue_name => l_venue_name);
     l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
-    l_customer_id := events_api.get_customer_id(p_customer_email => l_customer_email);
+    l_customer_id := customer_api.get_customer_id(p_customer_email => l_customer_email);
     
     delete from tickets t where t.ticket_sales_id in (select ts.ticket_sales_id from ticket_sales ts where ts.customer_id = l_customer_id);
     delete from ticket_sales ts where ts.customer_id = l_customer_id;

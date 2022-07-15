@@ -391,7 +391,7 @@ as
     begin
     
         for r in venues loop
-            events_api.create_venue(r.venue_name, r.organizer_name, r.organizer_email,r.capacity, v_id);
+            venue_api.create_venue(r.venue_name, r.organizer_name, r.organizer_email,r.capacity, v_id);
         end loop;
     
     end create_venues;

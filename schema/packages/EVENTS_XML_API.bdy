@@ -379,7 +379,7 @@ as
 
         begin   
         
-            events_api.create_venue(
+            venue_api.create_venue(
                 p_venue_name => r_venue.venue_name, 
                 p_organizer_name => r_venue.organizer_name, 
                 p_organizer_email => r_venue.organizer_email, 
@@ -424,7 +424,7 @@ as
         
         begin   
         
-            events_api.update_venue(
+            venue_api.update_venue(
                 p_venue_id => r_venue.venue_id,
                 p_venue_name => r_venue.venue_name, 
                 p_organizer_name => r_venue.organizer_name, 
