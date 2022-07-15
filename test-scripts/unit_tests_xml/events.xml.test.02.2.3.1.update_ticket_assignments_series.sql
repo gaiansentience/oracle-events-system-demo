@@ -14,8 +14,8 @@ begin
 
     l_venue_id := events_api.get_venue_id(p_venue_name => l_venue_name);
     l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
-    l_reseller_id_1 := events_api.get_reseller_id(p_reseller_name => l_reseller_name_1);
-    l_reseller_id_2 := events_api.get_reseller_id(p_reseller_name => l_reseller_name_2);
+    l_reseller_id_1 := reseller_api.get_reseller_id(p_reseller_name => l_reseller_name_1);
+    l_reseller_id_2 := reseller_api.get_reseller_id(p_reseller_name => l_reseller_name_2);
     
     l_xml := replace(l_xml, '$$VENUE_ID$$', l_venue_id);
     l_xml := replace(l_xml, '$$VENUE_NAME$$', l_venue_name);

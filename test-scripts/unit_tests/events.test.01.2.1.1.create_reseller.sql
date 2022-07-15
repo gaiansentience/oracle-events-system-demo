@@ -13,7 +13,7 @@ begin
     l_reseller.reseller_email := 'ticket.sales@EasyTickets.com';
     l_reseller.commission_percent := 0.11;
 
-    event_system.events_api.create_reseller(
+    reseller_api.create_reseller(
         p_reseller_name => l_reseller.reseller_name,
         p_reseller_email => l_reseller.reseller_email,
         p_commission_percent => l_reseller.commission_percent,

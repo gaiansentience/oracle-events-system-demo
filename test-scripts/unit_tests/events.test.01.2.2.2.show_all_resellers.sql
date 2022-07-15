@@ -3,5 +3,5 @@
 select
 *
 from 
-event_system.events_report_api.show_all_resellers()
+reseller_api.show_all_resellers()
 order by reseller_name

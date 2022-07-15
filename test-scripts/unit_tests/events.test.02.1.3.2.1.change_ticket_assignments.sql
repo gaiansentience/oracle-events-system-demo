@@ -14,7 +14,7 @@ declare
     
 begin
 
-    l_reseller_id := events_api.get_reseller_id(p_reseller_name => 'Old School');
+    l_reseller_id := reseller_api.get_reseller_id(p_reseller_name => 'Old School');
     l_venue_id := events_api.get_venue_id(p_venue_name => 'City Stadium');
     l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'The New Toys');
 
@@ -28,10 +28,6 @@ for i in 1..l_assign.count loop
 
     select e.ticket_group_id into l_assign(i).ticket_group_id
     from event_ticket_prices_v e where e.event_id = l_event_id and e.price_category = l_assign(i).price_category;
-
-end loop;
-
-for i in 1..l_assign.count loop  
 
     begin
     

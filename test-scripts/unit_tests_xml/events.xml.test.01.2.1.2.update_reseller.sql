@@ -7,7 +7,7 @@ declare
     l_reseller_email resellers.reseller_email%type;
     l_commission resellers.commission_percent%type := 0.1212;
 begin
-    l_reseller_id := events_api.get_reseller_id(p_reseller_name => l_reseller_name);
+    l_reseller_id := reseller_api.get_reseller_id(p_reseller_name => l_reseller_name);
 
 l_xml :=
 '

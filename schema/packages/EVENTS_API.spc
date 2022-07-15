@@ -2,43 +2,6 @@ create or replace package events_api
 authid current_user
 as 
 
-----reseller api----------------------begin
-
-    function get_reseller_id
-    (
-        p_reseller_name in varchar2
-    ) return number;
-            
-    procedure create_reseller
-    (
-        p_reseller_name in varchar2,
-        p_reseller_email in varchar2,
-        p_commission_percent in number default 0.10,
-        p_reseller_id out number
-    );
-    
-    procedure update_reseller
-    (
-        p_reseller_id in number,    
-        p_reseller_name in varchar2,
-        p_reseller_email in varchar2,
-        p_commission_percent in number default 0.10    
-    );
-    
-    procedure show_reseller
-    (
-        p_reseller_id in number,
-        p_info out sys_refcursor
-    );
-        
-    procedure show_all_resellers
-    (
-        p_resellers out sys_refcursor
-    );
-
-----reseller api----------------------end
-
-
 ----venue api-------------------------begin
 
     function get_venue_id

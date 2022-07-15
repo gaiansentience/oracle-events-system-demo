@@ -9,13 +9,11 @@ begin
     l_reseller.reseller_name := 'Easy Tickets';
     l_reseller.reseller_email := 'tickets@EasyTickets.com';
     l_reseller.commission_percent := 0.0909;
-    
-    select r.reseller_id into l_reseller.reseller_id
-    from resellers r 
-    where r.reseller_name = l_reseller.reseller_name;
+        
+    l_reseller.reseller_id := reseller_api.get_reseller_id(p_reseller_name => l_reseller.reseller_name);
     
 
-    event_system.events_api.update_reseller(
+    reseller_api.update_reseller(
         p_reseller_id => l_reseller.reseller_id,
         p_reseller_name => l_reseller.reseller_name,
         p_reseller_email => l_reseller.reseller_email,

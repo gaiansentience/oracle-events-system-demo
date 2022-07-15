@@ -7,7 +7,7 @@ declare
     l_customer_email customers.customer_email%type := 'Bilbo.Baggins@example.customer.com';
 begin
 
-    l_customer_id := events_api.get_customer_id(p_customer_email => l_customer_email);
+    l_customer_id := customer_api.get_customer_id(p_customer_email => l_customer_email);
     
 l_xml := 
 '

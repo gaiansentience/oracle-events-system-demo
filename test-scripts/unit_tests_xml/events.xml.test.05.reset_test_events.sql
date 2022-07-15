@@ -7,7 +7,7 @@ v_customer_id number;
 v_reseller_id number;
 begin
 
-v_venue_id := events_api.get_venue_id(p_venue_name => 'The Pink Pony Revue');
+v_venue_id := venue_api.get_venue_id(p_venue_name => 'The Pink Pony Revue');
 v_event_name := 'Evangeline Thorpe';
 events_test_data_api.delete_venue_events_by_name(v_venue_id, v_event_name);
 
@@ -16,11 +16,11 @@ v_event_name := 'Cool Jazz Evening';
 events_test_data_api.delete_venue_events_by_name(v_venue_id, v_event_name);
 
 --delete test customers created
-v_customer_id := events_api.get_customer_id('Bilbo.Baggins@example.customer.com');
+v_customer_id := customer_api.get_customer_id('Bilbo.Baggins@example.customer.com');
 events_test_data_api.delete_customer_data(v_customer_id);
 
 --delete test reseller created
-v_reseller_id := events_api.get_reseller_id(p_reseller_name => 'New Wave Tickets');
+v_reseller_id := reseller_api.get_reseller_id(p_reseller_name => 'New Wave Tickets');
 events_test_data_api.delete_reseller_data(v_reseller_id);
 
 --delete test venue created

@@ -22,8 +22,8 @@ begin
     v_venue_id := events_api.get_venue_id(p_venue_name => 'City Stadium');
     v_event_series_id := events_api.get_event_series_id(p_venue_id => v_venue_id, p_event_name => 'Hometown Hockey League');
 
-    v_old_school_id := events_api.get_reseller_id(p_reseller_name => v_old_school);
-    v_tickets_r_us_id := events_api.get_reseller_id(p_reseller_name => 'Tickets R Us');
+    v_old_school_id := reseller_api.get_reseller_id(p_reseller_name => v_old_school);
+    v_tickets_r_us_id := reseller_api.get_reseller_id(p_reseller_name => 'Tickets R Us');
     
     v_assign(1) := r_assign(v_old_school_id, v_old_school, v_category_general, 1000);
     v_assign(2) := r_assign(v_old_school_id, v_old_school, v_category_vip, 300);

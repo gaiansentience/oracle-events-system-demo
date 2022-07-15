@@ -325,7 +325,7 @@ as
     begin
 
     for r in customers loop
-        events_api.create_customer(r.name, r.email, c_id);
+        customer_api.create_customer(r.name, r.email, c_id);
     end loop;
 
     end create_customers;
@@ -359,7 +359,7 @@ as
     
     
         for r in resellers loop
-            events_api.create_reseller(r.name, r.email, r.commission_pct, r_id);
+            reseller_api.create_reseller(r.name, r.email, r.commission_pct, r_id);
         end loop;
     
     end create_resellers;

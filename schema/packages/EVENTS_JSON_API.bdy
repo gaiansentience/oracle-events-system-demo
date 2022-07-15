@@ -226,7 +226,7 @@ as
         
         begin     
         
-            events_api.create_reseller(
+            reseller_api.create_reseller(
                 r_reseller.reseller_name, 
                 r_reseller.reseller_email, 
                 r_reseller.commission_percent, 
@@ -267,7 +267,7 @@ as
         
         begin      
         
-            events_api.update_reseller(
+            reseller_api.update_reseller(
                 p_reseller_id => r_reseller.reseller_id,
                 p_reseller_name => r_reseller.reseller_name, 
                 p_reseller_email => r_reseller.reseller_email, 

@@ -9,7 +9,7 @@ declare
     l_name customers.customer_name%type := 'Andrea Warenko';
 begin
 
-    l_customer_id := events_api.get_customer_id(p_customer_email => l_email);
+    l_customer_id := customer_api.get_customer_id(p_customer_email => l_email);
 
 l_json_doc := 
 '

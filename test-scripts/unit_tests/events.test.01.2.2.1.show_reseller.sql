@@ -3,7 +3,7 @@
 select
 *
 from 
-event_system.events_report_api.show_reseller(73)
+reseller_api.show_reseller(73)
 order by reseller_name;
 
 

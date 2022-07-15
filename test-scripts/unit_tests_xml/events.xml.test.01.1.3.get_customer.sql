@@ -5,7 +5,7 @@ declare
     l_customer_email customers.customer_email%type := 'Bilbo.Baggins@example.customer.com';
 begin
 
-    l_customer_id := events_api.get_customer_id(p_customer_email => l_customer_email);
+    l_customer_id := customer_api.get_customer_id(p_customer_email => l_customer_email);
 
     l_xml_doc := events_xml_api.get_customer(p_customer_id => l_customer_id, p_formatted => true);
     dbms_output.put_line(l_xml_doc.getclobval());
