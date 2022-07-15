@@ -176,6 +176,210 @@ as
 
     end show_customer;
 
+
+    procedure show_customer_event_tickets
+    (
+        p_customer_id in number,
+        p_event_id in number,
+        p_tickets out sys_refcursor
+    )
+    is
+    begin
+    
+        open p_tickets for
+        select
+            ct.customer_id,
+            ct.customer_name,
+            ct.customer_email,   
+            ct.venue_id,
+            ct.venue_name,
+            ct.event_id,
+            ct.event_name,
+            ct.event_date,
+            ct.event_tickets,
+            ct.ticket_group_id,
+            ct.price_category,
+            ct.ticket_sales_id,
+            ct.ticket_quantity,
+            ct.sales_date,
+            ct.reseller_id,
+            ct.reseller_name
+        from 
+            event_system.customer_event_tickets_v ct
+        where 
+            ct.event_id = p_event_id 
+            and ct.customer_id = p_customer_id
+        order by 
+            ct.price_category, 
+            ct.sales_date;
+    
+    end show_customer_event_tickets;
+
+    procedure show_customer_event_tickets_by_email
+    (
+        p_customer_email in varchar2,
+        p_event_id in number,
+        p_tickets out sys_refcursor
+    )
+    is
+        v_customer_id number;
+    begin
+    
+        v_customer_id := customer_api.get_customer_id(p_customer_email);
+    
+        show_customer_event_tickets(v_customer_id, p_event_id, p_tickets);
+    
+    end show_customer_event_tickets_by_email;
+    
+    procedure show_customer_event_series_tickets
+    (
+        p_customer_id in number,
+        p_event_series_id in number,
+        p_tickets out sys_refcursor
+    )
+    is
+    begin
+    
+        open p_tickets for
+        select
+            ct.customer_id
+            ,ct.customer_name
+            ,ct.customer_email
+            ,ct.venue_id
+            ,ct.venue_name
+            ,ct.event_series_id
+            ,ct.event_name
+            ,ct.first_event_date
+            ,ct.last_event_date
+            ,ct.series_tickets
+            ,ct.event_id
+            ,ct.event_date
+            ,ct.event_tickets
+            ,ct.ticket_group_id
+            ,ct.price_category
+            ,ct.ticket_sales_id
+            ,ct.ticket_quantity
+            ,ct.sales_date
+            ,ct.reseller_id
+            ,ct.reseller_name
+        from 
+            event_system.customer_event_series_tickets_v ct
+        where 
+            ct.event_series_id = p_event_series_id 
+            and ct.customer_id = p_customer_id
+        order by 
+            ct.price_category, 
+            ct.sales_date;
+    
+    end show_customer_event_series_tickets;
+
+    procedure show_customer_event_series_tickets_by_email
+    (
+        p_customer_email in varchar2,
+        p_event_series_id in number,
+        p_tickets out sys_refcursor
+    )
+    is
+        v_customer_id number;
+    begin
+    
+        v_customer_id := customer_api.get_customer_id(p_customer_email);
+    
+        show_customer_event_series_tickets(v_customer_id, p_event_series_id, p_tickets);
+    
+    end show_customer_event_series_tickets_by_email;
+    
+    function show_customer_event_tickets
+    (
+        p_customer_id in number,
+        p_event_id in number
+    ) return t_customer_event_tickets pipelined
+    is
+        t_rows t_customer_event_tickets;
+        rc sys_refcursor;
+    begin
+    
+        show_customer_event_tickets(p_customer_id, p_event_id, rc);
+        fetch rc bulk collect into t_rows;
+        close rc;
+        
+        for i in 1..t_rows.count loop
+            pipe row(t_rows(i));
+        end loop;
+        return;
+    
+    end show_customer_event_tickets;
+
+    function show_customer_event_tickets_by_email
+    (
+        p_customer_email in varchar2,
+        p_event_id in number
+    ) return t_customer_event_tickets pipelined
+    is
+        t_rows t_customer_event_tickets;
+        rc sys_refcursor;
+    begin
+            
+        show_customer_event_tickets_by_email(p_customer_email, p_event_id, rc);
+        fetch rc bulk collect into t_rows;
+        close rc;
+        
+        for i in 1..t_rows.count loop
+            pipe row(t_rows(i));
+        end loop;
+        return;
+    
+    end show_customer_event_tickets_by_email;
+
+    function show_customer_event_series_tickets
+    (
+        p_customer_id in number,
+        p_event_series_id in number
+    ) return t_customer_event_series_tickets pipelined
+    is
+        t_rows t_customer_event_series_tickets;
+        rc sys_refcursor;
+    begin
+    
+        show_customer_event_series_tickets(p_customer_id, p_event_series_id, rc);
+        fetch rc bulk collect into t_rows;
+        close rc;
+        
+        for i in 1..t_rows.count loop
+            pipe row(t_rows(i));
+        end loop;
+        return;
+    
+    end show_customer_event_series_tickets;
+
+    function show_customer_event_series_tickets_by_email
+    (
+        p_customer_email in varchar2,
+        p_event_series_id in number
+    ) return t_customer_event_series_tickets pipelined
+    is
+        t_rows t_customer_event_series_tickets;
+        rc sys_refcursor;
+    begin
+        
+        show_customer_event_series_tickets_by_email(p_customer_email, p_event_series_id, rc);
+        fetch rc bulk collect into t_rows;
+        close rc;
+        
+        for i in 1..t_rows.count loop
+            pipe row(t_rows(i));
+        end loop;
+        return;
+    
+    end show_customer_event_series_tickets_by_email;
+    
+    
+    --add methods to print_tickets by ticket_sales_id
+    
+    
+
+
+
 begin
     initialize;
 end customer_api;
