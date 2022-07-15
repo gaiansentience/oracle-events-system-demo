@@ -43,35 +43,35 @@ as
     
     
     
-    procedure show_customer_event_tickets
+    procedure show_customer_event_purchases
     (
         p_customer_id in number,
         p_event_id in number,
-        p_tickets out sys_refcursor
+        p_purchases out sys_refcursor
     );
     
-    procedure show_customer_event_tickets_by_email
+    procedure show_customer_event_purchases_by_email
     (
         p_customer_email in varchar2,
         p_event_id in number,
-        p_tickets out sys_refcursor
+        p_purchases out sys_refcursor
     );
 
-    procedure show_customer_event_series_tickets
+    procedure show_customer_event_series_purchases
     (
         p_customer_id in number,
         p_event_series_id in number,
-        p_tickets out sys_refcursor
+        p_purchases out sys_refcursor
     );
     
-    procedure show_customer_event_series_tickets_by_email
+    procedure show_customer_event_series_purchases_by_email
     (
         p_customer_email in varchar2,
         p_event_series_id in number,
-        p_tickets out sys_refcursor
+        p_purchases out sys_refcursor
     );
 
-    type r_customer_event_tickets is record
+    type r_customer_event_purchases is record
     (
         customer_id      customers.customer_id%type
         ,customer_name   customers.customer_name%type
@@ -91,22 +91,22 @@ as
         ,reseller_name   resellers.reseller_name%type
     );
        
-    type t_customer_event_tickets is table of r_customer_event_tickets;
+    type t_customer_event_purchases is table of r_customer_event_purchases;
        
     --show tickets purchased by this customer for this event
-    function show_customer_event_tickets
+    function show_customer_event_purchases
     (
         p_customer_id in number,
         p_event_id in number
-    ) return t_customer_event_tickets pipelined;
+    ) return t_customer_event_purchases pipelined;
     
-    function show_customer_event_tickets_by_email
+    function show_customer_event_purchases_by_email
     (
         p_customer_email in varchar2,
         p_event_id in number
-    ) return t_customer_event_tickets pipelined;
+    ) return t_customer_event_purchases pipelined;
 
-    type r_customer_event_series_tickets is record
+    type r_customer_event_series_purchases is record
     (
         customer_id       customers.customer_id%type
         ,customer_name    customers.customer_name%type
@@ -130,19 +130,19 @@ as
         ,reseller_name    resellers.reseller_name%type
     );
        
-    type t_customer_event_series_tickets is table of r_customer_event_series_tickets;
+    type t_customer_event_series_purchases is table of r_customer_event_series_purchases;
 
-    function show_customer_event_series_tickets
+    function show_customer_event_series_purchases
     (
         p_customer_id in number,
         p_event_series_id in number
-    ) return t_customer_event_series_tickets pipelined;
+    ) return t_customer_event_series_purchases pipelined;
     
-    function show_customer_event_series_tickets_by_email
+    function show_customer_event_series_purchases_by_email
     (
         p_customer_email in varchar2,
         p_event_series_id in number
-    ) return t_customer_event_series_tickets pipelined;
+    ) return t_customer_event_series_purchases pipelined;
 
 
 

@@ -177,16 +177,16 @@ as
     end show_customer;
 
 
-    procedure show_customer_event_tickets
+    procedure show_customer_event_purchases
     (
         p_customer_id in number,
         p_event_id in number,
-        p_tickets out sys_refcursor
+        p_purchases out sys_refcursor
     )
     is
     begin
     
-        open p_tickets for
+        open p_purchases for
         select
             ct.customer_id,
             ct.customer_name,
@@ -205,7 +205,7 @@ as
             ct.reseller_id,
             ct.reseller_name
         from 
-            event_system.customer_event_tickets_v ct
+            event_system.customer_event_purchase_v ct
         where 
             ct.event_id = p_event_id 
             and ct.customer_id = p_customer_id
@@ -213,13 +213,13 @@ as
             ct.price_category, 
             ct.sales_date;
     
-    end show_customer_event_tickets;
+    end show_customer_event_purchases;
 
-    procedure show_customer_event_tickets_by_email
+    procedure show_customer_event_purchases_by_email
     (
         p_customer_email in varchar2,
         p_event_id in number,
-        p_tickets out sys_refcursor
+        p_purchases out sys_refcursor
     )
     is
         v_customer_id number;
@@ -227,20 +227,20 @@ as
     
         v_customer_id := customer_api.get_customer_id(p_customer_email);
     
-        show_customer_event_tickets(v_customer_id, p_event_id, p_tickets);
+        show_customer_event_purchases(v_customer_id, p_event_id, p_purchases);
     
-    end show_customer_event_tickets_by_email;
+    end show_customer_event_purchases_by_email;
     
-    procedure show_customer_event_series_tickets
+    procedure show_customer_event_series_purchases
     (
         p_customer_id in number,
         p_event_series_id in number,
-        p_tickets out sys_refcursor
+        p_purchases out sys_refcursor
     )
     is
     begin
     
-        open p_tickets for
+        open p_purchases for
         select
             ct.customer_id
             ,ct.customer_name
@@ -263,7 +263,7 @@ as
             ,ct.reseller_id
             ,ct.reseller_name
         from 
-            event_system.customer_event_series_tickets_v ct
+            event_system.customer_event_series_purchase_v ct
         where 
             ct.event_series_id = p_event_series_id 
             and ct.customer_id = p_customer_id
@@ -271,13 +271,13 @@ as
             ct.price_category, 
             ct.sales_date;
     
-    end show_customer_event_series_tickets;
+    end show_customer_event_series_purchases;
 
-    procedure show_customer_event_series_tickets_by_email
+    procedure show_customer_event_series_purchases_by_email
     (
         p_customer_email in varchar2,
         p_event_series_id in number,
-        p_tickets out sys_refcursor
+        p_purchases out sys_refcursor
     )
     is
         v_customer_id number;
@@ -285,21 +285,21 @@ as
     
         v_customer_id := customer_api.get_customer_id(p_customer_email);
     
-        show_customer_event_series_tickets(v_customer_id, p_event_series_id, p_tickets);
+        show_customer_event_series_purchases(v_customer_id, p_event_series_id, p_purchases);
     
-    end show_customer_event_series_tickets_by_email;
+    end show_customer_event_series_purchases_by_email;
     
-    function show_customer_event_tickets
+    function show_customer_event_purchases
     (
         p_customer_id in number,
         p_event_id in number
-    ) return t_customer_event_tickets pipelined
+    ) return t_customer_event_purchases pipelined
     is
-        t_rows t_customer_event_tickets;
+        t_rows t_customer_event_purchases;
         rc sys_refcursor;
     begin
     
-        show_customer_event_tickets(p_customer_id, p_event_id, rc);
+        show_customer_event_purchases(p_customer_id, p_event_id, rc);
         fetch rc bulk collect into t_rows;
         close rc;
         
@@ -308,19 +308,19 @@ as
         end loop;
         return;
     
-    end show_customer_event_tickets;
+    end show_customer_event_purchases;
 
-    function show_customer_event_tickets_by_email
+    function show_customer_event_purchases_by_email
     (
         p_customer_email in varchar2,
         p_event_id in number
-    ) return t_customer_event_tickets pipelined
+    ) return t_customer_event_purchases pipelined
     is
-        t_rows t_customer_event_tickets;
+        t_rows t_customer_event_purchases;
         rc sys_refcursor;
     begin
             
-        show_customer_event_tickets_by_email(p_customer_email, p_event_id, rc);
+        show_customer_event_purchases_by_email(p_customer_email, p_event_id, rc);
         fetch rc bulk collect into t_rows;
         close rc;
         
@@ -329,19 +329,19 @@ as
         end loop;
         return;
     
-    end show_customer_event_tickets_by_email;
+    end show_customer_event_purchases_by_email;
 
-    function show_customer_event_series_tickets
+    function show_customer_event_series_purchases
     (
         p_customer_id in number,
         p_event_series_id in number
-    ) return t_customer_event_series_tickets pipelined
+    ) return t_customer_event_series_purchases pipelined
     is
-        t_rows t_customer_event_series_tickets;
+        t_rows t_customer_event_series_purchases;
         rc sys_refcursor;
     begin
     
-        show_customer_event_series_tickets(p_customer_id, p_event_series_id, rc);
+        show_customer_event_series_purchases(p_customer_id, p_event_series_id, rc);
         fetch rc bulk collect into t_rows;
         close rc;
         
@@ -350,19 +350,19 @@ as
         end loop;
         return;
     
-    end show_customer_event_series_tickets;
+    end show_customer_event_series_purchases;
 
-    function show_customer_event_series_tickets_by_email
+    function show_customer_event_series_purchases_by_email
     (
         p_customer_email in varchar2,
         p_event_series_id in number
-    ) return t_customer_event_series_tickets pipelined
+    ) return t_customer_event_series_purchases pipelined
     is
-        t_rows t_customer_event_series_tickets;
+        t_rows t_customer_event_series_purchases;
         rc sys_refcursor;
     begin
         
-        show_customer_event_series_tickets_by_email(p_customer_email, p_event_series_id, rc);
+        show_customer_event_series_purchases_by_email(p_customer_email, p_event_series_id, rc);
         fetch rc bulk collect into t_rows;
         close rc;
         
@@ -371,7 +371,7 @@ as
         end loop;
         return;
     
-    end show_customer_event_series_tickets_by_email;
+    end show_customer_event_series_purchases_by_email;
     
     
     --add methods to print_tickets by ticket_sales_id

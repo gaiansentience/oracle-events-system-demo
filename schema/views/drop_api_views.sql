@@ -4,6 +4,10 @@ drop view customer_event_series_tickets_v;
 drop view customer_event_tickets_v;
 drop view customer_event_ticket_base_v;
 
+drop view customer_event_series_purchase_v;
+drop view customer_event_purchase_v;
+drop view customer_event_purchase_base_v;
+
 drop view tickets_available_series_reseller_v;
 drop view tickets_available_series_venue_v;
 drop view tickets_available_series_all_v;

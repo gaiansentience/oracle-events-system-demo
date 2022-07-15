@@ -2,7 +2,7 @@
 select
 *  
 from 
-customer_api.show_customer_event_tickets(2640, 602);
+customer_api.show_customer_event_purchases(2640, 602);
 
 
   select * from events e join venues v on e.venue_id = v.venue_id

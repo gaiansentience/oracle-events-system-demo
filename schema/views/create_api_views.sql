@@ -26,6 +26,10 @@ prompt creating views for events api
 @@view.tickets_available_series_venue_v.sql;
 @@view.tickets_available_series_reseller_v.sql;
 
+@@view.customer_event_purchase_base_v.sql;
+@@view.customer_event_purchase_v.sql;
+@@view.customer_event_series_purchase_v.sql;
+
 @@view.customer_event_ticket_base_v.sql;
 @@view.customer_event_tickets_v.sql;
 @@view.customer_event_series_tickets_v.sql;

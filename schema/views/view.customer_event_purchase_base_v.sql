@@ -1,4 +1,4 @@
-create or replace view customer_event_ticket_base_v as
+create or replace view customer_event_purchase_base_v as
 select
     ts.customer_id
     ,tg.event_id
