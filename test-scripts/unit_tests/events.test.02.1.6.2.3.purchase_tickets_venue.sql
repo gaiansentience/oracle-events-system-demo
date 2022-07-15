@@ -34,9 +34,8 @@ declare
     l_venue_id number;
     l_event_id number;
 begin
-
     l_venue_id := venue_api.get_venue_id(p_venue_name => 'City Stadium');
-    l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'The New Toys');
+    l_event_id := event_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'The New Toys');
 
 l_purchases(1).email := 'James.Kirk@example.customer.com';
 l_purchases(1).price_category := 'GENERAL ADMISSION';
@@ -74,6 +73,7 @@ for i in 1..l_purchases.count loop
         when others then
             dbms_output.put_line(sqlerrm);
     end;
+    
 end loop;
 
 end;

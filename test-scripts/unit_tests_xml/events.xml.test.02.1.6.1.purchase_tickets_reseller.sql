@@ -1,6 +1,7 @@
+--use get_event_tickets_available_venue or get_event_tickets_available_all for correct event/ticket_group_id values
 set serveroutput on;
 declare
-  p_xml_doc xmltype;
+  l_xml_doc xmltype;
   l_xml varchar2(4000);
 begin
 
@@ -33,9 +34,9 @@ l_xml :=
   </ticket_groups>
 </ticket_purchase_request>
 ';
-    p_xml_doc := xmltype(l_xml);
+    l_xml_doc := xmltype(l_xml);
 
-    events_xml_api.purchase_tickets_reseller(p_xml_doc => p_xml_doc);
+    events_xml_api.purchase_tickets_reseller(p_xml_doc => l_xml_doc);
 
     dbms_output.put_line(p_xml_doc.getstringval);
 

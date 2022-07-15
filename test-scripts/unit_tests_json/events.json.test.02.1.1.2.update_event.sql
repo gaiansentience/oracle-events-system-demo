@@ -1,6 +1,7 @@
 --update event using a json document
 set serveroutput on;
 declare
+    l_json_template varchar2(4000);
     l_json_doc varchar2(4000);
     l_venue_id number;
     l_event_id number;
@@ -12,9 +13,9 @@ declare
 begin
 
     l_venue_id := venue_api.get_venue_id(p_venue_name => l_venue_name);
-    l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
+    l_event_id := event_api.get_event_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
     
-l_json_doc := 
+l_json_template := 
 '
 {
   "event_id" : $$EVENT_ID$$,
@@ -24,7 +25,7 @@ l_json_doc :=
 }
 ';
 
-    l_json_doc := replace(l_json_doc, '$$EVENT_ID$$', l_event_id);
+    l_json_doc := replace(l_json_template, '$$EVENT_ID$$', l_event_id);
     l_json_doc := replace(l_json_doc, '$$EVENT$$', l_event_name);
     l_json_doc := replace(l_json_doc, '$$DATE$$', l_event_date);
     l_json_doc := replace(l_json_doc, '$$TICKETS$$', l_tickets);
@@ -32,21 +33,12 @@ l_json_doc :=
     events_json_api.update_event(p_json_doc => l_json_doc);
     dbms_output.put_line(events_json_api.format_json_string(l_json_doc));
 
-l_json_doc := 
-'
-{
-  "event_id" : $$EVENT_ID$$,
-  "event_name" : "$$EVENT$$",
-  "event_date" : "$$DATE$$",
-  "tickets_available" : $$TICKETS$$
-}
-';
 
     select e.event_date into l_conflicting_date from events e where e.venue_id = l_venue_id and e.event_id <> l_event_id fetch first 1 row only;
     
     l_event_date := to_char(l_conflicting_date, 'YYYY-MM-DD"T"HH24:MI:SS');
 
-    l_json_doc := replace(l_json_doc, '$$EVENT_ID$$', l_event_id);
+    l_json_doc := replace(l_json_template, '$$EVENT_ID$$', l_event_id);
     l_json_doc := replace(l_json_doc, '$$EVENT$$', l_event_name);
     l_json_doc := replace(l_json_doc, '$$DATE$$', l_event_date);
     l_json_doc := replace(l_json_doc, '$$TICKETS$$', l_tickets);

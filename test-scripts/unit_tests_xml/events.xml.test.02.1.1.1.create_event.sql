@@ -4,7 +4,6 @@ declare
     l_xml varchar2(4000);
     l_venue_id number;
     l_venue_name venues.venue_name%type := 'The Pink Pony Revue';    
---    l_event_id number;
     l_event_name events.event_name%type := 'Evangeline Thorpe';
     l_event_date varchar2(50) := '2023-05-01';
     l_tickets number := 200;

@@ -13,10 +13,9 @@ declare
     l_assign t_assign;
     
 begin
-
     l_reseller_id := reseller_api.get_reseller_id(p_reseller_name => 'Old School');
     l_venue_id := venue_api.get_venue_id(p_venue_name => 'City Stadium');
-    l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'The New Toys');
+    l_event_id := event_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'The New Toys');
 
 l_assign(1).price_category := 'GENERAL ADMISSION';
 l_assign(1).quantity := 500;
@@ -30,7 +29,7 @@ for i in 1..l_assign.count loop
 
     begin
     
-        events_api.create_ticket_assignment(
+        event_setup_api.create_ticket_assignment(
            p_reseller_id => l_reseller_id,
            p_ticket_group_id => l_assign(i).ticket_group_id,
            p_number_tickets => l_assign(i).quantity,

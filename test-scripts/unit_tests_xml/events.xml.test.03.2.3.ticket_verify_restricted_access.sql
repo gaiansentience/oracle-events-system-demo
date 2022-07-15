@@ -1,5 +1,6 @@
 set serveroutput on;
 declare
+    l_xml_template varchar2(4000);
     l_xml varchar2(4000);
     l_xml_doc xmltype;
     
@@ -16,7 +17,7 @@ declare
     
 begin
     l_venue_id := venue_api.get_venue_id(p_venue_name => 'The Pink Pony Revue');
-    l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'Evangeline Thorpe');
+    l_event_id := event_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'Evangeline Thorpe');
     l_customer_id := customer_api.get_customer_id(p_customer_email => l_customer_email);
     
 --get a specific ticket
@@ -30,7 +31,7 @@ order by et.ticket_sales_id, t.ticket_id
 fetch first 1 row only;
     
 
-l_xml :=
+l_xml_template :=
 '
 <ticket_verify_restricted_access>
     <ticket_group>
@@ -42,7 +43,7 @@ l_xml :=
     </ticket>
 </ticket_verify_restricted_access>
 ';
-l_xml := replace(l_xml, '$$GROUP$$', l_ticket_group_id);
+l_xml := replace(l_xml_template, '$$GROUP$$', l_ticket_group_id);
 l_xml := replace(l_xml, '$$CATEGORY$$', l_price_category);
 l_xml := replace(l_xml, '$$SERIAL$$', l_serial_code);
 l_xml_doc := xmltype(l_xml);
@@ -53,19 +54,8 @@ l_xml_doc := xmltype(l_xml);
     events_xml_api.ticket_verify_restricted_access(p_xml_doc => l_xml_doc);
     dbms_output.put_line(l_xml_doc.getclobval);
 
-l_xml :=
-'
-<ticket_verify_restricted_access>
-    <ticket_group>
-        <ticket_group_id>$$GROUP$$</ticket_group_id>
-        <price_category>$$CATEGORY$$</price_category>
-    </ticket_group>
-    <ticket>
-        <serial_code>$$SERIAL$$</serial_code>
-    </ticket>
-</ticket_verify_restricted_access>
-';
-l_xml := replace(l_xml, '$$GROUP$$', l_ticket_group_id);
+
+l_xml := replace(l_xml_template, '$$GROUP$$', l_ticket_group_id);
 l_xml := replace(l_xml, '$$CATEGORY$$', l_price_category);
 l_xml := replace(l_xml, '$$SERIAL$$', l_serial_code);
 l_xml_doc := xmltype(l_xml);
@@ -81,19 +71,7 @@ l_xml_doc := xmltype(l_xml);
     from ticket_groups tg where tg.event_id = l_event_id and tg.ticket_group_id <> l_ticket_group_id
     fetch first 1 row only;
 
-l_xml :=
-'
-<ticket_verify_restricted_access>
-    <ticket_group>
-        <ticket_group_id>$$GROUP$$</ticket_group_id>
-        <price_category>$$CATEGORY$$</price_category>
-    </ticket_group>
-    <ticket>
-        <serial_code>$$SERIAL$$</serial_code>
-    </ticket>
-</ticket_verify_restricted_access>
-';
-l_xml := replace(l_xml, '$$GROUP$$', l_other_ticket_group_id);
+l_xml := replace(l_xml_template, '$$GROUP$$', l_other_ticket_group_id);
 l_xml := replace(l_xml, '$$CATEGORY$$', l_other_price_category);
 l_xml := replace(l_xml, '$$SERIAL$$', l_serial_code);
 l_xml_doc := xmltype(l_xml);
@@ -102,19 +80,7 @@ l_xml_doc := xmltype(l_xml);
     events_xml_api.ticket_verify_restricted_access(p_xml_doc => l_xml_doc);
     dbms_output.put_line(l_xml_doc.getclobval);
 
-l_xml :=
-'
-<ticket_verify_restricted_access>
-    <ticket_group>
-        <ticket_group_id>$$GROUP$$</ticket_group_id>
-        <price_category>$$CATEGORY$$</price_category>
-    </ticket_group>
-    <ticket>
-        <serial_code>$$SERIAL$$</serial_code>
-    </ticket>
-</ticket_verify_restricted_access>
-';
-l_xml := replace(l_xml, '$$GROUP$$', l_ticket_group_id);
+l_xml := replace(l_xml_template, '$$GROUP$$', l_ticket_group_id);
 l_xml := replace(l_xml, '$$CATEGORY$$', l_price_category);
 l_xml := replace(l_xml, '$$SERIAL$$', l_serial_code || 'xxxxx');
 l_xml_doc := xmltype(l_xml);

@@ -47,6 +47,12 @@ as
         nRoot dbms_xmldom.DOMnode;
     begin
     
+        --write the error message to the logs
+        util_error_api.log_error(
+            p_error_message => p_error_message, 
+            p_error_code => p_error_code, 
+            p_locale => 'events_xml_api.' || p_xml_method);
+    
         util_xmldom_helper.newDoc(p_root_tag => 'service_error_report', p_root_node => nRoot);
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'xml_service_method', p_data => p_xml_method);
         util_xmldom_helper.addTextNode(p_parent => nRoot, p_tag => 'error_code', p_data => p_error_code);
@@ -583,7 +589,7 @@ as
                 l_status_message := 'Missing event capacity, cannot create event';      
             else
                 begin                  
-                    events_api.create_event(
+                    event_setup_api.create_event(
                         r_event.venue_id, 
                         r_event.event_name, 
                         r_event.event_date, 
@@ -630,7 +636,7 @@ as
         l_date_mask varchar2(20) := 'yyyy-mm-dd';
         
         l_event_series_id number;        
-        t_status_details events_api.t_series_event;
+        t_status_details event_setup_api.t_series_event;
         l_status_code varchar2(20);
         l_status_message varchar2(4000);
     begin
@@ -650,7 +656,7 @@ as
         dbms_xslprocessor.valueof(nEventSeries, 'event_day/text()', l_event_day);          
         dbms_xslprocessor.valueof(nEventSeries, 'tickets_available/text()', l_tickets_available);  
 
-        events_api.create_weekly_event(
+        event_setup_api.create_weekly_event(
             p_venue_id => l_venue_id,   
             p_event_name => l_event_name,
             p_event_start_date => l_event_start_date,
@@ -713,7 +719,7 @@ as
 
         begin
         
-            events_api.update_event
+            event_setup_api.update_event
                 (p_event_id => l_event_id,
                 p_event_name => l_event_name,
                 p_event_date => l_event_date,
@@ -762,7 +768,7 @@ as
     
         begin
         
-            events_api.update_event_series(
+            event_setup_api.update_event_series(
                 p_event_series_id => l_event_series_id,
                 p_event_name => l_event_name,
                 p_tickets_available => l_tickets_available);
@@ -1004,7 +1010,7 @@ as
                 else
                     begin
                     
-                        events_api.create_ticket_group(
+                        event_setup_api.create_ticket_group(
                             p_event_id => r_group.event_id, 
                             p_price_category => r_group.price_category, 
                             p_price => r_group.price, 
@@ -1092,7 +1098,7 @@ as
                 else
                     begin
                                                 
-                        events_api.create_ticket_group_event_series(
+                        event_setup_api.create_ticket_group_event_series(
                             p_event_series_id => l_event_series_id, 
                             p_price_category => r_group.price_category, 
                             p_price => r_group.price, 
@@ -1240,7 +1246,7 @@ as
                 r_assignment.ticket_assignment_id := 0;
 
                 begin
-                    events_api.create_ticket_assignment(
+                    event_setup_api.create_ticket_assignment(
                         p_reseller_id => r_assignment.reseller_id,
                         p_ticket_group_id => r_assignment.ticket_group_id,
                         p_number_tickets => r_assignment.tickets_assigned,
@@ -1341,7 +1347,7 @@ as
 
                 begin
 
-                    events_api.create_ticket_assignment_event_series(
+                    event_setup_api.create_ticket_assignment_event_series(
                         p_event_series_id => l_event_series_id,
                         p_reseller_id => l_reseller_id,
                         p_price_category => l_price_category,
@@ -1680,7 +1686,7 @@ as
             nGroup := dbms_xmldom.item(nListGroups, i);
         
             dbms_xslprocessor.valueof(nGroup, 'ticket_group_id/text()', l_purchase.ticket_group_id);
-            l_purchase.price_category := events_api.get_ticket_group_category(l_purchase.ticket_group_id);    
+            l_purchase.price_category := event_setup_api.get_ticket_group_category(l_purchase.ticket_group_id);    
             util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'price_category', p_data => l_purchase.price_category);
             dbms_xslprocessor.valueof(nGroup, 'tickets_requested/text()', l_purchase.tickets_requested);
             dbms_xslprocessor.valueof(nGroup, 'price/text()', l_purchase.price_requested);
@@ -1746,7 +1752,7 @@ as
             nGroup := dbms_xmldom.item(nListGroups, i);
     
             dbms_xslprocessor.valueof(nGroup, 'ticket_group_id/text()', l_purchase.ticket_group_id);
-            l_purchase.price_category := events_api.get_ticket_group_category(l_purchase.ticket_group_id);    
+            l_purchase.price_category := event_setup_api.get_ticket_group_category(l_purchase.ticket_group_id);    
             util_xmldom_helper.addTextNode(p_parent => nGroup, p_tag => 'price_category', p_data => l_purchase.price_category);            
             dbms_xslprocessor.valueof(nGroup, 'tickets_requested/text()', l_purchase.tickets_requested);
             dbms_xslprocessor.valueof(nGroup, 'price/text()', l_purchase.price_requested);

@@ -3,13 +3,15 @@ set serveroutput on;
 declare
     l_json_doc varchar2(4000);
     l_venue_id number;
+    l_venue_name venues.venue_name%type := 'Another Roadside Attraction';
     l_event_id number;
+    l_event_name events.event_name%type := 'New Years Mischief';
     l_customer_email varchar2(50) := 'John.Kirby@example.customer.com';
     l_nonpurchase_customer varchar2(50) := 'James.Kirk@example.customer.com';
 begin
 
-    l_venue_id := venue_api.get_venue_id(p_venue_name => 'Another Roadside Attraction');
-    l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'New Years Mischief');
+    l_venue_id := venue_api.get_venue_id(p_venue_name => l_venue_name);
+    l_event_id := event_api.get_event_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
     
     l_json_doc := events_json_api.get_customer_event_tickets_by_email(p_customer_email => l_customer_email, p_event_id => l_event_id, p_formatted => true);   
     dbms_output.put_line(l_json_doc);
@@ -20,15 +22,6 @@ begin
  end;
 
 /*  customer purchased tickets
-{
-  "json_method" : "get_customer_event_tickets",
-  "error_code" : 100,
-  "error_message" : "ORA-01403: no data found"
-}
-
-
-PL/SQL procedure successfully completed.
-
 {
   "customer_id" : 1910,
   "customer_name" : "John Kirby",

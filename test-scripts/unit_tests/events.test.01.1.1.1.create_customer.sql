@@ -9,13 +9,20 @@ begin
     l_customer.customer_name := 'Julius Irving';
     l_customer.customer_email := 'Julius.Irving@example.customer.com';
     
-    customer_api.create_customer(
-        p_customer_name => l_customer.customer_name,
-        p_customer_email => l_customer.customer_email,
-        p_customer_id => l_customer.customer_id);
+    begin
     
-    dbms_output.put_line('customer created with id = ' || l_customer.customer_id);
-
+        customer_api.create_customer(
+            p_customer_name => l_customer.customer_name,
+            p_customer_email => l_customer.customer_email,
+            p_customer_id => l_customer.customer_id);
+    
+        dbms_output.put_line('customer created with id = ' || l_customer.customer_id);
+    
+    exception
+        when others then
+            dbms_output.put_line(sqlerrm);
+    end;
+    
 end;
 
 /*

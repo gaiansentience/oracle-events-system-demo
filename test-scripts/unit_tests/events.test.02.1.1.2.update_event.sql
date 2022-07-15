@@ -17,9 +17,9 @@ declare
 begin
     l_date := next_day(l_date,'Friday');
     l_venue_id := venue_api.get_venue_id(p_venue_name => 'City Stadium');
-    l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => l_name);
+    l_event_id := event_api.get_event_id(p_venue_id => l_venue_id, p_event_name => l_name);
 
-    events_api.update_event(
+    event_setup_api.update_event(
         p_event_id => l_event_id,
         p_event_name => l_name,
         p_event_date => l_date,

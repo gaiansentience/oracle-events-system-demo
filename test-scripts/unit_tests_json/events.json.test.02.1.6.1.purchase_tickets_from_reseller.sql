@@ -1,14 +1,37 @@
+--use test for get_tickets_available_all or get_tickets_available_reseller to get ticket_group_id values for request
 set serveroutput on;
 declare
+    l_event_name events.event_name%type := 'New Years Mischief';
+    l_event_id number;
+    l_venue_name venues.venue_name%type := 'Another Roadside Attraction';
+    l_venue_id number;
+    l_reseller_id number;
+    l_reseller_name resellers.reseller_name%type := 'Old School';
+
     l_customer_id number;
-    l_jdoc varchar2(4000) :=
+    l_customer_email customers.customer_email%type := 'Maggie.Wayland@example.customer.com';
+    
+    l_jdoc varchar2(4000);
+begin
+
+    l_venue_id := venue_api.get_venue_id(p_venue_name => l_venue_name);
+    l_event_id := event_api.get_event_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
+    l_reseller_id := reseller_api.get_reseller_id(p_reseller_name => l_reseller_name);
+    l_customer_id := customer_api.get_customer_id(p_customer_email => l_customer_email);
+    
+    delete from tickets t where t.ticket_sales_id in (select ts.ticket_sales_id from ticket_sales ts where ts.customer_id = l_customer_id);
+    delete from ticket_sales ts where ts.customer_id = l_customer_id;
+    commit;
+
+
+l_jdoc :=
 '
 {
-  "event_id" : 581,
-  "event_name" : "New Years Mischief",
-  "customer_email" : "Maggie.Wayland@example.customer.com",
-  "reseller_id" : 3,
-  "reseller_name" : "Old School",
+  "event_id" : $$EVENT_ID$$,
+  "event_name" : "$$EVENT_NAME$$",
+  "customer_email" : "$$CUSTOMER_EMAIL$$",
+  "reseller_id" : $$RESELLER_ID$$,
+  "reseller_name" : "$$RESELLER_NAME$$",
   "ticket_groups" :
   [
     {
@@ -27,13 +50,12 @@ declare
 }
 ';
 
-begin
+    l_jdoc := replace(l_jdoc, '$$EVENT_ID$$', l_event_id);
+    l_jdoc := replace(l_jdoc, '$$EVENT_NAME$$', l_event_name);
+    l_jdoc := replace(l_jdoc, '$$RESELLER_ID$$', l_reseller_id);
+    l_jdoc := replace(l_jdoc, '$$RESELLER_NAME$$', l_reseller_name);
+    l_jdoc := replace(l_jdoc, '$$CUSTOMER_EMAIL$$', l_customer_email);
 
-    l_customer_id := customer_api.get_customer_id(p_customer_email => 'Maggie.Wayland@example.customer.com');
-    
-    delete from tickets t where t.ticket_sales_id in (select ts.ticket_sales_id from ticket_sales ts where ts.customer_id = l_customer_id);
-    delete from ticket_sales ts where ts.customer_id = l_customer_id;
-    commit;
 
     events_json_api.purchase_tickets_reseller(l_jdoc);
     l_jdoc := events_json_api.format_json_clob(l_jdoc);

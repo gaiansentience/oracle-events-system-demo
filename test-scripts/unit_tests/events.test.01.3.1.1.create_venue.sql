@@ -12,6 +12,8 @@ begin
     l_venue.organizer_email := 'Bill.Styles#RoadsideCafe.com';
     l_venue.max_event_capacity := 500;
 
+    begin
+    
     venue_api.create_venue(
         p_venue_name => l_venue.venue_name,
         p_organizer_name => l_venue.organizer_name,
@@ -19,8 +21,13 @@ begin
         p_max_event_capacity => l_venue.max_event_capacity,
         p_venue_id => l_venue.venue_id);
     
-  dbms_output.put_line('venue created with id = ' || l_venue.venue_id);
-
+    dbms_output.put_line('venue created with id = ' || l_venue.venue_id);
+    
+    exception
+        when others then
+            dbms_output.put_line(sqlerrm);
+    end;
+    
 end;
 
 /*

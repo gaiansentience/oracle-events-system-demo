@@ -2,16 +2,16 @@ set serveroutput on;
 declare
     l_json_doc varchar2(32000);
     l_venue_id number;
+    l_venue_name venues.venue_name%type := 'Another Roadside Attraction';
     l_event_id number;
+    l_event_name events.event_name%type := 'New Years Mischief';
 begin
 
-    l_venue_id := venue_api.get_venue_id(p_venue_name => 'Another Roadside Attraction');
-    l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'New Years Mischief');
+    l_venue_id := venue_api.get_venue_id(p_venue_name => l_venue_name);
+    l_event_id := event_api.get_event_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
 
 
-    l_json_doc := events_json_api.get_event_ticket_prices(
-                                           p_event_id => l_event_id,
-                                           p_formatted => true);
+    l_json_doc := events_json_api.get_event_ticket_prices(p_event_id => l_event_id, p_formatted => true);
 
     dbms_output.put_line(l_json_doc);
 

@@ -1,5 +1,6 @@
 set serveroutput on;
 declare
+    l_xml_template varchar2(4000);
     l_xml varchar2(4000);
     l_xml_doc xmltype;
     l_venue_id number;
@@ -9,7 +10,7 @@ declare
     l_serial_code varchar2(100);
 begin
     l_venue_id := venue_api.get_venue_id(p_venue_name => 'The Pink Pony Revue');
-    l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'Evangeline Thorpe');
+    l_event_id := event_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'Evangeline Thorpe');
     l_customer_id := customer_api.get_customer_id(p_customer_email => l_customer_email);
     
 --get a specific ticket
@@ -23,7 +24,7 @@ order by et.ticket_sales_id, t.ticket_id
 fetch first 1 row only;
     
 
-l_xml :=
+l_xml_template :=
 '
 <ticket_verify_validation>
     <event>
@@ -34,7 +35,7 @@ l_xml :=
     </ticket>
 </ticket_verify_validation>
 ';
-l_xml := replace(l_xml, '$$EVENT$$', l_event_id);
+l_xml := replace(l_xml_template, '$$EVENT$$', l_event_id);
 l_xml := replace(l_xml, '$$SERIAL$$', l_serial_code);
 l_xml_doc := xmltype(l_xml);
 
@@ -44,18 +45,7 @@ l_xml_doc := xmltype(l_xml);
     events_xml_api.ticket_verify_validation(p_xml_doc => l_xml_doc);
     dbms_output.put_line(l_xml_doc.getclobval);
 
-l_xml :=
-'
-<ticket_verify_validation>
-    <event>
-        <event_id>$$EVENT$$</event_id>        
-    </event>
-    <ticket>
-        <serial_code>$$SERIAL$$</serial_code>
-    </ticket>
-</ticket_verify_validation>
-';
-l_xml := replace(l_xml, '$$EVENT$$', l_event_id);
+l_xml := replace(l_xml_template, '$$EVENT$$', l_event_id);
 l_xml := replace(l_xml, '$$SERIAL$$', l_serial_code);
 l_xml_doc := xmltype(l_xml);
 
@@ -65,18 +55,7 @@ l_xml_doc := xmltype(l_xml);
     events_xml_api.ticket_verify_validation(p_xml_doc => l_xml_doc);
     dbms_output.put_line(l_xml_doc.getclobval);
 
-l_xml :=
-'
-<ticket_verify_validation>
-    <event>
-        <event_id>$$EVENT$$</event_id>        
-    </event>
-    <ticket>
-        <serial_code>$$SERIAL$$</serial_code>
-    </ticket>
-</ticket_verify_validation>
-';
-l_xml := replace(l_xml, '$$EVENT$$', l_event_id + 1);
+l_xml := replace(l_xml_template, '$$EVENT$$', l_event_id + 1);
 l_xml := replace(l_xml, '$$SERIAL$$', l_serial_code);
 l_xml_doc := xmltype(l_xml);
 
@@ -84,18 +63,7 @@ l_xml_doc := xmltype(l_xml);
     events_xml_api.ticket_verify_validation(p_xml_doc => l_xml_doc);
     dbms_output.put_line(l_xml_doc.getclobval);
 
-l_xml :=
-'
-<ticket_verify_validation>
-    <event>
-        <event_id>$$EVENT$$</event_id>        
-    </event>
-    <ticket>
-        <serial_code>$$SERIAL$$</serial_code>
-    </ticket>
-</ticket_verify_validation>
-';
-l_xml := replace(l_xml, '$$EVENT$$', l_event_id);
+l_xml := replace(l_xml_template, '$$EVENT$$', l_event_id);
 l_xml := replace(l_xml, '$$SERIAL$$', l_serial_code || 'xxxxx');
 l_xml_doc := xmltype(l_xml);
 

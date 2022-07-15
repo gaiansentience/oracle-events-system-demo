@@ -15,10 +15,10 @@ declare
 begin
 
     l_venue_id := venue_api.get_venue_id(p_venue_name => 'City Stadium');
-    l_event_series_id := events_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => l_name);
+    l_event_series_id := event_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => l_name);
 
     begin
-        events_api.update_event_series(
+        event_setup_api.update_event_series(
             p_event_series_id => l_event_series_id,
             p_event_name => l_name,
             p_tickets_available => l_tickets);

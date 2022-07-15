@@ -5,7 +5,7 @@
 select
 *
 from
-events_report_api.show_ticket_assignments(602,3);
+event_setup_api.show_ticket_assignments(602,3);
 
 
 select * from events e join venues v on e.venue_id = v.venue_id

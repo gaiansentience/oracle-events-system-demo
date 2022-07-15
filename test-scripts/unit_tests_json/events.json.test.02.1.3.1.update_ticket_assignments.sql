@@ -1,3 +1,4 @@
+--use get_ticket_assignments to get event/reseller/ticket group information for request
 set serveroutput on;
 declare
    l_json_doc clob;

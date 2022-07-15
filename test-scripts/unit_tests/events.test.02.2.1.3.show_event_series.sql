@@ -2,7 +2,7 @@
 select
 *
 from
-events_report_api.show_event_series(61) 
+event_api.show_event_series(61) 
 order by event_date;
 
 select * from events e join venues v on e.venue_id = v.venue_id

@@ -13,14 +13,21 @@ begin
     l_reseller.reseller_email := 'ticket.sales@EasyTickets.com';
     l_reseller.commission_percent := 0.11;
 
-    reseller_api.create_reseller(
+    begin
+    
+        reseller_api.create_reseller(
         p_reseller_name => l_reseller.reseller_name,
         p_reseller_email => l_reseller.reseller_email,
         p_commission_percent => l_reseller.commission_percent,
         p_reseller_id => l_reseller.reseller_id);
     
-    dbms_output.put_line('reseller created with id = ' || l_reseller.reseller_id);
-
+        dbms_output.put_line('reseller created with id = ' || l_reseller.reseller_id);
+    
+    exception
+        when others then
+            dbms_output.put_line(sqlerrm);
+    end;
+    
 end;
 
 /*

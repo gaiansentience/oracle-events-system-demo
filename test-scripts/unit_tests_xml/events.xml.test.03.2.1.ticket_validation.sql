@@ -1,5 +1,6 @@
 set serveroutput on;
 declare
+    l_xml_template varchar2(4000);
     l_xml varchar2(4000);
     l_xml_doc xmltype;
     l_venue_id number;
@@ -23,7 +24,7 @@ order by et.ticket_sales_id, t.ticket_id
 fetch first 1 row only;
     
 
-l_xml :=
+l_xml_template :=
 '
 <ticket_validate>
     <event>
@@ -34,7 +35,7 @@ l_xml :=
     </ticket>
 </ticket_validate>
 ';
-l_xml := replace(l_xml, '$$EVENT$$', l_event_id);
+l_xml := replace(l_xml_template, '$$EVENT$$', l_event_id);
 l_xml := replace(l_xml, '$$SERIAL$$', l_serial_code);
 l_xml_doc := xmltype(l_xml);
 
@@ -43,18 +44,8 @@ l_xml_doc := xmltype(l_xml);
     commit;
     events_xml_api.ticket_validate(p_xml_doc => l_xml_doc);
     dbms_output.put_line(l_xml_doc.getclobval);
-l_xml :=
-'
-<ticket_validate>
-    <event>
-        <event_id>$$EVENT$$</event_id>        
-    </event>
-    <ticket>
-        <serial_code>$$SERIAL$$</serial_code>
-    </ticket>
-</ticket_validate>
-';
-l_xml := replace(l_xml, '$$EVENT$$', l_event_id);
+
+l_xml := replace(l_xml_template, '$$EVENT$$', l_event_id);
 l_xml := replace(l_xml, '$$SERIAL$$', l_serial_code);
 l_xml_doc := xmltype(l_xml);
 
@@ -63,18 +54,8 @@ l_xml_doc := xmltype(l_xml);
     commit;
     events_xml_api.ticket_validate(p_xml_doc => l_xml_doc);
     dbms_output.put_line(l_xml_doc.getclobval);
-l_xml :=
-'
-<ticket_validate>
-    <event>
-        <event_id>$$EVENT$$</event_id>        
-    </event>
-    <ticket>
-        <serial_code>$$SERIAL$$</serial_code>
-    </ticket>
-</ticket_validate>
-';
-l_xml := replace(l_xml, '$$EVENT$$', l_event_id);
+
+l_xml := replace(l_xml_template, '$$EVENT$$', l_event_id);
 l_xml := replace(l_xml, '$$SERIAL$$', l_serial_code);
 l_xml_doc := xmltype(l_xml);
     
@@ -82,18 +63,7 @@ l_xml_doc := xmltype(l_xml);
     events_xml_api.ticket_validate(p_xml_doc => l_xml_doc);
     dbms_output.put_line(l_xml_doc.getclobval);
 
-l_xml :=
-'
-<ticket_validate>
-    <event>
-        <event_id>$$EVENT$$</event_id>        
-    </event>
-    <ticket>
-        <serial_code>$$SERIAL$$</serial_code>
-    </ticket>
-</ticket_validate>
-';
-l_xml := replace(l_xml, '$$EVENT$$', l_event_id + 1);
+l_xml := replace(l_xml_template, '$$EVENT$$', l_event_id + 1);
 l_xml := replace(l_xml, '$$SERIAL$$', l_serial_code);
 l_xml_doc := xmltype(l_xml);
 
@@ -103,22 +73,9 @@ l_xml_doc := xmltype(l_xml);
     events_xml_api.ticket_validate(p_xml_doc => l_xml_doc);
     dbms_output.put_line(l_xml_doc.getclobval);
 
-
-l_xml :=
-'
-<ticket_validate>
-    <event>
-        <event_id>$$EVENT$$</event_id>        
-    </event>
-    <ticket>
-        <serial_code>$$SERIAL$$</serial_code>
-    </ticket>
-</ticket_validate>
-';
-l_xml := replace(l_xml, '$$EVENT$$', l_event_id);
+l_xml := replace(l_xml_template, '$$EVENT$$', l_event_id);
 l_xml := replace(l_xml, '$$SERIAL$$', l_serial_code || 'xxxxx');
 l_xml_doc := xmltype(l_xml);
-
 
     dbms_output.put_line('try to validate a ticket with an invalid serial number');
     events_xml_api.ticket_validate(p_xml_doc => l_xml_doc);

@@ -1,4 +1,4 @@
-create or replace package events_api 
+create or replace package event_api 
 authid current_user
 as 
             
@@ -104,4 +104,4 @@ as
         p_venue_id in number
     ) return t_event_info pipelined;
 
-end events_api;
+end event_api;

@@ -3,7 +3,7 @@
 select
 *
 from
-events_report_api.show_venue_reseller_commissions(1,3);
+venue_api.show_venue_reseller_commissions(1,3);
 
 select * from venues where venue_name = 'City Stadium';
 

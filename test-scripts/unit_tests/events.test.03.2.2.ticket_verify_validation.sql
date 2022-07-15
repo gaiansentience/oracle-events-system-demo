@@ -12,7 +12,7 @@ declare
     l_status varchar2(50);
 begin
     l_venue_id := venue_api.get_venue_id(p_venue_name => 'City Stadium');
-    l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'The New Toys');
+    l_event_id := event_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'The New Toys');
     l_customer_id := customer_api.get_customer_id(p_customer_email => l_customer_email);
 
 --get a specific ticket

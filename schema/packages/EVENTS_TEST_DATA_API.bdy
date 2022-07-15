@@ -443,9 +443,9 @@ as
         e_id number;
     begin
         for r in acts loop
-            events_api.create_event(r.venue_id, r.act_name, r.event_date, r.tickets_available, e_id);
+            event_setup_api.create_event(r.venue_id, r.act_name, r.event_date, r.tickets_available, e_id);
             if mod(e_id, 3) = 0 then
-                events_api.create_event(r.venue_id, r.act_name, r.event_date + 1, r.tickets_available, e_id);            
+                event_setup_api.create_event(r.venue_id, r.act_name, r.event_date + 1, r.tickets_available, e_id);            
             end if;
         end loop;
     end create_events;
@@ -466,9 +466,9 @@ as
     begin
     
         for r in small_venues loop
-            events_api.create_weekly_event(r.venue_id, 'Amateur Comedy Hour', v_start_date, v_end_date, 'Thursday',r.event_tickets,v_event_series_id,v_status);
-            events_api.create_weekly_event(r.venue_id, 'Poetry Night', v_start_date, v_end_date, 'Tuesday',r.event_tickets,v_event_series_id,v_status);
-            events_api.create_weekly_event(r.venue_id, 'Open Mike Night', v_start_date, v_end_date, 'Wednesday',r.event_tickets,v_event_series_id,v_status);
+            event_setup_api.create_weekly_event(r.venue_id, 'Amateur Comedy Hour', v_start_date, v_end_date, 'Thursday',r.event_tickets,v_event_series_id,v_status);
+            event_setup_api.create_weekly_event(r.venue_id, 'Poetry Night', v_start_date, v_end_date, 'Tuesday',r.event_tickets,v_event_series_id,v_status);
+            event_setup_api.create_weekly_event(r.venue_id, 'Open Mike Night', v_start_date, v_end_date, 'Wednesday',r.event_tickets,v_event_series_id,v_status);
         end loop;
     
     end create_weekly_events;
@@ -562,7 +562,7 @@ as
         for r in small_events loop
             v_ticket_groups := build_small_event(r.tickets_available);
             for g in 1..v_ticket_groups.count loop
-                events_api.create_ticket_group(
+                event_setup_api.create_ticket_group(
                     r.event_id, 
                     v_ticket_groups(g).price_category, 
                     v_ticket_groups(g).price, 
@@ -574,7 +574,7 @@ as
         for r in large_events loop
             v_ticket_groups := build_large_event(r.tickets_available);
             for g in 1..v_ticket_groups.count loop
-                events_api.create_ticket_group(
+                event_setup_api.create_ticket_group(
                     r.event_id, 
                     v_ticket_groups(g).price_category, 
                     v_ticket_groups(g).price, 
@@ -586,7 +586,7 @@ as
         for r in series_events loop
             v_ticket_groups := build_small_event(r.tickets_available);
             for g in 1..v_ticket_groups.count loop
-                events_api.create_ticket_group_event_series(
+                event_setup_api.create_ticket_group_event_series(
                     r.event_series_id, 
                     v_ticket_groups(g).price_category, 
                     v_ticket_groups(g).price, 
@@ -695,7 +695,7 @@ as
             for r in 1..v_resellers.count loop
                 factor_tickets(etg.tickets_available, v_tickets, v_tickets_remaining);
                 if v_tickets > 0 then
-                    events_api.create_ticket_assignment(v_resellers(r),etg.ticket_group_id, v_tickets, v_assignment_id); 
+                    event_setup_api.create_ticket_assignment(v_resellers(r),etg.ticket_group_id, v_tickets, v_assignment_id); 
                 end if;     
             end loop;
         end loop;
@@ -708,7 +708,7 @@ as
             for r in 1..v_resellers.count loop
                 factor_tickets(etg.tickets_available, v_tickets, v_tickets_remaining);
                 if v_tickets > 0 then
-                    events_api.create_ticket_assignment_event_series(
+                    event_setup_api.create_ticket_assignment_event_series(
                         etg.event_series_id, 
                         v_resellers(r),
                         etg.price_category, 

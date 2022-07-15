@@ -20,8 +20,7 @@ declare
 begin
 
     v_venue_id := venue_api.get_venue_id(p_venue_name => 'City Stadium');
-    v_event_series_id := events_api.get_event_series_id(p_venue_id => v_venue_id, p_event_name => 'Hometown Hockey League');
-
+    v_event_series_id := event_api.get_event_series_id(p_venue_id => v_venue_id, p_event_name => 'Hometown Hockey League');
     v_old_school_id := reseller_api.get_reseller_id(p_reseller_name => v_old_school);
     v_tickets_r_us_id := reseller_api.get_reseller_id(p_reseller_name => 'Tickets R Us');
     

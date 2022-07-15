@@ -18,9 +18,8 @@ declare
     type t_groups is table of r_group index by pls_integer;
     l_groups t_groups;
 begin
-
     l_venue_id := venue_api.get_venue_id(p_venue_name => 'City Stadium');
-    l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'The New Toys');
+    l_event_id := event_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'The New Toys');
 
     l_groups(1) := r_group(0,'BACKSTAGE',150,1000);
     l_groups(2) := r_group(0,'GENERAL ADMISSION', 42, 10000);
@@ -30,7 +29,7 @@ begin
     for i in 1..l_groups.count loop
         begin
         
-            events_api.create_ticket_group(
+            event_setup_api.create_ticket_group(
                 p_event_id => l_event_id,
                 p_price_category => l_groups(i).price_category,
                 p_price => l_groups(i).price,

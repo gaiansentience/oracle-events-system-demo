@@ -1,5 +1,6 @@
 set serveroutput on;
 declare
+    l_xml_template varchar2(4000);
     l_xml varchar2(4000);
     l_xml_doc xmltype;
     l_reseller_id number;
@@ -9,7 +10,7 @@ declare
 begin
     l_reseller_id := reseller_api.get_reseller_id(p_reseller_name => l_reseller_name);
 
-l_xml :=
+l_xml_template :=
 '
 <update_reseller>
   <reseller>
@@ -21,43 +22,25 @@ l_xml :=
 </update_reseller>
 ';
 
-    l_xml := replace(l_xml, '$$RESELLER_ID$$', l_reseller_id);
-    
     l_reseller_name := 'Old Wave Events';
     l_reseller_email := 'sales@OldWaveEvents.com';
-    l_commission := 0.0909;
+    l_commission := 0.0909;    
+    l_xml := replace(l_xml_template, '$$RESELLER_ID$$', l_reseller_id);
     l_xml := replace(l_xml, '$$RESELLER_NAME$$', l_reseller_name);
     l_xml := replace(l_xml, '$$RESELLER_EMAIL$$', l_reseller_email);
     l_xml := replace(l_xml, '$$COMMISSION$$', l_commission);
-    
     l_xml_doc := xmltype(l_xml);
-
     events_xml_api.update_reseller(p_xml_doc => l_xml_doc);
     dbms_output.put_line(l_xml_doc.getstringval);
 
-l_xml :=
-'
-<update_reseller>
-  <reseller>
-    <reseller_id>$$RESELLER_ID$$</reseller_id>
-    <reseller_name>$$RESELLER_NAME$$</reseller_name>
-    <reseller_email>$$RESELLER_EMAIL$$</reseller_email>
-    <commission_percent>$$COMMISSION$$</commission_percent>
-  </reseller>
-</update_reseller>
-';
-
-    l_xml := replace(l_xml, '$$RESELLER_ID$$', l_reseller_id);
-    
     l_reseller_name := 'New Wave Tickets';
     l_reseller_email := 'events@NewWaveTickets.com';
     l_commission := 0.1414;
+    l_xml := replace(l_xml_template, '$$RESELLER_ID$$', l_reseller_id);
     l_xml := replace(l_xml, '$$RESELLER_NAME$$', l_reseller_name);
     l_xml := replace(l_xml, '$$RESELLER_EMAIL$$', l_reseller_email);
     l_xml := replace(l_xml, '$$COMMISSION$$', l_commission);
-    
     l_xml_doc := xmltype(l_xml);
-
     events_xml_api.update_reseller(p_xml_doc => l_xml_doc);
     dbms_output.put_line(l_xml_doc.getstringval);
 

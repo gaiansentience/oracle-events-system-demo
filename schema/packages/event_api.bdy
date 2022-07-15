@@ -1,4 +1,4 @@
-create or replace package body events_api
+create or replace package body event_api
 as
 
     g_processing_event_series boolean := false;
@@ -23,7 +23,7 @@ as
         util_error_api.log_error(
             p_error_message => p_error_message, 
             p_error_code => p_error_code, 
-            p_locale => 'events_api.' || p_locale);
+            p_locale => 'event_api.' || p_locale);
    
     end log_error;
 
@@ -215,7 +215,7 @@ as
         rc sys_refcursor;
     begin
     
-        events_api.show_event(p_event_id, rc);
+        show_event(p_event_id, rc);
         fetch rc bulk collect into t_rows;
         close rc;
         
@@ -235,7 +235,7 @@ as
         rc sys_refcursor;
     begin
     
-        events_api.show_event_series(p_event_series_id, rc);
+        show_event_series(p_event_series_id, rc);
         fetch rc bulk collect into t_rows;
         close rc;
         
@@ -255,7 +255,7 @@ as
         rc sys_refcursor;
     begin
     
-        events_api.show_all_events(p_venue_id, rc);
+        show_all_events(p_venue_id, rc);
         fetch rc bulk collect into t_rows;
         close rc;
         
@@ -275,7 +275,7 @@ as
         rc sys_refcursor;
     begin
     
-        events_api.show_all_event_series(p_venue_id, rc);
+        show_all_event_series(p_venue_id, rc);
         fetch rc bulk collect into t_rows;
         close rc;
         
@@ -289,4 +289,4 @@ as
 --package initialization
 begin
     initialize;
-end events_api;
+end event_api;

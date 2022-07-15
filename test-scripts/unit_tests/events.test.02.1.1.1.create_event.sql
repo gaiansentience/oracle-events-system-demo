@@ -14,7 +14,7 @@ begin
     l_date := next_day(l_date,'Friday');
     l_venue_id := venue_api.get_venue_id(p_venue_name => 'City Stadium');
 
-    events_api.create_event(
+    event_setup_api.create_event(
         p_venue_id => l_venue_id,
         p_event_name => l_name,
         p_event_date => l_date,

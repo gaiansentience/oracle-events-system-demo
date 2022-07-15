@@ -1,13 +1,28 @@
+--use test for get_tickets_available_all or get_tickets_available_reseller to get ticket_group_id values for request
 set serveroutput on;
 declare
+    l_event_name events.event_name%type := 'New Years Mischief';
+    l_event_id number;
+    l_venue_name venues.venue_name%type := 'Another Roadside Attraction';
+    l_venue_id number;
     l_customer_id number;
-l_jdoc varchar2(4000) :=
+    l_customer_email customers.customer_email%type := 'John.Kirby@example.customer.com';
+    l_jdoc varchar2(4000);
+begin
+    l_venue_id := venue_api.get_venue_id(p_venue_name => l_venue_name);
+    l_event_id := event_api.get_event_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
+    l_customer_id := customer_api.get_customer_id(p_customer_email => l_customer_email);
+
+    delete from tickets t where t.ticket_sales_id in (select ts.ticket_sales_id from ticket_sales ts where ts.customer_id = l_customer_id);
+    delete from ticket_sales ts where ts.customer_id = l_customer_id;
+    commit;
+
+l_jdoc :=
 '
 {
-  "event_id" : 581,
-  "event_name" : "New Years Mischief",
-  "customer_name" : "John Kirby",
-  "customer_email" : "John.Kirby@example.customer.com",
+  "event_id" : $$EVENT_ID$$,
+  "event_name" : "$$EVENT_NAME$$",
+  "customer_email" : "$$CUSTOMER_EMAIL$$",
   "ticket_groups" :
   [
     {
@@ -26,13 +41,9 @@ l_jdoc varchar2(4000) :=
 }
 ';
 
-begin
-
-    l_customer_id := customer_api.get_customer_id(p_customer_email => 'John.Kirby@example.customer.com');
-    
-    delete from tickets t where t.ticket_sales_id in (select ts.ticket_sales_id from ticket_sales ts where ts.customer_id = l_customer_id);
-    delete from ticket_sales ts where ts.customer_id = l_customer_id;
-    commit;
+    l_jdoc := replace(l_jdoc, '$$EVENT_ID$$', l_event_id);
+    l_jdoc := replace(l_jdoc, '$$EVENT_NAME$$', l_event_name);
+    l_jdoc := replace(l_jdoc, '$$CUSTOMER_EMAIL$$', l_customer_email);
 
     events_json_api.purchase_tickets_venue(l_jdoc);
     l_jdoc := events_json_api.format_json_clob(l_jdoc);
@@ -45,7 +56,6 @@ end;
 {
   "event_id" : 581,
   "event_name" : "New Years Mischief",
-  "customer_name" : "John Kirby",
   "customer_email" : "John.Kirby@example.customer.com",
   "ticket_groups" :
   [

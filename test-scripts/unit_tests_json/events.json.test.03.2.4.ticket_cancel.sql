@@ -1,16 +1,19 @@
 set serveroutput on;
 declare
+    l_json_template varchar2(4000);
     l_json_doc varchar2(4000);
     l_venue_id number;
+    l_venue_name venues.venue_name%type := 'Another Roadside Attraction';
     l_event_id number;    
+    l_event_name events.event_name%type := 'New Years Mischief';
     l_customer_email varchar2(50) := 'Maggie.Wayland@example.customer.com';
     l_customer_id number;    
     l_serial_code varchar2(100);
 begin
-
-    l_venue_id := venue_api.get_venue_id(p_venue_name => 'Another Roadside Attraction');
-    l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'New Years Mischief');
+    l_venue_id := venue_api.get_venue_id(p_venue_name => l_venue_name);
+    l_event_id := event_api.get_event_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
     l_customer_id := customer_api.get_customer_id(p_customer_email => l_customer_email);
+    
 --get a specific ticket
 select t.serial_code
 into l_serial_code
@@ -21,7 +24,7 @@ where et.customer_id = l_customer_id and et.event_id = l_event_id
 order by et.ticket_sales_id, t.ticket_id
 fetch first 1 row only;
 
-l_json_doc := 
+l_json_template := 
 '
 {
     "action" : "ticket-cancel",
@@ -29,9 +32,10 @@ l_json_doc :=
     "serial_code" : "$$SERIAL$$"
 }    
 ';
-l_json_doc := replace(l_json_doc, '$$EVENT$$', l_event_id);
-l_json_doc := replace(l_json_doc, '$$SERIAL$$', l_serial_code);
 
+
+l_json_doc := replace(l_json_template, '$$EVENT$$', l_event_id);
+l_json_doc := replace(l_json_doc, '$$SERIAL$$', l_serial_code);
 
     --set the ticket to ISSUED
     update tickets t set t.status = 'ISSUED' where t.serial_code = upper(l_serial_code);
@@ -51,30 +55,16 @@ l_json_doc := replace(l_json_doc, '$$SERIAL$$', l_serial_code);
     update tickets t set t.status = 'ISSUED' where t.serial_code = upper(l_serial_code);
     commit;
 
-l_json_doc := 
-'
-{
-    "action" : "ticket-cancel",
-    "event_id" : $$EVENT$$,
-    "serial_code" : "$$SERIAL$$"
-}    
-';
-l_json_doc := replace(l_json_doc, '$$EVENT$$', l_event_id + 1);
+
+l_json_doc := replace(l_json_template, '$$EVENT$$', l_event_id + 1);
 l_json_doc := replace(l_json_doc, '$$SERIAL$$', l_serial_code);
 
     dbms_output.put_line('try to cancel a ticket from a different event');
     events_json_api.ticket_cancel(p_json_doc => l_json_doc);
     dbms_output.put_line(events_json_api.format_json_string(l_json_doc));
 
-l_json_doc := 
-'
-{
-    "action" : "ticket-cancel",
-    "event_id" : $$EVENT$$,
-    "serial_code" : "$$SERIAL$$"
-}    
-';
-l_json_doc := replace(l_json_doc, '$$EVENT$$', l_event_id);
+
+l_json_doc := replace(l_json_template, '$$EVENT$$', l_event_id);
 l_json_doc := replace(l_json_doc, '$$SERIAL$$', l_serial_code || 'xxxxx');
 
     dbms_output.put_line('try to cancel a ticket with an invalid serial code');

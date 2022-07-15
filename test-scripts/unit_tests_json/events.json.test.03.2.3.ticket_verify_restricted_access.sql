@@ -1,5 +1,6 @@
 set serveroutput on;
 declare
+    l_json_template varchar2(4000);
     l_json_doc varchar2(4000);
     l_venue_id number;
     l_event_id number;    
@@ -13,7 +14,7 @@ declare
 begin
 
     l_venue_id := venue_api.get_venue_id(p_venue_name => 'Another Roadside Attraction');
-    l_event_id := events_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'New Years Mischief');
+    l_event_id := event_api.get_event_id(p_venue_id => l_venue_id, p_event_name => 'New Years Mischief');
     l_customer_id := customer_api.get_customer_id(p_customer_email => l_customer_email);
     
 --get a specific ticket
@@ -26,7 +27,7 @@ where et.customer_id = l_customer_id and et.event_id = l_event_id
 order by et.ticket_sales_id, t.ticket_id
 fetch first 1 row only;
 
-l_json_doc := 
+l_json_template := 
 '
 {
     "action" : "ticket-verify-restricted-access",
@@ -35,7 +36,8 @@ l_json_doc :=
     "serial_code" : "$$SERIAL$$"
 }        
 ';
-l_json_doc := replace(l_json_doc, '$$GROUP$$', l_ticket_group_id);
+
+l_json_doc := replace(l_json_template, '$$GROUP$$', l_ticket_group_id);
 l_json_doc := replace(l_json_doc, '$$CATEGORY$$', l_price_category);
 l_json_doc := replace(l_json_doc, '$$SERIAL$$', l_serial_code);
 
@@ -51,16 +53,8 @@ l_json_doc := replace(l_json_doc, '$$SERIAL$$', l_serial_code);
     events_json_api.ticket_verify_restricted_access(p_json_doc => l_json_doc);
     dbms_output.put_line(events_json_api.format_json_string(l_json_doc));
 
-l_json_doc := 
-'
-{
-    "action" : "ticket-verify-restricted-access",
-    "ticket_group_id" : $$GROUP$$,
-    "price_category" : "$$CATEGORY$$",
-    "serial_code" : "$$SERIAL$$"
-}        
-';
-l_json_doc := replace(l_json_doc, '$$GROUP$$', l_ticket_group_id);
+
+l_json_doc := replace(l_json_template, '$$GROUP$$', l_ticket_group_id);
 l_json_doc := replace(l_json_doc, '$$CATEGORY$$', l_price_category);
 l_json_doc := replace(l_json_doc, '$$SERIAL$$', l_serial_code || 'xxxx');
 
@@ -74,16 +68,8 @@ l_json_doc := replace(l_json_doc, '$$SERIAL$$', l_serial_code || 'xxxx');
     from ticket_groups tg where tg.event_id = l_event_id and tg.ticket_group_id <> l_ticket_group_id
     fetch first 1 row only;
 
-l_json_doc := 
-'
-{
-    "action" : "ticket-verify-restricted-access",
-    "ticket_group_id" : $$GROUP$$,
-    "price_category" : "$$CATEGORY$$",
-    "serial_code" : "$$SERIAL$$"
-}        
-';
-l_json_doc := replace(l_json_doc, '$$GROUP$$', l_other_ticket_group_id);
+
+l_json_doc := replace(l_json_template, '$$GROUP$$', l_other_ticket_group_id);
 l_json_doc := replace(l_json_doc, '$$CATEGORY$$', l_other_price_category);
 l_json_doc := replace(l_json_doc, '$$SERIAL$$', l_serial_code);
 

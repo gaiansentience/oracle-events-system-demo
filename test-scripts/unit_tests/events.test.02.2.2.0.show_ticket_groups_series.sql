@@ -10,7 +10,7 @@
 select
 *
 from
-events_report_api.show_ticket_groups_event_series(61);
+event_setup_api.show_ticket_groups_event_series(61);
 
 select max(e.event_series_id) from events e join venues v on e.venue_id = v.venue_id
 where v.venue_name = 'City Stadium' and e.event_series_id is not null and e.event_name = 'Hometown Hockey League';

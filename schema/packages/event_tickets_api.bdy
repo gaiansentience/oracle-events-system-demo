@@ -17,7 +17,7 @@ as
     begin
     
         --route to error api package
-        error_api.log_error(
+        util_error_api.log_error(
             p_error_message => p_error_message, 
             p_error_code => p_error_code, 
             p_locale => 'event_tickets_api.' || p_locale);
@@ -380,8 +380,8 @@ as
                 when l_status <> c_ticket_status_validated then
                     raise_application_error(-20100, 'Ticket has not been validated for event entry, cannot verify access for status ' || l_status);
                 when l_ticket_group_id <> p_ticket_group_id then
-                    l_ticket_price_category := events_api.get_ticket_group_category(p_ticket_group_id => l_ticket_group_id);
-                    l_price_category := events_api.get_ticket_group_category(p_ticket_group_id => p_ticket_group_id);
+                    l_ticket_price_category := event_setup_api.get_ticket_group_category(p_ticket_group_id => l_ticket_group_id);
+                    l_price_category := event_setup_api.get_ticket_group_category(p_ticket_group_id => p_ticket_group_id);
                     raise_application_error(-20100, 'Ticket is for ' || l_ticket_price_category || ', ticket not valid for ' || l_price_category);
                 else
                     raise_application_error(-20100, 'An unexpected error has occurred, cannot verify access');

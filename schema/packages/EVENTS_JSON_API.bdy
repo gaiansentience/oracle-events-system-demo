@@ -49,6 +49,13 @@ as
         l_json varchar2(4000);
     begin
     
+        --write the error message to the logs
+        util_error_api.log_error(
+            p_error_message => p_error_message, 
+            p_error_code => p_error_code, 
+            p_locale => 'events_json_api.' || p_json_method);
+    
+    
         o_error.put('json_method', p_json_method);
         o_error.put('error_code', p_error_code);
         o_error.put('error_message', p_error_message);
@@ -563,7 +570,7 @@ as
                 l_status_message := 'Missing event capacity, cannot create event';      
             else
                 begin
-                    events_api.create_event(r_event.venue_id, r_event.event_name, r_event.event_date, r_event.tickets_available, r_event.event_id);
+                    event_setup_api.create_event(r_event.venue_id, r_event.event_name, r_event.event_date, r_event.tickets_available, r_event.event_id);
                     l_status_code := 'SUCCESS';
                     l_status_message := 'Created event';
                 exception
@@ -601,7 +608,7 @@ as
         o_event json_object_t;
         
         l_event_series_id number;        
-        t_status_details events_api.t_series_event;
+        t_status_details event_setup_api.t_series_event;
         l_status_code varchar2(20);
         l_status_message varchar2(4000);
     begin
@@ -615,7 +622,7 @@ as
         l_event_day := o_request.get_string('event_day');
         l_tickets_available := o_request.get_number('tickets_available');
         
-        events_api.create_weekly_event(
+        event_setup_api.create_weekly_event(
             p_venue_id => l_venue_id,   
             p_event_name => l_event_name,
             p_event_start_date => l_event_start_date,
@@ -671,7 +678,7 @@ as
 
         begin
         
-            events_api.update_event
+            event_setup_api.update_event
                 (p_event_id => l_event_id,
                 p_event_name => l_event_name,
                 p_event_date => l_event_date,
@@ -715,7 +722,7 @@ as
 
         begin
         
-            events_api.update_event_series(
+            event_setup_api.update_event_series(
                 p_event_series_id => l_event_series_id,
                 p_event_name => l_event_name,
                 p_tickets_available => l_tickets_available);
@@ -936,7 +943,7 @@ as
                 else
                     begin   
                     
-                        events_api.create_ticket_group(
+                        event_setup_api.create_ticket_group(
                             p_event_id => r_group.event_id, 
                             p_price_category => r_group.price_category, 
                             p_price => r_group.price, 
@@ -1018,7 +1025,7 @@ as
                 else
                     begin
                     
-                        events_api.create_ticket_group_event_series(
+                        event_setup_api.create_ticket_group_event_series(
                             p_event_series_id => l_event_series_id, 
                             p_price_category => r_group.price_category, 
                             p_price => r_group.price, 
@@ -1165,7 +1172,7 @@ as
                 r_assignment.ticket_assignment_id := 0;
                 
                 begin
-                    events_api.create_ticket_assignment(
+                    event_setup_api.create_ticket_assignment(
                         p_reseller_id => r_assignment.reseller_id,
                         p_ticket_group_id => r_assignment.ticket_group_id,
                         p_number_tickets => r_assignment.tickets_assigned,
@@ -1262,7 +1269,7 @@ as
                 l_tickets_assigned := o_group.get_number('tickets_assigned');
                 
                 begin
-                    events_api.create_ticket_assignment_event_series(
+                    event_setup_api.create_ticket_assignment_event_series(
                         p_event_series_id => l_event_series_id,
                         p_reseller_id => l_reseller_id,
                         p_price_category => l_price_category,
@@ -1594,7 +1601,7 @@ as
             o_group := json_object_t(a_groups.get(group_index));
 
             l_purchase.ticket_group_id := o_group.get_number('ticket_group_id');
-            l_purchase.price_category := events_api.get_ticket_group_category(l_purchase.ticket_group_id);    
+            l_purchase.price_category := event_setup_api.get_ticket_group_category(l_purchase.ticket_group_id);    
             o_group.put('price_category', l_purchase.price_category);
             l_purchase.tickets_requested := o_group.get_number('tickets_requested');
             l_purchase.price_requested := o_group.get_number('price');
@@ -1658,7 +1665,7 @@ as
             o_group := json_object_t(a_groups.get(group_index));
         
             l_purchase.ticket_group_id := o_group.get_number('ticket_group_id');
-            l_purchase.price_category := events_api.get_ticket_group_category(l_purchase.ticket_group_id);    
+            l_purchase.price_category := event_setup_api.get_ticket_group_category(l_purchase.ticket_group_id);    
             o_group.put('price_category', l_purchase.price_category);
             l_purchase.tickets_requested := o_group.get_number('tickets_requested');
             l_purchase.price_requested := o_group.get_number('price');
