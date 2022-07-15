@@ -752,7 +752,7 @@ as
                     begin
                         if r.reseller_id is not null then
                         
-                            events_api.purchase_tickets_reseller(
+                            event_sales_api.purchase_tickets_reseller(
                                 p_reseller_id => r.reseller_id,
                                 p_ticket_group_id => r.ticket_group_id,
                                 p_customer_id => v_customers(c).customer_id,
@@ -764,7 +764,7 @@ as
                         
                         else
                         
-                            events_api.purchase_tickets_venue(
+                            event_sales_api.purchase_tickets_venue(
                                 p_ticket_group_id => r.ticket_group_id,
                                 p_customer_id => v_customers(c).customer_id,
                                 p_number_tickets => v_customers(c).number_tickets,
@@ -817,7 +817,7 @@ as
                     begin
                         if r.reseller_id is not null then
 
-                            events_api.purchase_tickets_reseller_series(
+                            event_sales_api.purchase_tickets_reseller_series(
                                 p_reseller_id => r.reseller_id,
                                 p_event_series_id => p_event_series_id,
                                 p_price_category => r.price_category,
@@ -832,7 +832,7 @@ as
                                                 
                         else
 
-                            events_api.purchase_tickets_venue_series(
+                            event_sales_api.purchase_tickets_venue_series(
                                 p_event_series_id => p_event_series_id,
                                 p_price_category => r.price_category,
                                 p_customer_id => v_customers(c).customer_id,

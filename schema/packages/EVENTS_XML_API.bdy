@@ -1613,7 +1613,7 @@ as
     procedure purchase_update_group
     (
         nGroup in out nocopy dbms_xmldom.DOMnode,
-        p_purchase in events_api.r_purchase,
+        p_purchase in event_sales_api.r_purchase,
         p_is_series in boolean
 
     )
@@ -1657,7 +1657,7 @@ as
         p_xml_doc in out nocopy xmltype
     )
     is
-        l_purchase events_api.r_purchase;
+        l_purchase event_sales_api.r_purchase;
         l_total_error_count number := 0;
         l_total_tickets_requested number := 0;
         l_total_tickets_purchased number := 0;
@@ -1688,7 +1688,7 @@ as
 
             begin
             
-                events_api.purchase_tickets_reseller(p_purchase => l_purchase);
+                event_sales_api.purchase_tickets_reseller(p_purchase => l_purchase);
  
                 l_total_tickets_purchased := l_total_tickets_purchased + l_purchase.tickets_purchased;
                 l_total_purchase_amount := l_total_purchase_amount + l_purchase.purchase_amount;
@@ -1724,7 +1724,7 @@ as
         p_xml_doc in out nocopy xmltype
     )
     is
-        l_purchase events_api.r_purchase;
+        l_purchase event_sales_api.r_purchase;
         l_total_error_count number := 0;
         l_total_tickets_requested number := 0;
         l_total_tickets_purchased number := 0;
@@ -1754,7 +1754,7 @@ as
                         
             begin
             
-                events_api.purchase_tickets_venue(p_purchase => l_purchase);
+                event_sales_api.purchase_tickets_venue(p_purchase => l_purchase);
                                     
                 l_total_tickets_purchased := l_total_tickets_purchased + l_purchase.tickets_purchased;
                 l_total_purchase_amount := l_total_purchase_amount + l_purchase.purchase_amount;
@@ -1789,7 +1789,7 @@ as
         p_xml_doc in out nocopy xmltype
     )
     is
-        l_purchase events_api.r_purchase;
+        l_purchase event_sales_api.r_purchase;
         l_total_error_count number := 0;
         l_total_tickets_requested number := 0;
         l_total_tickets_purchased number := 0;
@@ -1817,7 +1817,7 @@ as
                 
             begin
             
-                events_api.purchase_tickets_reseller_series(p_purchase => l_purchase);
+                event_sales_api.purchase_tickets_reseller_series(p_purchase => l_purchase);
                     
                 l_total_tickets_purchased := l_total_tickets_purchased + l_purchase.tickets_purchased;
                 l_total_purchase_amount := l_total_purchase_amount + l_purchase.purchase_amount;
@@ -1853,7 +1853,7 @@ as
         p_xml_doc in out nocopy xmltype
     )
     is
-        l_purchase events_api.r_purchase;
+        l_purchase event_sales_api.r_purchase;
         l_total_error_count number := 0;
         l_total_tickets_requested number := 0;
         l_total_tickets_purchased number := 0;
@@ -1880,7 +1880,7 @@ as
         
             begin
             
-                events_api.purchase_tickets_venue_series(p_purchase => l_purchase);
+                event_sales_api.purchase_tickets_venue_series(p_purchase => l_purchase);
                                     
                 l_total_tickets_purchased := l_total_tickets_purchased + l_purchase.tickets_purchased;
                 l_total_purchase_amount := l_total_purchase_amount + l_purchase.purchase_amount;

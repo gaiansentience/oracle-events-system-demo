@@ -59,7 +59,7 @@ for i in 1..l_purchases.count loop
 
     begin
     
-        events_api.purchase_tickets_venue(
+        event_sales_api.purchase_tickets_venue(
             p_ticket_group_id => l_purchases(i).ticket_group_id,
             p_customer_id => l_purchases(i).customer_id,
             p_number_tickets => l_purchases(i).quantity,

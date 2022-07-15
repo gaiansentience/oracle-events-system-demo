@@ -46,7 +46,7 @@ for i in 1..l_purchases.count loop
 
     begin
     
-        events_api.purchase_tickets_reseller(
+        event_sales_api.purchase_tickets_reseller(
             p_reseller_id => l_reseller_id,
             p_ticket_group_id => l_purchases(i).ticket_group_id,
             p_customer_id => l_purchases(i).customer_id,
