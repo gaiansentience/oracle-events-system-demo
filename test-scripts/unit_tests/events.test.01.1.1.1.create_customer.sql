@@ -9,7 +9,7 @@ begin
     l_customer.customer_name := 'Julius Irving';
     l_customer.customer_email := 'Julius.Irving@example.customer.com';
     
-    event_system.events_api.create_customer(
+    customer_api.create_customer(
         p_customer_name => l_customer.customer_name,
         p_customer_email => l_customer.customer_email,
         p_customer_id => l_customer.customer_id);

@@ -43,15 +43,13 @@ l_purchases(3).quantity := 5;
 
 for i in 1..l_purchases.count loop
 
-    l_purchases(i).customer_id := events_api.get_customer_id(p_customer_email => l_purchases(i).email);
+    l_purchases(i).customer_id := customer_api.get_customer_id(p_customer_email => l_purchases(i).email);
 
     select e.price 
     into l_purchases(i).price 
     from event_series_ticket_prices_v e
     where e.event_series_id = l_event_series_id and e.price_category = l_purchases(i).price_category;
-end loop;
 
-for i in 1..l_purchases.count loop
 
     begin
     

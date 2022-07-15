@@ -40,15 +40,13 @@ l_purchases(3).quantity := 11;
 
 for i in 1..l_purchases.count loop
 
-    l_purchases(i).customer_id := events_api.get_customer_id(p_customer_email => l_purchases(i).email);
+    l_purchases(i).customer_id := customer_api.get_customer_id(p_customer_email => l_purchases(i).email);
 
     select e.ticket_group_id, e.price 
     into l_purchases(i).ticket_group_id, l_purchases(i).price 
     from event_ticket_prices_v e
     where e.event_id = l_event_id and e.price_category = l_purchases(i).price_category;
-end loop;
 
-for i in 1..l_purchases.count loop
     begin
     
         events_api.purchase_tickets_venue(
@@ -66,6 +64,7 @@ for i in 1..l_purchases.count loop
         when others then
             dbms_output.put_line(sqlerrm);
     end;
+    
 end loop;
 
 

@@ -2,36 +2,6 @@ create or replace package events_api
 authid current_user
 as 
 
-----customer api----------------------begin
-
-
-    function get_customer_id
-    (
-        p_customer_email in varchar2
-    ) return number;
-    
-    procedure create_customer
-    (
-        p_customer_name in varchar2,
-        p_customer_email in varchar2,
-        p_customer_id out number
-    );   
-    
-    procedure update_customer
-    (
-        p_customer_id in number,
-        p_customer_name in varchar2,
-        p_customer_email in varchar2
-    );
-    
-    procedure show_customer
-    (
-        p_customer_id in number,
-        p_info out sys_refcursor
-    );
-
-----customer api----------------------end
-
 ----reseller api----------------------begin
 
     function get_reseller_id

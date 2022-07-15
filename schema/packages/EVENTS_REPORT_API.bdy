@@ -1,6 +1,6 @@
 create or replace package body events_report_api
 as
-
+/*
     function show_customer
     (
         p_customer_id in customers.customer_id%type
@@ -20,6 +20,7 @@ as
         return;
     
     end show_customer;
+*/
 
     function show_reseller
     (

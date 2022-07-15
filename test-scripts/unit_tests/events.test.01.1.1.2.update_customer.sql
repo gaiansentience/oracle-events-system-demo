@@ -14,7 +14,7 @@ begin
     from customers c 
     where c.customer_email = l_customer.customer_email;    
     
-    event_system.events_api.update_customer(
+    customer_api.update_customer(
         p_customer_id => l_customer.customer_id,
         p_customer_name => l_customer.customer_name,
         p_customer_email => l_customer.customer_email);

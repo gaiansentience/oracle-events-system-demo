@@ -4,6 +4,7 @@ as
 --expose ref cursor procedures from events_api.[show]xxx procedures
 --use pipelined table functions to support applications that cannot use ref cursors
 
+/*
     type r_customer_info is record
     (
         customer_id     customers.customer_id%type
@@ -17,6 +18,8 @@ as
     (
         p_customer_id in customers.customer_id%type
     ) return t_customer_info pipelined;
+*/
+
 
     type r_reseller_info is record
     (
@@ -25,6 +28,7 @@ as
         ,reseller_email     resellers.reseller_email%type
         ,commission_percent resellers.commission_percent%type
     );
+
     type t_reseller_info is table of r_reseller_info;
 
     function show_reseller

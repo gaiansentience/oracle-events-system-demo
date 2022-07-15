@@ -40,25 +40,31 @@ l_purchases(3).quantity := 11;
 
 for i in 1..l_purchases.count loop
 
-    l_purchases(i).customer_id := events_api.get_customer_id(p_customer_email => l_purchases(i).email);
+    l_purchases(i).customer_id := customer_api.get_customer_id(p_customer_email => l_purchases(i).email);
 
     select e.ticket_group_id, e.price 
     into l_purchases(i).ticket_group_id, l_purchases(i).price 
     from event_ticket_prices_v e
     where e.event_id = l_event_id and e.price_category = l_purchases(i).price_category;
-end loop;
 
-for i in 1..l_purchases.count loop
-events_api.purchase_tickets_venue(
-   p_ticket_group_id => l_purchases(i).ticket_group_id,
-   p_customer_id => l_purchases(i).customer_id,
-   p_number_tickets => l_purchases(i).quantity,
-   p_requested_price => l_purchases(i).price,
-   p_actual_price => l_purchases(i).actual_price,
-   p_extended_price => l_purchases(i).extended_price,
-   p_ticket_sales_id => l_purchases(i).ticket_sales_id);
+    begin
+    
+        events_api.purchase_tickets_venue(
+            p_ticket_group_id => l_purchases(i).ticket_group_id,
+            p_customer_id => l_purchases(i).customer_id,
+            p_number_tickets => l_purchases(i).quantity,
+            p_requested_price => l_purchases(i).price,
+            p_actual_price => l_purchases(i).actual_price,
+            p_extended_price => l_purchases(i).extended_price,
+            p_ticket_sales_id => l_purchases(i).ticket_sales_id);
    
-   dbms_output.put_line(l_purchases(i).quantity || ' ' || l_purchases(i).price_category || ' tickets purchased, extended price = ' || l_purchases(i).extended_price || ', sale id = ' || l_purchases(i).ticket_sales_id); 
+    dbms_output.put_line(l_purchases(i).quantity || ' ' || l_purchases(i).price_category || ' tickets purchased, extended price = ' || l_purchases(i).extended_price || ', sale id = ' || l_purchases(i).ticket_sales_id); 
+
+    exception
+        when other then
+            dbms_output.put_line(sqlerrm);
+    end;
+    
 end loop;
 
 end;

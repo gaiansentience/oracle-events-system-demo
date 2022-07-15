@@ -89,7 +89,7 @@ as
         
         begin                  
         
-            events_api.create_customer(
+            customer_api.create_customer(
                 p_customer_name => r_customer.customer_name, 
                 p_customer_email => r_customer.customer_email, 
                 p_customer_id => r_customer.customer_id);
@@ -129,7 +129,7 @@ as
         
         begin                  
         
-            events_api.update_customer(
+            customer_api.update_customer(
                 p_customer_id => r_customer.customer_id,
                 p_customer_name => r_customer.customer_name, 
                 p_customer_email => r_customer.customer_email);
@@ -185,7 +185,8 @@ as
         l_customer_id customers.customer_id%type;
     begin
     
-        l_customer_id := events_api.get_customer_id(p_customer_email => p_customer_email);
+        l_customer_id := customer_api.get_customer_id(p_customer_email => p_customer_email);
+        
         return get_customer(p_customer_id => l_customer_id, p_formatted => p_formatted);
     
     exception
@@ -1506,13 +1507,13 @@ as
         r_customer.customer_name := o_request.get_string('customer_name');
         --validate customer by email, set v_customer_id if found, else create  
         
-        p_customer_id := events_api.get_customer_id(r_customer.customer_email);
+        p_customer_id := customer_api.get_customer_id(r_customer.customer_email);
         if p_customer_id = 0 then
             --need to create customer, if name was not specified use email for name
             if r_customer.customer_name is null then
                 r_customer.customer_name := r_customer.customer_email;
             end if;
-            events_api.create_customer(
+            customer_api.create_customer(
                 p_customer_name => r_customer.customer_name,
                 p_customer_email => r_customer.customer_email,
                 p_customer_id => p_customer_id);
@@ -1858,7 +1859,7 @@ as
         l_json clob;   
     begin
        
-        l_customer_id := events_api.get_customer_id(p_customer_email);
+        l_customer_id := customer_api.get_customer_id(p_customer_email);
         
         return get_customer_event_tickets(l_customer_id, p_event_id, p_formatted);
               
@@ -1907,7 +1908,7 @@ as
         l_json clob;   
     begin
        
-        l_customer_id := events_api.get_customer_id(p_customer_email);
+        l_customer_id := customer_api.get_customer_id(p_customer_email);
         
         return get_customer_event_series_tickets(l_customer_id, p_event_series_id, p_formatted);
               

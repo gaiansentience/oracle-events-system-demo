@@ -7,7 +7,7 @@ begin
 
     l_customer.customer_email := 'Julius.Irving@example.customer.com';
     
-    l_customer.customer_id := events_api.get_customer_id(p_customer_email => l_customer.customer_email);
+    l_customer.customer_id := customer_api.get_customer_id(p_customer_email => l_customer.customer_email);
         
     dbms_output.put_line('customer found with id = ' || l_customer.customer_id);
 
