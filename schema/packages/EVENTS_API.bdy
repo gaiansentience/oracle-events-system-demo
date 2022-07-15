@@ -28,9 +28,12 @@ as
         error_api.log_error(
             p_error_message => p_error_message, 
             p_error_code => p_error_code, 
-            p_locale => 'EVENTS_API.' || p_locale);
+            p_locale => 'events_api.' || p_locale);
    
     end log_error;
+
+
+----customer api----------------------begin
 
     function get_customer_id
     (
@@ -163,6 +166,11 @@ as
         where c.customer_id = p_customer_id;
         
     end show_customer;
+
+----customer api----------------------end
+
+----reseller api----------------------begin
+
 
     function get_reseller_id
     (
@@ -311,6 +319,11 @@ as
         order by r.reseller_name;
     
     end show_all_resellers;
+
+----reseller api----------------------end
+
+----venue api-------------------------begin
+
 
     function get_venue_id
     (
@@ -616,6 +629,10 @@ as
             rc.event_name;
     
     end show_venue_reseller_commissions;
+
+----venue api-------------------------end
+
+----event setup api-------------------begin
 
     function get_event_id
     (
@@ -1968,6 +1985,12 @@ as
             log_error(sqlerrm, sqlcode, 'create_ticket_assignment_event_series');
             raise;    
     end create_ticket_assignment_event_series;
+
+
+----event setup api-------------------end
+
+----event sales api-------------------begin
+
     
     procedure show_event_ticket_prices
     (
@@ -2952,6 +2975,13 @@ as
     end show_customer_event_series_tickets_by_email;
     
     --add methods to print_tickets by ticket_sales_id
+    
+    
+----event sales api-------------------end
+
+
+----event manage api------------------begin
+    
     
     
     function get_ticket_status

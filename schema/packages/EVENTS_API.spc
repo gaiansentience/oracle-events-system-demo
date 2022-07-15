@@ -2,6 +2,9 @@ create or replace package events_api
 authid current_user
 as 
 
+----customer api----------------------begin
+
+
     function get_customer_id
     (
         p_customer_email in varchar2
@@ -27,11 +30,15 @@ as
         p_info out sys_refcursor
     );
 
+----customer api----------------------end
+
+----reseller api----------------------begin
+
     function get_reseller_id
     (
         p_reseller_name in varchar2
     ) return number;
-      
+            
     procedure create_reseller
     (
         p_reseller_name in varchar2,
@@ -58,6 +65,11 @@ as
     (
         p_resellers out sys_refcursor
     );
+
+----reseller api----------------------end
+
+
+----venue api-------------------------begin
 
     function get_venue_id
     (
@@ -103,7 +115,7 @@ as
     (
         p_venues out sys_refcursor
     );
-                
+                                
     --show ticket sales and ticket quantity for each reseller
     --rank resellers by total sales amount
     procedure show_venue_reseller_performance
@@ -129,6 +141,10 @@ as
         --?   p_event_id in number default null,
         p_commissions out sys_refcursor
     );
+            
+----venue api-------------------------end
+            
+----event setup api-------------------begin
             
     function get_event_id
     (
@@ -330,6 +346,10 @@ as
         p_status_message out varchar2
     );
 
+----event setup api-------------------end
+
+----event sales api-------------------begin
+
     --show pricing and availability for tickets created for the event
     procedure show_event_ticket_prices
     (
@@ -516,6 +536,15 @@ as
         p_event_series_id in number,
         p_tickets out sys_refcursor
     );
+
+----print serialized tickets
+
+----event sales api-------------------end
+
+
+----event manage api------------------begin
+
+
       
     function get_ticket_status
     (
@@ -558,6 +587,7 @@ as
     (
         p_tickets in out t_ticket_reissues
     );
+
 
     --validate that the ticket has been used for event entry
     --raise error if ticket was sold for a different event
