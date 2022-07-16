@@ -1826,7 +1826,7 @@ as
     
 --get customer tickets purchased for event
 --used to verify customer purchases
-    function get_customer_event_tickets
+    function get_customer_event_purchases
     (
         p_customer_id in number,
         p_event_id in number,
@@ -1838,7 +1838,7 @@ as
     
         select b.json_doc
         into l_json
-        from customer_event_tickets_v_json b
+        from customer_event_purchase_v_json b
         where 
             b.event_id = p_event_id 
             and b.customer_id = p_customer_id;
@@ -1850,12 +1850,12 @@ as
     
     exception
         when others then
-            return get_json_error_doc(sqlcode, sqlerrm, 'get_customer_event_tickets');
-    end get_customer_event_tickets;
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_customer_event_purchases');
+    end get_customer_event_purchases;
 
 --get customer tickets purchased for event
 --use email to get customer_id
-    function get_customer_event_tickets_by_email
+    function get_customer_event_purchases_by_email
     (
         p_customer_email in customers.customer_email%type,
         p_event_id in number,
@@ -1868,14 +1868,14 @@ as
        
         l_customer_id := customer_api.get_customer_id(p_customer_email);
         
-        return get_customer_event_tickets(l_customer_id, p_event_id, p_formatted);
+        return get_customer_event_purchases(l_customer_id, p_event_id, p_formatted);
               
     exception
         when others then
-            return get_json_error_doc(sqlcode, sqlerrm, 'get_customer_event_tickets_by_email');
-    end get_customer_event_tickets_by_email;
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_customer_event_purchases_by_email');
+    end get_customer_event_purchases_by_email;
 
-    function get_customer_event_series_tickets
+    function get_customer_event_series_purchases
     (
         p_customer_id in number,
         p_event_series_id in number,
@@ -1887,7 +1887,7 @@ as
     
         select b.json_doc
         into l_json
-        from customer_event_series_tickets_v_json b
+        from customer_event_series_purchase_v_json b
         where 
             b.event_series_id = p_event_series_id 
             and b.customer_id = p_customer_id;
@@ -1899,12 +1899,12 @@ as
     
     exception
         when others then
-            return get_json_error_doc(sqlcode, sqlerrm, 'get_customer_event_series_tickets');
-    end get_customer_event_series_tickets;
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_customer_event_series_purchases');
+    end get_customer_event_series_purchases;
 
 --get customer tickets purchased for event
 --use email to get customer_id
-    function get_customer_event_series_tickets_by_email
+    function get_customer_event_series_purchases_by_email
     (
         p_customer_email in customers.customer_email%type,
         p_event_series_id in number,
@@ -1917,12 +1917,12 @@ as
        
         l_customer_id := customer_api.get_customer_id(p_customer_email);
         
-        return get_customer_event_series_tickets(l_customer_id, p_event_series_id, p_formatted);
+        return get_customer_event_series_purchases(l_customer_id, p_event_series_id, p_formatted);
               
     exception
         when others then
-            return get_json_error_doc(sqlcode, sqlerrm, 'get_customer_event_series_tickets_by_email');
-    end get_customer_event_series_tickets_by_email;
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_customer_event_series_purchases_by_email');
+    end get_customer_event_series_purchases_by_email;
 
 --print tickets by ticket_sales_id
 

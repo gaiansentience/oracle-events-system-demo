@@ -10,7 +10,7 @@ l_xml :=
 <ticket_purchase_request>
   <purchase_channel>VENUE</purchase_channel>
   <event>
-    <event_id>561</event_id>
+    <event_id>636</event_id>
   </event>
   <customer>
     <customer_name>James Kirk</customer_name>
@@ -21,12 +21,12 @@ l_xml :=
   </reseller>
   <ticket_groups>
     <ticket_group>
-      <ticket_group_id>2282</ticket_group_id>
-      <price>85</price>
+      <ticket_group_id>2484</ticket_group_id>
+      <price>95</price>
       <tickets_requested>4</tickets_requested>      
     </ticket_group>
     <ticket_group>
-      <ticket_group_id>2283</ticket_group_id>
+      <ticket_group_id>2485</ticket_group_id>
       <price>42</price>
       <tickets_requested>2</tickets_requested>      
     </ticket_group>
@@ -37,15 +37,16 @@ l_xml :=
 
     events_xml_api.purchase_tickets_venue(p_xml_doc => l_xml_doc);
 
-    dbms_output.put_line(p_xml_doc.getstringval);
+    dbms_output.put_line(l_xml_doc.getstringval);
 
 end;
 
 /*
+
 <ticket_purchase_request>
   <purchase_channel>VENUE</purchase_channel>
   <event>
-    <event_id>561</event_id>
+    <event_id>636</event_id>
   </event>
   <customer>
     <customer_name>James Kirk</customer_name>
@@ -57,11 +58,11 @@ end;
   </reseller>
   <ticket_groups>
     <ticket_group>
-      <ticket_group_id>2282</ticket_group_id>
-      <price>85</price>
+      <ticket_group_id>2484</ticket_group_id>
+      <price>95</price>
       <tickets_requested>4</tickets_requested>
       <price_category>VIP</price_category>
-      <ticket_sales_id>71023</ticket_sales_id>
+      <ticket_sales_id>80343</ticket_sales_id>
       <actual_price>85</actual_price>
       <tickets_purchased>4</tickets_purchased>
       <purchase_amount>340</purchase_amount>
@@ -69,11 +70,11 @@ end;
       <status_message>group tickets purchased</status_message>
     </ticket_group>
     <ticket_group>
-      <ticket_group_id>2283</ticket_group_id>
+      <ticket_group_id>2485</ticket_group_id>
       <price>42</price>
       <tickets_requested>2</tickets_requested>
       <price_category>GENERAL ADMISSION</price_category>
-      <ticket_sales_id>71024</ticket_sales_id>
+      <ticket_sales_id>80344</ticket_sales_id>
       <actual_price>42</actual_price>
       <tickets_purchased>2</tickets_purchased>
       <purchase_amount>84</purchase_amount>

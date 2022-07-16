@@ -14,12 +14,13 @@ begin
     l_event_series_id := event_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
     l_customer_id := customer_api.get_customer_id(p_customer_email => l_customer_email);
 
-    l_json_doc := events_json_api.get_customer_event_series_tickets(p_customer_id => l_customer_id, p_event_series_id => l_event_series_id, p_formatted => true);   
+    l_json_doc := events_json_api.get_customer_event_series_purchases(p_customer_id => l_customer_id, p_event_series_id => l_event_series_id, p_formatted => true);   
     dbms_output.put_line(l_json_doc);
 
  end;
 
 /* 
+
 {
   "customer_id" : 4734,
   "customer_name" : "Albert Einstein",
@@ -376,7 +377,6 @@ begin
 
 
 PL/SQL procedure successfully completed.
-
 
 
 */

@@ -12,14 +12,14 @@ begin
     l_event_series_id := event_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
 
     
-    l_xml := events_xml_api.get_customer_event_series_tickets_by_email(p_customer_email => l_customer_email, p_event_series_id => l_event_series_id, p_formatted => true);
+    l_xml := events_xml_api.get_customer_event_series_purchases_by_email(p_customer_email => l_customer_email, p_event_series_id => l_event_series_id, p_formatted => true);
 
     dbms_output.put_line(l_xml.getclobval());
 
 end;
 
 /*
-<customer_tickets>
+<customer_event_series_ticket_purchases>
   <customer>
     <customer_id>3961</customer_id>
     <customer_name>James Kirk</customer_name>
@@ -429,7 +429,7 @@ end;
       </event_ticket_purchases>
     </event>
   </events>
-</customer_tickets>
+</customer_event_series_ticket_purchases>
 
 
 

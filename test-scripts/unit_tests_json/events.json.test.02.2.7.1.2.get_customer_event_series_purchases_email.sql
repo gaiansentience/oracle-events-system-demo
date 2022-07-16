@@ -12,7 +12,7 @@ begin
     l_venue_id := venue_api.get_venue_id(p_venue_name => l_venue_name);
     l_event_series_id := event_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
 
-    l_json_doc := events_json_api.get_customer_event_series_tickets_by_email(p_customer_email => l_customer_email, p_event_series_id => l_event_series_id, p_formatted => true);
+    l_json_doc := events_json_api.get_customer_event_series_purchases_by_email(p_customer_email => l_customer_email, p_event_series_id => l_event_series_id, p_formatted => true);
     dbms_output.put_line(l_json_doc);
 
  end;
@@ -371,6 +371,10 @@ begin
     }
   ]
 }
+
+
+PL/SQL procedure successfully completed.
+
 
 
 */
