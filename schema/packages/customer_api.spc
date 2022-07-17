@@ -231,6 +231,13 @@ as
         p_event_series_id in number
     ) return t_customer_event_series_purchases pipelined;
 
+    procedure show_customer_event_tickets_by_sale_id
+    (
+        p_customer_id in number,
+        p_ticket_sale_id in number,
+        p_tickets out sys_refcursor
+    );
+
     procedure show_customer_event_tickets
     (
         p_customer_id in number,

@@ -557,8 +557,52 @@ as
     
     end show_customer_event_series_purchases_by_email;
     
+    procedure show_customer_event_tickets_by_sale_id
+    (
+        p_customer_id in number,
+        p_ticket_sale_id in number,
+        p_tickets out sys_refcursor
+    )
+    is
+    begin
     
-    --add methods to print_tickets by ticket_sales_id
+        open p_tickets for
+        select
+            ct.customer_id
+            ,ct.customer_name
+            ,ct.customer_email
+            ,ct.venue_id
+            ,ct.venue_name
+            ,ct.event_series_id
+            ,ct.event_id
+            ,ct.event_name
+            ,ct.event_date
+            ,ct.event_tickets
+            ,ct.ticket_group_id
+            ,ct.price_category
+            ,ct.ticket_sales_id
+            ,ct.ticket_quantity
+            ,ct.sales_date
+            ,ct.reseller_id
+            ,ct.reseller_name
+            ,ct.ticket_id
+            ,ct.serial_code
+            ,ct.status
+            ,ct.issued_to_name
+            ,ct.issued_to_id
+            ,ct.assigned_section
+            ,ct.assigned_row
+            ,ct.assigned_seat
+        from 
+            event_system.customer_event_tickets_v ct
+        where 
+            ct.ticket_sales_id = p_ticket_sale_id 
+            and ct.customer_id = p_customer_id
+        order by 
+            ct.ticket_id;
+    
+    end show_customer_event_tickets_by_sale_id;
+    
     procedure show_customer_event_tickets
     (
         p_customer_id in number,
@@ -602,7 +646,8 @@ as
             and ct.customer_id = p_customer_id
         order by 
             ct.price_category
-            ,ct.sales_date;
+            ,ct.sales_date
+            ,ct.ticket_id;
     
     end show_customer_event_tickets;
 
@@ -668,8 +713,10 @@ as
             ct.event_series_id = p_event_series_id 
             and ct.customer_id = p_customer_id
         order by 
-            ct.price_category, 
-            ct.sales_date;
+            ct.event_date
+            ,ct.price_category
+            ,ct.sales_date
+            ,ct.ticket_id;
     
     end show_customer_event_series_tickets;
 
