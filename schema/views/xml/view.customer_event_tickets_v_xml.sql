@@ -42,6 +42,11 @@ with xml_base as
                                                     t.ticket_id    as "ticket_id"
                                                     ,t.serial_code as "serial_code"
                                                     ,t.status      as "status"
+                                                    ,t.issued_to_name as "issued_to_name"
+                                                    ,t.issued_to_id as "issued_to_id"
+                                                    ,t.assigned_section as "assigned_section"
+                                                    ,t.assigned_row as "assigned_row"
+                                                    ,t.assigned_seat as "assigned_seat"
                                                 )
                                             )
                                         )

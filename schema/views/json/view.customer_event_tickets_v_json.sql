@@ -31,9 +31,14 @@ with json_base as
                             (select
                                 json_arrayagg(
                                     json_object(
-                                        'ticket_id'    : t.ticket_id
-                                        ,'serial_code' : t.serial_code
-                                        ,'status'      : t.status
+                                        'ticket_id'         : t.ticket_id
+                                        ,'serial_code'      : t.serial_code
+                                        ,'status'           : t.status
+                                        ,'issued_to_name'   : t.issued_to_name
+                                        ,'issued_to_id'     : t.issued_to_id
+                                        ,'assigned_section' : t.assigned_section
+                                        ,'assigned_row'     : t.assigned_row
+                                        ,'assigned_seat'    : t.assigned_seat
                                     )
                                 )
                             from event_system.customer_event_tickets_v t

@@ -20,6 +20,11 @@ select
     ,t.ticket_id
     ,t.serial_code
     ,t.status
+    ,t.issued_to_name
+    ,t.issued_to_id
+    ,t.assigned_section
+    ,t.assigned_row
+    ,t.assigned_seat
 from
     event_system.customer_event_purchases_v p
     join event_system.tickets t

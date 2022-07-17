@@ -5,27 +5,27 @@ with json_base as
         es.customer_id
         ,es.event_series_id
         ,json_object(
-            'customer_id'     : es.customer_id
-            ,'customer_name'  : es.customer_name
-            ,'customer_email' : es.customer_email      
-            ,'venue_id'       : es.venue_id
-            ,'venue_name'     : es.venue_name
-            ,'event_series_id'       : es.event_series_id
-            ,'event_series_name'     : es.event_series_name
-            ,'first_event_date' : es.first_event_date
-            ,'last_event_date' : es.last_event_date
-            ,'series_events' : es.series_events
-            ,'series_tickets' : es.series_tickets
+            'customer_id'        : es.customer_id
+            ,'customer_name'     : es.customer_name
+            ,'customer_email'    : es.customer_email      
+            ,'venue_id'          : es.venue_id
+            ,'venue_name'        : es.venue_name
+            ,'event_series_id'   : es.event_series_id
+            ,'event_series_name' : es.event_series_name
+            ,'first_event_date'  : es.first_event_date
+            ,'last_event_date'   : es.last_event_date
+            ,'series_events'     : es.series_events
+            ,'series_tickets'    : es.series_tickets
             ,'events' : 
                 (
                 select
                     json_arrayagg(
                         json_object(
-                            'event_id' : e.event_id
-                            ,'event_name' : e.event_name
-                            ,'event_date'     : e.event_date
+                            'event_id'       : e.event_id
+                            ,'event_name'    : e.event_name
+                            ,'event_date'    : e.event_date
                             ,'event_tickets' : e.event_tickets
-                            ,'purchases'  :
+                            ,'purchases'     :
                                 (
                                 select 
                                     json_arrayagg(
@@ -37,14 +37,18 @@ with json_base as
                                             ,'sales_date'      : p.sales_date
                                             ,'reseller_id'     : p.reseller_id
                                             ,'reseller_name'   : p.reseller_name
-                                            
                                             ,'tickets' :  
                                             (select
                                                 json_arrayagg(
                                                     json_object(
-                                                        'ticket_id'    : t.ticket_id
-                                                        ,'serial_code' : t.serial_code
-                                                        ,'status'      : t.status
+                                                        'ticket_id'         : t.ticket_id
+                                                        ,'serial_code'      : t.serial_code
+                                                        ,'status'           : t.status
+                                                        ,'issued_to_name'   : t.issued_to_name
+                                                        ,'issued_to_id'     : t.issued_to_id
+                                                        ,'assigned_section' : t.assigned_section
+                                                        ,'assigned_row'     : t.assigned_row
+                                                        ,'assigned_seat'    : t.assigned_seat
                                                     )
                                                 )
                                             from event_system.customer_event_tickets_v t
