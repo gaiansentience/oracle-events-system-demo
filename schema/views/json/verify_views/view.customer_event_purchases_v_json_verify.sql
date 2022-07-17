@@ -1,11 +1,11 @@
-create or replace view customer_event_purchase_v_json_verify as
+create or replace view customer_event_purchases_v_json_verify as
 with base as
 (
     select
         customer_id
         ,event_id
         ,json_doc
-    from customer_event_purchase_v_json
+    from customer_event_purchases_v_json
 )
 select
     b.customer_id
@@ -40,7 +40,7 @@ from
             ,event_name     varchar2(100) path '$.event_name'
             ,event_date     timestamp     path '$.event_date'
             ,event_tickets  number        path '$.event_tickets'
-            ,nested                       path '$.event_ticket_purchases[*]'
+            ,nested                       path '$.purchases[*]'
                 columns
                 (
                     ticket_group_id  number        path ticket_group_id

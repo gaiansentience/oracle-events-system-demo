@@ -16,6 +16,9 @@ prompt creating verification views for xml web services
 @@view.tickets_available_series_venue_v_xml_verify.sql;
 @@view.tickets_available_series_reseller_v_xml_verify.sql;
 
+@@view.customer_event_purchases_v_xml_verify.sql;
+@@view.customer_event_series_purchases_v_xml_verify.sql;
+
 @@view.customer_event_tickets_v_xml_verify.sql;
 @@view.customer_event_series_tickets_v_xml_verify.sql;
 

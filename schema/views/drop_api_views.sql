@@ -2,11 +2,13 @@
 prompt dropping views
 drop view customer_event_series_tickets_v;
 drop view customer_event_tickets_v;
-drop view customer_event_ticket_base_v;
+drop view customer_event_series_purchases_v;
+drop view customer_event_purchases_v;
+drop view customer_event_purchases_base_v;
+drop view customer_event_series_v;
+drop view customer_events_v;
 
-drop view customer_event_series_purchase_v;
-drop view customer_event_purchase_v;
-drop view customer_event_purchase_base_v;
+drop materialized view customer_purchases_mv;
 
 drop view tickets_available_series_reseller_v;
 drop view tickets_available_series_venue_v;

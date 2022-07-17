@@ -1,32 +1,31 @@
 create or replace view customer_event_series_tickets_v as
 select
-    ct.customer_id
-    ,c.customer_name
-    ,c.customer_email      
-    ,e.venue_id
-    ,e.venue_name
-    ,es.event_series_id
-    ,es.event_name
-    ,es.first_event_date
-    ,es.last_event_date
-    ,sum(ct.ticket_quantity) over
-        (partition by ct.event_series_id, ct.customer_id) as series_tickets
-    ,e.event_id
-    ,e.event_date
-    ,sum(ct.ticket_quantity) over 
-        (partition by ct.event_series_id, ct.event_id, ct.customer_id) as event_tickets
-    ,ct.ticket_group_id
-    ,ct.price_category
-    ,ct.ticket_sales_id
-    ,ct.ticket_quantity
-    ,ct.sales_date
-    ,ct.reseller_id
-    ,ct.reseller_name
+    p.customer_id
+    ,p.customer_name
+    ,p.customer_email      
+    ,p.venue_id
+    ,p.venue_name
+    ,p.event_series_id
+    ,p.event_series_name
+    ,p.first_event_date
+    ,p.last_event_date
+    ,p.series_events
+    ,p.series_tickets
+    ,p.event_id
+    ,p.event_name
+    ,p.event_date
+    ,p.event_tickets    
+    ,p.ticket_group_id
+    ,p.price_category
+    ,p.ticket_sales_id
+    ,p.ticket_quantity
+    ,p.sales_date
+    ,p.reseller_id
+    ,p.reseller_name
+    ,t.ticket_id
+    ,t.serial_code
+    ,t.status
 from 
-    event_system.venue_event_series_base_v es
-    join event_system.venue_event_base_v e
-        on es.event_series_id = e.event_series_id
-    join event_system.customer_event_ticket_base_v ct 
-        on e.event_id = ct.event_id
-    join event_system.customers c 
-        on ct.customer_id = c.customer_id;
+    event_system.customer_event_series_purchases_v p
+    join event_system.tickets t
+        on p.ticket_sales_id = t.ticket_sales_id;

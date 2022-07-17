@@ -27,11 +27,11 @@ create table ticket_sales
 create index ticket_sales_idx01 
     on ticket_sales (ticket_group_id, reseller_id, ticket_quantity);
 
-create index ticket_sales_idx02 
-    on ticket_sales (ticket_group_id, customer_id, ticket_quantity);
+create unique index ticket_sales_udx01 
+    on ticket_sales (customer_id, ticket_group_id, ticket_sales_id, ticket_quantity);
 
-create index ticket_sales_idx03 
+create unique index ticket_sales_udx02 
     on ticket_sales (ticket_sales_id, customer_id);
 
-create index ticket_sales_idx04 
+create unique index ticket_sales_udx03 
     on ticket_sales (ticket_sales_id, ticket_group_id);

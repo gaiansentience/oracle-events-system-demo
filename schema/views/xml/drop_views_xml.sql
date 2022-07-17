@@ -6,8 +6,8 @@ prompt dropping xml views
 drop view customer_event_series_tickets_v_xml;
 drop view customer_event_tickets_v_xml;
 
-drop view customer_event_series_purchase_v_xml;
-drop view customer_event_purchase_v_xml;
+drop view customer_event_series_purchases_v_xml;
+drop view customer_event_purchases_v_xml;
 
 drop view tickets_available_series_all_v_xml;
 drop view tickets_available_series_reseller_v_xml;
