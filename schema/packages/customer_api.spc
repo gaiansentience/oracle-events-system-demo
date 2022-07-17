@@ -98,7 +98,35 @@ as
         p_venue_id in number
     ) return t_customer_events pipelined;
     
+    type r_customer_event_series is record
+    (
+        customer_id       customers.customer_id%type
+        ,customer_name    customers.customer_name%type
+        ,customer_email   customers.customer_email%type
+        ,venue_id         venues.venue_id%type
+        ,venue_name       venues.venue_name%type
+        ,event_series_id  events.event_series_id%type
+        ,event_series_name       events.event_name%type
+        ,first_event_date date
+        ,last_event_date  date
+        ,series_events    number
+        ,series_tickets   number
+    );
+       
+    type t_customer_event_series is table of r_customer_event_series;
+
+    function show_customer_event_series
+    (
+        p_customer_id in number,
+        p_venue_id in number
+    ) return t_customer_event_series pipelined;
     
+    function show_customer_event_series_by_email
+    (
+        p_customer_email in varchar2,
+        p_venue_id in number
+    ) return t_customer_event_series pipelined;
+        
     procedure show_customer_event_purchases
     (
         p_customer_id in number,
