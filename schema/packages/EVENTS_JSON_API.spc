@@ -420,7 +420,36 @@ as
         p_json_doc in out nocopy clob
     );
 
---get customer tickets purchased for event
+--get events with customer purchases
+    function get_customer_events
+    (
+        p_customer_id in number,
+        p_venue_id in number,
+        p_formatted in boolean default false
+    ) return clob;
+    
+    function get_customer_events_by_email
+    (
+        p_customer_email in customers.customer_email%type,
+        p_venue_id in number,
+        p_formatted in boolean default false
+    ) return clob;
+
+    function get_customer_event_series
+    (
+        p_customer_id in number,
+        p_venue_id in number,
+        p_formatted in boolean default false
+    ) return clob;
+    
+    function get_customer_event_series_by_email
+    (
+        p_customer_email in customers.customer_email%type,
+        p_venue_id in number,
+        p_formatted in boolean default false
+    ) return clob;
+
+--get customer purchases for event
 --used to verify customer purchases
     function get_customer_event_purchases
     (

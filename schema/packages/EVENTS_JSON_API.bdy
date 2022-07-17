@@ -1824,7 +1824,102 @@ as
             p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'purchase_tickets_venue_series');
     end purchase_tickets_venue_series;
     
+    
+--get customer purchases for event
+--used to verify customer purchases
+    function get_customer_events
+    (
+        p_customer_id in number,
+        p_venue_id in number,
+        p_formatted in boolean default false
+    ) return clob
+    is
+        l_json clob;
+    begin
+    
+        select b.json_doc
+        into l_json
+        from customer_events_v_json b
+        where 
+            b.venue_id = p_venue_id 
+            and b.customer_id = p_customer_id;
+    
+        if p_formatted then
+            l_json := format_json_clob(l_json);
+        end if;
+        return l_json;
+    
+    exception
+        when others then
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_customer_events');
+    end get_customer_events;
+
 --get customer tickets purchased for event
+--use email to get customer_id
+    function get_customer_events_by_email
+    (
+        p_customer_email in customers.customer_email%type,
+        p_venue_id in number,
+        p_formatted in boolean default false
+    ) return clob
+    is
+        l_customer_id number;
+    begin
+       
+        l_customer_id := customer_api.get_customer_id(p_customer_email);        
+        return get_customer_events(l_customer_id, p_venue_id, p_formatted);
+              
+    exception
+        when others then
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_customer_events_by_email');
+    end get_customer_events_by_email;
+
+    function get_customer_event_series
+    (
+        p_customer_id in number,
+        p_venue_id in number,
+        p_formatted in boolean default false
+    ) return clob
+    is
+        l_json clob;
+    begin
+    
+        select b.json_doc
+        into l_json
+        from customer_event_series_v_json b
+        where 
+            b.venue_id = p_venue_id 
+            and b.customer_id = p_customer_id;
+    
+        if p_formatted then
+            l_json := format_json_clob(l_json);
+        end if;
+        return l_json;
+    
+    exception
+        when others then
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_customer_event_series');
+    end get_customer_event_series;
+
+    function get_customer_event_series_by_email
+    (
+        p_customer_email in customers.customer_email%type,
+        p_venue_id in number,
+        p_formatted in boolean default false
+    ) return clob
+    is
+        l_customer_id number;
+    begin
+       
+        l_customer_id := customer_api.get_customer_id(p_customer_email);        
+        return get_customer_event_series(l_customer_id, p_venue_id, p_formatted);
+              
+    exception
+        when others then
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_customer_event_series_by_email');
+    end get_customer_event_series_by_email;
+    
+--get customer purchases for event
 --used to verify customer purchases
     function get_customer_event_purchases
     (
@@ -1863,11 +1958,9 @@ as
     ) return clob
     is
         l_customer_id number;
-        l_json clob;   
     begin
        
-        l_customer_id := customer_api.get_customer_id(p_customer_email);
-        
+        l_customer_id := customer_api.get_customer_id(p_customer_email);    
         return get_customer_event_purchases(l_customer_id, p_event_id, p_formatted);
               
     exception
@@ -1912,11 +2005,9 @@ as
     ) return clob
     is
         l_customer_id number;
-        l_json clob;   
     begin
        
-        l_customer_id := customer_api.get_customer_id(p_customer_email);
-        
+        l_customer_id := customer_api.get_customer_id(p_customer_email);        
         return get_customer_event_series_purchases(l_customer_id, p_event_series_id, p_formatted);
               
     exception
