@@ -32,7 +32,7 @@ select
     ,p.reseller_name
 from 
     base b,
-    xmltable('/customer_event_ticket_purchases' passing b.xml_doc 
+    xmltable('/customer_event_purchases' passing b.xml_doc 
         columns
             customer_id      number        path 'customer/customer_id'
             ,customer_name   varchar2(100) path 'customer/customer_name'

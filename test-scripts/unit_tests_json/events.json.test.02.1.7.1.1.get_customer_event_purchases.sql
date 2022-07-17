@@ -21,7 +21,6 @@ begin
  end;
 
 /* 
-
 {
   "customer_id" : 529,
   "customer_name" : "Maggie Wayland",
@@ -33,7 +32,7 @@ begin
   "event_name" : "New Years Mischief",
   "event_date" : "2023-12-31T20:00:00",
   "event_tickets" : 9,
-  "event_ticket_purchases" :
+  "purchases" :
   [
     {
       "ticket_group_id" : 2442,
@@ -55,6 +54,9 @@ begin
     }
   ]
 }
+
+
+PL/SQL procedure successfully completed.
 
 
 

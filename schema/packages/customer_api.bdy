@@ -188,30 +188,31 @@ as
     
         open p_purchases for
         select
-            ct.customer_id,
-            ct.customer_name,
-            ct.customer_email,   
-            ct.venue_id,
-            ct.venue_name,
-            ct.event_id,
-            ct.event_name,
-            ct.event_date,
-            ct.event_tickets,
-            ct.ticket_group_id,
-            ct.price_category,
-            ct.ticket_sales_id,
-            ct.ticket_quantity,
-            ct.sales_date,
-            ct.reseller_id,
-            ct.reseller_name
+            ct.customer_id
+            ,ct.customer_name
+            ,ct.customer_email
+            ,ct.venue_id
+            ,ct.venue_name
+            ,ct.event_series_id
+            ,ct.event_id
+            ,ct.event_name
+            ,ct.event_date
+            ,ct.event_tickets
+            ,ct.ticket_group_id
+            ,ct.price_category
+            ,ct.ticket_sales_id
+            ,ct.ticket_quantity
+            ,ct.sales_date
+            ,ct.reseller_id
+            ,ct.reseller_name
         from 
-            event_system.customer_event_purchase_v ct
+            event_system.customer_event_purchases_v ct
         where 
             ct.event_id = p_event_id 
             and ct.customer_id = p_customer_id
         order by 
-            ct.price_category, 
-            ct.sales_date;
+            ct.price_category
+            ,ct.sales_date;
     
     end show_customer_event_purchases;
 
@@ -248,11 +249,13 @@ as
             ,ct.venue_id
             ,ct.venue_name
             ,ct.event_series_id
-            ,ct.event_name
+            ,ct.event_series_name
             ,ct.first_event_date
             ,ct.last_event_date
+            ,ct.series_events
             ,ct.series_tickets
             ,ct.event_id
+            ,ct.event_name
             ,ct.event_date
             ,ct.event_tickets
             ,ct.ticket_group_id
@@ -263,7 +266,7 @@ as
             ,ct.reseller_id
             ,ct.reseller_name
         from 
-            event_system.customer_event_series_purchase_v ct
+            event_system.customer_event_series_purchases_v ct
         where 
             ct.event_series_id = p_event_series_id 
             and ct.customer_id = p_customer_id

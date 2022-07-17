@@ -78,6 +78,7 @@ as
         ,customer_email  customers.customer_email%type
         ,venue_id        venues.venue_id%type
         ,venue_name      venues.venue_name%type
+        ,event_series_id events.event_series_id%type
         ,event_id        events.event_id%type
         ,event_name      events.event_name%type
         ,event_date      events.event_date%type
@@ -114,11 +115,13 @@ as
         ,venue_id         venues.venue_id%type
         ,venue_name       venues.venue_name%type
         ,event_series_id  events.event_series_id%type
-        ,event_name       events.event_name%type
+        ,event_series_name       events.event_name%type
         ,first_event_date date
         ,last_event_date  date
+        ,series_events    number
         ,series_tickets   number
         ,event_id         events.event_id%type
+        ,event_name       events.event_name%type
         ,event_date       events.event_date%type
         ,event_tickets    number
         ,ticket_group_id  ticket_groups.ticket_group_id%type

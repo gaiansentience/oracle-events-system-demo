@@ -4,7 +4,7 @@ with xml_base as
     select
         es.customer_id
         ,es.event_series_id
-        ,xmlelement("customer_event_series_ticket_purchases"
+        ,xmlelement("customer_event_series_purchases"
             ,xmlforest(
                 xmlforest(
                     es.customer_id     as "customer_id" 

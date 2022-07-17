@@ -20,7 +20,6 @@ begin
  end;
 
 /* 
-
 {
   "customer_id" : 4734,
   "customer_name" : "Albert Einstein",
@@ -28,17 +27,19 @@ begin
   "venue_id" : 1,
   "venue_name" : "City Stadium",
   "event_series_id" : 81,
-  "event_name" : "Monster Truck Smashup",
+  "event_series_name" : "Monster Truck Smashup",
   "first_event_date" : "2023-06-07T19:00:00",
   "last_event_date" : "2023-08-30T19:00:00",
+  "series_events" : 13,
   "series_tickets" : 91,
   "events" :
   [
     {
       "event_id" : 623,
       "event_date" : "2023-06-07T19:00:00",
+      "event_name" : "Monster Truck Smashup",
       "event_tickets" : 7,
-      "event_ticket_purchases" :
+      "purchases" :
       [
         {
           "ticket_group_id" : 2457,
@@ -63,8 +64,9 @@ begin
     {
       "event_id" : 624,
       "event_date" : "2023-06-14T19:00:00",
+      "event_name" : "Monster Truck Smashup",
       "event_tickets" : 7,
-      "event_ticket_purchases" :
+      "purchases" :
       [
         {
           "ticket_group_id" : 2458,
@@ -89,8 +91,9 @@ begin
     {
       "event_id" : 625,
       "event_date" : "2023-06-21T19:00:00",
+      "event_name" : "Monster Truck Smashup",
       "event_tickets" : 7,
-      "event_ticket_purchases" :
+      "purchases" :
       [
         {
           "ticket_group_id" : 2459,
@@ -115,8 +118,9 @@ begin
     {
       "event_id" : 626,
       "event_date" : "2023-06-28T19:00:00",
+      "event_name" : "Monster Truck Smashup",
       "event_tickets" : 7,
-      "event_ticket_purchases" :
+      "purchases" :
       [
         {
           "ticket_group_id" : 2460,
@@ -141,8 +145,9 @@ begin
     {
       "event_id" : 627,
       "event_date" : "2023-07-05T19:00:00",
+      "event_name" : "Monster Truck Smashup",
       "event_tickets" : 7,
-      "event_ticket_purchases" :
+      "purchases" :
       [
         {
           "ticket_group_id" : 2461,
@@ -167,8 +172,9 @@ begin
     {
       "event_id" : 628,
       "event_date" : "2023-07-12T19:00:00",
+      "event_name" : "Monster Truck Smashup",
       "event_tickets" : 7,
-      "event_ticket_purchases" :
+      "purchases" :
       [
         {
           "ticket_group_id" : 2462,
@@ -193,8 +199,9 @@ begin
     {
       "event_id" : 629,
       "event_date" : "2023-07-19T19:00:00",
+      "event_name" : "Monster Truck Smashup",
       "event_tickets" : 7,
-      "event_ticket_purchases" :
+      "purchases" :
       [
         {
           "ticket_group_id" : 2463,
@@ -219,8 +226,9 @@ begin
     {
       "event_id" : 630,
       "event_date" : "2023-07-26T19:00:00",
+      "event_name" : "Monster Truck Smashup",
       "event_tickets" : 7,
-      "event_ticket_purchases" :
+      "purchases" :
       [
         {
           "ticket_group_id" : 2464,
@@ -245,8 +253,9 @@ begin
     {
       "event_id" : 631,
       "event_date" : "2023-08-02T19:00:00",
+      "event_name" : "Monster Truck Smashup",
       "event_tickets" : 7,
-      "event_ticket_purchases" :
+      "purchases" :
       [
         {
           "ticket_group_id" : 2465,
@@ -271,8 +280,9 @@ begin
     {
       "event_id" : 632,
       "event_date" : "2023-08-09T19:00:00",
+      "event_name" : "Monster Truck Smashup",
       "event_tickets" : 7,
-      "event_ticket_purchases" :
+      "purchases" :
       [
         {
           "ticket_group_id" : 2466,
@@ -297,8 +307,9 @@ begin
     {
       "event_id" : 633,
       "event_date" : "2023-08-16T19:00:00",
+      "event_name" : "Monster Truck Smashup",
       "event_tickets" : 7,
-      "event_ticket_purchases" :
+      "purchases" :
       [
         {
           "ticket_group_id" : 2467,
@@ -323,8 +334,9 @@ begin
     {
       "event_id" : 634,
       "event_date" : "2023-08-23T19:00:00",
+      "event_name" : "Monster Truck Smashup",
       "event_tickets" : 7,
-      "event_ticket_purchases" :
+      "purchases" :
       [
         {
           "ticket_group_id" : 2468,
@@ -349,8 +361,9 @@ begin
     {
       "event_id" : 635,
       "event_date" : "2023-08-30T19:00:00",
+      "event_name" : "Monster Truck Smashup",
       "event_tickets" : 7,
-      "event_ticket_purchases" :
+      "purchases" :
       [
         {
           "ticket_group_id" : 2469,
@@ -377,6 +390,7 @@ begin
 
 
 PL/SQL procedure successfully completed.
+
 
 
 */

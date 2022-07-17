@@ -33,8 +33,8 @@ end;
     <event_name>Evangeline Thorpe</event_name>
     <event_date>2023-05-01</event_date>
     <event_tickets>12</event_tickets>
-    <event_ticket_purchases>
-      <ticket_purchase>
+    <purchases>
+      <purchase>
         <ticket_group_id>2484</ticket_group_id>
         <price_category>VIP</price_category>
         <ticket_sales_id>80345</ticket_sales_id>
@@ -42,8 +42,8 @@ end;
         <sales_date>2022-07-15</sales_date>
         <reseller_id>3</reseller_id>
         <reseller_name>Old School</reseller_name>
-      </ticket_purchase>
-      <ticket_purchase>
+      </purchase>
+      <purchase>
         <ticket_group_id>2485</ticket_group_id>
         <price_category>GENERAL ADMISSION</price_category>
         <ticket_sales_id>80346</ticket_sales_id>
@@ -51,10 +51,52 @@ end;
         <sales_date>2022-07-15</sales_date>
         <reseller_id>3</reseller_id>
         <reseller_name>Old School</reseller_name>
-      </ticket_purchase>
-    </event_ticket_purchases>
+      </purchase>
+    </purchases>
   </event>
 </customer_event_ticket_purchases>
+
+
+
+PL/SQL procedure successfully completed.
+
+<customer_event_purchases>
+  <customer>
+    <customer_id>3633</customer_id>
+    <customer_name>Gary Walsh</customer_name>
+    <customer_email>Gary.Walsh@example.customer.com</customer_email>
+  </customer>
+  <event>
+    <venue>
+      <venue_id>82</venue_id>
+      <venue_name>The Pink Pony Revue</venue_name>
+    </venue>
+    <event_id>636</event_id>
+    <event_name>Evangeline Thorpe</event_name>
+    <event_date>2023-05-01</event_date>
+    <event_tickets>12</event_tickets>
+    <purchases>
+      <purchase>
+        <ticket_group_id>2484</ticket_group_id>
+        <price_category>VIP</price_category>
+        <ticket_sales_id>80345</ticket_sales_id>
+        <ticket_quantity>4</ticket_quantity>
+        <sales_date>2022-07-15</sales_date>
+        <reseller_id>3</reseller_id>
+        <reseller_name>Old School</reseller_name>
+      </purchase>
+      <purchase>
+        <ticket_group_id>2485</ticket_group_id>
+        <price_category>GENERAL ADMISSION</price_category>
+        <ticket_sales_id>80346</ticket_sales_id>
+        <ticket_quantity>8</ticket_quantity>
+        <sales_date>2022-07-15</sales_date>
+        <reseller_id>3</reseller_id>
+        <reseller_name>Old School</reseller_name>
+      </purchase>
+    </purchases>
+  </event>
+</customer_event_purchases>
 
 
 

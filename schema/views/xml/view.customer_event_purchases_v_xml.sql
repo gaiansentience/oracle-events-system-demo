@@ -5,7 +5,7 @@ with xml_base as
         c.customer_id
         ,c.event_id
         ,c.event_series_id
-        ,xmlelement("customer_event_ticket_purchases",
+        ,xmlelement("customer_event_purchases",
             xmlforest(
                 xmlforest(
                     c.customer_id     as "customer_id"

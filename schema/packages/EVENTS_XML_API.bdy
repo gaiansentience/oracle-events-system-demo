@@ -1930,7 +1930,7 @@ as
     
         select b.xml_doc
         into l_xml
-        from customer_event_purchase_v_xml b
+        from customer_event_purchases_v_xml b
         where 
             b.event_id = p_event_id 
             and b.customer_id = p_customer_id;
@@ -1980,7 +1980,7 @@ as
     
         select b.xml_doc
         into l_xml
-        from customer_event_series_purchase_v_xml b
+        from customer_event_series_purchases_v_xml b
         where 
             b.event_series_id = p_event_series_id 
             and b.customer_id = p_customer_id;

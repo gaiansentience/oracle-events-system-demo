@@ -23,6 +23,7 @@ begin
  end;
 
 /*  
+
 customer purchased tickets:
 {
   "customer_id" : 1910,
@@ -35,7 +36,7 @@ customer purchased tickets:
   "event_name" : "New Years Mischief",
   "event_date" : "2023-12-31T20:00:00",
   "event_tickets" : 9,
-  "event_ticket_purchases" :
+  "purchases" :
   [
     {
       "ticket_group_id" : 2442,
@@ -57,12 +58,15 @@ customer purchased tickets:
     }
   ]
 }
-
 customer did not purchase tickets:
 {
   "json_method" : "get_customer_event_purchases",
   "error_code" : 100,
   "error_message" : "ORA-01403: no data found"
 }
+
+
+PL/SQL procedure successfully completed.
+
 
 */
