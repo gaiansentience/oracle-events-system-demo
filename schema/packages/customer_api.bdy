@@ -274,6 +274,47 @@ as
     end show_customer_event_series_by_email;
     
     
+    function show_customer_events
+    (
+        p_customer_id in number,
+        p_venue_id in number
+    ) return t_customer_events pipelined
+    is
+        t_rows t_customer_events;
+        rc sys_refcursor;
+    begin
+    
+        show_customer_events(p_customer_id, p_venue_id, rc);
+        fetch rc bulk collect into t_rows;
+        close rc;
+        
+        for i in 1..t_rows.count loop
+            pipe row(t_rows(i));
+        end loop;
+        return;
+    
+    end show_customer_events;
+
+    function show_customer_events_by_email
+    (
+        p_customer_email in varchar2,
+        p_venue_id in number
+    ) return t_customer_events pipelined
+    is
+        t_rows t_customer_events;
+        rc sys_refcursor;
+    begin
+            
+        show_customer_events_by_email(p_customer_email, p_venue_id, rc);
+        fetch rc bulk collect into t_rows;
+        close rc;
+        
+        for i in 1..t_rows.count loop
+            pipe row(t_rows(i));
+        end loop;
+        return;
+    
+    end show_customer_events_by_email;
     
     
     

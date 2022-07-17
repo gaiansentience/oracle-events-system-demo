@@ -69,6 +69,36 @@ as
         p_events out sys_refcursor
     );
     
+    type r_customer_events is record
+    (
+        customer_id      customers.customer_id%type
+        ,customer_name   customers.customer_name%type
+        ,customer_email  customers.customer_email%type
+        ,venue_id        venues.venue_id%type
+        ,venue_name      venues.venue_name%type
+        ,event_series_id events.event_series_id%type
+        ,event_id        events.event_id%type
+        ,event_name      events.event_name%type
+        ,event_date      events.event_date%type
+        ,event_tickets   number
+    );
+       
+    type t_customer_events is table of r_customer_events;
+       
+    --show tickets purchased by this customer for this event
+    function show_customer_events
+    (
+        p_customer_id in number,
+        p_venue_id in number
+    ) return t_customer_events pipelined;
+    
+    function show_customer_events_by_email
+    (
+        p_customer_email in varchar2,
+        p_venue_id in number
+    ) return t_customer_events pipelined;
+    
+    
     procedure show_customer_event_purchases
     (
         p_customer_id in number,
