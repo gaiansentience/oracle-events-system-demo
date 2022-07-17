@@ -453,8 +453,38 @@ as
         p_xml_doc in out nocopy xmltype
     );
 
+--get customer events with purchases
+    function get_customer_events
+    (
+        p_customer_id in number,
+        p_venue_id in number,
+        p_formatted in boolean default false
+    ) return xmltype;
+    
+    function get_customer_events_by_email
+    (
+        p_customer_email in customers.customer_email%type,
+        p_venue_id in number,
+        p_formatted in boolean default false
+    ) return xmltype;
+    
+--get customer events series with purchases
+    function get_customer_event_series
+    (
+        p_customer_id in number,
+        p_venue_id in number,
+        p_formatted in boolean default false
+    ) return xmltype;
+    
+    function get_customer_event_series_by_email
+    (
+        p_customer_email in customers.customer_email%type,
+        p_venue_id in number,
+        p_formatted in boolean default false
+    ) return xmltype;
 
---get customer tickets purchased for event
+
+--get customer purchases for event
 --used to verify customer purchases
     function get_customer_event_purchases
     (

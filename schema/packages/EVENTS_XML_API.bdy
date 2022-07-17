@@ -1916,7 +1916,106 @@ as
             p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'purchase_tickets_venue_series');
     end purchase_tickets_venue_series;
 
---get customer tickets purchased for event
+--get customer purchases for event
+--used to verify customer purchases
+    function get_customer_events
+    (
+        p_customer_id in number,
+        p_venue_id in number,
+        p_formatted in boolean default false
+    ) return xmltype
+    is
+        l_xml xmltype;
+    begin
+    
+        select b.xml_doc
+        into l_xml
+        from customer_events_v_xml b
+        where 
+            b.venue_id = p_venue_id 
+            and b.customer_id = p_customer_id;
+    
+        if p_formatted then
+            l_xml := format_xml_string(l_xml);
+        end if;
+        return l_xml;
+    
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_customer_events');
+    end get_customer_events;
+
+    function get_customer_events_by_email
+    (
+        p_customer_email in customers.customer_email%type,
+        p_venue_id in number,
+        p_formatted in boolean default false
+    ) return xmltype
+    is
+        v_customer_id number;
+    begin
+       
+        v_customer_id := customer_api.get_customer_id(p_customer_email);
+        
+        return get_customer_events(v_customer_id, p_venue_id, p_formatted);
+       
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_customer_events_by_email');
+    end get_customer_events_by_email;
+
+--get all event series the customer has purhased tickets for
+    function get_customer_event_series
+    (
+        p_customer_id in number,
+        p_venue_id in number,
+        p_formatted in boolean default false
+    ) return xmltype
+    is
+        l_xml xmltype;
+    begin
+    
+        select b.xml_doc
+        into l_xml
+        from customer_event_series_v_xml b
+        where 
+            b.venue_id = p_venue_id 
+            and b.customer_id = p_customer_id;
+    
+        if p_formatted then
+            l_xml := format_xml_string(l_xml);
+        end if;
+        return l_xml;
+    
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_customer_event_series');
+    end get_customer_event_series;
+
+--use email to get customer_id
+    function get_customer_event_series_by_email
+    (
+        p_customer_email in customers.customer_email%type,
+        p_venue_id in number,
+        p_formatted in boolean default false
+    ) return xmltype
+    is
+        v_customer_id number;
+    begin
+       
+        v_customer_id := customer_api.get_customer_id(p_customer_email);
+        
+        return get_customer_event_series(v_customer_id, p_venue_id, p_formatted);
+       
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_customer_event_series_by_email');
+    end get_customer_event_series_by_email;
+
+
+
+
+--get customer purchases for event
 --used to verify customer purchases
     function get_customer_event_purchases
     (
@@ -1956,7 +2055,6 @@ as
     ) return xmltype
     is
         v_customer_id number;
-        l_xml xmltype;   
     begin
        
         v_customer_id := customer_api.get_customer_id(p_customer_email);
@@ -2006,7 +2104,6 @@ as
     ) return xmltype
     is
         v_customer_id number;
-        l_xml xmltype;   
     begin
        
         v_customer_id := customer_api.get_customer_id(p_customer_email);
