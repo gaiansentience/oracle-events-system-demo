@@ -1956,7 +1956,6 @@ as
     begin
        
         v_customer_id := customer_api.get_customer_id(p_customer_email);
-        
         return get_customer_events(v_customer_id, p_venue_id, p_formatted);
        
     exception
@@ -2004,16 +2003,12 @@ as
     begin
        
         v_customer_id := customer_api.get_customer_id(p_customer_email);
-        
         return get_customer_event_series(v_customer_id, p_venue_id, p_formatted);
        
     exception
         when others then
             return get_xml_error_doc(sqlcode, sqlerrm, 'get_customer_event_series_by_email');
     end get_customer_event_series_by_email;
-
-
-
 
 --get customer purchases for event
 --used to verify customer purchases
@@ -2058,7 +2053,6 @@ as
     begin
        
         v_customer_id := customer_api.get_customer_id(p_customer_email);
-        
         return get_customer_event_purchases(v_customer_id, p_event_id, p_formatted);
        
     exception
@@ -2107,7 +2101,6 @@ as
     begin
        
         v_customer_id := customer_api.get_customer_id(p_customer_email);
-        
         return get_customer_event_series_purchases(v_customer_id, p_event_series_id, p_formatted);
        
     exception
@@ -2116,6 +2109,98 @@ as
     end get_customer_event_series_purchases_by_email;
 
 --print tickets
+    function get_customer_event_tickets
+    (
+        p_customer_id in number,
+        p_event_id in number,
+        p_formatted in boolean default false
+    ) return xmltype
+    is
+        l_xml xmltype;
+    begin
+    
+        select b.xml_doc
+        into l_xml
+        from customer_event_tickets_v_xml b
+        where 
+            b.event_id = p_event_id 
+            and b.customer_id = p_customer_id;
+    
+        if p_formatted then
+            l_xml := format_xml_string(l_xml);
+        end if;
+        return l_xml;
+    
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_customer_event_tickets');
+    end get_customer_event_tickets;
+
+    function get_customer_event_tickets_by_email
+    (
+        p_customer_email in customers.customer_email%type,
+        p_event_id in number,
+        p_formatted in boolean default false
+    ) return xmltype
+    is
+        v_customer_id number;
+    begin
+       
+        v_customer_id := customer_api.get_customer_id(p_customer_email);
+        return get_customer_event_tickets(v_customer_id, p_event_id, p_formatted);
+       
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_customer_event_tickets_by_email');
+    end get_customer_event_tickets_by_email;
+
+    function get_customer_event_series_tickets
+    (
+        p_customer_id in number,
+        p_event_series_id in number,
+        p_formatted in boolean default false
+    ) return xmltype
+    is
+        l_xml xmltype;
+    begin
+    
+        select b.xml_doc
+        into l_xml
+        from customer_event_series_tickets_v_xml b
+        where 
+            b.event_series_id = p_event_series_id 
+            and b.customer_id = p_customer_id;
+    
+        if p_formatted then
+            l_xml := format_xml_string(l_xml);
+        end if;
+        return l_xml;
+    
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_customer_event_series_tickets');
+    end get_customer_event_series_tickets;
+
+
+--get customer tickets purchased for event
+--use email to get customer_id
+    function get_customer_event_series_tickets_by_email
+    (
+        p_customer_email in customers.customer_email%type,
+        p_event_series_id in number,
+        p_formatted in boolean default false
+    ) return xmltype
+    is
+        v_customer_id number;
+    begin
+       
+        v_customer_id := customer_api.get_customer_id(p_customer_email);
+        return get_customer_event_series_tickets(v_customer_id, p_event_series_id, p_formatted);
+       
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_customer_event_series_tickets_by_email');
+    end get_customer_event_series_tickets_by_email;
 
 --ticket_reissue
 
