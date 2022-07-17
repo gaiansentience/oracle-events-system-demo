@@ -41,7 +41,33 @@ as
         p_customer_id in customers.customer_id%type
     ) return t_customer_info pipelined;
     
+    procedure show_customer_events
+    (
+        p_customer_id in number,
+        p_venue_id in number,
+        p_events out sys_refcursor
+    );
     
+    procedure show_customer_events_by_email
+    (
+        p_customer_email in varchar2,
+        p_venue_id in number,
+        p_events out sys_refcursor
+    );
+
+    procedure show_customer_event_series
+    (
+        p_customer_id in number,
+        p_venue_id in number,
+        p_events out sys_refcursor
+    );
+    
+    procedure show_customer_event_series_by_email
+    (
+        p_customer_email in varchar2,
+        p_venue_id in number,
+        p_events out sys_refcursor
+    );
     
     procedure show_customer_event_purchases
     (

@@ -175,6 +175,109 @@ as
         return;
 
     end show_customer;
+    
+    
+    
+    procedure show_customer_events
+    (
+        p_customer_id in number,
+        p_venue_id in number,
+        p_events out sys_refcursor
+    )
+    is
+    begin
+    
+        open p_events for
+        select
+            ct.customer_id
+            ,ct.customer_name
+            ,ct.customer_email
+            ,ct.venue_id
+            ,ct.venue_name
+            ,ct.event_series_id
+            ,ct.event_id
+            ,ct.event_name
+            ,ct.event_date
+            ,ct.event_tickets
+        from 
+            event_system.customer_events_v ct
+        where 
+            ct.venue_id = p_venue_id 
+            and ct.customer_id = p_customer_id
+        order by 
+            ct.event_date;
+    
+    end show_customer_events;
+
+    procedure show_customer_events_by_email
+    (
+        p_customer_email in varchar2,
+        p_venue_id in number,
+        p_events out sys_refcursor
+    )
+    is
+        v_customer_id number;
+    begin
+    
+        v_customer_id := customer_api.get_customer_id(p_customer_email);
+    
+        show_customer_events(v_customer_id, p_venue_id, p_events);
+    
+    end show_customer_events_by_email;
+    
+    procedure show_customer_event_series
+    (
+        p_customer_id in number,
+        p_venue_id in number,
+        p_events out sys_refcursor
+    )
+    is
+    begin
+    
+        open p_events for
+        select
+            ct.customer_id
+            ,ct.customer_name
+            ,ct.customer_email
+            ,ct.venue_id
+            ,ct.venue_name
+            ,ct.event_series_id
+            ,ct.event_series_name
+            ,ct.first_event_date
+            ,ct.last_event_date
+            ,ct.series_events
+            ,ct.series_tickets
+        from 
+            event_system.customer_event_series_v ct
+        where 
+            ct.venue_id = p_venue_id 
+            and ct.customer_id = p_customer_id
+        order by 
+            ct.event_series_name;
+    
+    end show_customer_event_series;
+
+    procedure show_customer_event_series_by_email
+    (
+        p_customer_email in varchar2,
+        p_venue_id in number,
+        p_events out sys_refcursor
+    )
+    is
+        v_customer_id number;
+    begin
+    
+        v_customer_id := customer_api.get_customer_id(p_customer_email);
+    
+        show_customer_event_series(v_customer_id, p_venue_id, p_events);
+    
+    end show_customer_event_series_by_email;
+    
+    
+    
+    
+    
+    
 
 
     procedure show_customer_event_purchases
