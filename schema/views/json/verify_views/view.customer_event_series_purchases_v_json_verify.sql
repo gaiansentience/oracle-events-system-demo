@@ -16,11 +16,13 @@ select
     ,j.venue_name
     ,b.event_series_id
     ,j.event_series_id as event_series_id_json
-    ,j.event_name
+    ,j.event_series_name
     ,cast(j.first_event_date as date) as first_event_date
     ,cast(j.last_event_date as date) as last_event_date
+    ,j.series_events
     ,j.series_tickets
     ,j.event_id
+    ,j.event_name
     ,cast(j.event_date as date) as event_date
     ,j.event_tickets
     ,j.ticket_group_id
@@ -35,23 +37,25 @@ from
     json_table(b.json_doc
         columns
         (
-            customer_id       number        path '$.customer_id'
-            ,customer_name    varchar2(100) path '$.customer_name'
-            ,customer_email   varchar2(100) path '$.customer_email'
-            ,venue_id         number        path '$.venue_id'
-            ,venue_name       varchar2(100) path '$.venue_name'
-            ,event_series_id  number        path '$.event_series_id'
-            ,event_name       varchar2(100) path '$.event_name'
-            ,first_event_date timestamp     path '$.first_event_date'
-            ,last_event_date  timestamp     path '$.last_event_date'
-            ,series_tickets   number        path '$.series_tickets'
-            ,nested                         path '$.events[*]'
+            customer_id        number        path '$.customer_id'
+            ,customer_name     varchar2(100) path '$.customer_name'
+            ,customer_email    varchar2(100) path '$.customer_email'
+            ,venue_id          number        path '$.venue_id'
+            ,venue_name        varchar2(100) path '$.venue_name'
+            ,event_series_id   number        path '$.event_series_id'
+            ,event_series_name varchar2(100) path '$.event_series_name'
+            ,first_event_date  timestamp     path '$.first_event_date'
+            ,last_event_date   timestamp     path '$.last_event_date'
+            ,series_events     number        path '$.series_events'
+            ,series_tickets    number        path '$.series_tickets'
+            ,nested                          path '$.events[*]'
                 columns
                 (
-                    event_id       number    path '$.event_id'
-                    ,event_date    timestamp path '$.event_date'
-                    ,event_tickets number    path '$.event_tickets'
-                    ,nested                  path '$.purchases[*]'
+                    event_id       number        path '$.event_id'
+                    ,event_name    varchar2(100) path '$.event_name'
+                    ,event_date    timestamp     path '$.event_date'
+                    ,event_tickets number        path '$.event_tickets'
+                    ,nested                      path '$.purchases[*]'
                         columns
                         (
                             ticket_group_id  number        path ticket_group_id
@@ -65,4 +69,3 @@ from
                 )
         )
     ) j;
-

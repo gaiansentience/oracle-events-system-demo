@@ -14,6 +14,7 @@ select
     ,j.customer_email
     ,j.venue_id
     ,j.venue_name
+    ,j.event_series_id
     ,b.event_id
     ,j.event_id as event_id_json
     ,j.event_name
@@ -31,16 +32,17 @@ from
     json_table(b.json_doc
         columns
         (
-            customer_id     number        path '$.customer_id'
-            ,customer_name  varchar2(100) path '$.customer_name'
-            ,customer_email varchar2(100) path '$.customer_email'
-            ,venue_id       number        path '$.venue_id'
-            ,venue_name     varchar2(100) path '$.venue_name'
-            ,event_id       number        path '$.event_id'
-            ,event_name     varchar2(100) path '$.event_name'
-            ,event_date     timestamp     path '$.event_date'
-            ,event_tickets  number        path '$.event_tickets'
-            ,nested                       path '$.purchases[*]'
+            customer_id      number        path '$.customer_id'
+            ,customer_name   varchar2(100) path '$.customer_name'
+            ,customer_email  varchar2(100) path '$.customer_email'
+            ,venue_id        number        path '$.venue_id'
+            ,venue_name      varchar2(100) path '$.venue_name'
+            ,event_series_id number        path '$.event_series_id'
+            ,event_id        number        path '$.event_id'
+            ,event_name      varchar2(100) path '$.event_name'
+            ,event_date      timestamp     path '$.event_date'
+            ,event_tickets   number        path '$.event_tickets'
+            ,nested                        path '$.purchases[*]'
                 columns
                 (
                     ticket_group_id  number        path ticket_group_id
@@ -53,4 +55,3 @@ from
                 )
         )
     ) j;
-

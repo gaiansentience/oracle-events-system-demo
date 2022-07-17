@@ -33,7 +33,7 @@ from
             ,nested                       path '$.event_listing[*]'
                 columns
                 (
-                    event_series_id number path event_series_id
+                    event_series_id number        path event_series_id
                     ,event_id       number        path event_id
                     ,event_name     varchar2(100) path event_name
                     ,event_date     timestamp     path event_date
