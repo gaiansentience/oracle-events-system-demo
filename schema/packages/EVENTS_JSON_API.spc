@@ -480,6 +480,33 @@ as
     ) return clob;
 
     --add methods to print tickets
+    function get_customer_event_tickets
+    (
+        p_customer_id in number,
+        p_event_id in number,
+        p_formatted in boolean default false
+    ) return clob;
+    
+    function get_customer_event_tickets_by_email
+    (
+        p_customer_email in customers.customer_email%type,
+        p_event_id in number,
+        p_formatted in boolean default false
+    ) return clob;
+
+    function get_customer_event_series_tickets
+    (
+        p_customer_id in number,
+        p_event_series_id in number,
+        p_formatted in boolean default false
+    ) return clob;
+    
+    function get_customer_event_series_tickets_by_email
+    (
+        p_customer_email in customers.customer_email%type,
+        p_event_series_id in number,
+        p_formatted in boolean default false
+    ) return clob;
     
     --add ticket methods (reissue)
     
