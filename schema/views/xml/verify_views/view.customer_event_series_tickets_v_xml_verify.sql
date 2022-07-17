@@ -38,6 +38,11 @@ select
     ,t.ticket_id
     ,t.serial_code
     ,t.status
+    ,t.issued_to_name
+    ,t.issued_to_id
+    ,t.assigned_section
+    ,t.assigned_row
+    ,t.assigned_seat
 from 
     base b,
     xmltable('/customer_tickets' passing b.xml_doc 
@@ -76,7 +81,12 @@ from
     ) p,
     xmltable('/ticket' passing p.ticket
         columns
-            ticket_id    number        path 'ticket_id'
-            ,serial_code varchar2(100) path 'serial_code'
-            ,status      varchar2(20)  path 'status'
+            ticket_id         number        path 'ticket_id'
+            ,serial_code      varchar2(500) path 'serial_code'
+            ,status           varchar2(20)  path 'status'
+            ,issued_to_name   varchar2(100) path 'issued_to_name'
+            ,issued_to_id     varchar2(100) path 'issued_to_id'
+            ,assigned_section varchar2(20)  path 'assigned_section'
+            ,assigned_row     varchar2(10)  path 'assigned_row'
+            ,assigned_seat    varchar2(10)  path 'assigned_seat'
     ) t;

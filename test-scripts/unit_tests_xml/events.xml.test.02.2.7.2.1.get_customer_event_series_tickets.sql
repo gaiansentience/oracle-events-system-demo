@@ -1,6 +1,7 @@
 set serveroutput on;
 declare
     l_xml xmltype;
+    l_xml_doc clob;
     l_customer_email varchar2(50) := 'Gary.Walsh@example.customer.com';
     l_customer_id number;    
     l_event_series_id number;
@@ -13,16 +14,20 @@ begin
     l_event_series_id := event_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
     l_customer_id := customer_api.get_customer_id(p_customer_email => l_customer_email);
 
-    l_xml := events_xml_api.get_customer_event_series_purchases(p_customer_id => l_customer_id, p_event_series_id => l_event_series_id, p_formatted => true);
+    l_xml := events_xml_api.get_customer_event_series_tickets(p_customer_id => l_customer_id, p_event_series_id => l_event_series_id, p_formatted => true);
 
-    dbms_output.put_line(l_xml.getclobval());
+    --dbms_output.put_line(l_xml.getclobval());
+    l_xml_doc := l_xml.getclobval();
+    events_test_data_api.output_put_clob(p_doc => l_xml_doc, p_chunksize => 16000);
+
 
 end;
 
 
 /*
 
-<customer_event_series_ticket_purchases>
+Document is 43454 characters, outputting in 16000 character chunks
+<customer_tickets>
   <customer>
     <customer_id>3633</customer_id>
     <customer_name>Gary Walsh</customer_name>
@@ -34,18 +39,20 @@ end;
       <venue_name>The Pink Pony Revue</venue_name>
     </venue>
     <event_series_id>82</event_series_id>
-    <event_name>Cool Jazz Evening</event_name>
+    <event_series_name>Cool Jazz Evening</event_series_name>
     <first_event_date>2023-05-04</first_event_date>
     <last_event_date>2023-08-24</last_event_date>
+    <series_events>17</series_events>
     <series_tickets>119</series_tickets>
   </event_series>
   <events>
     <event>
       <event_id>637</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-05-04</event_date>
       <event_tickets>7</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2486</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80257</ticket_sales_id>
@@ -53,8 +60,20 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641026</ticket_id>
+              <serial_code>G2486C3633S80257D20220714084923Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641027</ticket_id>
+              <serial_code>G2486C3633S80257D20220714084923Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2503</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80274</ticket_sales_id>
@@ -62,15 +81,43 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641060</ticket_id>
+              <serial_code>G2503C3633S80274D20220714084923Q0005I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641061</ticket_id>
+              <serial_code>G2503C3633S80274D20220714084923Q0005I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641062</ticket_id>
+              <serial_code>G2503C3633S80274D20220714084923Q0005I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641063</ticket_id>
+              <serial_code>G2503C3633S80274D20220714084923Q0005I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641064</ticket_id>
+              <serial_code>G2503C3633S80274D20220714084923Q0005I0005</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>638</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-05-11</event_date>
       <event_tickets>7</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2487</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80258</ticket_sales_id>
@@ -78,8 +125,20 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641028</ticket_id>
+              <serial_code>G2487C3633S80258D20220714084923Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641029</ticket_id>
+              <serial_code>G2487C3633S80258D20220714084923Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2504</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80275</ticket_sales_id>
@@ -87,15 +146,43 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641065</ticket_id>
+              <serial_code>G2504C3633S80275D20220714084923Q0005I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641066</ticket_id>
+              <serial_code>G2504C3633S80275D20220714084923Q0005I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641067</ticket_id>
+              <serial_code>G2504C3633S80275D20220714084923Q0005I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641068</ticket_id>
+              <serial_code>G2504C3633S80275D20220714084923Q0005I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641069</ticket_id>
+              <serial_code>G2504C3633S80275D20220714084923Q0005I0005</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>639</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-05-18</event_date>
       <event_tickets>7</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2488</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80259</ticket_sales_id>
@@ -103,8 +190,20 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641030</ticket_id>
+              <serial_code>G2488C3633S80259D20220714084923Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641031</ticket_id>
+              <serial_code>G2488C3633S80259D20220714084923Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2505</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80276</ticket_sales_id>
@@ -112,15 +211,43 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641070</ticket_id>
+              <serial_code>G2505C3633S80276D20220714084923Q0005I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641071</ticket_id>
+              <serial_code>G2505C3633S80276D20220714084923Q0005I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641072</ticket_id>
+              <serial_code>G2505C3633S80276D20220714084923Q0005I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641073</ticket_id>
+              <serial_code>G2505C3633S80276D20220714084923Q0005I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641074</ticket_id>
+              <serial_code>G2505C3633S80276D20220714084923Q0005I0005</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>640</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-05-25</event_date>
       <event_tickets>7</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2489</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80260</ticket_sales_id>
@@ -128,8 +255,20 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641032</ticket_id>
+              <serial_code>G2489C3633S80260D20220714084923Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641033</ticket_id>
+              <serial_code>G2489C3633S80260D20220714084923Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2506</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80277</ticket_sales_id>
@@ -137,15 +276,43 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641075</ticket_id>
+              <serial_code>G2506C3633S80277D20220714084923Q0005I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641076</ticket_id>
+              <serial_code>G2506C3633S80277D20220714084923Q0005I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641077</ticket_id>
+              <serial_code>G2506C3633S80277D20220714084923Q0005I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641078</ticket_id>
+              <serial_code>G2506C3633S80277D20220714084923Q0005I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641079</ticket_id>
+              <serial_code>G2506C3633S80277D20220714084923Q0005I0005</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>641</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-06-01</event_date>
       <event_tickets>7</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2490</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80261</ticket_sales_id>
@@ -153,8 +320,20 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641034</ticket_id>
+              <serial_code>G2490C3633S80261D20220714084923Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641035</ticket_id>
+              <serial_code>G2490C3633S80261D20220714084923Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2507</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80278</ticket_sales_id>
@@ -162,15 +341,43 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641080</ticket_id>
+              <serial_code>G2507C3633S80278D20220714084923Q0005I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641081</ticket_id>
+              <serial_code>G2507C3633S80278D20220714084923Q0005I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641082</ticket_id>
+              <serial_code>G2507C3633S80278D20220714084923Q0005I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641083</ticket_id>
+              <serial_code>G2507C3633S80278D20220714084923Q0005I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641084</ticket_id>
+              <serial_code>G2507C3633S80278D20220714084923Q0005I0005</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>642</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-06-08</event_date>
       <event_tickets>7</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2491</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80262</ticket_sales_id>
@@ -178,8 +385,20 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641036</ticket_id>
+              <serial_code>G2491C3633S80262D20220714084923Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641037</ticket_id>
+              <serial_code>G2491C3633S80262D20220714084923Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2508</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80279</ticket_sales_id>
@@ -187,24 +406,65 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641085</ticket_id>
+              <serial_code>G2508C3633S80279D20220714084923Q0005I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641086</ticket_id>
+              <serial_code>G2508C3633S80279D20220714084923Q0005I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641087</ticket_id>
+              <serial_code>G2508C3633S80279D20220714084923Q0005I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641088</ticket_id>
+              <serial_code>G2508C3633S80279D20220714084923Q0005I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641089</ticket_id>
+              <serial_code>G2508C3633S80279D20220714084923Q0005I0005</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>643</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-06-15</event_date>
       <event_tickets>7</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2492</ticket_group_id>
-          <price_category>VIP</price_category>
+     
+     <price_category>VIP</price_category>
           <ticket_sales_id>80263</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641038</ticket_id>
+              <serial_code>G2492C3633S80263D20220714084923Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641039</ticket_id>
+              <serial_code>G2492C3633S80263D20220714084923Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2509</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80280</ticket_sales_id>
@@ -212,15 +472,43 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641090</ticket_id>
+              <serial_code>G2509C3633S80280D20220714084923Q0005I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641091</ticket_id>
+              <serial_code>G2509C3633S80280D20220714084923Q0005I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641092</ticket_id>
+              <serial_code>G2509C3633S80280D20220714084923Q0005I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641093</ticket_id>
+              <serial_code>G2509C3633S80280D20220714084923Q0005I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641094</ticket_id>
+              <serial_code>G2509C3633S80280D20220714084923Q0005I0005</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>644</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-06-22</event_date>
       <event_tickets>7</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2493</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80264</ticket_sales_id>
@@ -228,8 +516,20 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641040</ticket_id>
+              <serial_code>G2493C3633S80264D20220714084923Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641041</ticket_id>
+              <serial_code>G2493C3633S80264D20220714084923Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2510</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80281</ticket_sales_id>
@@ -237,15 +537,43 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641095</ticket_id>
+              <serial_code>G2510C3633S80281D20220714084923Q0005I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641096</ticket_id>
+              <serial_code>G2510C3633S80281D20220714084923Q0005I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641097</ticket_id>
+              <serial_code>G2510C3633S80281D20220714084923Q0005I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641098</ticket_id>
+              <serial_code>G2510C3633S80281D20220714084923Q0005I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641099</ticket_id>
+              <serial_code>G2510C3633S80281D20220714084923Q0005I0005</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>645</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-06-29</event_date>
       <event_tickets>7</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2494</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80265</ticket_sales_id>
@@ -253,8 +581,20 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641042</ticket_id>
+              <serial_code>G2494C3633S80265D20220714084923Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641043</ticket_id>
+              <serial_code>G2494C3633S80265D20220714084923Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2511</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80282</ticket_sales_id>
@@ -262,15 +602,43 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641100</ticket_id>
+              <serial_code>G2511C3633S80282D20220714084923Q0005I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641101</ticket_id>
+              <serial_code>G2511C3633S80282D20220714084923Q0005I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641102</ticket_id>
+              <serial_code>G2511C3633S80282D20220714084923Q0005I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641103</ticket_id>
+              <serial_code>G2511C3633S80282D20220714084923Q0005I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641104</ticket_id>
+              <serial_code>G2511C3633S80282D20220714084923Q0005I0005</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>646</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-07-06</event_date>
       <event_tickets>7</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2495</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80266</ticket_sales_id>
@@ -278,8 +646,20 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641044</ticket_id>
+              <serial_code>G2495C3633S80266D20220714084923Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641045</ticket_id>
+              <serial_code>G2495C3633S80266D20220714084923Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2512</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80283</ticket_sales_id>
@@ -287,15 +667,43 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641105</ticket_id>
+              <serial_code>G2512C3633S80283D20220714084923Q0005I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641106</ticket_id>
+              <serial_code>G2512C3633S80283D20220714084923Q0005I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641107</ticket_id>
+              <serial_code>G2512C3633S80283D20220714084923Q0005I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641108</ticket_id>
+              <serial_code>G2512C3633S80283D20220714084923Q0005I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641109</ticket_id>
+              <serial_code>G2512C3633S80283D20220714084923Q0005I0005</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>647</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-07-13</event_date>
       <event_tickets>7</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2496</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80267</ticket_sales_id>
@@ -303,8 +711,20 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641046</ticket_id>
+              <serial_code>G2496C3633S80267D20220714084923Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641047</ticket_id>
+              <serial_code>G2496C3633S80267D20220714084923Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2513</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80284</ticket_sales_id>
@@ -312,15 +732,43 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641110</ticket_id>
+              <serial_code>G2513C3633S80284D20220714084923Q0005I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641111</ticket_id>
+              <serial_code>G2513C3633S80284D20220714084923Q0005I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641112</ticket_id>
+              <serial_code>G2513C3633S80284D20220714084923Q0005I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641113</ticket_id>
+              <serial_code>G2513C3633S80284D20220714084923Q0005I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641114</ticket_id>
+              <serial_code>G2513C3633S80284D20220714084923Q0005I0005</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>648</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-07-20</event_date>
       <event_tickets>7</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2497</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80268</ticket_sales_id>
@@ -328,8 +776,20 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641048</ticket_id>
+              <serial_code>G2497C3633S80268D20220714084923Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641049</ticket_id>
+              <serial_code>G2497C3633S80268D20220714084923Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2514</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80285</ticket_sales_id>
@@ -337,15 +797,43 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641115</ticket_id>
+              <serial_code>G2514C3633S80285D20220714084923Q0005I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641116</ticket_id>
+              <serial_code>G2514C3633S80285D20220714084923Q0005I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641117</ticket_id>
+              <serial_code>G2514C3633S80285D20220714084923Q0005I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641118</ticket_id>
+              <serial_code>G2514C3633S80285D20220714084923Q0005I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641119</ticket_id>
+              <serial_code>G2514C3633S80285D20220714084923Q0005I0005</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>649</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-07-27</event_date>
       <event_tickets>7</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2498</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80269</ticket_sales_id>
@@ -353,24 +841,65 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641050</ticket_id>
+              <serial_code>G2498C3633S80269D20220714084923Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641051</ticket_id>
+              <serial_code>G2498C3633S80269D20220714084923Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2515</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
-          <ticket_sales_id>80286</ticket_sales_id>
+          <tic
+ket_sales_id>80286</ticket_sales_id>
           <ticket_quantity>5</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641120</ticket_id>
+              <serial_code>G2515C3633S80286D20220714084923Q0005I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641121</ticket_id>
+              <serial_code>G2515C3633S80286D20220714084923Q0005I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641122</ticket_id>
+              <serial_code>G2515C3633S80286D20220714084923Q0005I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641123</ticket_id>
+              <serial_code>G2515C3633S80286D20220714084923Q0005I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641124</ticket_id>
+              <serial_code>G2515C3633S80286D20220714084923Q0005I0005</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>650</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-08-03</event_date>
       <event_tickets>7</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2499</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80270</ticket_sales_id>
@@ -378,8 +907,20 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641052</ticket_id>
+              <serial_code>G2499C3633S80270D20220714084923Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641053</ticket_id>
+              <serial_code>G2499C3633S80270D20220714084923Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2516</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80287</ticket_sales_id>
@@ -387,15 +928,43 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641125</ticket_id>
+              <serial_code>G2516C3633S80287D20220714084923Q0005I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641126</ticket_id>
+              <serial_code>G2516C3633S80287D20220714084923Q0005I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641127</ticket_id>
+              <serial_code>G2516C3633S80287D20220714084923Q0005I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641128</ticket_id>
+              <serial_code>G2516C3633S80287D20220714084923Q0005I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641129</ticket_id>
+              <serial_code>G2516C3633S80287D20220714084923Q0005I0005</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>651</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-08-10</event_date>
       <event_tickets>7</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2500</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80271</ticket_sales_id>
@@ -403,8 +972,20 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641054</ticket_id>
+              <serial_code>G2500C3633S80271D20220714084923Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641055</ticket_id>
+              <serial_code>G2500C3633S80271D20220714084923Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2517</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80288</ticket_sales_id>
@@ -412,15 +993,43 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641130</ticket_id>
+              <serial_code>G2517C3633S80288D20220714084923Q0005I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641131</ticket_id>
+              <serial_code>G2517C3633S80288D20220714084923Q0005I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641132</ticket_id>
+              <serial_code>G2517C3633S80288D20220714084923Q0005I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641133</ticket_id>
+              <serial_code>G2517C3633S80288D20220714084923Q0005I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641134</ticket_id>
+              <serial_code>G2517C3633S80288D20220714084923Q0005I0005</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>652</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-08-17</event_date>
       <event_tickets>7</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2501</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80272</ticket_sales_id>
@@ -428,8 +1037,20 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641056</ticket_id>
+              <serial_code>G2501C3633S80272D20220714084923Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641057</ticket_id>
+              <serial_code>G2501C3633S80272D20220714084923Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2518</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80289</ticket_sales_id>
@@ -437,15 +1058,43 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641135</ticket_id>
+              <serial_code>G2518C3633S80289D20220714084923Q0005I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641136</ticket_id>
+              <serial_code>G2518C3633S80289D20220714084923Q0005I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641137</ticket_id>
+              <serial_code>G2518C3633S80289D20220714084923Q0005I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641138</ticket_id>
+              <serial_code>G2518C3633S80289D20220714084923Q0005I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641139</ticket_id>
+              <serial_code>G2518C3633S80289D20220714084923Q0005I0005</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>653</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-08-24</event_date>
       <event_tickets>7</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2502</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80273</ticket_sales_id>
@@ -453,8 +1102,20 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641058</ticket_id>
+              <serial_code>G2502C3633S80273D20220714084923Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641059</ticket_id>
+              <serial_code>G2502C3633S80273D20220714084923Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2519</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80290</ticket_sales_id>
@@ -462,10 +1123,42 @@ end;
           <sales_date>2022-07-14</sales_date>
           <reseller_id>3</reseller_id>
           <reseller_name>Old School</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641140</ticket_id>
+              <serial_code>G2519C3633S80290D20220714084923Q0005I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641141</ticket_id>
+              <serial_code>G2519C3633S80290D20220714084923Q0005I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641142</ticket_id>
+              <serial_code>G2519C3633S80290D20220714084923Q0005I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641143</ticket_id>
+              <serial_code>G2519C3633S80290D20220714084923Q0005I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641144</ticket_id>
+              <serial_code>G2519C3633S80290D20220714084923Q0005I0005</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
   </events>
-</customer_event_series_ticket_purchases>
+</customer_tickets>
+
+
+
+PL/SQL procedure successfully completed.
+
 
 */

@@ -289,6 +289,7 @@ as
         ,serial_code      tickets.serial_code%type
         ,status           tickets.status%type
         ,issued_to_name   tickets.issued_to_name%type
+        ,issued_to_id     tickets.issued_to_id%type
         ,assigned_section tickets.assigned_section%type
         ,assigned_row     tickets.assigned_row%type
         ,assigned_seat    tickets.assigned_seat%type
@@ -337,6 +338,7 @@ as
         ,serial_code      tickets.serial_code%type
         ,status           tickets.status%type
         ,issued_to_name   tickets.issued_to_name%type
+        ,issued_to_id     tickets.issued_to_id%type
         ,assigned_section tickets.assigned_section%type
         ,assigned_row     tickets.assigned_row%type
         ,assigned_seat    tickets.assigned_seat%type

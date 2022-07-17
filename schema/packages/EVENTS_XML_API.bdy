@@ -1936,7 +1936,7 @@ as
             and b.customer_id = p_customer_id;
     
         if p_formatted then
-            l_xml := format_xml_string(l_xml);
+            l_xml := format_xml_clob(l_xml);
         end if;
         return l_xml;
     
@@ -1982,7 +1982,7 @@ as
             and b.customer_id = p_customer_id;
     
         if p_formatted then
-            l_xml := format_xml_string(l_xml);
+            l_xml := format_xml_clob(l_xml);
         end if;
         return l_xml;
     
@@ -2030,7 +2030,7 @@ as
             and b.customer_id = p_customer_id;
     
         if p_formatted then
-            l_xml := format_xml_string(l_xml);
+            l_xml := format_xml_clob(l_xml);
         end if;
         return l_xml;
     
@@ -2078,7 +2078,7 @@ as
             and b.customer_id = p_customer_id;
     
         if p_formatted then
-            l_xml := format_xml_string(l_xml);
+            l_xml := format_xml_clob(l_xml);
         end if;
         return l_xml;
     
@@ -2127,7 +2127,7 @@ as
             and b.customer_id = p_customer_id;
     
         if p_formatted then
-            l_xml := format_xml_string(l_xml);
+            l_xml := format_xml_clob(l_xml);
         end if;
         return l_xml;
     
@@ -2172,7 +2172,7 @@ as
             and b.customer_id = p_customer_id;
     
         if p_formatted then
-            l_xml := format_xml_string(l_xml);
+            l_xml := format_xml_clob(l_xml);
         end if;
         return l_xml;
     

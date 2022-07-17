@@ -34,5 +34,13 @@ as
     procedure create_ticket_sales;
 
     procedure create_test_data;
-
+    
+    --write a large clob in chunks using dbms_output
+    --use for test scripts with large documents
+    procedure output_put_clob
+    (
+        p_doc in out nocopy clob, 
+        p_chunksize in number default 32000
+    );
+    
 end events_test_data_api;

@@ -28,14 +28,13 @@ with json_base as
                             ,'reseller_id'     : p.reseller_id
                             ,'reseller_name'   : p.reseller_name
                         )
-                    )
+                    returning clob)
                 from event_system.customer_event_purchases_v p
                 where 
                     p.customer_id = e.customer_id
                     and p.event_id = e.event_id)
-        ) as json_doc
-    from 
-        event_system.customer_events_v e
+        returning clob) as json_doc
+    from event_system.customer_events_v e
 )
 select
     b.customer_id

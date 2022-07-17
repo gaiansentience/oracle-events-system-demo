@@ -38,28 +38,27 @@ with json_base as
                                             ,'reseller_id'     : p.reseller_id
                                             ,'reseller_name'   : p.reseller_name
                                             ,'tickets' :  
-                                            (select
-                                                json_arrayagg(
-                                                    json_object(
-                                                        'ticket_id'         : t.ticket_id
-                                                        ,'serial_code'      : t.serial_code
-                                                        ,'status'           : t.status
-                                                        ,'issued_to_name'   : t.issued_to_name
-                                                        ,'issued_to_id'     : t.issued_to_id
-                                                        ,'assigned_section' : t.assigned_section
-                                                        ,'assigned_row'     : t.assigned_row
-                                                        ,'assigned_seat'    : t.assigned_seat
-                                                    )
+                                                (
+                                                select
+                                                    json_arrayagg(
+                                                        json_object(
+                                                            'ticket_id'         : t.ticket_id
+                                                            ,'serial_code'      : t.serial_code
+                                                            ,'status'           : t.status
+                                                            ,'issued_to_name'   : t.issued_to_name
+                                                            ,'issued_to_id'     : t.issued_to_id
+                                                            ,'assigned_section' : t.assigned_section
+                                                            ,'assigned_row'     : t.assigned_row
+                                                            ,'assigned_seat'    : t.assigned_seat
+                                                        returning clob)
+                                                    returning clob)
+                                                from event_system.customer_event_tickets_v t
+                                                where 
+                                                    t.customer_id = p.customer_id
+                                                    and t.event_id = p.event_id
+                                                    and t.ticket_sales_id = p.ticket_sales_id
                                                 )
-                                            from event_system.customer_event_tickets_v t
-                                            where 
-                                                t.customer_id = p.customer_id
-                                                and t.event_id = p.event_id
-                                                and t.ticket_sales_id = p.ticket_sales_id
-                                            )
-                                            
-                                            
-                                        )
+                                        returning clob)
                                     returning clob)
                                 from event_system.customer_event_purchases_v p
                                 where 

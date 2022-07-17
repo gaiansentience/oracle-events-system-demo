@@ -919,6 +919,47 @@ as
         end loop;
     
     end create_test_data;
+    
+    procedure output_put_clob
+    (
+        p_doc in out nocopy clob, 
+        p_chunksize in number default 32000
+    )
+    is
+        l_chunck clob;
+        l_length number;
+        l_offset number := 1;
+        l_amount number := p_chunksize;
+    begin
+    
+        l_length := dbms_lob.getlength(p_doc);
+        dbms_output.put_line('Document is ' || l_length || ' characters, outputting in ' || p_chunksize || ' character chunks');
+        if l_amount > l_length then 
+            l_amount := l_length;
+        end if;
+    
+        loop
+                  
+            dbms_lob.read(p_doc, l_amount, l_offset, l_chunck);
+            dbms_output.put_line(l_chunck);
+            --set the offset past the last read
+            l_offset := l_offset + l_amount;
+            --adjust the amount to read based on total length
+            if (l_offset + l_amount) > l_length then
+                l_amount := (l_length - l_offset) + 1;
+            end if;
+            --exit if there is nothing to read or offset would exceed length
+            if (l_amount <= 0) or (l_offset >= l_length) then
+                exit;
+            end if;
+        
+        end loop;
+    
+    exception
+        when others then
+            raise;
+    end output_put_clob;
+
 
 begin
     dbms_random.seed('Albert Einstein');

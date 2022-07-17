@@ -32,13 +32,13 @@ with customer_venues as
                             ,'event_date'     : e.event_date
                             ,'event_tickets' : e.event_tickets
                         )
-                    )
+                    returning clob)
                 from event_system.customer_events_v e
                 where
                     e.venue_id = v.venue_id
                     and e.customer_id = v.customer_id
                 )            
-        ) as json_doc
+        returning clob) as json_doc
     from customer_venues v
 )
 select

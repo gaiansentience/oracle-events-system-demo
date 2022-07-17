@@ -14,14 +14,12 @@ begin
     l_event_id := event_api.get_event_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
     l_customer_id := customer_api.get_customer_id(p_customer_email => l_customer_email);
     
-    l_json_doc := events_json_api.get_customer_event_purchases(p_customer_id => l_customer_id, p_event_id => l_event_id, p_formatted => true);
-   
+    l_json_doc := events_json_api.get_customer_event_tickets(p_customer_id => l_customer_id, p_event_id => l_event_id, p_formatted => true);
     dbms_output.put_line(l_json_doc);
 
  end;
 
 /* 
-
 {
   "customer_id" : 529,
   "customer_name" : "Maggie Wayland",
@@ -33,7 +31,7 @@ begin
   "event_name" : "New Years Mischief",
   "event_date" : "2023-12-31T20:00:00",
   "event_tickets" : 9,
-  "event_ticket_purchases" :
+  "purchases" :
   [
     {
       "ticket_group_id" : 2442,
@@ -42,7 +40,40 @@ begin
       "ticket_quantity" : 3,
       "sales_date" : "2022-07-13T12:09:38",
       "reseller_id" : 3,
-      "reseller_name" : "Old School"
+      "reseller_name" : "Old School",
+      "tickets" :
+      [
+        {
+          "ticket_id" : 640761,
+          "serial_code" : "G2442C529S80201D20220713120938Q0003I0001",
+          "status" : "ISSUED",
+          "issued_to_name" : null,
+          "issued_to_id" : null,
+          "assigned_section" : null,
+          "assigned_row" : null,
+          "assigned_seat" : null
+        },
+        {
+          "ticket_id" : 640762,
+          "serial_code" : "G2442C529S80201D20220713120938Q0003I0002",
+          "status" : "ISSUED",
+          "issued_to_name" : null,
+          "issued_to_id" : null,
+          "assigned_section" : null,
+          "assigned_row" : null,
+          "assigned_seat" : null
+        },
+        {
+          "ticket_id" : 640763,
+          "serial_code" : "G2442C529S80201D20220713120938Q0003I0003",
+          "status" : "ISSUED",
+          "issued_to_name" : null,
+          "issued_to_id" : null,
+          "assigned_section" : null,
+          "assigned_row" : null,
+          "assigned_seat" : null
+        }
+      ]
     },
     {
       "ticket_group_id" : 2443,
@@ -51,11 +82,73 @@ begin
       "ticket_quantity" : 6,
       "sales_date" : "2022-07-13T12:09:38",
       "reseller_id" : 3,
-      "reseller_name" : "Old School"
+      "reseller_name" : "Old School",
+      "tickets" :
+      [
+        {
+          "ticket_id" : 640764,
+          "serial_code" : "G2443C529S80202D20220713120938Q0006I0001",
+          "status" : "ISSUED",
+          "issued_to_name" : null,
+          "issued_to_id" : null,
+          "assigned_section" : null,
+          "assigned_row" : null,
+          "assigned_seat" : null
+        },
+        {
+          "ticket_id" : 640765,
+          "serial_code" : "G2443C529S80202D20220713120938Q0006I0002",
+          "status" : "ISSUED",
+          "issued_to_name" : null,
+          "issued_to_id" : null,
+          "assigned_section" : null,
+          "assigned_row" : null,
+          "assigned_seat" : null
+        },
+        {
+          "ticket_id" : 640766,
+          "serial_code" : "G2443C529S80202D20220713120938Q0006I0003",
+          "status" : "ISSUED",
+          "issued_to_name" : null,
+          "issued_to_id" : null,
+          "assigned_section" : null,
+          "assigned_row" : null,
+          "assigned_seat" : null
+        },
+        {
+          "ticket_id" : 640767,
+          "serial_code" : "G2443C529S80202D20220713120938Q0006I0004",
+          "status" : "ISSUED",
+          "issued_to_name" : null,
+          "issued_to_id" : null,
+          "assigned_section" : null,
+          "assigned_row" : null,
+          "assigned_seat" : null
+        },
+        {
+          "ticket_id" : 640768,
+          "serial_code" : "G2443C529S80202D20220713120938Q0006I0005",
+          "status" : "ISSUED",
+          "issued_to_name" : null,
+          "issued_to_id" : null,
+          "assigned_section" : null,
+          "assigned_row" : null,
+          "assigned_seat" : null
+        },
+        {
+          "ticket_id" : 640769,
+          "serial_code" : "G2443C529S80202D20220713120938Q0006I0006",
+          "status" : "ISSUED",
+          "issued_to_name" : null,
+          "issued_to_id" : null,
+          "assigned_section" : null,
+          "assigned_row" : null,
+          "assigned_seat" : null
+        }
+      ]
     }
   ]
 }
-
 
 
 */

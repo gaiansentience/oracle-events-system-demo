@@ -1,6 +1,7 @@
 set serveroutput on;
 declare
     l_xml xmltype;
+    l_xml_doc clob;    
     l_customer_email varchar2(50) := 'James.Kirk@example.customer.com';
     l_event_series_id number;
     l_event_name events.event_name%type := 'Cool Jazz Evening';
@@ -12,14 +13,18 @@ begin
     l_event_series_id := event_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
 
     
-    l_xml := events_xml_api.get_customer_event_series_purchases_by_email(p_customer_email => l_customer_email, p_event_series_id => l_event_series_id, p_formatted => true);
+    l_xml := events_xml_api.get_customer_event_series_tickets_by_email(p_customer_email => l_customer_email, p_event_series_id => l_event_series_id, p_formatted => true);
 
-    dbms_output.put_line(l_xml.getclobval());
+    --dbms_output.put_line(l_xml.getclobval());
+    l_xml_doc := l_xml.getclobval();
+    events_test_data_api.output_put_clob(p_doc => l_xml_doc, p_chunksize => 16000);
 
 end;
 
 /*
-<customer_event_series_ticket_purchases>
+
+Document is 38864 characters, outputting in 16000 character chunks
+<customer_tickets>
   <customer>
     <customer_id>3961</customer_id>
     <customer_name>James Kirk</customer_name>
@@ -31,410 +36,1007 @@ end;
       <venue_name>The Pink Pony Revue</venue_name>
     </venue>
     <event_series_id>82</event_series_id>
-    <event_name>Cool Jazz Evening</event_name>
+    <event_series_name>Cool Jazz Evening</event_series_name>
     <first_event_date>2023-05-04</first_event_date>
     <last_event_date>2023-08-24</last_event_date>
+    <series_events>17</series_events>
     <series_tickets>102</series_tickets>
   </event_series>
   <events>
     <event>
       <event_id>637</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-05-04</event_date>
       <event_tickets>6</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2486</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80291</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641145</ticket_id>
+              <serial_code>G2486C3961S80291D20220714085324Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641146</ticket_id>
+              <serial_code>G2486C3961S80291D20220714085324Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2503</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80308</ticket_sales_id>
           <ticket_quantity>4</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641179</ticket_id>
+              <serial_code>G2503C3961S80308D20220714085324Q0004I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641180</ticket_id>
+              <serial_code>G2503C3961S80308D20220714085324Q0004I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641181</ticket_id>
+              <serial_code>G2503C3961S80308D20220714085324Q0004I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641182</ticket_id>
+              <serial_code>G2503C3961S80308D20220714085324Q0004I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>638</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-05-11</event_date>
       <event_tickets>6</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2487</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80292</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641147</ticket_id>
+              <serial_code>G2487C3961S80292D20220714085324Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641148</ticket_id>
+              <serial_code>G2487C3961S80292D20220714085324Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2504</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80309</ticket_sales_id>
           <ticket_quantity>4</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641183</ticket_id>
+              <serial_code>G2504C3961S80309D20220714085324Q0004I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641184</ticket_id>
+              <serial_code>G2504C3961S80309D20220714085324Q0004I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641185</ticket_id>
+              <serial_code>G2504C3961S80309D20220714085324Q0004I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641186</ticket_id>
+              <serial_code>G2504C3961S80309D20220714085324Q0004I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>639</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-05-18</event_date>
       <event_tickets>6</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2488</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80293</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641149</ticket_id>
+              <serial_code>G2488C3961S80293D20220714085324Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641150</ticket_id>
+              <serial_code>G2488C3961S80293D20220714085324Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2505</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80310</ticket_sales_id>
           <ticket_quantity>4</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641187</ticket_id>
+              <serial_code>G2505C3961S80310D20220714085324Q0004I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641188</ticket_id>
+              <serial_code>G2505C3961S80310D20220714085324Q0004I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641189</ticket_id>
+              <serial_code>G2505C3961S80310D20220714085324Q0004I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641190</ticket_id>
+              <serial_code>G2505C3961S80310D20220714085324Q0004I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>640</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-05-25</event_date>
       <event_tickets>6</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2489</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80294</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641151</ticket_id>
+              <serial_code>G2489C3961S80294D20220714085324Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641152</ticket_id>
+              <serial_code>G2489C3961S80294D20220714085324Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2506</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80311</ticket_sales_id>
           <ticket_quantity>4</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641191</ticket_id>
+              <serial_code>G2506C3961S80311D20220714085324Q0004I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641192</ticket_id>
+              <serial_code>G2506C3961S80311D20220714085324Q0004I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641193</ticket_id>
+              <serial_code>G2506C3961S80311D20220714085324Q0004I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641194</ticket_id>
+              <serial_code>G2506C3961S80311D20220714085324Q0004I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>641</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-06-01</event_date>
       <event_tickets>6</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2490</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80295</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641153</ticket_id>
+              <serial_code>G2490C3961S80295D20220714085324Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641154</ticket_id>
+              <serial_code>G2490C3961S80295D20220714085324Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2507</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80312</ticket_sales_id>
           <ticket_quantity>4</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641195</ticket_id>
+              <serial_code>G2507C3961S80312D20220714085324Q0004I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641196</ticket_id>
+              <serial_code>G2507C3961S80312D20220714085324Q0004I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641197</ticket_id>
+              <serial_code>G2507C3961S80312D20220714085324Q0004I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641198</ticket_id>
+              <serial_code>G2507C3961S80312D20220714085324Q0004I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>642</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-06-08</event_date>
       <event_tickets>6</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2491</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80296</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641155</ticket_id>
+              <serial_code>G2491C3961S80296D20220714085324Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641156</ticket_id>
+              <serial_code>G2491C3961S80296D20220714085324Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2508</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80313</ticket_sales_id>
           <ticket_quantity>4</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641199</ticket_id>
+              <serial_code>G2508C3961S80313D20220714085324Q0004I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641200</ticket_id>
+              <serial_code>G2508C3961S80313D20220714085324Q0004I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641201</ticket_id>
+              <serial_code>G2508C3961S80313D20220714085324Q0004I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641202</ticket_id>
+              <serial_code>G2508C3961S80313D20220714085324Q0004I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>643</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-06-15</event_date>
       <event_tickets>6</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2492</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80297</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641157</ticket_id>
+              <serial_code>G2492C3961S80297D20220714085324Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641158</ticket_id>
+              <serial_code>G2492C3961S80297D20220714085324Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2509</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80314</ticket_sales_id>
           <ticket_quantity>4</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641203</ticket_id>
+              <serial_code>G2509C3961S80314D20220714085324Q0004I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641204</ticket_id>
+              <serial_code>G2509C3961S80314D20220714085324Q0004I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641205</ticket_id>
+              <serial_code>G2509C3961S80314D20220714085324Q000
+4I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641206</ticket_id>
+              <serial_code>G2509C3961S80314D20220714085324Q0004I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>644</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-06-22</event_date>
       <event_tickets>6</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2493</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80298</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641159</ticket_id>
+              <serial_code>G2493C3961S80298D20220714085324Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641160</ticket_id>
+              <serial_code>G2493C3961S80298D20220714085324Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2510</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80315</ticket_sales_id>
           <ticket_quantity>4</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641207</ticket_id>
+              <serial_code>G2510C3961S80315D20220714085324Q0004I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641208</ticket_id>
+              <serial_code>G2510C3961S80315D20220714085324Q0004I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641209</ticket_id>
+              <serial_code>G2510C3961S80315D20220714085324Q0004I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641210</ticket_id>
+              <serial_code>G2510C3961S80315D20220714085324Q0004I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>645</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-06-29</event_date>
       <event_tickets>6</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2494</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80299</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641161</ticket_id>
+              <serial_code>G2494C3961S80299D20220714085324Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641162</ticket_id>
+              <serial_code>G2494C3961S80299D20220714085324Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2511</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80316</ticket_sales_id>
           <ticket_quantity>4</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641211</ticket_id>
+              <serial_code>G2511C3961S80316D20220714085324Q0004I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641212</ticket_id>
+              <serial_code>G2511C3961S80316D20220714085324Q0004I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641213</ticket_id>
+              <serial_code>G2511C3961S80316D20220714085324Q0004I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641214</ticket_id>
+              <serial_code>G2511C3961S80316D20220714085324Q0004I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>646</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-07-06</event_date>
       <event_tickets>6</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2495</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80300</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641163</ticket_id>
+              <serial_code>G2495C3961S80300D20220714085324Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641164</ticket_id>
+              <serial_code>G2495C3961S80300D20220714085324Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2512</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80317</ticket_sales_id>
           <ticket_quantity>4</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641215</ticket_id>
+              <serial_code>G2512C3961S80317D20220714085324Q0004I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641216</ticket_id>
+              <serial_code>G2512C3961S80317D20220714085324Q0004I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641217</ticket_id>
+              <serial_code>G2512C3961S80317D20220714085324Q0004I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641218</ticket_id>
+              <serial_code>G2512C3961S80317D20220714085324Q0004I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>647</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-07-13</event_date>
       <event_tickets>6</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2496</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80301</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641165</ticket_id>
+              <serial_code>G2496C3961S80301D20220714085324Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641166</ticket_id>
+              <serial_code>G2496C3961S80301D20220714085324Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2513</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80318</ticket_sales_id>
           <ticket_quantity>4</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641219</ticket_id>
+              <serial_code>G2513C3961S80318D20220714085324Q0004I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641220</ticket_id>
+              <serial_code>G2513C3961S80318D20220714085324Q0004I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641221</ticket_id>
+              <serial_code>G2513C3961S80318D20220714085324Q0004I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641222</ticket_id>
+              <serial_code>G2513C3961S80318D20220714085324Q0004I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>648</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-07-20</event_date>
       <event_tickets>6</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2497</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80302</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641167</ticket_id>
+              <serial_code>G2497C3961S80302D20220714085324Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641168</ticket_id>
+              <serial_code>G2497C3961S80302D20220714085324Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2514</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80319</ticket_sales_id>
           <ticket_quantity>4</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641223</ticket_id>
+              <serial_code>G2514C3961S80319D20220714085324Q0004I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641224</ticket_id>
+              <serial_code>G2514C3961S80319D20220714085324Q0004I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641225</ticket_id>
+              <serial_code>G2514C3961S80319D20220714085324Q0004I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641226</ticket_id>
+              <serial_code>G2514C3961S80319D20220714085324Q0004I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>649</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-07-27</event_date>
       <event_tickets>6</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2498</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80303</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641169</ticket_id>
+              <serial_code>G2498C3961S80303D20220714085324Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641170</ticket_id>
+              <serial_code>G2498C3961S80303D20220714085324Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2515</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80320</ticket_sales_id>
           <ticket_quantity>4</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641227</ticket_id>
+              <serial_code>G2515C3961S80320D20220714085324Q0004I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641228</ticket_id>
+              <serial_code>G2515C3961S80320D20220714085324Q0004I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641229</ticket_id>
+              <serial_code>G2515C3961S80320D20220714085324Q0004I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641230</ticket_id>
+              <serial_code>G2515C3961S80320D20220714085324Q0004I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>650</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-08-03</event_date>
       <event_tickets>6</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2499</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80304</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641171</ticket_id>
+              <serial_code>G2499C3961S80304D20220714085324Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641172</ticket_id>
+              <serial_code>G2499C3961S80304D20220714085324Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2516</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80321</ticket_sales_id>
           <ticket_quantity>4</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641231</ticket_id>
+              <serial_code>G2516C3961S80321D20220714085324Q0004I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641232</ticket_id>
+              <serial_code>G2516C3961S80321D20220714085324Q0004I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641233</ticket_id>
+              <serial_code>G2516C3961S80321D20220714085324Q0004I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641234</ticket_id>
+              <serial_code>G2516C3961S80321D20220714085324Q0004I0004</serial_code>
+              <status>ISSUED</status>
+    
+        </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>651</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-08-10</event_date>
       <event_tickets>6</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2500</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80305</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641173</ticket_id>
+              <serial_code>G2500C3961S80305D20220714085324Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641174</ticket_id>
+              <serial_code>G2500C3961S80305D20220714085324Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2517</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80322</ticket_sales_id>
           <ticket_quantity>4</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641235</ticket_id>
+              <serial_code>G2517C3961S80322D20220714085324Q0004I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641236</ticket_id>
+              <serial_code>G2517C3961S80322D20220714085324Q0004I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641237</ticket_id>
+              <serial_code>G2517C3961S80322D20220714085324Q0004I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641238</ticket_id>
+              <serial_code>G2517C3961S80322D20220714085324Q0004I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>652</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-08-17</event_date>
       <event_tickets>6</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2501</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80306</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641175</ticket_id>
+              <serial_code>G2501C3961S80306D20220714085324Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641176</ticket_id>
+              <serial_code>G2501C3961S80306D20220714085324Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2518</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80323</ticket_sales_id>
           <ticket_quantity>4</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641239</ticket_id>
+              <serial_code>G2518C3961S80323D20220714085324Q0004I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641240</ticket_id>
+              <serial_code>G2518C3961S80323D20220714085324Q0004I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641241</ticket_id>
+              <serial_code>G2518C3961S80323D20220714085324Q0004I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641242</ticket_id>
+              <serial_code>G2518C3961S80323D20220714085324Q0004I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
     <event>
       <event_id>653</event_id>
+      <event_name>Cool Jazz Evening</event_name>
       <event_date>2023-08-24</event_date>
       <event_tickets>6</event_tickets>
-      <event_ticket_purchases>
-        <ticket_purchase>
+      <purchases>
+        <purchase>
           <ticket_group_id>2502</ticket_group_id>
           <price_category>VIP</price_category>
           <ticket_sales_id>80307</ticket_sales_id>
           <ticket_quantity>2</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-        <ticket_purchase>
+          <tickets>
+            <ticket>
+              <ticket_id>641177</ticket_id>
+              <serial_code>G2502C3961S80307D20220714085324Q0002I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641178</ticket_id>
+              <serial_code>G2502C3961S80307D20220714085324Q0002I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+        <purchase>
           <ticket_group_id>2519</ticket_group_id>
           <price_category>GENERAL ADMISSION</price_category>
           <ticket_sales_id>80324</ticket_sales_id>
           <ticket_quantity>4</ticket_quantity>
           <sales_date>2022-07-14</sales_date>
           <reseller_name>VENUE DIRECT SALES</reseller_name>
-        </ticket_purchase>
-      </event_ticket_purchases>
+          <tickets>
+            <ticket>
+              <ticket_id>641243</ticket_id>
+              <serial_code>G2519C3961S80324D20220714085324Q0004I0001</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641244</ticket_id>
+              <serial_code>G2519C3961S80324D20220714085324Q0004I0002</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641245</ticket_id>
+              <serial_code>G2519C3961S80324D20220714085324Q0004I0003</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+            <ticket>
+              <ticket_id>641246</ticket_id>
+              <serial_code>G2519C3961S80324D20220714085324Q0004I0004</serial_code>
+              <status>ISSUED</status>
+            </ticket>
+          </tickets>
+        </purchase>
+      </purchases>
     </event>
   </events>
-</customer_event_series_ticket_purchases>
+</customer_tickets>
 
 
 
 PL/SQL procedure successfully completed.
-
 
 
 */

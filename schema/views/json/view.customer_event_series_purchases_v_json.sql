@@ -46,8 +46,7 @@ with json_base as
                                 )                
                         returning clob)
                     returning clob)
-                from
-                    event_system.customer_events_v e
+                from event_system.customer_events_v e
                 where 
                     e.event_series_id = es.event_series_id 
                     and e.customer_id = es.customer_id                    

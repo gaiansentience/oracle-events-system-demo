@@ -2,7 +2,7 @@
 select
 *  
 from 
-customer_api.show_customer_event_purchases_by_email('Harry.Potter@example.customer.com', 602);
+customer_api.show_customer_event_tickets_by_email('Harry.Potter@example.customer.com', 602);
 
   
   select * from events e join venues v on e.venue_id = v.venue_id
