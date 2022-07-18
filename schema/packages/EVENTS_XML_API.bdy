@@ -2253,31 +2253,57 @@ as
             return get_xml_error_doc(sqlcode, sqlerrm, 'get_customer_event_series_tickets_by_email');
     end get_customer_event_series_tickets_by_email;
 
-    --add ticket methods (reissue)
-    --ticket_reissue (customer_id, serial_code)
-    --ticket_reissue_email (customer_email, serial_code)
-    --ticket_reissue_batch (customer_id, [serial_code, serial_code...])
-    --ticket_reissue_batch_email(customer_email, [serial_code, serial_code...])
-    /*
-    <ticket_reissue>
-      <customer>
-        <customer_id>123</customer_id>
-        <customer_email>customer@customer.com</customer_email>
-      </customer>
-      <ticket>
-        <serial_code>xyz</serial_code>
-        <**status_code>SUCESS|ERROR</status_code>
-        <**status_message>REISSUED|error message</status_message>        
-      </ticket>
-    </ticket_reissue>
-    */
     procedure ticket_reissue
     (
         p_xml_doc in out nocopy xmltype
     )
     is
+        l_customer_id customers.customer_id%type;
+        l_customer_email customers.customer_email%type;
+        l_serial_code tickets.serial_code%type;
+        l_status_code varchar2(50);
+        l_status_message varchar2(4000);
+        nRequest dbms_xmldom.DOMnode;
+        nCustomer dbms_xmldom.DOMnode;
+        nTicket dbms_xmldom.DOMnode;
     begin
-        null;
+        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRequest);
+        
+        nCustomer := dbms_xslprocessor.selectSingleNode(n => nRequest, pattern => '/ticket_reissue/customer');  
+        dbms_xslprocessor.valueof(nCustomer, 'customer_id/text()', l_customer_id);
+        dbms_xslprocessor.valueof(nCustomer, 'customer_email/text()', l_customer_email);
+        
+        nTicket := dbms_xslprocessor.selectSingleNode(n => nRequest, pattern => '/ticket_reissue/ticket');  
+        dbms_xslprocessor.valueof(nTicket, 'serial_code/text()', l_serial_code);
+
+        begin
+            if l_customer_id is not null then
+                customer_api.ticket_reissue(
+                    p_customer_id => l_customer_id, 
+                    p_serial_code => l_serial_code);
+            else
+                customer_api.ticket_reissue_using_email(
+                    p_customer_email => l_customer_email, 
+                    p_serial_code => l_serial_code);
+            end if;
+            l_status_code := 'SUCCESS';
+            l_status_message := 'REISSUED';
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
+
+        util_xmldom_helper.addTextNode(p_parent => nTicket, p_tag => 'status_code', p_data => l_status_code);
+        util_xmldom_helper.addTextNode(p_parent => nTicket, p_tag => 'status_message', p_data => l_status_message);
+                    
+        p_xml_doc := util_xmldom_helper.docToXMLtype;
+        util_xmldom_helper.freeDoc;
+    
+    exception
+        when others then
+            util_xmldom_helper.freeDoc;
+            p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'ticket_reissue');
     end ticket_reissue;
     
     /*
@@ -2307,8 +2333,62 @@ as
         p_xml_doc in out nocopy xmltype
     )
     is
+        l_customer_id customers.customer_id%type;
+        l_customer_email customers.customer_email%type;
+        l_serial_code tickets.serial_code%type;
+        l_status_code varchar2(50);
+        l_status_message varchar2(4000);
+        l_request_errors number := 0;
+        nRequest dbms_xmldom.DOMnode;
+        nCustomer dbms_xmldom.DOMnode;
+        nListTickets dbms_xmldom.DOMnodeList;
+        nTicket dbms_xmldom.DOMnode;
     begin
-        null;
+        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRequest);
+        
+        nCustomer := dbms_xslprocessor.selectSingleNode(n => nRequest, pattern => '/ticket_reissue_batch/customer');  
+        dbms_xslprocessor.valueof(nCustomer, 'customer_id/text()', l_customer_id);
+        dbms_xslprocessor.valueof(nCustomer, 'customer_email/text()', l_customer_email);
+        
+        nListTickets := dbms_xslprocessor.selectNodes(n => nRequest, pattern => '/ticket_reissue_batch/tickets/ticket');
+        for i in 0..dbms_xmldom.getLength(nListTickets) - 1 loop
+            nTicket := dbms_xmldom.item(nListTickets, i);        
+            dbms_xslprocessor.valueof(nTicket, 'serial_code/text()', l_serial_code);
+    
+            begin
+                if l_customer_id is not null then
+                    customer_api.ticket_reissue(
+                        p_customer_id => l_customer_id, 
+                        p_serial_code => l_serial_code);
+                else
+                    customer_api.ticket_reissue_using_email(
+                        p_customer_email => l_customer_email, 
+                        p_serial_code => l_serial_code);
+                end if;
+                l_status_code := 'SUCCESS';
+                l_status_message := 'REISSUED';
+            exception
+                when others then
+                    l_status_code := 'ERROR';
+                    l_status_message := sqlerrm;
+                    l_request_errors := l_request_errors + 1;
+            end;
+    
+            util_xmldom_helper.addTextNode(p_parent => nTicket, p_tag => 'status_code', p_data => l_status_code);
+            util_xmldom_helper.addTextNode(p_parent => nTicket, p_tag => 'status_message', p_data => l_status_message);
+                    
+        end loop;
+        
+        util_xmldom_helper.addTextNode(p_parent => nRequest, p_tag => 'request_status', p_data => case when l_request_errors = 0 then 'SUCCESS' else 'ERRORS' end);
+        util_xmldom_helper.addTextNode(p_parent => nRequest, p_tag => 'request_errors', p_data => l_request_errors);
+                                        
+        p_xml_doc := util_xmldom_helper.docToXMLtype;
+        util_xmldom_helper.freeDoc;
+    
+    exception
+        when others then
+            util_xmldom_helper.freeDoc;
+            p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'ticket_reissue_batch');
     end ticket_reissue_batch;
 
 

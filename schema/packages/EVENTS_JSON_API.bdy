@@ -2168,8 +2168,47 @@ as
         p_json_doc in out nocopy clob
     )
     is
+        l_customer_id customers.customer_id%type;
+        l_customer_email customers.customer_email%type;
+        l_serial_code tickets.serial_code%type;
+        l_status_code varchar2(50);
+        l_status_message varchar2(4000);
+        o_request json_object_t;
+        o_ticket json_object_t;
     begin
-        null;
+        o_request := json_object_t.parse(p_json_doc);
+        l_customer_id := o_request.get_number('customer_id');
+        l_customer_email := o_request.get_string('customer_email');
+        
+        o_ticket := o_request.get_object('ticket');        
+        l_serial_code := o_ticket.get_string('serial_code');   
+    
+        begin
+            if l_customer_id is not null then
+                customer_api.ticket_reissue(
+                    p_customer_id => l_customer_id, 
+                    p_serial_code => l_serial_code);
+            else
+                customer_api.ticket_reissue_using_email(
+                    p_customer_email => l_customer_email, 
+                    p_serial_code => l_serial_code);
+            end if;
+            l_status_code := 'SUCCESS';
+            l_status_message := 'REISSUED';
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
+
+        o_ticket.put('status_code', l_status_code);
+        o_ticket.put('status_message', l_status_message);
+
+        p_json_doc := o_request.to_clob; 
+
+    exception
+        when others then
+            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'ticket_reissue');
     end ticket_reissue;
     
     /*
@@ -2199,8 +2238,58 @@ as
         p_json_doc in out nocopy clob
     )
     is
+        l_customer_id customers.customer_id%type;
+        l_customer_email customers.customer_email%type;
+        l_serial_code tickets.serial_code%type;
+        l_status_code varchar2(50);
+        l_status_message varchar2(4000);
+        l_request_errors number := 0;
+        o_request json_object_t;
+        a_tickets json_array_t;
+        o_ticket json_object_t;
     begin
-        null;
+    
+        o_request := json_object_t.parse(p_json_doc);
+        l_customer_id := o_request.get_number('customer_id');
+        l_customer_email := o_request.get_string('customer_email');
+    
+        a_tickets := o_request.get_array('tickets');
+        for i in 0..a_tickets.get_size - 1 loop
+            o_ticket := json_object_t(a_tickets.get(i));
+            l_serial_code := o_ticket.get_string('serial_code');   
+    
+            begin
+                if l_customer_id is not null then
+                    customer_api.ticket_reissue(
+                        p_customer_id => l_customer_id, 
+                        p_serial_code => l_serial_code);
+                else
+                    customer_api.ticket_reissue_using_email(
+                        p_customer_email => l_customer_email, 
+                        p_serial_code => l_serial_code);
+                end if;
+                l_status_code := 'SUCCESS';
+                l_status_message := 'REISSUED';
+            exception
+                when others then
+                    l_status_code := 'ERROR';
+                    l_status_message := sqlerrm;
+                    l_request_errors := l_request_errors + 1;
+            end;
+    
+            o_ticket.put('status_code', l_status_code);
+            o_ticket.put('status_message', l_status_message);
+    
+        end loop;
+        
+        o_request.put('request_status', case when l_request_errors = 0 then 'SUCCESS' else 'ERRORS' end);
+        o_request.put('status_message', l_request_errors);
+        
+        p_json_doc := o_request.to_clob; 
+
+    exception
+        when others then
+            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'ticket_reissue');
     end ticket_reissue_batch;
 
     procedure ticket_validate

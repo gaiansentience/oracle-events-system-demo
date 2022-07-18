@@ -976,60 +976,6 @@ as
             p_serial_code => p_serial_code);
             
     end ticket_reissue_using_email;    
-    
-    procedure ticket_reissue_batch
-    (
-        p_tickets in out t_ticket_reissues
-    )
-    is
-    begin
- 
-        for i in 1..p_tickets.count loop
-            
-            begin
-            
-                ticket_reissue(
-                    p_customer_id => p_tickets(i).customer_id, 
-                    p_serial_code => p_tickets(i).serial_code);
-                    
-                p_tickets(i).status := 'SUCCESS';
-                p_tickets(i).status_message := 'Reissued ticket serial code.  Previous ticket is unusable for event.  Please reprint ticket.';
-            exception
-                when others then
-                    p_tickets(i).status := 'ERROR';
-                    p_tickets(i).status_message := sqlerrm;
-            end;
-        
-        end loop;
-    
-    end ticket_reissue_batch;
-
-    procedure ticket_reissue_using_email_batch
-    (
-        p_tickets in out t_ticket_reissues
-    )
-    is
-    begin
- 
-        for i in 1..p_tickets.count loop
-            
-            begin
-            
-                ticket_reissue_using_email(
-                    p_customer_email => p_tickets(i).customer_email, 
-                    p_serial_code => p_tickets(i).serial_code);
-                
-                p_tickets(i).status := 'SUCCESS';
-                p_tickets(i).status_message := 'Reissued ticket serial code.  Previous ticket is unusable for event.  Please reprint ticket.';
-            exception
-                when others then
-                    p_tickets(i).status := 'ERROR';
-                    p_tickets(i).status_message := sqlerrm;
-            end;
-        
-        end loop;
-    
-    end ticket_reissue_using_email_batch;
 
 begin
     initialize;

@@ -413,26 +413,4 @@ as
         p_serial_code in varchar2
     );
 
-    type r_ticket_reissue_request is record
-        (
-            customer_id customers.customer_id%type,
-            customer_email customers.customer_email%type,
-            serial_code tickets.serial_code%type, 
-            status varchar2(20), 
-            status_message varchar2(4000)
-        );
-    
-    type t_ticket_reissues is table of r_ticket_reissue_request index by pls_integer;
-
-    procedure ticket_reissue_batch
-    (
-        p_tickets in out t_ticket_reissues
-    );
-
-    procedure ticket_reissue_using_email_batch
-    (
-        p_tickets in out t_ticket_reissues
-    );
-    
-
 end customer_api;
