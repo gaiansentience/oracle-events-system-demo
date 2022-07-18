@@ -16,17 +16,14 @@ begin
     l_customer_id := customer_api.get_customer_id(p_customer_email => l_customer_email);
 
 --get a specific ticket
-select t.serial_code
+select et.serial_code
 into l_serial_code
-from 
-customer_event_tickets_v et
-join tickets t on et.ticket_sales_id = t.ticket_sales_id
+from customer_event_tickets_v et
 where et.customer_id = l_customer_id and et.event_id = l_event_id
-order by et.ticket_sales_id, t.ticket_id
+order by et.ticket_sales_id, et.ticket_id
 fetch first 1 row only;
 
-    update tickets t set t.status = 'VALIDATED' where t.serial_code = upper(l_serial_code);
-    commit;
+    event_tickets_api.update_ticket_status(p_serial_code => l_serial_code, p_status => event_tickets_api.c_ticket_status_validated, p_use_commit => true);
     l_status := event_tickets_api.get_ticket_status(p_serial_code => l_serial_code);
     dbms_output.put_line('before verify validation: serial code ' || l_serial_code || ' status ' || l_status);
     begin
@@ -53,9 +50,7 @@ fetch first 1 row only;
             dbms_output.put_line(sqlerrm);
     end;
 
-
-    update tickets t set t.status = 'ISSUED' where t.serial_code = upper(l_serial_code);
-    commit;
+    event_tickets_api.update_ticket_status(p_serial_code => l_serial_code, p_status => event_tickets_api.c_ticket_status_issued, p_use_commit => true);
     l_status := event_tickets_api.get_ticket_status(p_serial_code => l_serial_code);
     dbms_output.put_line('before verify validation: serial code ' || l_serial_code || ' status ' || l_status);
     begin
@@ -65,8 +60,7 @@ fetch first 1 row only;
             dbms_output.put_line(sqlerrm);
     end;
 
-    update tickets t set t.status = 'CANCELLED' where t.serial_code = upper(l_serial_code);
-    commit;
+    event_tickets_api.update_ticket_status(p_serial_code => l_serial_code, p_status => event_tickets_api.c_ticket_status_cancelled, p_use_commit => true);
     l_status := event_tickets_api.get_ticket_status(p_serial_code => l_serial_code);
     dbms_output.put_line('before verify validation: serial code ' || l_serial_code || ' status ' || l_status);
     begin
@@ -76,28 +70,29 @@ fetch first 1 row only;
             dbms_output.put_line(sqlerrm);
     end;
 
-    --set the ticket back to validated state for next test
-    update tickets t set t.status = 'VALIDATED' where t.serial_code = upper(l_serial_code);
-    commit;
+    --set the ticket back to validated state for other tests
+    event_tickets_api.update_ticket_status(p_serial_code => l_serial_code, p_status => event_tickets_api.c_ticket_status_issued, p_use_commit => true);
     
 end;
 
 
 /*
-
-before verify validation: serial code G2229C2640S55997D20220701161539Q0011I0001 status VALIDATED
+before verify validation: serial code G2381C2640S71343D20220712152931Q0011I0001 status VALIDATED
 validation verified
 
 try to verify a ticket from a different event
 ORA-20100: Ticket is for different event, cannot verify.
 
 try to verify a ticket with an invalid serial code
-ORA-20100: Ticket serial code not found for event, cannot validate
+ORA-20100: Ticket not found for serial code = G2381C2640S71343D20220712152931Q0011I0001xxxx
 
-before verify validation: serial code G2229C2640S55997D20220701161539Q0011I0001 status ISSUED
+before verify validation: serial code G2381C2640S71343D20220712152931Q0011I0001 status ISSUED
 ORA-20100: Ticket has not been validated for event entry.
 
-before verify validation: serial code G2229C2640S55997D20220701161539Q0011I0001 status CANCELLED
+before verify validation: serial code G2381C2640S71343D20220712152931Q0011I0001 status CANCELLED
 ORA-20100: Ticket has not been validated for event entry.
+
+
+PL/SQL procedure successfully completed.
 
 */

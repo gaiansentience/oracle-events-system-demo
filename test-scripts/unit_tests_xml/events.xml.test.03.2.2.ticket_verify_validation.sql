@@ -14,13 +14,11 @@ begin
     l_customer_id := customer_api.get_customer_id(p_customer_email => l_customer_email);
     
 --get a specific ticket
-select t.serial_code
+select et.serial_code
 into l_serial_code
-from 
-customer_event_tickets_v et
-join tickets t on et.ticket_sales_id = t.ticket_sales_id
+from customer_event_tickets_v et
 where et.customer_id = l_customer_id and et.event_id = l_event_id
-order by et.ticket_sales_id, t.ticket_id
+order by et.ticket_sales_id, et.ticket_id
 fetch first 1 row only;
     
 
@@ -40,8 +38,7 @@ l_xml := replace(l_xml, '$$SERIAL$$', l_serial_code);
 l_xml_doc := xmltype(l_xml);
 
     dbms_output.put_line('force the ticket to ISSUED');
-    update tickets t set t.status = 'ISSUED' where t.serial_code = upper(l_serial_code);
-    commit;
+    event_tickets_api.update_ticket_status(p_serial_code => l_serial_code, p_status => event_tickets_api.c_ticket_status_issued, p_use_commit => true);
     events_xml_api.ticket_verify_validation(p_xml_doc => l_xml_doc);
     dbms_output.put_line(l_xml_doc.getclobval);
 
@@ -50,8 +47,7 @@ l_xml := replace(l_xml, '$$SERIAL$$', l_serial_code);
 l_xml_doc := xmltype(l_xml);
 
     dbms_output.put_line('force the ticket to VALIDATED');
-    update tickets t set t.status = 'VALIDATED' where t.serial_code = upper(l_serial_code);
-    commit;
+    event_tickets_api.update_ticket_status(p_serial_code => l_serial_code, p_status => event_tickets_api.c_ticket_status_validated, p_use_commit => true);
     events_xml_api.ticket_verify_validation(p_xml_doc => l_xml_doc);
     dbms_output.put_line(l_xml_doc.getclobval);
 
@@ -71,6 +67,9 @@ l_xml_doc := xmltype(l_xml);
     events_xml_api.ticket_verify_validation(p_xml_doc => l_xml_doc);
     dbms_output.put_line(l_xml_doc.getclobval);
 
+    --reset the ticket to ISSUED for other testing
+    event_tickets_api.update_ticket_status(p_serial_code => l_serial_code, p_status => event_tickets_api.c_ticket_status_issued, p_use_commit => true);
+    
 
 end;
 
@@ -78,10 +77,10 @@ end;
 force the ticket to ISSUED
 <ticket_verify_validation>
   <event>
-    <event_id>561</event_id>
+    <event_id>636</event_id>
   </event>
   <ticket>
-    <serial_code>G2282C3633S71321D20220710164012Q0006I0001</serial_code>
+    <serial_code>G2484C3633S80345D20220715171025Q0004I0001</serial_code>
   </ticket>
   <status_code>ERROR</status_code>
   <status_message>ORA-20100: Ticket has not been validated for event entry.</status_message>
@@ -90,10 +89,10 @@ force the ticket to ISSUED
 force the ticket to VALIDATED
 <ticket_verify_validation>
   <event>
-    <event_id>561</event_id>
+    <event_id>636</event_id>
   </event>
   <ticket>
-    <serial_code>G2282C3633S71321D20220710164012Q0006I0001</serial_code>
+    <serial_code>G2484C3633S80345D20220715171025Q0004I0001</serial_code>
   </ticket>
   <status_code>SUCCESS</status_code>
   <status_message>VERIFIED</status_message>
@@ -102,10 +101,10 @@ force the ticket to VALIDATED
 try to verify a ticket issued for a different event
 <ticket_verify_validation>
   <event>
-    <event_id>562</event_id>
+    <event_id>637</event_id>
   </event>
   <ticket>
-    <serial_code>G2282C3633S71321D20220710164012Q0006I0001</serial_code>
+    <serial_code>G2484C3633S80345D20220715171025Q0004I0001</serial_code>
   </ticket>
   <status_code>ERROR</status_code>
   <status_message>ORA-20100: Ticket is for different event, cannot verify.</status_message>
@@ -114,12 +113,18 @@ try to verify a ticket issued for a different event
 try to verify a ticket with an invalid serial code
 <ticket_verify_validation>
   <event>
-    <event_id>561</event_id>
+    <event_id>636</event_id>
   </event>
   <ticket>
-    <serial_code>G2282C3633S71321D20220710164012Q0006I0001xxxxx</serial_code>
+    <serial_code>G2484C3633S80345D20220715171025Q0004I0001xxxxx</serial_code>
   </ticket>
   <status_code>ERROR</status_code>
-  <status_message>ORA-20100: Ticket serial code not found for event, cannot verify</status_message>
+  <status_message>ORA-20100: Ticket not found for serial code = G2484C3633S80345D20220715171025Q0004I0001xxxxx</status_message>
 </ticket_verify_validation>
+
+
+
+PL/SQL procedure successfully completed.
+
+
 */    

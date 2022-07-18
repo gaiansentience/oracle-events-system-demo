@@ -18,6 +18,14 @@ as
         p_serial_code in tickets.serial_code%type
     ) return varchar2;
     
+    --expose for unit test scripts
+    procedure update_ticket_status
+    (
+        p_serial_code in tickets.serial_code%type,
+        p_status in tickets.status%type,
+        p_use_commit in boolean default false        
+    );
+    
     procedure get_ticket_information
     (
         p_serial_code in tickets.serial_code%type,

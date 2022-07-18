@@ -101,7 +101,8 @@ as
     procedure update_ticket_status
     (
         p_serial_code in tickets.serial_code%type,
-        p_status in tickets.status%type
+        p_status in tickets.status%type,
+        p_use_commit in boolean default false
     )
     is
     begin
@@ -109,6 +110,10 @@ as
         update tickets t
         set t.status = p_status
         where t.serial_code = upper(p_serial_code);
+        
+        if p_use_commit then
+            commit;
+        end if;
         
     end update_ticket_status;
 
@@ -139,10 +144,8 @@ as
         if i = 1 then
             
             --ticket is valid for the event and has not already been used for entry, update status to validated
-            update_ticket_status(p_serial_code => p_serial_code, p_status => c_ticket_status_validated);
-            
-            commit;
-            
+            update_ticket_status(p_serial_code => p_serial_code, p_status => c_ticket_status_validated, p_use_commit => true);
+                        
         else
         
             get_ticket_information(
@@ -299,9 +302,7 @@ as
             when l_status = c_ticket_status_validated then
                 raise_application_error(-20100, 'Ticket has been validated for event entry, cannot cancel');
             else
-                update_ticket_status(p_serial_code => p_serial_code, p_status => c_ticket_status_cancelled);
-        
-                commit;
+                update_ticket_status(p_serial_code => p_serial_code, p_status => c_ticket_status_cancelled, p_use_commit => true);
         end case;
         
     exception

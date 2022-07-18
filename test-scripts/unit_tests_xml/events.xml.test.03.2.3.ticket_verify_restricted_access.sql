@@ -21,13 +21,11 @@ begin
     l_customer_id := customer_api.get_customer_id(p_customer_email => l_customer_email);
     
 --get a specific ticket
-select t.serial_code, et.ticket_group_id, et.price_category
+select et.serial_code, et.ticket_group_id, et.price_category
 into l_serial_code, l_ticket_group_id, l_price_category
-from 
-customer_event_tickets_v et
-join tickets t on et.ticket_sales_id = t.ticket_sales_id
+from customer_event_tickets_v et
 where et.customer_id = l_customer_id and et.event_id = l_event_id
-order by et.ticket_sales_id, t.ticket_id
+order by et.ticket_sales_id, et.ticket_id
 fetch first 1 row only;
     
 
@@ -49,8 +47,7 @@ l_xml := replace(l_xml, '$$SERIAL$$', l_serial_code);
 l_xml_doc := xmltype(l_xml);
 
     dbms_output.put_line('force the ticket to ISSUED');
-    update tickets t set t.status = 'ISSUED' where t.serial_code = upper(l_serial_code);
-    commit;
+    event_tickets_api.update_ticket_status(p_serial_code => l_serial_code, p_status => event_tickets_api.c_ticket_status_issued, p_use_commit => true);
     events_xml_api.ticket_verify_restricted_access(p_xml_doc => l_xml_doc);
     dbms_output.put_line(l_xml_doc.getclobval);
 
@@ -61,8 +58,7 @@ l_xml := replace(l_xml, '$$SERIAL$$', l_serial_code);
 l_xml_doc := xmltype(l_xml);
 
     dbms_output.put_line('force the ticket to VALIDATED');
-    update tickets t set t.status = 'VALIDATED' where t.serial_code = upper(l_serial_code);
-    commit;
+    event_tickets_api.update_ticket_status(p_serial_code => l_serial_code, p_status => event_tickets_api.c_ticket_status_validated, p_use_commit => true);
     events_xml_api.ticket_verify_restricted_access(p_xml_doc => l_xml_doc);
     dbms_output.put_line(l_xml_doc.getclobval);
 
@@ -89,22 +85,22 @@ l_xml_doc := xmltype(l_xml);
     events_xml_api.ticket_verify_restricted_access(p_xml_doc => l_xml_doc);
     dbms_output.put_line(l_xml_doc.getclobval);
 
-    --reset ticket status to ISSUED
-    update tickets t set t.status = 'ISSUED' where t.serial_code = upper(l_serial_code);
-    commit;
+    --reset ticket status to ISSUED for other testing
+    event_tickets_api.update_ticket_status(p_serial_code => l_serial_code, p_status => event_tickets_api.c_ticket_status_issued, p_use_commit => true);
 
 end;
 
 
 /*
+
 force the ticket to ISSUED
 <ticket_verify_restricted_access>
   <ticket_group>
-    <ticket_group_id>2282</ticket_group_id>
+    <ticket_group_id>2484</ticket_group_id>
     <price_category>VIP</price_category>
   </ticket_group>
   <ticket>
-    <serial_code>G2282C3633S71321D20220710164012Q0006I0001</serial_code>
+    <serial_code>G2484C3633S80345D20220715171025Q0004I0001</serial_code>
   </ticket>
   <status_code>ERROR</status_code>
   <status_message>ORA-20100: Ticket has not been validated for event entry, cannot verify access for status ISSUED</status_message>
@@ -113,11 +109,11 @@ force the ticket to ISSUED
 force the ticket to VALIDATED
 <ticket_verify_restricted_access>
   <ticket_group>
-    <ticket_group_id>2282</ticket_group_id>
+    <ticket_group_id>2484</ticket_group_id>
     <price_category>VIP</price_category>
   </ticket_group>
   <ticket>
-    <serial_code>G2282C3633S71321D20220710164012Q0006I0001</serial_code>
+    <serial_code>G2484C3633S80345D20220715171025Q0004I0001</serial_code>
   </ticket>
   <status_code>SUCCESS</status_code>
   <status_message>ACCESS VERIFIED</status_message>
@@ -126,11 +122,11 @@ force the ticket to VALIDATED
 try to verify access for a different ticket group
 <ticket_verify_restricted_access>
   <ticket_group>
-    <ticket_group_id>2281</ticket_group_id>
+    <ticket_group_id>2483</ticket_group_id>
     <price_category>SPONSOR</price_category>
   </ticket_group>
   <ticket>
-    <serial_code>G2282C3633S71321D20220710164012Q0006I0001</serial_code>
+    <serial_code>G2484C3633S80345D20220715171025Q0004I0001</serial_code>
   </ticket>
   <status_code>ERROR</status_code>
   <status_message>ORA-20100: Ticket is for VIP, ticket not valid for SPONSOR</status_message>
@@ -139,14 +135,19 @@ try to verify access for a different ticket group
 try to verify access for an invalid ticket serial code
 <ticket_verify_restricted_access>
   <ticket_group>
-    <ticket_group_id>2282</ticket_group_id>
+    <ticket_group_id>2484</ticket_group_id>
     <price_category>VIP</price_category>
   </ticket_group>
   <ticket>
-    <serial_code>G2282C3633S71321D20220710164012Q0006I0001xxxxx</serial_code>
+    <serial_code>G2484C3633S80345D20220715171025Q0004I0001xxxxx</serial_code>
   </ticket>
   <status_code>ERROR</status_code>
-  <status_message>ORA-01403: no data found</status_message>
+  <status_message>ORA-20100: Ticket not found for serial code = G2484C3633S80345D20220715171025Q0004I0001xxxxx</status_message>
 </ticket_verify_restricted_access>
+
+
+
+PL/SQL procedure successfully completed.
+
 
 */    

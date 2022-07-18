@@ -18,13 +18,11 @@ begin
     l_customer_id := customer_api.get_customer_id(p_customer_email => l_customer_email);
     
 --get a specific ticket
-select t.serial_code, et.ticket_group_id, et.price_category
+select et.serial_code, et.ticket_group_id, et.price_category
 into l_serial_code, l_ticket_group_id, l_price_category
-from 
-customer_event_tickets_v et
-join tickets t on et.ticket_sales_id = t.ticket_sales_id
+from customer_event_tickets_v et
 where et.customer_id = l_customer_id and et.event_id = l_event_id
-order by et.ticket_sales_id, t.ticket_id
+order by et.ticket_sales_id, et.ticket_id
 fetch first 1 row only;
 
 l_json_template := 
@@ -42,14 +40,12 @@ l_json_doc := replace(l_json_doc, '$$CATEGORY$$', l_price_category);
 l_json_doc := replace(l_json_doc, '$$SERIAL$$', l_serial_code);
 
     dbms_output.put_line('force the ticket status to ISSUED to show ticket has not been used for event entry');
-    update tickets t set t.status = 'ISSUED' where t.serial_code = upper(l_serial_code);
-    commit;
+    event_tickets_api.update_ticket_status(p_serial_code => l_serial_code, p_status => event_tickets_api.c_ticket_status_issued, p_use_commit => true);
     events_json_api.ticket_verify_restricted_access(p_json_doc => l_json_doc);
     dbms_output.put_line(events_json_api.format_json_string(l_json_doc));
 
     dbms_output.put_line('force the ticket status to VALIDATED to show event entry');
-    update tickets t set t.status = 'VALIDATED' where t.serial_code = upper(l_serial_code);
-    commit;
+    event_tickets_api.update_ticket_status(p_serial_code => l_serial_code, p_status => event_tickets_api.c_ticket_status_validated, p_use_commit => true);
     events_json_api.ticket_verify_restricted_access(p_json_doc => l_json_doc);
     dbms_output.put_line(events_json_api.format_json_string(l_json_doc));
 
@@ -77,6 +73,10 @@ l_json_doc := replace(l_json_doc, '$$SERIAL$$', l_serial_code);
     events_json_api.ticket_verify_restricted_access(p_json_doc => l_json_doc);
     dbms_output.put_line(events_json_api.format_json_string(l_json_doc));
     
+    --reset the ticket status to ISSUED for other testing
+    event_tickets_api.update_ticket_status(p_serial_code => l_serial_code, p_status => event_tickets_api.c_ticket_status_issued, p_use_commit => true);
+    
+    
  end;
 
 
@@ -84,37 +84,42 @@ l_json_doc := replace(l_json_doc, '$$SERIAL$$', l_serial_code);
 force the ticket status to ISSUED to show ticket has not been used for event entry
 {
   "action" : "ticket-verify-restricted-access",
-  "ticket_group_id" : 2322,
+  "ticket_group_id" : 2442,
   "price_category" : "VIP",
-  "serial_code" : "G2322C529S71141D20220706120837Q0003I0001",
+  "serial_code" : "G2442C529S80201D20220713120938Q0003I0001",
   "status_code" : "ERROR",
   "status_message" : "ORA-20100: Ticket has not been validated for event entry, cannot verify access for status ISSUED"
 }
 force the ticket status to VALIDATED to show event entry
 {
   "action" : "ticket-verify-restricted-access",
-  "ticket_group_id" : 2322,
+  "ticket_group_id" : 2442,
   "price_category" : "VIP",
-  "serial_code" : "G2322C529S71141D20220706120837Q0003I0001",
+  "serial_code" : "G2442C529S80201D20220713120938Q0003I0001",
   "status_code" : "SUCCESS",
   "status_message" : "ACCESS VERIFIED"
 }
 try to verify access for an invalid ticket serial code
 {
   "action" : "ticket-verify-restricted-access",
-  "ticket_group_id" : 2322,
+  "ticket_group_id" : 2442,
   "price_category" : "VIP",
-  "serial_code" : "G2322C529S71141D20220706120837Q0003I0001xxxx",
+  "serial_code" : "G2442C529S80201D20220713120938Q0003I0001xxxx",
   "status_code" : "ERROR",
-  "status_message" : "ORA-01403: no data found"
+  "status_message" : "ORA-20100: Ticket not found for serial code = G2442C529S80201D20220713120938Q0003I0001xxxx"
 }
 try to verify access for the wrong ticket group
 {
   "action" : "ticket-verify-restricted-access",
-  "ticket_group_id" : 2321,
+  "ticket_group_id" : 2441,
   "price_category" : "SPONSOR",
-  "serial_code" : "G2322C529S71141D20220706120837Q0003I0001",
+  "serial_code" : "G2442C529S80201D20220713120938Q0003I0001",
   "status_code" : "ERROR",
   "status_message" : "ORA-20100: Ticket is for VIP, ticket not valid for SPONSOR"
 }
+
+
+PL/SQL procedure successfully completed.
+
+
 */

@@ -17,19 +17,15 @@ begin
     l_customer_id := customer_api.get_customer_id(p_customer_email => l_customer_email);
     
 --get a specific ticket
-select t.serial_code
+select et.serial_code
 into l_serial_code
-from 
-customer_event_tickets_v et
-join tickets t on et.ticket_sales_id = t.ticket_sales_id
+from customer_event_tickets_v et
 where et.customer_id = l_customer_id and et.event_id = l_event_id
-order by et.ticket_sales_id, t.ticket_id
+order by et.ticket_sales_id, et.ticket_id
 fetch first 1 row only;
     
     --force the ticket to ISSUED (allows repeatable test)
-    update tickets t set t.status = 'ISSUED' where t.serial_code = upper(l_serial_code);
-    commit;
-    
+    event_tickets_api.update_ticket_status(p_serial_code => l_serial_code, p_status => event_tickets_api.c_ticket_status_issued, p_use_commit => true);
     dbms_output.put_line('try to validate an invalid serial number');
     begin
         event_tickets_api.ticket_validate(p_event_id => l_event_id, p_serial_code => l_serial_code || 'xxxx');
@@ -37,7 +33,6 @@ fetch first 1 row only;
         when others then
             dbms_output.put_line(sqlerrm);
     end;
-
 
     dbms_output.put_line('try to validate the ticket for the wrong event');
     begin
@@ -54,8 +49,7 @@ fetch first 1 row only;
     dbms_output.put_line('after validation: serial code ' || l_serial_code || ' status ' || l_status);
 
     dbms_output.put_line('force the ticket status to REISSUED');
-    update tickets t set t.status = 'REISSUED' where t.serial_code = upper(l_serial_code);
-    commit;
+    event_tickets_api.update_ticket_status(p_serial_code => l_serial_code, p_status => event_tickets_api.c_ticket_status_reissued, p_use_commit => true);
 
     l_status := event_tickets_api.get_ticket_status(p_serial_code => l_serial_code);
     dbms_output.put_line('before validation: serial code ' || l_serial_code || ' status ' || l_status);    
@@ -71,24 +65,32 @@ fetch first 1 row only;
             dbms_output.put_line(sqlerrm);
     end;
 
+    --reset the ticket to status of issued for continued testing
+    event_tickets_api.update_ticket_status(p_serial_code => l_serial_code, p_status => event_tickets_api.c_ticket_status_issued, p_use_commit => true);
+
+
 end;
 
 
 /*
+
 try to validate an invalid serial number
-ORA-20100: Ticket serial code not found for event, cannot validate
+ORA-20100: Ticket not found for serial code = G2381C2640S71343D20220712152931Q0011I0001xxxx
 
 try to validate the ticket for the wrong event
 ORA-20100: Ticket is for a different event, cannot validate.
 
-before validation: serial code G2229C2640S55997D20220701161539Q0011I0001 status ISSUED
-after validation: serial code G2229C2640S55997D20220701161539Q0011I0001 status VALIDATED
+before validation: serial code G2381C2640S71343D20220712152931Q0011I0001 status ISSUED
+after validation: serial code G2381C2640S71343D20220712152931Q0011I0001 status VALIDATED
 
 force the ticket status to REISSUED
-before validation: serial code G2229C2640S55997D20220701161539Q0011I0001 status REISSUED
-after validation: serial code G2229C2640S55997D20220701161539Q0011I0001 status VALIDATED
+before validation: serial code G2381C2640S71343D20220712152931Q0011I0001 status REISSUED
+after validation: serial code G2381C2640S71343D20220712152931Q0011I0001 status VALIDATED
 
 try to revalidate the ticket with status of VALIDATED
 ORA-20100: Ticket has already been used for event entry, cannot revalidate.
+
+PL/SQL procedure successfully completed.
+
 
 */
