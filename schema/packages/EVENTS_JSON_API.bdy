@@ -1834,6 +1834,10 @@ as
         l_json clob;
     begin
     
+        if not customer_api.customer_has_venue_events(p_customer_id => p_customer_id, p_venue_id => p_venue_id) then
+            raise_application_error(-20100, 'Customer has not purchased tickets for events at this venue');
+        end if;
+        
         select b.json_doc
         into l_json
         from customer_events_v_json b
@@ -1878,6 +1882,10 @@ as
     is
         l_json clob;
     begin
+    
+        if not customer_api.customer_has_venue_events(p_customer_id => p_customer_id, p_venue_id => p_venue_id) then
+            raise_application_error(-20100, 'Customer has not purchased tickets for any event series at this venue');
+        end if;
     
         select b.json_doc
         into l_json
@@ -1924,6 +1932,10 @@ as
         l_json clob;
     begin
     
+        if not customer_api.customer_has_event_tickets(p_customer_id => p_customer_id, p_event_id => p_event_id) then
+            raise_application_error(-20100, 'Customer has not purchased tickets for this event');
+        end if;    
+    
         select b.json_doc
         into l_json
         from customer_event_purchases_v_json b
@@ -1968,6 +1980,10 @@ as
     is
         l_json clob;
     begin
+    
+        if not customer_api.customer_has_event_series_tickets(p_customer_id => p_customer_id, p_event_series_id => p_event_series_id) then
+            raise_application_error(-20100, 'Customer has not purchased tickets for this event series');
+        end if;    
     
         select b.json_doc
         into l_json
@@ -2041,6 +2057,10 @@ as
         l_json clob;
     begin
     
+        if not customer_api.customer_has_event_tickets(p_customer_id => p_customer_id, p_event_id => p_event_id) then
+            raise_application_error(-20100, 'Customer has not purchased tickets for this event');
+        end if;    
+        
         select b.json_doc
         into l_json
         from customer_event_tickets_v_json b
@@ -2086,6 +2106,10 @@ as
         l_json clob;
     begin
     
+        if not customer_api.customer_has_event_series_tickets(p_customer_id => p_customer_id, p_event_series_id => p_event_series_id) then
+            raise_application_error(-20100, 'Customer has not purchased tickets for this event series');
+        end if;    
+        
         select b.json_doc
         into l_json
         from customer_event_series_tickets_v_json b

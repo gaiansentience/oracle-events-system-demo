@@ -41,6 +41,38 @@ as
         p_customer_id in customers.customer_id%type
     ) return t_customer_info pipelined;
     
+    --use for web services that get customer events for a venue
+    --if false return meaninful error message instead of no data found
+    function customer_has_venue_events
+    (
+        p_customer_id in customers.customer_id%type,
+        p_venue_id in venues.venue_id%type
+    ) return boolean;
+
+    --use for web services that get customer event series for a venue
+    --if false return meaninful error message instead of no data found
+    function customer_has_venue_event_series
+    (
+        p_customer_id in customers.customer_id%type,
+        p_venue_id in venues.venue_id%type
+    ) return boolean;
+
+    --use for web services that get customer purchases or tickets for an event
+    --if false return meaninful error message instead of no data found
+    function customer_has_event_tickets
+    (
+        p_customer_id in customers.customer_id%type,
+        p_event_id in venues.venue_id%type
+    ) return boolean;
+
+    --use for web services that get customer purchases or tickets for an event series
+    --if false return meaninful error message instead of no data found
+    function customer_has_event_series_tickets
+    (
+        p_customer_id in customers.customer_id%type,
+        p_event_series_id in venues.venue_id%type
+    ) return boolean;
+    
     procedure show_customer_events
     (
         p_customer_id in number,

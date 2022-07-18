@@ -176,8 +176,79 @@ as
 
     end show_customer;
     
-    
-    
+    --use for web services that get customer events for a venue
+    --if false return meaninful error message instead of no data found
+    function customer_has_venue_events
+    (
+        p_customer_id in customers.customer_id%type,
+        p_venue_id in venues.venue_id%type
+    ) return boolean
+    is
+        i number := 0;
+    begin
+        select count(*) into i
+        from customer_purchases_mv p
+        where 
+            p.customer_id = p_customer_id
+            and p.venue_id = p_venue_id;        
+        return (i > 0);
+    end customer_has_venue_events;
+
+    --use for web services that get customer event series for a venue
+    --if false return meaninful error message instead of no data found
+    function customer_has_venue_event_series
+    (
+        p_customer_id in customers.customer_id%type,
+        p_venue_id in venues.venue_id%type
+    ) return boolean
+    is
+        i number := 0;
+    begin
+        select count(*) into i
+        from customer_purchases_mv p
+        where 
+            p.customer_id = p_customer_id
+            and p.venue_id = p_venue_id
+            and p.event_series_id is not null;
+        return (i > 0);
+    end customer_has_venue_event_series;
+
+    --use for web services that get customer purchases or tickets for an event
+    --if false return meaninful error message instead of no data found
+    function customer_has_event_tickets
+    (
+        p_customer_id in customers.customer_id%type,
+        p_event_id in venues.venue_id%type
+    ) return boolean
+    is
+        i number := 0;
+    begin
+        select count(*) into i
+        from customer_purchases_mv p
+        where 
+            p.customer_id = p_customer_id
+            and p.event_id = p_event_id;
+        return (i > 0);
+    end customer_has_event_tickets;
+
+    --use for web services that get customer purchases or tickets for an event series
+    --if false return meaninful error message instead of no data found
+    function customer_has_event_series_tickets
+    (
+        p_customer_id in customers.customer_id%type,
+        p_event_series_id in venues.venue_id%type
+    ) return boolean
+    is
+        i number := 0;
+    begin
+        select count(*) into i
+        from customer_purchases_mv p
+        where 
+            p.customer_id = p_customer_id
+            and p.event_series_id = p_event_series_id;
+        return (i > 0);
+    end customer_has_event_series_tickets;
+        
     procedure show_customer_events
     (
         p_customer_id in number,

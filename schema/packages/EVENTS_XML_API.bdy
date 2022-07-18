@@ -1928,6 +1928,10 @@ as
         l_xml xmltype;
     begin
     
+        if not customer_api.customer_has_venue_events(p_customer_id => p_customer_id, p_venue_id => p_venue_id) then
+            raise_application_error(-20100, 'Customer has not purchased tickets for events at this venue');
+        end if;
+    
         select b.xml_doc
         into l_xml
         from customer_events_v_xml b
@@ -1973,6 +1977,10 @@ as
     is
         l_xml xmltype;
     begin
+
+        if not customer_api.customer_has_venue_events(p_customer_id => p_customer_id, p_venue_id => p_venue_id) then
+            raise_application_error(-20100, 'Customer has not purchased tickets for any event series at this venue');
+        end if;
     
         select b.xml_doc
         into l_xml
@@ -2022,6 +2030,10 @@ as
         l_xml xmltype;
     begin
     
+        if not customer_api.customer_has_event_tickets(p_customer_id => p_customer_id, p_event_id => p_event_id) then
+            raise_application_error(-20100, 'Customer has not purchased tickets for this event');
+        end if;    
+    
         select b.xml_doc
         into l_xml
         from customer_event_purchases_v_xml b
@@ -2070,6 +2082,10 @@ as
         l_xml xmltype;
     begin
     
+        if not customer_api.customer_has_event_series_tickets(p_customer_id => p_customer_id, p_event_series_id => p_event_series_id) then
+            raise_application_error(-20100, 'Customer has not purchased tickets for this event series');
+        end if;    
+        
         select b.xml_doc
         into l_xml
         from customer_event_series_purchases_v_xml b
@@ -2146,6 +2162,10 @@ as
         l_xml xmltype;
     begin
     
+        if not customer_api.customer_has_event_tickets(p_customer_id => p_customer_id, p_event_id => p_event_id) then
+            raise_application_error(-20100, 'Customer has not purchased tickets for this event');
+        end if;    
+        
         select b.xml_doc
         into l_xml
         from customer_event_tickets_v_xml b
@@ -2191,6 +2211,10 @@ as
         l_xml xmltype;
     begin
     
+        if not customer_api.customer_has_event_series_tickets(p_customer_id => p_customer_id, p_event_series_id => p_event_series_id) then
+            raise_application_error(-20100, 'Customer has not purchased tickets for this event series');
+        end if;    
+        
         select b.xml_doc
         into l_xml
         from customer_event_series_tickets_v_xml b
