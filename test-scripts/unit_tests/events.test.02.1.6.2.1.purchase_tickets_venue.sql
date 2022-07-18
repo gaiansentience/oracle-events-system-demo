@@ -60,7 +60,7 @@ for i in 1..l_purchases.count loop
     dbms_output.put_line(l_purchases(i).quantity || ' ' || l_purchases(i).price_category || ' tickets purchased, extended price = ' || l_purchases(i).extended_price || ', sale id = ' || l_purchases(i).ticket_sales_id); 
 
     exception
-        when other then
+        when others then
             dbms_output.put_line(sqlerrm);
     end;
     
