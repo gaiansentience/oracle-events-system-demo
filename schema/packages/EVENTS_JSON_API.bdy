@@ -2283,7 +2283,7 @@ as
         end loop;
         
         o_request.put('request_status', case when l_request_errors = 0 then 'SUCCESS' else 'ERRORS' end);
-        o_request.put('status_message', l_request_errors);
+        o_request.put('request_errors', l_request_errors);
         
         p_json_doc := o_request.to_clob; 
 
