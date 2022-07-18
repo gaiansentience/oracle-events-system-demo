@@ -85,136 +85,15 @@ as
     is
     begin
     
-        select tg.event_id, ts.ticket_group_id, ts.customer_id, t.status
+        select p.event_id, p.ticket_group_id, p.customer_id, t.status
         into p_event_id, p_ticket_group_id, p_customer_id, p_status
         from
-            event_system.ticket_groups tg
-            join event_system.ticket_sales ts
-                on tg.ticket_group_id = ts.ticket_group_id
+            event_system.customer_purchases_mv p
             join event_system.tickets t
-                on ts.ticket_sales_id = t.ticket_sales_id
+                on p.ticket_sales_id = t.ticket_sales_id
         where t.serial_code = upper(p_serial_code);
         
     end get_ticket_information;
-                               
-    procedure ticket_reissue
-    (
-        p_customer_id in number,
-        p_serial_code in varchar2
-    )
-    is
-        l_status tickets.status%type;
-        l_customer_id number;
-        l_ticket_group_id number;
-        l_event_id number;
-    begin
-        
-        get_ticket_information(
-            p_serial_code => p_serial_code, 
-            p_status => l_status, 
-            p_ticket_group_id => l_ticket_group_id, 
-            p_customer_id => l_customer_id, 
-            p_event_id => l_event_id);
-        
-        case
-            when l_customer_id <> p_customer_id then
-                raise_application_error(-20100, 'Tickets can only be reissued to original purchasing customer, cannot reissue.');
-            when l_status = c_ticket_status_issued then
-        
-                update tickets t
-                set 
-                    t.status = c_ticket_status_reissued, 
-                    t.serial_code = t.serial_code || 'R'
-                where t.serial_code = upper(p_serial_code);
-            
-                commit;
-        
-            when l_status = c_ticket_status_reissued then
-                raise_application_error(-20100, 'Ticket has already been reissued, cannot reissue twice.');
-            when l_status = c_ticket_status_validated then
-                raise_application_error(-20100, 'Ticket has been validated for event entry, cannot reissue.');
-            when l_status = c_ticket_status_cancelled then
-                raise_application_error(-20100, 'Ticket has been cancelled, cannot reissue.');
-            when l_status = c_ticket_status_refunded then
-                raise_application_error(-20100, 'Ticket has been refunded, cannot reissue.');                
-        end case;
-        
-    exception
-        when others then
-            log_error(sqlerrm, sqlcode, 'ticket_reissue');
-            raise;
-    end ticket_reissue;
-    
-    procedure ticket_reissue_using_email
-    (
-        p_customer_email in varchar2,
-        p_serial_code in varchar2
-    )
-    is
-        l_customer_id customers.customer_id%type;
-    begin
-    
-        l_customer_id := customer_api.get_customer_id(p_customer_email => p_customer_email);
-        
-        ticket_reissue(
-            p_customer_id => l_customer_id, 
-            p_serial_code => p_serial_code);
-            
-    end ticket_reissue_using_email;    
-    
-    procedure ticket_reissue_batch
-    (
-        p_tickets in out t_ticket_reissues
-    )
-    is
-    begin
- 
-        for i in 1..p_tickets.count loop
-            
-            begin
-            
-                ticket_reissue(
-                    p_customer_id => p_tickets(i).customer_id, 
-                    p_serial_code => p_tickets(i).serial_code);
-                    
-                p_tickets(i).status := 'SUCCESS';
-                p_tickets(i).status_message := 'Reissued ticket serial code.  Previous ticket is unusable for event.  Please reprint ticket.';
-            exception
-                when others then
-                    p_tickets(i).status := 'ERROR';
-                    p_tickets(i).status_message := sqlerrm;
-            end;
-        
-        end loop;
-    
-    end ticket_reissue_batch;
-
-    procedure ticket_reissue_using_email_batch
-    (
-        p_tickets in out t_ticket_reissues
-    )
-    is
-    begin
- 
-        for i in 1..p_tickets.count loop
-            
-            begin
-            
-                ticket_reissue_using_email(
-                    p_customer_email => p_tickets(i).customer_email, 
-                    p_serial_code => p_tickets(i).serial_code);
-                
-                p_tickets(i).status := 'SUCCESS';
-                p_tickets(i).status_message := 'Reissued ticket serial code.  Previous ticket is unusable for event.  Please reprint ticket.';
-            exception
-                when others then
-                    p_tickets(i).status := 'ERROR';
-                    p_tickets(i).status_message := sqlerrm;
-            end;
-        
-        end loop;
-    
-    end ticket_reissue_using_email_batch;
 
     procedure update_ticket_status
     (
@@ -246,13 +125,11 @@ as
         select count(*)
         into i
         from
-            event_system.ticket_groups tg
-            join event_system.ticket_sales ts
-                on tg.ticket_group_id = ts.ticket_group_id
+            event_system.customer_purchases_mv p
             join event_system.tickets t
-                on ts.ticket_sales_id = t.ticket_sales_id
-            where
-                tg.event_id = p_event_id
+                on p.ticket_sales_id = t.ticket_sales_id
+        where
+                p.event_id = p_event_id
                 and t.serial_code = upper(p_serial_code)
                 and t.status in (c_ticket_status_issued, c_ticket_status_reissued);
                 
@@ -432,8 +309,6 @@ as
             log_error(sqlerrm, sqlcode, 'ticket_cancel');
             raise;
     end ticket_cancel;
-
-
 
 begin
     initialize;

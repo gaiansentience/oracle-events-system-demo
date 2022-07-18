@@ -17,45 +17,16 @@ as
     (
         p_serial_code in tickets.serial_code%type
     ) return varchar2;
-      
-    --use to replace customer lost tickets
-    --update ticket status to REISSUED and add R to the serial code
-    --raise error if customer is not the original purchaser
-    --raise error if ticket status is REISSUED or VALIDATED
-    procedure ticket_reissue
+    
+    procedure get_ticket_information
     (
-        p_customer_id in number,
-        p_serial_code in varchar2
+        p_serial_code in tickets.serial_code%type,
+        p_status out tickets.status%type,
+        p_ticket_group_id out ticket_sales.ticket_group_id%type,
+        p_customer_id out ticket_sales.customer_id%type,
+        p_event_id out ticket_groups.event_id%type
     );
     
-    procedure ticket_reissue_using_email
-    (
-        p_customer_email in varchar2,
-        p_serial_code in varchar2
-    );
-
-    type r_ticket_reissue_request is record
-        (
-            customer_id customers.customer_id%type,
-            customer_email customers.customer_email%type,
-            serial_code tickets.serial_code%type, 
-            status varchar2(20), 
-            status_message varchar2(4000)
-        );
-    
-    type t_ticket_reissues is table of r_ticket_reissue_request index by pls_integer;
-
-    procedure ticket_reissue_batch
-    (
-        p_tickets in out t_ticket_reissues
-    );
-
-    procedure ticket_reissue_using_email_batch
-    (
-        p_tickets in out t_ticket_reissues
-    );
-
-
     --validate that the ticket has been used for event entry
     --raise error if ticket was sold for a different event
     --raise error if ticket status is not ISSUED or REISSUED
