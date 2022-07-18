@@ -70,8 +70,8 @@ as
         return l_status;
         
     exception
-        when others then
-            return null;
+        when no_data_found then
+            raise_application_error(-20100, 'Ticket not found for serial code = ' || p_serial_code);
     end get_ticket_status;
     
     procedure get_ticket_information
@@ -92,7 +92,10 @@ as
             join event_system.tickets t
                 on p.ticket_sales_id = t.ticket_sales_id
         where t.serial_code = upper(p_serial_code);
-        
+    
+    exception
+        when no_data_found then
+            raise_application_error(-20100, 'Ticket not found for serial code = ' || p_serial_code);
     end get_ticket_information;
 
     procedure update_ticket_status

@@ -12,7 +12,6 @@ declare
     l_original_serial_code tickets.serial_code%type;
     l_new_serial_code tickets.serial_code%type;
     l_status tickets.status%type;
-
 begin
 
     l_venue_id := venue_api.get_venue_id(p_venue_name => l_venue_name);
