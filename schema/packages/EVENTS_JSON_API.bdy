@@ -2145,11 +2145,63 @@ as
             return get_json_error_doc(sqlcode, sqlerrm, 'get_customer_event_series_tickets_by_email');
     end get_customer_event_series_tickets_by_email;
 
---print tickets by ticket_sales_id
-
---reissue tickets
-
-
+    --add ticket methods (reissue)
+    --ticket_reissue (customer_id, serial_code)
+    --ticket_reissue_email (customer_email, serial_code)
+    --ticket_reissue_batch (customer_id, [serial_code, serial_code...])
+    --ticket_reissue_batch_email(customer_email, [serial_code, serial_code...])
+    /*
+    {
+        "action" : "ticket_reissue",
+        "customer_id" : 123,
+        "customer_email" : "customer@customer.com",
+        "ticket" : 
+            {
+                "serial_code" : "xyz", 
+                "**status_code" : "SUCCESS|ERROR", 
+                "**status_message" : "REISSUED|error message"
+            }
+    }
+    */
+    procedure ticket_reissue
+    (
+        p_json_doc in out nocopy clob
+    )
+    is
+    begin
+        null;
+    end ticket_reissue;
+    
+    /*
+    {
+        "action" : "ticket_reissue_batch",
+        "customer_id" : 123,
+        "customer_email" : "customer@customer.com",
+        "tickets" : 
+            [ 
+                {
+                    "serial_code" : "xyz", 
+                    "**status_code" : "SUCCESS|ERROR", 
+                    "**status_message" : "REISSUED|error message"
+                },
+                {
+                    "serial_code" : "abc", 
+                    "**status_code" : "SUCCESS|ERROR", 
+                    "**status_message" : "REISSUED|error message"
+                }
+            ]
+        "request_status" : "SUCCESS|ERRORS",
+        "request_errors" : 999
+    }
+    */
+    procedure ticket_reissue_batch
+    (
+        p_json_doc in out nocopy clob
+    )
+    is
+    begin
+        null;
+    end ticket_reissue_batch;
 
     procedure ticket_validate
     (

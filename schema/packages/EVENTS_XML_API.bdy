@@ -2253,7 +2253,63 @@ as
             return get_xml_error_doc(sqlcode, sqlerrm, 'get_customer_event_series_tickets_by_email');
     end get_customer_event_series_tickets_by_email;
 
---ticket_reissue
+    --add ticket methods (reissue)
+    --ticket_reissue (customer_id, serial_code)
+    --ticket_reissue_email (customer_email, serial_code)
+    --ticket_reissue_batch (customer_id, [serial_code, serial_code...])
+    --ticket_reissue_batch_email(customer_email, [serial_code, serial_code...])
+    /*
+    <ticket_reissue>
+      <customer>
+        <customer_id>123</customer_id>
+        <customer_email>customer@customer.com</customer_email>
+      </customer>
+      <ticket>
+        <serial_code>xyz</serial_code>
+        <**status_code>SUCESS|ERROR</status_code>
+        <**status_message>REISSUED|error message</status_message>        
+      </ticket>
+    </ticket_reissue>
+    */
+    procedure ticket_reissue
+    (
+        p_xml_doc in out nocopy xmltype
+    )
+    is
+    begin
+        null;
+    end ticket_reissue;
+    
+    /*
+    <ticket_reissue_batch>
+      <customer>
+        <customer_id>123</customer_id>
+        <customer_email>customer@customer.com</customer_email>
+      </customer>
+      <tickets>
+        <ticket>
+          <serial_code>xyz</serial_code>
+          <**status_code>SUCESS|ERROR</status_code>
+          <**status_message>REISSUED|error message</status_message>
+        </ticket>
+        <ticket>
+          <serial_code>abc</serial_code>
+          <**status_code>SUCESS|ERROR</status_code>
+          <**status_message>REISSUED|error message</status_message>
+        </ticket>
+      </tickets>
+      <request_status>SUCCESS|ERRORS</request_status>
+      <request_errors>999</request_errors>
+    </ticket_reissue_batch>
+    */
+    procedure ticket_reissue_batch
+    (
+        p_xml_doc in out nocopy xmltype
+    )
+    is
+    begin
+        null;
+    end ticket_reissue_batch;
 
 
     procedure ticket_validate
