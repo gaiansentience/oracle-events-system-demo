@@ -298,6 +298,12 @@ as
     type t_customer_event_tickets is table of r_customer_event_tickets;
        
     --show tickets purchased by this customer for this event
+    function show_customer_event_tickets_by_sale_id
+    (
+        p_customer_id in number,
+        p_ticket_sales_id in number
+    ) return t_customer_event_tickets pipelined;
+    
     function show_customer_event_tickets
     (
         p_customer_id in number,

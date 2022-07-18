@@ -594,7 +594,7 @@ as
             ,ct.assigned_row
             ,ct.assigned_seat
         from 
-            event_system.customer_event_tickets_v ct
+            event_system.customer_purchase_tickets_v ct
         where 
             ct.ticket_sales_id = p_ticket_sale_id 
             and ct.customer_id = p_customer_id
@@ -735,6 +735,27 @@ as
         show_customer_event_series_tickets(v_customer_id, p_event_series_id, p_tickets);
     
     end show_customer_event_series_tickets_by_email;
+
+    function show_customer_event_tickets_by_sale_id
+    (
+        p_customer_id in number,
+        p_ticket_sales_id in number
+    ) return t_customer_event_tickets pipelined
+    is
+        t_rows t_customer_event_tickets;
+        rc sys_refcursor;
+    begin
+    
+        show_customer_event_tickets_by_sale_id(p_customer_id, p_ticket_sales_id, rc);
+        fetch rc bulk collect into t_rows;
+        close rc;
+        
+        for i in 1..t_rows.count loop
+            pipe row(t_rows(i));
+        end loop;
+        return;
+    
+    end show_customer_event_tickets_by_sale_id;
     
     function show_customer_event_tickets
     (

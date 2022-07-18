@@ -8,7 +8,6 @@ drop view event_ticket_assignment_v_json_verify;
 drop view tickets_available_series_all_v_json_verify;
 drop view tickets_available_series_reseller_v_json_verify;
 drop view tickets_available_series_venue_v_json_verify;
-
 drop view tickets_available_all_v_json_verify;
 drop view tickets_available_reseller_v_json_verify;
 drop view tickets_available_venue_v_json_verify;
@@ -18,10 +17,11 @@ drop view event_ticket_prices_v_json_verify;
 
 drop view customer_event_series_tickets_v_json_verify;
 drop view customer_event_tickets_v_json_verify;
-
+drop view customer_purchase_tickets_v_json_verify;
 drop view customer_event_series_purchases_v_json_verify;
 drop view customer_event_purchases_v_json_verify;
-
+drop view customer_event_series_v_json_verify;
+drop view customer_events_v_json_verify;
 
 drop view customers_v_json_verify;
 

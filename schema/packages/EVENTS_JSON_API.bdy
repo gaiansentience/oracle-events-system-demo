@@ -2004,6 +2004,33 @@ as
             return get_json_error_doc(sqlcode, sqlerrm, 'get_customer_event_series_purchases_by_email');
     end get_customer_event_series_purchases_by_email;
 
+    function get_customer_event_tickets_by_sale_id
+    (
+        p_customer_id in number,
+        p_ticket_sales_id in number,
+        p_formatted in boolean default false
+    ) return clob
+    is
+        l_json clob;
+    begin
+    
+        select b.json_doc
+        into l_json
+        from customer_purchase_tickets_v_json b
+        where 
+            b.ticket_sales_id = p_ticket_sales_id 
+            and b.customer_id = p_customer_id;
+    
+        if p_formatted then
+            l_json := format_json_clob(l_json);
+        end if;
+        return l_json;
+    
+    exception
+        when others then
+            return get_json_error_doc(sqlcode, sqlerrm, 'get_customer_event_tickets_by_sale_id');
+    end get_customer_event_tickets_by_sale_id;
+
     function get_customer_event_tickets
     (
         p_customer_id in number,

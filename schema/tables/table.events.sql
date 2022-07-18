@@ -15,16 +15,13 @@ create table events(
     event_series_id number
 );
 
-create index events_idx_venue_id 
-    on events (venue_id);
-
-create index events_idx_date 
-    on events (event_date);
-
 create index events_idx01 
-    on events(event_id, event_date, venue_id, tickets_available, event_name);
+    on events(venue_id, event_date, event_id);
+
+create index events_idx02
+    on events(venue_id, event_date, event_series_id, event_id);
     
-create index events_idx_series
-    on events(event_series_id);
+create index events_idx03
+    on events(event_series_id, event_id, event_date);
     
 create sequence event_series_id_seq;

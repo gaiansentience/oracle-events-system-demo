@@ -41,13 +41,10 @@ with json_base as
                                             ,'assigned_section' : t.assigned_section
                                             ,'assigned_row'     : t.assigned_row
                                             ,'assigned_seat'    : t.assigned_seat
-                                        returning clob)
+                                        absent on null returning clob)
                                     returning clob)
-                                from event_system.customer_event_tickets_v t
-                                where 
-                                    t.customer_id = p.customer_id
-                                    and t.event_id = p.event_id
-                                    and t.ticket_sales_id = p.ticket_sales_id
+                                from event_system.tickets t
+                                where t.ticket_sales_id = p.ticket_sales_id
                                 )
                         returning clob)
                     returning clob)

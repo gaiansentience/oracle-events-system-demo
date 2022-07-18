@@ -480,6 +480,13 @@ as
     ) return clob;
 
     --add methods to print tickets
+    function get_customer_event_tickets_by_sale_id
+    (
+        p_customer_id in number,
+        p_ticket_sales_id in number,
+        p_formatted in boolean default false
+    ) return clob;
+        
     function get_customer_event_tickets
     (
         p_customer_id in number,

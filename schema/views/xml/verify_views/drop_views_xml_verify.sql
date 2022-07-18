@@ -17,6 +17,7 @@ drop view event_ticket_prices_v_xml_verify;
 
 drop view customer_event_series_tickets_v_xml_verify;
 drop view customer_event_tickets_v_xml_verify;
+drop view customer_purchase_tickets_v_xml_verify;
 drop view customer_event_series_purchases_v_xml_verify;
 drop view customer_event_purchases_v_xml_verify;
 drop view customer_event_series_v_xml_verify;

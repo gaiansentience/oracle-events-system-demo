@@ -2109,6 +2109,33 @@ as
     end get_customer_event_series_purchases_by_email;
 
 --print tickets
+    function get_customer_event_tickets_by_sale_id
+    (
+        p_customer_id in number,
+        p_ticket_sales_id in number,
+        p_formatted in boolean default false
+    ) return xmltype
+    is
+        l_xml xmltype;
+    begin
+    
+        select b.xml_doc
+        into l_xml
+        from customer_purchase_tickets_v_xml b
+        where 
+            b.ticket_sales_id = p_ticket_sales_id 
+            and b.customer_id = p_customer_id;
+    
+        if p_formatted then
+            l_xml := format_xml_clob(l_xml);
+        end if;
+        return l_xml;
+    
+    exception
+        when others then
+            return get_xml_error_doc(sqlcode, sqlerrm, 'get_customer_event_tickets_by_sale_id');
+    end get_customer_event_tickets_by_sale_id;
+
     function get_customer_event_tickets
     (
         p_customer_id in number,
