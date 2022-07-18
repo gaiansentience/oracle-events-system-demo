@@ -18,7 +18,6 @@ begin
  end;
 
 /*  
-
 {
   "customer_id" : 1910,
   "customer_name" : "John Kirby",
@@ -45,32 +44,17 @@ begin
         {
           "ticket_id" : 640770,
           "serial_code" : "G2442C1910S80203D20220713121101Q0003I0001",
-          "status" : "ISSUED",
-          "issued_to_name" : null,
-          "issued_to_id" : null,
-          "assigned_section" : null,
-          "assigned_row" : null,
-          "assigned_seat" : null
+          "status" : "ISSUED"
         },
         {
           "ticket_id" : 640771,
           "serial_code" : "G2442C1910S80203D20220713121101Q0003I0002",
-          "status" : "ISSUED",
-          "issued_to_name" : null,
-          "issued_to_id" : null,
-          "assigned_section" : null,
-          "assigned_row" : null,
-          "assigned_seat" : null
+          "status" : "ISSUED"
         },
         {
           "ticket_id" : 640772,
           "serial_code" : "G2442C1910S80203D20220713121101Q0003I0003",
-          "status" : "ISSUED",
-          "issued_to_name" : null,
-          "issued_to_id" : null,
-          "assigned_section" : null,
-          "assigned_row" : null,
-          "assigned_seat" : null
+          "status" : "ISSUED"
         }
       ]
     },
@@ -87,67 +71,41 @@ begin
         {
           "ticket_id" : 640773,
           "serial_code" : "G2443C1910S80204D20220713121101Q0006I0001",
-          "status" : "ISSUED",
-          "issued_to_name" : null,
-          "issued_to_id" : null,
-          "assigned_section" : null,
-          "assigned_row" : null,
-          "assigned_seat" : null
+          "status" : "ISSUED"
         },
         {
           "ticket_id" : 640774,
           "serial_code" : "G2443C1910S80204D20220713121101Q0006I0002",
-          "status" : "ISSUED",
-          "issued_to_name" : null,
-          "issued_to_id" : null,
-          "assigned_section" : null,
-          "assigned_row" : null,
-          "assigned_seat" : null
+          "status" : "ISSUED"
         },
         {
           "ticket_id" : 640775,
           "serial_code" : "G2443C1910S80204D20220713121101Q0006I0003",
-          "status" : "ISSUED",
-          "issued_to_name" : null,
-          "issued_to_id" : null,
-          "assigned_section" : null,
-          "assigned_row" : null,
-          "assigned_seat" : null
+          "status" : "ISSUED"
         },
         {
           "ticket_id" : 640776,
           "serial_code" : "G2443C1910S80204D20220713121101Q0006I0004",
-          "status" : "ISSUED",
-          "issued_to_name" : null,
-          "issued_to_id" : null,
-          "assigned_section" : null,
-          "assigned_row" : null,
-          "assigned_seat" : null
+          "status" : "ISSUED"
         },
         {
           "ticket_id" : 640777,
           "serial_code" : "G2443C1910S80204D20220713121101Q0006I0005",
-          "status" : "ISSUED",
-          "issued_to_name" : null,
-          "issued_to_id" : null,
-          "assigned_section" : null,
-          "assigned_row" : null,
-          "assigned_seat" : null
+          "status" : "ISSUED"
         },
         {
           "ticket_id" : 640778,
           "serial_code" : "G2443C1910S80204D20220713121101Q0006I0006",
-          "status" : "ISSUED",
-          "issued_to_name" : null,
-          "issued_to_id" : null,
-          "assigned_section" : null,
-          "assigned_row" : null,
-          "assigned_seat" : null
+          "status" : "ISSUED"
         }
       ]
     }
   ]
 }
+
+
+PL/SQL procedure successfully completed.
+
 
 
 */

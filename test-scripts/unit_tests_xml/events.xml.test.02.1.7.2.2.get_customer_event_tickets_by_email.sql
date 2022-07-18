@@ -16,6 +16,7 @@ begin
 end;
 
 /*
+
 <customer_tickets>
   <customer>
     <customer_id>3961</customer_id>
@@ -89,7 +90,6 @@ end;
 
 
 PL/SQL procedure successfully completed.
-
 
 
 */

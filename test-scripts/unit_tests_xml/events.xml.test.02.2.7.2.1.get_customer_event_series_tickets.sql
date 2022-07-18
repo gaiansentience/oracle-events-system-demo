@@ -16,9 +16,12 @@ begin
 
     l_xml := events_xml_api.get_customer_event_series_tickets(p_customer_id => l_customer_id, p_event_series_id => l_event_series_id, p_formatted => true);
 
-    --dbms_output.put_line(l_xml.getclobval());
     l_xml_doc := l_xml.getclobval();
-    events_test_data_api.output_put_clob(p_doc => l_xml_doc, p_chunksize => 16000);
+    if dbms_lob.getlength(l_xml_doc) < 32000 then
+        dbms_output.put_line(l_xml.getclobval());
+    else
+        events_test_data_api.output_put_clob(p_doc => l_xml_doc, p_chunksize => 16000);
+    end if;
 
 
 end;
@@ -1159,6 +1162,7 @@ ket_sales_id>80286</ticket_sales_id>
 
 
 PL/SQL procedure successfully completed.
+
 
 
 */
