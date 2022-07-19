@@ -41,25 +41,65 @@ fetch first 1 row only;
         when others then
             dbms_output.put_line(sqlerrm);
     end;
-    
-    l_status := event_tickets_api.get_ticket_status(p_serial_code => l_serial_code);
-    dbms_output.put_line('before validation: serial code ' || l_serial_code || ' status ' || l_status);    
-    event_tickets_api.ticket_validate(p_event_id => l_event_id, p_serial_code => l_serial_code);
-    l_status := event_tickets_api.get_ticket_status(p_serial_code => l_serial_code);
-    dbms_output.put_line('after validation: serial code ' || l_serial_code || ' status ' || l_status);
 
-    dbms_output.put_line('force the ticket status to REISSUED');
+    dbms_output.put_line('ticket is ISSUED, normal validation result');    
+    begin
+        l_status := event_tickets_api.get_ticket_status(p_serial_code => l_serial_code);
+        dbms_output.put_line('before validation: serial code ' || l_serial_code || ' status ' || l_status);    
+        event_tickets_api.ticket_validate(p_event_id => l_event_id, p_serial_code => l_serial_code);
+        l_status := event_tickets_api.get_ticket_status(p_serial_code => l_serial_code);
+        dbms_output.put_line('after validation: serial code ' || l_serial_code || ' status ' || l_status);
+    exception
+        when others then
+            dbms_output.put_line(sqlerrm);
+    end;
+
+    dbms_output.put_line('force the ticket status to REISSUED, normal validation result');
     event_tickets_api.update_ticket_status(p_serial_code => l_serial_code, p_status => event_tickets_api.c_ticket_status_reissued, p_use_commit => true);
-
-    l_status := event_tickets_api.get_ticket_status(p_serial_code => l_serial_code);
-    dbms_output.put_line('before validation: serial code ' || l_serial_code || ' status ' || l_status);    
-    event_tickets_api.ticket_validate(p_event_id => l_event_id, p_serial_code => l_serial_code);
-    l_status := event_tickets_api.get_ticket_status(p_serial_code => l_serial_code);
-    dbms_output.put_line('after validation: serial code ' || l_serial_code || ' status ' || l_status);
+    begin
+        l_status := event_tickets_api.get_ticket_status(p_serial_code => l_serial_code);
+        dbms_output.put_line('before validation: serial code ' || l_serial_code || ' status ' || l_status);    
+        event_tickets_api.ticket_validate(p_event_id => l_event_id, p_serial_code => l_serial_code);
+        l_status := event_tickets_api.get_ticket_status(p_serial_code => l_serial_code);
+        dbms_output.put_line('after validation: serial code ' || l_serial_code || ' status ' || l_status);
+    exception
+        when others then
+            dbms_output.put_line(sqlerrm);
+    end;
 
     dbms_output.put_line('try to revalidate the ticket with status of VALIDATED');
     begin
+        l_status := event_tickets_api.get_ticket_status(p_serial_code => l_serial_code);
+        dbms_output.put_line('before validation: serial code ' || l_serial_code || ' status ' || l_status);    
         event_tickets_api.ticket_validate(p_event_id => l_event_id, p_serial_code => l_serial_code);
+        l_status := event_tickets_api.get_ticket_status(p_serial_code => l_serial_code);
+        dbms_output.put_line('after validation: serial code ' || l_serial_code || ' status ' || l_status);
+    exception
+        when others then
+            dbms_output.put_line(sqlerrm);
+    end;
+
+    dbms_output.put_line('force the ticket status to CANCELLED');
+    event_tickets_api.update_ticket_status(p_serial_code => l_serial_code, p_status => event_tickets_api.c_ticket_status_cancelled, p_use_commit => true);
+    begin
+        l_status := event_tickets_api.get_ticket_status(p_serial_code => l_serial_code);
+        dbms_output.put_line('before validation: serial code ' || l_serial_code || ' status ' || l_status);    
+        event_tickets_api.ticket_validate(p_event_id => l_event_id, p_serial_code => l_serial_code);
+        l_status := event_tickets_api.get_ticket_status(p_serial_code => l_serial_code);
+        dbms_output.put_line('after validation: serial code ' || l_serial_code || ' status ' || l_status);
+    exception
+        when others then
+            dbms_output.put_line(sqlerrm);
+    end;
+
+    dbms_output.put_line('force the ticket status to REFUNDED');
+    event_tickets_api.update_ticket_status(p_serial_code => l_serial_code, p_status => event_tickets_api.c_ticket_status_refunded, p_use_commit => true);
+    begin
+        l_status := event_tickets_api.get_ticket_status(p_serial_code => l_serial_code);
+        dbms_output.put_line('before validation: serial code ' || l_serial_code || ' status ' || l_status);    
+        event_tickets_api.ticket_validate(p_event_id => l_event_id, p_serial_code => l_serial_code);
+        l_status := event_tickets_api.get_ticket_status(p_serial_code => l_serial_code);
+        dbms_output.put_line('after validation: serial code ' || l_serial_code || ' status ' || l_status);
     exception
         when others then
             dbms_output.put_line(sqlerrm);
@@ -73,24 +113,36 @@ end;
 
 
 /*
-
 try to validate an invalid serial number
 ORA-20100: Ticket not found for serial code = G2381C2640S71343D20220712152931Q0011I0001xxxx
 
 try to validate the ticket for the wrong event
 ORA-20100: Ticket is for a different event, cannot validate.
 
+ticket is ISSUED, normal validation result
 before validation: serial code G2381C2640S71343D20220712152931Q0011I0001 status ISSUED
 after validation: serial code G2381C2640S71343D20220712152931Q0011I0001 status VALIDATED
 
-force the ticket status to REISSUED
+force the ticket status to REISSUED, normal validation result
 before validation: serial code G2381C2640S71343D20220712152931Q0011I0001 status REISSUED
 after validation: serial code G2381C2640S71343D20220712152931Q0011I0001 status VALIDATED
 
 try to revalidate the ticket with status of VALIDATED
+before validation: serial code G2381C2640S71343D20220712152931Q0011I0001 status VALIDATED
 ORA-20100: Ticket has already been used for event entry, cannot revalidate.
 
+force the ticket status to CANCELLED
+before validation: serial code G2381C2640S71343D20220712152931Q0011I0001 status CANCELLED
+ORA-20100: Ticket has been cancelled.  Cannot validate.
+
+force the ticket status to REFUNDED
+before validation: serial code G2381C2640S71343D20220712152931Q0011I0001 status REFUNDED
+ORA-20100: Ticket has been refunded.  Cannot validate.
+
+
 PL/SQL procedure successfully completed.
+
+
 
 
 */

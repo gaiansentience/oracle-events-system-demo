@@ -9,3 +9,7 @@ create table customers(
        constraint customers_nn_customer_email not null
        constraint customers_u_customer_email unique
 );
+
+--parameter MAX_STRING_SIZE must be set to EXTENDED
+--alter table customers 
+--  modify (customer_email collate binary_ci);

@@ -59,10 +59,52 @@ begin
             dbms_output.put_line(sqlerrm);
     end;
     
+    update tickets t set t.status = 'VALIDATED', t.serial_code = l_original_serial_code
+    where t.ticket_id = l_ticket_id;
+    commit;
+    
+    dbms_output.put_line('reset ticket to validated state and original serial code, then try to reissue');
+    begin
+        customer_api.ticket_reissue(p_customer_id => l_customer_id, p_serial_code => l_original_serial_code);
+    exception
+        when others then
+            dbms_output.put_line(sqlerrm);
+    end;
+
+    update tickets t set t.status = 'CANCELLED', t.serial_code = l_original_serial_code
+    where t.ticket_id = l_ticket_id;
+    commit;
+    
+    dbms_output.put_line('reset ticket to cancelled state and original serial code, then try to reissue');
+    begin
+        customer_api.ticket_reissue(p_customer_id => l_customer_id, p_serial_code => l_original_serial_code);
+    exception
+        when others then
+            dbms_output.put_line(sqlerrm);
+    end;
+
+    update tickets t set t.status = 'REFUNDED', t.serial_code = l_original_serial_code
+    where t.ticket_id = l_ticket_id;
+    commit;
+    
+    dbms_output.put_line('reset ticket to refunded state and original serial code, then try to reissue');
+    begin
+        customer_api.ticket_reissue(p_customer_id => l_customer_id, p_serial_code => l_original_serial_code);
+    exception
+        when others then
+            dbms_output.put_line(sqlerrm);
+    end;
+
+    --set the ticket back to issued status for other testing
+    update tickets t set t.status = 'ISSUED', t.serial_code = l_original_serial_code
+    where t.ticket_id = l_ticket_id;
+    commit;
+
     
 end;
 
 /*
+
 original serial code = G2381C2640S71343D20220712152931Q0011I0001, status is ISSUED
 after reissuing ticket serial code = G2381C2640S71343D20220712152931Q0011I0001R, status is REISSUED
 
@@ -70,9 +112,23 @@ try to reissue the same ticket using the updated serial code
 ORA-20100: Ticket has already been reissued, cannot reissue twice.
 
 try to reissue the same ticket using the original serial code
-ORA-01403: no data found
+ORA-20100: Ticket not found for serial code = G2381C2640S71343D20220712152931Q0011I0001
 
 reset ticket to issued state and serial code, then try to reissue for another customer
 ORA-20100: Tickets can only be reissued to original purchasing customer, cannot reissue.
+
+reset ticket to validated state and original serial code, then try to reissue
+ORA-20100: Ticket has been validated for event entry, cannot reissue.
+
+reset ticket to cancelled state and original serial code, then try to reissue
+ORA-20100: Ticket has been cancelled, cannot reissue.
+
+reset ticket to refunded state and original serial code, then try to reissue
+ORA-20100: Ticket has been refunded, cannot reissue.
+
+
+PL/SQL procedure successfully completed.
+
+
 
 */

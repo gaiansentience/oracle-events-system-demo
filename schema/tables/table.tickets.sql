@@ -20,6 +20,10 @@ create table tickets
     assigned_seat varchar2(10)
 );
 
+--parameter MAX_STRING_SIZE must be set to EXTENDED
+--alter table tickets 
+--  modify (serial_code collate binary_ci);
+
 create index tickets_idx_ticket_sales_id 
     on tickets (ticket_sales_id);
 
@@ -28,3 +32,4 @@ create unique index tickets_u_serial_code
     
 create index tickets_idx1 
     on tickets (serial_code, ticket_sales_id, status);
+    

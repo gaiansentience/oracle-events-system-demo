@@ -15,4 +15,5 @@ drop package event_tickets_api;
 drop package event_setup_api;
 drop package event_api;
 drop package util_error_api;
+drop package util_types;
 prompt api packages dropped

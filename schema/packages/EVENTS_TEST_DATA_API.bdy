@@ -954,6 +954,8 @@ as
             end if;
         
         end loop;
+        
+        dbms_output.new_line;
     
     exception
         when others then

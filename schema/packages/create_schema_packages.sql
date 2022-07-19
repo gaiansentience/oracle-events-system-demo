@@ -1,5 +1,6 @@
 prompt creating api packages for events b2b system
 prompt views need to be deployed before running this script
+@@util_types.spc;
 prompt creating error logging package
 @@util_error_api.spc;
 @@util_error_api.bdy;

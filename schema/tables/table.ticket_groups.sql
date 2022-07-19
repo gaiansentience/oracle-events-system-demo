@@ -15,10 +15,18 @@ ticket_groups(
        constraint ticket_groups_nn_tickets_available not null
   );
   
-create unique index ticket_groups_udx on ticket_groups (event_id, price_category);  
+--parameter MAX_STRING_SIZE must be set to EXTENDED
+--alter table ticket_groups 
+--  modify (price_category collate binary_ci);
+  
+create unique index ticket_groups_udx 
+    on ticket_groups (event_id, price_category);  
 
-create index ticket_groups_idx01 on ticket_groups (ticket_group_id, event_id, price_category);  
+create index ticket_groups_idx01 
+    on ticket_groups (ticket_group_id, event_id, price_category);  
 
-create index ticket_groups_idx02 on ticket_groups (ticket_group_id, price);  
+create index ticket_groups_idx02 
+    on ticket_groups (ticket_group_id, price);  
 
-create index ticket_groups_idx03 on ticket_groups (event_id, ticket_group_id);
+create index ticket_groups_idx03 
+    on ticket_groups (event_id, ticket_group_id);
