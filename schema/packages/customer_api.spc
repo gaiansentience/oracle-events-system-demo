@@ -413,4 +413,13 @@ as
         p_serial_code in varchar2
     );
 
+    procedure ticket_assign_holder
+    (
+        p_customer_id in customers.customer_id%type,
+        p_serial_code in tickets.serial_code%type,
+        p_issued_to_name in tickets.issued_to_name%type,
+        p_issued_to_id in tickets.issued_to_id%type
+    );
+
+
 end customer_api;

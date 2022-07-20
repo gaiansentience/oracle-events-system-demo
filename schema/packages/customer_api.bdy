@@ -934,6 +934,7 @@ as
         case
             when l_customer_id <> p_customer_id then
                 raise_application_error(-20100, 'Tickets can only be reissued to original purchasing customer, cannot reissue.');
+                
             when l_status = event_tickets_api.c_ticket_status_issued then
         
                 update tickets t
@@ -951,7 +952,9 @@ as
             when l_status = event_tickets_api.c_ticket_status_cancelled then
                 raise_application_error(-20100, 'Ticket has been cancelled, cannot reissue.');
             when l_status = event_tickets_api.c_ticket_status_refunded then
-                raise_application_error(-20100, 'Ticket has been refunded, cannot reissue.');                
+                raise_application_error(-20100, 'Ticket has been refunded, cannot reissue.');  
+            else
+                raise_application_error(-20100, 'An unexpected error has occurred.');
         end case;
         
     exception
@@ -975,8 +978,54 @@ as
             p_customer_id => l_customer_id, 
             p_serial_code => p_serial_code);
             
-    end ticket_reissue_using_email;    
+    end ticket_reissue_using_email;  
+    
+    procedure ticket_assign_holder
+    (
+        p_customer_id in customers.customer_id%type,
+        p_serial_code in tickets.serial_code%type,
+        p_issued_to_name in tickets.issued_to_name%type,
+        p_issued_to_id in tickets.issued_to_id%type
+    )
+    is
+        l_status tickets.status%type;
+        l_customer_id number;
+        l_ticket_group_id number;
+        l_event_id number;
+    begin
 
+        event_tickets_api.get_ticket_information(
+            p_serial_code => p_serial_code, 
+            p_status => l_status, 
+            p_ticket_group_id => l_ticket_group_id, 
+            p_customer_id => l_customer_id, 
+            p_event_id => l_event_id);
+
+        case
+            when l_customer_id <> p_customer_id then
+                raise_application_error(-20100, 'Ticket holder can only be assigned by purchasing customer, cannot assign.');
+            when l_status = event_tickets_api.c_ticket_status_cancelled then
+                raise_application_error(-20100, 'Ticket has been cancelled, cannot assign.');
+            when l_status = event_tickets_api.c_ticket_status_refunded then
+                raise_application_error(-20100, 'Ticket has been refunded, cannot assign.');                
+            else
+            
+                update tickets t
+                set 
+                    t.issued_to_name = p_issued_to_name,
+                    t.issued_to_id = p_issued_to_id
+                where t.serial_code = upper(p_serial_code);
+            
+                commit;
+        
+        end case;
+
+    exception
+        when others then
+            log_error(sqlerrm, sqlcode, 'ticket_assign_holder');
+            raise;    
+    end ticket_assign_holder;
+    
 begin
     initialize;
 end customer_api;
