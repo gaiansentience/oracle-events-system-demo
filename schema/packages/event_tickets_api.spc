@@ -75,4 +75,11 @@ as
         p_serial_code in varchar2
     );
 
+    procedure get_ticket_holder_info
+    (
+        p_serial_code in tickets.serial_code%type,
+        p_issued_to_name out tickets.issued_to_name%type,
+        p_issued_to_id out tickets.issued_to_id%type
+    );
+
 end event_tickets_api;

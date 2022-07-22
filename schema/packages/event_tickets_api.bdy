@@ -314,6 +314,29 @@ as
             raise;
     end ticket_cancel;
 
+    procedure get_ticket_holder_info
+    (
+        p_serial_code in tickets.serial_code%type,
+        p_issued_to_name out tickets.issued_to_name%type,
+        p_issued_to_id out tickets.issued_to_id%type
+    )
+    is
+    begin
+    
+        select t.issued_to_name, t.issued_to_id
+        into p_issued_to_name, p_issued_to_id
+        from tickets t where t.serial_code = upper(p_serial_code);
+    
+    exception
+        when no_data_found then
+            log_error('TICKET SERIAL CODE (' || p_serial_code || ') NOT FOUND', sqlcode, 'get_ticket_holder_info');
+            raise_application_error(-20100, 'TICKET SERIAL CODE (' || p_serial_code || ') NOT FOUND');        
+        when others then
+            log_error(sqlerrm, sqlcode, 'get_ticket_holder_info');
+            raise;    
+    end get_ticket_holder_info;
+
+
 begin
     initialize;
 end event_tickets_api;
