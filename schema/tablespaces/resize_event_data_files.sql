@@ -1,6 +1,6 @@
 
 
---resize datafiles on unix system
+--resize datafiles on unix system (developer days vmbox)
 /*
 alter database datafile '/u01/app/oracle/oradata/ORCLCDB/orcl/event_data01.dbf'
    resize 200M;
