@@ -14,6 +14,8 @@ container = current;
 
 grant create table to event_system;
 
+grant create type to event_system;
+
 grant create view to event_system;
 
 grant create materialized view to event_system;

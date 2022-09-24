@@ -926,7 +926,7 @@ as
         p_chunksize in number default 32000
     )
     is
-        l_chunck clob;
+        l_chunk clob;
         l_length number;
         l_offset number := 1;
         l_amount number := p_chunksize;
@@ -940,8 +940,8 @@ as
     
         loop
                   
-            dbms_lob.read(p_doc, l_amount, l_offset, l_chunck);
-            dbms_output.put_line(l_chunck);
+            dbms_lob.read(p_doc, l_amount, l_offset, l_chunk);
+            dbms_output.put_line(l_chunk);
             --set the offset past the last read
             l_offset := l_offset + l_amount;
             --adjust the amount to read based on total length
