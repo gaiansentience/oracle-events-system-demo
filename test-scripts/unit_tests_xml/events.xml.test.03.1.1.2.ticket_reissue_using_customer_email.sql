@@ -9,8 +9,9 @@ declare
     l_event_name events.event_name%type := 'Evangeline Thorpe';
     l_venue_id number;
     l_event_id number;
-    l_customer_id number;
+
     l_customer_email customers.customer_name%type := 'James.Kirk@example.customer.com';
+    l_customer_id number;
     l_other_customer_email customers.customer_name%type := 'Gary.Walsh@example.customer.com';
     l_ticket_sales_id number;
     l_ticket_id number;

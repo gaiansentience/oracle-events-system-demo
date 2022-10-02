@@ -1,9 +1,9 @@
 --reset test cases for assign ticket holder and assign ticket holder batch
 set serveroutput on;
 declare
-    l_venue_name venues.venue_name%type := 'Another Roadside Attraction';
-    l_event_name events.event_name%type := 'New Years Mischief';
-    l_customer_email varchar2(50) := 'Maggie.Wayland@example.customer.com';
+    l_venue_name venues.venue_name%type := 'The Pink Pony Revue';
+    l_event_name events.event_name%type := 'Evangeline Thorpe';
+    l_customer_email customers.customer_name%type := 'Gary.Walsh@example.customer.com';
     l_venue_id number;
     l_event_id number;
     l_customer_id number;

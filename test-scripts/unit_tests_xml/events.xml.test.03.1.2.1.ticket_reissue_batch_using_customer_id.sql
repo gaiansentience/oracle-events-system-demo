@@ -9,8 +9,8 @@ declare
     l_event_name events.event_name%type := 'Evangeline Thorpe';
     l_venue_id number;
     l_event_id number;
-    l_customer_id number;
     l_customer_email customers.customer_name%type := 'Gary.Walsh@example.customer.com';
+    l_customer_id number;
 
     type r_ticket is record(ticket_id number, serial_code tickets.serial_code%type, status tickets.status%type);
     type t_tickets is table of r_ticket;

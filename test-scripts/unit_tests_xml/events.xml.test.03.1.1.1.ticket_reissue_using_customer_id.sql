@@ -5,12 +5,13 @@ declare
     l_xml varchar2(4000);
     l_xml_doc xmltype;
 
-    l_venue_id number;
     l_venue_name venues.venue_name%type := 'The Pink Pony Revue';
-    l_event_id number;
     l_event_name events.event_name%type := 'Evangeline Thorpe';
-    l_customer_id number;
+    l_venue_id number;
+    l_event_id number;
     l_customer_email customers.customer_name%type := 'Gary.Walsh@example.customer.com';
+    l_customer_id number;
+
     l_ticket_sales_id number;
     l_ticket_id number;
     l_original_serial_code tickets.serial_code%type;
