@@ -678,7 +678,7 @@ as
         <issued_to_name>Albert Einstein</issued_to_name>
         <issued_to_id>MA123456789</issued_to_id>
         <**status_code>SUCESS|ERROR</status_code>
-        <**status_message>REISSUED|error message</status_message>        
+        <**status_message>SERIAL CODE ASSIGNED|error message</status_message>        
       </ticket>
     </ticket_assign_holder>
     */
@@ -699,14 +699,14 @@ as
           <issued_to_name>Albert Einstein</issued_to_name>
           <issued_to_id>MA123456789</issued_to_id>
           <**status_code>SUCESS|ERROR</status_code>
-          <**status_message>REISSUED|error message</status_message>
+          <**status_message>SERIAL CODE ASSIGNED|error message</status_message>
         </ticket>
         <ticket>
           <serial_code>abc</serial_code>
           <issued_to_name>Nicola Tesla</issued_to_name>
           <issued_to_id>NY987654321</issued_to_id>
           <**status_code>SUCESS|ERROR</status_code>
-          <**status_message>REISSUED|error message</status_message>
+          <**status_message>SERIAL CODE ASSIGNED|error message</status_message>
         </ticket>
       </tickets>
       <request_status>SUCCESS|ERRORS</request_status>

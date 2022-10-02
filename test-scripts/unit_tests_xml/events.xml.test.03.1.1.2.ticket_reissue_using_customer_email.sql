@@ -5,10 +5,10 @@ declare
     l_xml varchar2(4000);
     l_xml_doc xmltype;
 
-    l_venue_id number;
     l_venue_name venues.venue_name%type := 'The Pink Pony Revue';
-    l_event_id number;
     l_event_name events.event_name%type := 'Evangeline Thorpe';
+    l_venue_id number;
+    l_event_id number;
     l_customer_id number;
     l_customer_email customers.customer_name%type := 'James.Kirk@example.customer.com';
     l_other_customer_email customers.customer_name%type := 'Gary.Walsh@example.customer.com';

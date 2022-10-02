@@ -628,7 +628,7 @@ as
                 "issued_to_name" : "Albert Einstein",
                 "issued_to_id" : "MA123456789",
                 "**status_code" : "SUCCESS|ERROR", 
-                "**status_message" : "REISSUED|error message"
+                "**status_message" : "SERIAL CODE ASSIGNED|error message"
             }
     }
     */
@@ -649,14 +649,14 @@ as
                     "issued_to_name" : "Albert Einstein",
                     "issued_to_id" : "MA123456789",
                     "**status_code" : "SUCCESS|ERROR", 
-                    "**status_message" : "REISSUED|error message"
+                    "**status_message" : "SERIAL CODE ASSIGNED|error message"
                 },
                 {
                     "serial_code" : "abc", 
                     "issued_to_name" : "Nicola Tesla",
                     "issued_to_id" : "NY987654321",
                     "**status_code" : "SUCCESS|ERROR", 
-                    "**status_message" : "REISSUED|error message"
+                    "**status_message" : "SERIAL CODE ASSIGNED|error message"
                 }
             ]
         "request_status" : "SUCCESS|ERRORS",

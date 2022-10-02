@@ -2428,7 +2428,7 @@ as
                     p_issued_to_id => l_issued_to_id);
             end if;
             l_status_code := 'SUCCESS';
-            l_status_message := 'SERIAL CODE ' || l_serial_code || ' ASSIGNED TO ' || l_issued_to_name;
+            l_status_message := 'SERIAL CODE ASSIGNED';
         exception
             when others then
                 l_status_code := 'ERROR';
@@ -2489,7 +2489,7 @@ as
                         p_issued_to_id => l_issued_to_id);
                 end if;
                 l_status_code := 'SUCCESS';
-                l_status_message := 'SERIAL CODE ' || l_serial_code || ' ASSIGNED TO ' || l_issued_to_name;
+                l_status_message := 'SERIAL CODE ASSIGNED';
             exception
                 when others then
                     l_status_code := 'ERROR';
