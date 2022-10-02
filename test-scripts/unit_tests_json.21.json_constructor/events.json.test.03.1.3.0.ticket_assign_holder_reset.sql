@@ -13,7 +13,9 @@ begin
     l_customer_id := customer_api.get_customer_id(p_customer_email => l_customer_email);
 
     update tickets tx
-    set tx.issued_to_name = null, tx.issued_to_id = null
+    set 
+        tx.issued_to_name = null, 
+        tx.issued_to_id = null
     where tx.ticket_id in
     (
     select t.ticket_id
