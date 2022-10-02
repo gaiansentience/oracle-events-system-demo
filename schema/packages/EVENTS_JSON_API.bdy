@@ -2145,24 +2145,6 @@ as
             return get_json_error_doc(sqlcode, sqlerrm, 'get_customer_event_series_tickets_by_email');
     end get_customer_event_series_tickets_by_email;
 
-    --add ticket methods (reissue)
-    --ticket_reissue (customer_id, serial_code)
-    --ticket_reissue_email (customer_email, serial_code)
-    --ticket_reissue_batch (customer_id, [serial_code, serial_code...])
-    --ticket_reissue_batch_email(customer_email, [serial_code, serial_code...])
-    /*
-    {
-        "action" : "ticket_reissue",
-        "customer_id" : 123,
-        "customer_email" : "customer@customer.com",
-        "ticket" : 
-            {
-                "serial_code" : "xyz", 
-                "**status_code" : "SUCCESS|ERROR", 
-                "**status_message" : "REISSUED|error message"
-            }
-    }
-    */
     procedure ticket_reissue
     (
         p_json_doc in out nocopy clob
@@ -2211,28 +2193,6 @@ as
             p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'ticket_reissue');
     end ticket_reissue;
     
-    /*
-    {
-        "action" : "ticket_reissue_batch",
-        "customer_id" : 123,
-        "customer_email" : "customer@customer.com",
-        "tickets" : 
-            [ 
-                {
-                    "serial_code" : "xyz", 
-                    "**status_code" : "SUCCESS|ERROR", 
-                    "**status_message" : "REISSUED|error message"
-                },
-                {
-                    "serial_code" : "abc", 
-                    "**status_code" : "SUCCESS|ERROR", 
-                    "**status_message" : "REISSUED|error message"
-                }
-            ]
-        "request_status" : "SUCCESS|ERRORS",
-        "request_errors" : 999
-    }
-    */
     procedure ticket_reissue_batch
     (
         p_json_doc in out nocopy clob
@@ -2445,6 +2405,129 @@ as
         when others then
             p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'ticket_cancel');
     end ticket_cancel;
+
+    procedure ticket_assign_holder
+    (
+        p_json_doc in out nocopy clob
+    )
+    is
+        l_customer_id customers.customer_id%type;
+        l_customer_email customers.customer_email%type;
+        l_serial_code tickets.serial_code%type;
+        l_issued_to_name tickets.issued_to_name%type;
+        l_issued_to_id tickets.issued_to_id%type;        
+        l_status_code varchar2(50);
+        l_status_message varchar2(4000);
+        o_request json_object_t;
+        o_ticket json_object_t;
+    begin
+        o_request := json_object_t.parse(p_json_doc);
+        l_customer_id := o_request.get_number('customer_id');
+        l_customer_email := o_request.get_string('customer_email');
+        
+        o_ticket := o_request.get_object('ticket');        
+        l_serial_code := o_ticket.get_string('serial_code');   
+        l_issued_to_name := o_ticket.get_string('issued_to_name');   
+        l_issued_to_id := o_ticket.get_string('issued_to_id');   
+    
+        begin
+            if l_customer_id is not null then
+                customer_api.ticket_assign_holder(
+                    p_customer_id => l_customer_id,
+                    p_serial_code => l_serial_code,
+                    p_issued_to_name => l_issued_to_name,
+                    p_issued_to_id => l_issued_to_id);            
+            else
+                customer_api.ticket_assign_holder_using_email(
+                    p_customer_email => l_customer_email, 
+                    p_serial_code => l_serial_code,
+                    p_issued_to_name => l_issued_to_name,
+                    p_issued_to_id => l_issued_to_id);
+            end if;
+            l_status_code := 'SUCCESS';
+            l_status_message := 'SERIAL CODE ' || l_serial_code || ' ASSIGNED TO ' || l_issued_to_name;
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
+
+        o_ticket.put('status_code', l_status_code);
+        o_ticket.put('status_message', l_status_message);
+
+        p_json_doc := o_request.to_clob; 
+
+    exception
+        when others then
+            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'ticket_assign_holder');
+    end ticket_assign_holder;
+    
+    procedure ticket_assign_holder_batch
+    (
+        p_json_doc in out nocopy clob
+    )
+    is
+        l_customer_id customers.customer_id%type;
+        l_customer_email customers.customer_email%type;
+        l_serial_code tickets.serial_code%type;
+        l_issued_to_name tickets.issued_to_name%type;
+        l_issued_to_id tickets.issued_to_id%type;        
+        l_status_code varchar2(50);
+        l_status_message varchar2(4000);
+        l_request_errors number := 0;
+        o_request json_object_t;
+        a_tickets json_array_t;
+        o_ticket json_object_t;
+    begin
+    
+        o_request := json_object_t.parse(p_json_doc);
+        l_customer_id := o_request.get_number('customer_id');
+        l_customer_email := o_request.get_string('customer_email');
+    
+        a_tickets := o_request.get_array('tickets');
+        for i in 0..a_tickets.get_size - 1 loop
+            o_ticket := json_object_t(a_tickets.get(i));
+            l_serial_code := o_ticket.get_string('serial_code');   
+            l_issued_to_name := o_ticket.get_string('issued_to_name');   
+            l_issued_to_id := o_ticket.get_string('issued_to_id');   
+    
+            begin
+                if l_customer_id is not null then
+                    customer_api.ticket_assign_holder(
+                        p_customer_id => l_customer_id,
+                        p_serial_code => l_serial_code,
+                        p_issued_to_name => l_issued_to_name,
+                        p_issued_to_id => l_issued_to_id);            
+                else
+                    customer_api.ticket_assign_holder_using_email(
+                        p_customer_email => l_customer_email, 
+                        p_serial_code => l_serial_code,
+                        p_issued_to_name => l_issued_to_name,
+                        p_issued_to_id => l_issued_to_id);
+                end if;
+                l_status_code := 'SUCCESS';
+                l_status_message := 'SERIAL CODE ' || l_serial_code || ' ASSIGNED TO ' || l_issued_to_name;
+            exception
+                when others then
+                    l_status_code := 'ERROR';
+                    l_status_message := sqlerrm;
+                    l_request_errors := l_request_errors + 1;
+            end;
+    
+            o_ticket.put('status_code', l_status_code);
+            o_ticket.put('status_message', l_status_message);
+    
+        end loop;
+        
+        o_request.put('request_status', case when l_request_errors = 0 then 'SUCCESS' else 'ERRORS' end);
+        o_request.put('request_errors', l_request_errors);
+        
+        p_json_doc := o_request.to_clob; 
+
+    exception
+        when others then
+            p_json_doc := get_json_error_doc(sqlcode, sqlerrm, 'ticket_assign_holder_batch');
+    end ticket_assign_holder_batch;
 
 begin
   null;

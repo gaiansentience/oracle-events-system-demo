@@ -515,11 +515,6 @@ as
         p_formatted in boolean default false
     ) return clob;
     
-    --add ticket methods (reissue)
-    --ticket_reissue (customer_id, serial_code)
-    --ticket_reissue_email (customer_email, serial_code)
-    --ticket_reissue_batch (customer_id, [serial_code, serial_code...])
-    --ticket_reissue_batch_email(customer_email, [serial_code, serial_code...])
     /*
     {
         "action" : "ticket_reissue",
@@ -574,7 +569,9 @@ as
         "**status_code" : "SUCCESS|ERROR",
         "**status_message" : "VALIDATED|error message"
     }    
+
     */
+
     procedure ticket_validate
     (
         p_json_doc in out nocopy clob
@@ -620,6 +617,57 @@ as
     }    
     */    
     procedure ticket_cancel
+    (
+        p_json_doc in out nocopy clob
+    );
+
+    /*
+    {
+        "action" : "ticket_assign_holder",
+        "customer_id" : 123,
+        "customer_email" : "customer@customer.com",
+        "ticket" : 
+            {
+                "serial_code" : "xyz", 
+                "issued_to_name" : "Albert Einstein",
+                "issued_to_id" : "MA123456789",
+                "**status_code" : "SUCCESS|ERROR", 
+                "**status_message" : "REISSUED|error message"
+            }
+    }
+    */
+    procedure ticket_assign_holder
+    (
+        p_json_doc in out nocopy clob
+    );
+    
+    /*
+    {
+        "action" : "ticket_assign_holder_batch",
+        "customer_id" : 123,
+        "customer_email" : "customer@customer.com",
+        "tickets" : 
+            [ 
+                {
+                    "serial_code" : "xyz", 
+                    "issued_to_name" : "Albert Einstein",
+                    "issued_to_id" : "MA123456789",
+                    "**status_code" : "SUCCESS|ERROR", 
+                    "**status_message" : "REISSUED|error message"
+                },
+                {
+                    "serial_code" : "abc", 
+                    "issued_to_name" : "Nicola Tesla",
+                    "issued_to_id" : "NY987654321",
+                    "**status_code" : "SUCCESS|ERROR", 
+                    "**status_message" : "REISSUED|error message"
+                }
+            ]
+        "request_status" : "SUCCESS|ERRORS",
+        "request_errors" : 999
+    }
+    */
+    procedure ticket_assign_holder_batch
     (
         p_json_doc in out nocopy clob
     );
