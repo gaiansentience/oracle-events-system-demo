@@ -1025,6 +1025,28 @@ as
             log_error(sqlerrm, sqlcode, 'ticket_assign_holder');
             raise;    
     end ticket_assign_holder;
+
+    procedure ticket_assign_holder_using_email
+    (
+        p_customer_email in varchar2,
+        p_serial_code in tickets.serial_code%type,
+        p_issued_to_name in tickets.issued_to_name%type,
+        p_issued_to_id in tickets.issued_to_id%type
+    )
+    is
+        l_customer_id customers.customer_id%type;
+    begin
+    
+        l_customer_id := get_customer_id(p_customer_email => p_customer_email);
+        
+        ticket_assign_holder(
+            p_customer_id => l_customer_id,
+            p_serial_code => p_serial_code,
+            p_issued_to_name => p_issued_to_name,
+            p_issued_to_id => p_issued_to_id);
+
+    end ticket_assign_holder_using_email;
+
     
 begin
     initialize;

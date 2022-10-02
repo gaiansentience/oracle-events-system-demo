@@ -550,11 +550,6 @@ as
         p_formatted in boolean default false
     ) return xmltype;
     
-    --add ticket methods (reissue)
-    --ticket_reissue (customer_id, serial_code)
-    --ticket_reissue_email (customer_email, serial_code)
-    --ticket_reissue_batch (customer_id, [serial_code, serial_code...])
-    --ticket_reissue_batch_email(customer_email, [serial_code, serial_code...])
     /*
     <ticket_reissue>
       <customer>
@@ -671,6 +666,58 @@ as
     (
         p_xml_doc in out nocopy xmltype
     );
+
+    /*
+    <ticket_assign_holder>
+      <customer>
+        <customer_id>123</customer_id>
+        <customer_email>customer@customer.com</customer_email>
+      </customer>
+      <ticket>
+        <serial_code>xyz</serial_code>
+        <issued_to_name>Albert Einstein</issued_to_name>
+        <issued_to_id>MA123456789</issued_to_id>
+        <**status_code>SUCESS|ERROR</status_code>
+        <**status_message>REISSUED|error message</status_message>        
+      </ticket>
+    </ticket_assign_holder>
+    */
+    procedure ticket_assign_holder
+    (
+        p_xml_doc in out nocopy xmltype
+    );
+    
+    /*
+    <ticket_assign_holder_batch>
+      <customer>
+        <customer_id>123</customer_id>
+        <customer_email>customer@customer.com</customer_email>
+      </customer>
+      <tickets>
+        <ticket>
+          <serial_code>xyz</serial_code>
+          <issued_to_name>Albert Einstein</issued_to_name>
+          <issued_to_id>MA123456789</issued_to_id>
+          <**status_code>SUCESS|ERROR</status_code>
+          <**status_message>REISSUED|error message</status_message>
+        </ticket>
+        <ticket>
+          <serial_code>abc</serial_code>
+          <issued_to_name>Nicola Tesla</issued_to_name>
+          <issued_to_id>NY987654321</issued_to_id>
+          <**status_code>SUCESS|ERROR</status_code>
+          <**status_message>REISSUED|error message</status_message>
+        </ticket>
+      </tickets>
+      <request_status>SUCCESS|ERRORS</request_status>
+      <request_errors>999</request_errors>
+    </ticket_assign_holder_batch>
+    */
+    procedure ticket_assign_holder_batch
+    (
+        p_xml_doc in out nocopy xmltype
+    );
+
 
 end events_xml_api;
  

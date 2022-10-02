@@ -2306,28 +2306,6 @@ as
             p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'ticket_reissue');
     end ticket_reissue;
     
-    /*
-    <ticket_reissue_batch>
-      <customer>
-        <customer_id>123</customer_id>
-        <customer_email>customer@customer.com</customer_email>
-      </customer>
-      <tickets>
-        <ticket>
-          <serial_code>xyz</serial_code>
-          <**status_code>SUCESS|ERROR</status_code>
-          <**status_message>REISSUED|error message</status_message>
-        </ticket>
-        <ticket>
-          <serial_code>abc</serial_code>
-          <**status_code>SUCESS|ERROR</status_code>
-          <**status_message>REISSUED|error message</status_message>
-        </ticket>
-      </tickets>
-      <request_status>SUCCESS|ERRORS</request_status>
-      <request_errors>999</request_errors>
-    </ticket_reissue_batch>
-    */
     procedure ticket_reissue_batch
     (
         p_xml_doc in out nocopy xmltype
@@ -2559,6 +2537,139 @@ as
             util_xmldom_helper.freeDoc;
             p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'ticket_cancel');
     end ticket_cancel;
+
+    procedure ticket_assign_holder
+    (
+        p_xml_doc in out nocopy xmltype
+    )
+    is
+        l_customer_id customers.customer_id%type;
+        l_customer_email customers.customer_email%type;
+        l_serial_code tickets.serial_code%type;
+        l_issued_to_name tickets.issued_to_name%type;
+        l_issued_to_id tickets.issued_to_id%type;
+        l_status_code varchar2(50);
+        l_status_message varchar2(4000);
+        nRequest dbms_xmldom.DOMnode;
+        nCustomer dbms_xmldom.DOMnode;
+        nTicket dbms_xmldom.DOMnode;
+    begin
+        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRequest);
+        
+        nCustomer := dbms_xslprocessor.selectSingleNode(n => nRequest, pattern => '/ticket_assign_holder/customer');  
+        dbms_xslprocessor.valueof(nCustomer, 'customer_id/text()', l_customer_id);
+        dbms_xslprocessor.valueof(nCustomer, 'customer_email/text()', l_customer_email);
+        
+        nTicket := dbms_xslprocessor.selectSingleNode(n => nRequest, pattern => '/ticket_assign_holder/ticket');  
+        dbms_xslprocessor.valueof(nTicket, 'serial_code/text()', l_serial_code);
+        dbms_xslprocessor.valueof(nTicket, 'issued_to_name/text()', l_issued_to_name);
+        dbms_xslprocessor.valueof(nTicket, 'issued_to_id/text()', l_issued_to_id);
+
+        begin
+            if l_customer_id is not null then
+                customer_api.ticket_assign_holder(
+                    p_customer_id => l_customer_id,
+                    p_serial_code => l_serial_code,
+                    p_issued_to_name => l_issued_to_name,
+                    p_issued_to_id => l_issued_to_id);            
+            else
+                customer_api.ticket_assign_holder_using_email(
+                    p_customer_email => l_customer_email, 
+                    p_serial_code => l_serial_code,
+                    p_issued_to_name => l_issued_to_name,
+                    p_issued_to_id => l_issued_to_id);
+            end if;
+            l_status_code := 'SUCCESS';
+            l_status_message := 'SERIAL CODE ' || l_serial_code || ' ASSIGNED TO ' || l_issued_to_name;
+        exception
+            when others then
+                l_status_code := 'ERROR';
+                l_status_message := sqlerrm;
+        end;
+
+        util_xmldom_helper.addTextNode(p_parent => nTicket, p_tag => 'status_code', p_data => l_status_code);
+        util_xmldom_helper.addTextNode(p_parent => nTicket, p_tag => 'status_message', p_data => l_status_message);
+                    
+        p_xml_doc := util_xmldom_helper.docToXMLtype;
+        util_xmldom_helper.freeDoc;
+    
+    exception
+        when others then
+            util_xmldom_helper.freeDoc;
+            p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'ticket_assign_holder');
+    end ticket_assign_holder;
+    
+    procedure ticket_assign_holder_batch
+    (
+        p_xml_doc in out nocopy xmltype
+    )
+    is
+        l_customer_id customers.customer_id%type;
+        l_customer_email customers.customer_email%type;
+        l_serial_code tickets.serial_code%type;
+        l_issued_to_name tickets.issued_to_name%type;
+        l_issued_to_id tickets.issued_to_id%type;
+        l_status_code varchar2(50);
+        l_status_message varchar2(4000);
+        l_request_errors number := 0;
+        nRequest dbms_xmldom.DOMnode;
+        nCustomer dbms_xmldom.DOMnode;
+        nListTickets dbms_xmldom.DOMnodeList;
+        nTicket dbms_xmldom.DOMnode;
+    begin
+        util_xmldom_helper.newDocFromXML(p_xml => p_xml_doc, p_root_node => nRequest);
+        
+        nCustomer := dbms_xslprocessor.selectSingleNode(n => nRequest, pattern => '/ticket_assign_holder_batch/customer');  
+        dbms_xslprocessor.valueof(nCustomer, 'customer_id/text()', l_customer_id);
+        dbms_xslprocessor.valueof(nCustomer, 'customer_email/text()', l_customer_email);
+        
+        nListTickets := dbms_xslprocessor.selectNodes(n => nRequest, pattern => '/ticket_assign_holder_batch/tickets/ticket');
+        for i in 0..dbms_xmldom.getLength(nListTickets) - 1 loop
+            nTicket := dbms_xmldom.item(nListTickets, i);        
+            dbms_xslprocessor.valueof(nTicket, 'serial_code/text()', l_serial_code);
+            dbms_xslprocessor.valueof(nTicket, 'issued_to_name/text()', l_issued_to_name);
+            dbms_xslprocessor.valueof(nTicket, 'issued_to_id/text()', l_issued_to_id);
+    
+            begin
+            if l_customer_id is not null then
+                customer_api.ticket_assign_holder(
+                    p_customer_id => l_customer_id,
+                    p_serial_code => l_serial_code,
+                    p_issued_to_name => l_issued_to_name,
+                    p_issued_to_id => l_issued_to_id);            
+            else
+                customer_api.ticket_assign_holder_using_email(
+                    p_customer_email => l_customer_email, 
+                    p_serial_code => l_serial_code,
+                    p_issued_to_name => l_issued_to_name,
+                    p_issued_to_id => l_issued_to_id);
+            end if;
+                l_status_code := 'SUCCESS';
+                l_status_message := 'SERIAL CODE ' || l_serial_code || ' ASSIGNED TO ' || l_issued_to_name;
+            exception
+                when others then
+                    l_status_code := 'ERROR';
+                    l_status_message := sqlerrm;
+                    l_request_errors := l_request_errors + 1;
+            end;
+    
+            util_xmldom_helper.addTextNode(p_parent => nTicket, p_tag => 'status_code', p_data => l_status_code);
+            util_xmldom_helper.addTextNode(p_parent => nTicket, p_tag => 'status_message', p_data => l_status_message);
+                    
+        end loop;
+        
+        util_xmldom_helper.addTextNode(p_parent => nRequest, p_tag => 'request_status', p_data => case when l_request_errors = 0 then 'SUCCESS' else 'ERRORS' end);
+        util_xmldom_helper.addTextNode(p_parent => nRequest, p_tag => 'request_errors', p_data => l_request_errors);
+                                        
+        p_xml_doc := util_xmldom_helper.docToXMLtype;
+        util_xmldom_helper.freeDoc;
+    
+    exception
+        when others then
+            util_xmldom_helper.freeDoc;
+            p_xml_doc := get_xml_error_doc(sqlcode, sqlerrm, 'ticket_assign_holder_batch');
+    end ticket_assign_holder_batch;
+
 
 begin
   null;

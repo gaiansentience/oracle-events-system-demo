@@ -421,5 +421,12 @@ as
         p_issued_to_id in tickets.issued_to_id%type
     );
 
+    procedure ticket_assign_holder_using_email
+    (
+        p_customer_email in varchar2,
+        p_serial_code in tickets.serial_code%type,
+        p_issued_to_name in tickets.issued_to_name%type,
+        p_issued_to_id in tickets.issued_to_id%type
+    );
 
 end customer_api;
