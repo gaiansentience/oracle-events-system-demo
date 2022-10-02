@@ -798,6 +798,29 @@ as
         when no_data_found then
             return 'Ticket category not found';
     end get_ticket_group_category;
+
+    function get_ticket_group_id
+    (
+        p_event_id in number,
+        p_price_category in varchar2
+    ) return number
+    is
+        v_ticket_group_id ticket_groups.ticket_group_id%type;
+    begin
+    
+        select tg.ticket_group_id
+        into v_ticket_group_id
+        from event_system.ticket_groups tg
+        where 
+            tg.event_id = p_event_id
+            and tg.price_category = p_price_category;
+        
+        return v_ticket_group_id;
+    
+    exception
+        when no_data_found then
+            raise_application_error(-20100, p_price_category || ' NOT FOUND FOR EVENT');
+    end get_ticket_group_id;
         
     function get_ticket_group_event_series_id
     (

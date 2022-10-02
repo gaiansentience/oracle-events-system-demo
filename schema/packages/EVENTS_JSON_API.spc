@@ -2,25 +2,21 @@ create or replace package events_json_api
 authid definer
 as
 
-    function format_json_clob
+    function format_json
     (
         p_json_doc in clob
     ) return clob;
-    
-    function format_json_string
-    (
-        p_json_doc in varchar2
-    ) return varchar2;
-    
+        
 /*    
 {
   "customer_name" : "Andi Warenkovna",
   "customer_email" : "Andi.Warenko@example.customer.com"
 }    
 */
+
     procedure create_customer
     (
-        p_json_doc in out nocopy varchar2
+        p_json_doc in out nocopy clob
     );
 
 /*
@@ -32,20 +28,20 @@ as
 */
     procedure update_customer
     (
-        p_json_doc in out nocopy varchar2
+        p_json_doc in out nocopy clob
     );
 
     function get_customer
     (
         p_customer_id in number,
         p_formatted in boolean default false   
-    ) return varchar2;
+    ) return clob;
 
     function get_customer_id
     (
         p_customer_email in customers.customer_email%type,
         p_formatted in boolean default false   
-    ) return varchar2;
+    ) return clob;
 
 /*
 {
@@ -56,7 +52,7 @@ as
 */
     procedure create_reseller
     (
-        p_json_doc in out nocopy varchar2
+        p_json_doc in out nocopy clob
     );
 
 /*
@@ -69,14 +65,14 @@ as
 */
     procedure update_reseller
     (
-        p_json_doc in out nocopy varchar2
+        p_json_doc in out nocopy clob
     );
 
     function get_reseller
     (
         p_reseller_id in number,
         p_formatted in boolean default false   
-    ) return varchar2;
+    ) return clob;
 
     function get_all_resellers
     (
@@ -93,7 +89,7 @@ as
 */
     procedure create_venue
     (
-        p_json_doc in out nocopy varchar2
+        p_json_doc in out nocopy clob
     );
 
 /*
@@ -107,14 +103,14 @@ as
 */
     procedure update_venue
     (
-        p_json_doc in out nocopy varchar2
+        p_json_doc in out nocopy clob
     );
 
     function get_venue
     (
         p_venue_id in number,
         p_formatted in boolean default false   
-    ) return varchar2;
+    ) return clob;
 
     function get_all_venues
     (
@@ -125,7 +121,7 @@ as
     (
         p_venue_id in number,
         p_formatted in boolean default false   
-    ) return varchar2;
+    ) return clob;
 
     function get_all_venues_summary
     (
@@ -143,7 +139,7 @@ as
 */
     procedure create_event
     (
-        p_json_doc in out nocopy varchar2
+        p_json_doc in out nocopy clob
     );
 
 /*
@@ -172,7 +168,7 @@ as
 */
     procedure update_event
     (
-        p_json_doc in out nocopy varchar2
+        p_json_doc in out nocopy clob
     );
 
 /*
@@ -184,14 +180,14 @@ as
 */
     procedure update_event_series
     (
-        p_json_doc in out nocopy varchar2
+        p_json_doc in out nocopy clob
     );
 
     function get_event
     (
         p_event_id in number,
         p_formatted in boolean default false   
-    ) return varchar2;
+    ) return clob;
 
     function get_event_series
     (
@@ -669,7 +665,7 @@ as
     */
     procedure ticket_assign_holder_batch
     (
-        p_json_doc in out nocopy clob
+        p_json_doc in out nocopy clob 
     );
 
 end events_json_api;

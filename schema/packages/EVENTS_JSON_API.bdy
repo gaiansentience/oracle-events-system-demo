@@ -1,7 +1,7 @@
 create or replace package body events_json_api
 as
 
-    function format_json_clob
+    function format_json
     (
         p_json_doc in clob
     ) return clob
@@ -15,30 +15,14 @@ as
     
         return l_json;
     
-    end format_json_clob;
+    end format_json;
     
-    function format_json_string
-    (
-        p_json_doc in varchar2
-    ) return varchar2
-    is
-        l_json varchar2(32000);
-    begin
-    
-        select json_serialize(p_json_doc returning clob pretty) 
-        into l_json 
-        from dual;
-    
-        return l_json;
-    
-    end format_json_string;
-
     function get_json_error_doc
     (
         p_error_code in number,
         p_error_message in varchar2,
         p_json_method in varchar2
-    ) return varchar2
+    ) return clob
     is
         $if dbms_db_version.version >= 21 $then
         pragma suppresses_warning_6009(get_json_error_doc);
@@ -46,7 +30,7 @@ as
         --pragma doesnt work for exception handlers that set in out parameter to get_json_error_doc
         $end
         o_error json_object_t := new json_object_t;
-        l_json varchar2(4000);
+        l_json clob;
     begin
     
         --write the error message to the logs
@@ -55,14 +39,13 @@ as
             p_error_code => p_error_code, 
             p_locale => 'events_json_api.' || p_json_method);
     
-    
         o_error.put('json_method', p_json_method);
         o_error.put('error_code', p_error_code);
         o_error.put('error_message', p_error_message);
-        l_json := o_error.to_string();
-       
-        return format_json_string(l_json);
-       
+        l_json := o_error.to_clob();
+        
+        return format_json(l_json);
+
     end get_json_error_doc;
 
     procedure parse_customer
@@ -81,7 +64,7 @@ as
     
     procedure create_customer
     (
-        p_json_doc in out nocopy varchar2
+        p_json_doc in out nocopy clob
     )
     is
         r_customer event_system.customers%rowtype;
@@ -113,7 +96,7 @@ as
         o_request.put('status_code', l_status_code);
         o_request.put('status_message', l_status_message);
         
-        p_json_doc := o_request.to_string; 
+        p_json_doc := o_request.to_clob; 
 
     exception
         when others then
@@ -122,7 +105,7 @@ as
     
     procedure update_customer
     (
-        p_json_doc in out nocopy varchar2
+        p_json_doc in out nocopy clob
     )
     is
         r_customer event_system.customers%rowtype;
@@ -152,7 +135,7 @@ as
         o_request.put('status_code', l_status_code);
         o_request.put('status_message', l_status_message);
         
-        p_json_doc := o_request.to_string; 
+        p_json_doc := o_request.to_clob; 
 
     exception
         when others then
@@ -163,9 +146,9 @@ as
     (
         p_customer_id in number,
         p_formatted in boolean default false   
-    ) return varchar2
+    ) return clob
     is
-        l_json varchar2(4000);
+        l_json clob;
     begin
     
         select b.json_doc
@@ -174,7 +157,7 @@ as
         where b.customer_id = p_customer_id;
     
         if p_formatted then
-            l_json := format_json_string(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
     
@@ -187,7 +170,7 @@ as
     (
         p_customer_email in customers.customer_email%type,
         p_formatted in boolean default false   
-    ) return varchar2
+    ) return clob
     is
         l_customer_id customers.customer_id%type;
     begin
@@ -218,7 +201,7 @@ as
     
     procedure create_reseller
     (
-        p_json_doc in out nocopy varchar2
+        p_json_doc in out nocopy clob
     )
     is
         r_reseller event_system.resellers%rowtype;
@@ -251,7 +234,7 @@ as
         o_request.put('status_code', l_status_code);
         o_request.put('status_message', l_status_message);
         
-        p_json_doc := o_request.to_string; 
+        p_json_doc := o_request.to_clob; 
 
     exception
         when others then
@@ -260,7 +243,7 @@ as
 
     procedure update_reseller
     (
-        p_json_doc in out nocopy varchar2
+        p_json_doc in out nocopy clob
     )
     is
         r_reseller event_system.resellers%rowtype;
@@ -291,7 +274,7 @@ as
         o_request.put('status_code', l_status_code);
         o_request.put('status_message', l_status_message);
         
-        p_json_doc := o_request.to_string; 
+        p_json_doc := o_request.to_clob; 
 
     exception
         when others then
@@ -302,9 +285,9 @@ as
     (
         p_reseller_id in number,
         p_formatted in boolean default false   
-    ) return varchar2
+    ) return clob
     is
-        l_json varchar2(4000);
+        l_json clob;
     begin
     
         select b.json_doc
@@ -313,7 +296,7 @@ as
         where b.reseller_id = p_reseller_id;
     
         if p_formatted then
-            l_json := format_json_string(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
     
@@ -335,7 +318,7 @@ as
         from all_resellers_v_json b;
     
         if p_formatted then
-            l_json := format_json_clob(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
     
@@ -362,7 +345,7 @@ as
 
     procedure create_venue
     (
-        p_json_doc in out nocopy varchar2
+        p_json_doc in out nocopy clob
     )
     is
         r_venue event_system.venues%rowtype;
@@ -396,7 +379,7 @@ as
         o_request.put('status_code',l_status_code);
         o_request.put('status_message', l_status_message);
 
-        p_json_doc := o_request.to_string; 
+        p_json_doc := o_request.to_clob; 
 
     exception
         when others then
@@ -405,7 +388,7 @@ as
 
     procedure update_venue
     (
-        p_json_doc in out nocopy varchar2
+        p_json_doc in out nocopy clob
     )
     is
         r_venue event_system.venues%rowtype;
@@ -437,7 +420,7 @@ as
         o_request.put('status_code',l_status_code);
         o_request.put('status_message', l_status_message);
 
-        p_json_doc := o_request.to_string; 
+        p_json_doc := o_request.to_clob; 
 
     exception
         when others then
@@ -448,9 +431,9 @@ as
     (
         p_venue_id in number,
         p_formatted in boolean default false   
-    ) return varchar2
+    ) return clob
     is
-        l_json varchar2(4000);
+        l_json clob;
     begin
 
         select b.json_doc
@@ -459,7 +442,7 @@ as
         where b.venue_id = p_venue_id;
 
         if p_formatted then
-            l_json := format_json_string(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
    
@@ -481,7 +464,7 @@ as
         from all_venues_v_json b;
     
         if p_formatted then
-            l_json := format_json_clob(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
     
@@ -494,9 +477,9 @@ as
     (
         p_venue_id in number,
         p_formatted in boolean default false   
-    ) return varchar2
+    ) return clob
     is
-        l_json varchar2(4000);
+        l_json clob;
     begin
 
         select b.json_doc
@@ -505,7 +488,7 @@ as
         where b.venue_id = p_venue_id;
 
         if p_formatted then
-            l_json := format_json_string(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
    
@@ -527,7 +510,7 @@ as
         from all_venues_summary_v_json b;
         
         if p_formatted then
-            l_json := format_json_clob(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
     
@@ -538,7 +521,7 @@ as
 
     procedure create_event
     (
-        p_json_doc in out nocopy varchar2
+        p_json_doc in out nocopy clob
     )
     is
         r_event event_system.events%rowtype;
@@ -584,7 +567,7 @@ as
         o_request.put('status_code',l_status_code);
         o_request.put('status_message', l_status_message);
         
-        p_json_doc := o_request.to_string; 
+        p_json_doc := o_request.to_clob; 
     
     exception
         when others then
@@ -658,7 +641,7 @@ as
     
     procedure update_event
     (
-        p_json_doc in out nocopy varchar2
+        p_json_doc in out nocopy clob
     )
     is
         o_request json_object_t;
@@ -704,7 +687,7 @@ as
 
     procedure update_event_series
     (
-        p_json_doc in out nocopy varchar2
+        p_json_doc in out nocopy clob
     )
     is
         o_request json_object_t;
@@ -748,9 +731,9 @@ as
     (
         p_event_id in number,
         p_formatted in boolean default false   
-    ) return varchar2
+    ) return clob
     is
-        l_json varchar2(4000);
+        l_json clob;
     begin
     
         select b.json_doc
@@ -759,7 +742,7 @@ as
         where b.event_id = p_event_id;
     
         if p_formatted then
-            l_json := format_json_string(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
     
@@ -784,7 +767,7 @@ as
         where b.event_series_id = p_event_series_id;
     
         if p_formatted then
-            l_json := format_json_clob(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
     
@@ -808,7 +791,7 @@ as
         where b.venue_id = p_venue_id;
     
         if p_formatted then
-            l_json := format_json_clob(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
     
@@ -832,7 +815,7 @@ as
         where b.venue_id = p_venue_id;
     
         if p_formatted then
-            l_json := format_json_clob(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
     
@@ -856,7 +839,7 @@ as
         where b.event_id = p_event_id;
         
         if p_formatted then
-            l_json := format_json_clob(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
     
@@ -880,7 +863,7 @@ as
         where b.event_series_id = p_event_series_id;
         
         if p_formatted then
-            l_json := format_json_clob(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
     
@@ -1073,7 +1056,7 @@ as
         where b.event_id = p_event_id;
     
         if p_formatted then
-            l_json := format_json_clob(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
     
@@ -1097,7 +1080,7 @@ as
         where b.event_series_id = p_event_series_id;
     
         if p_formatted then
-            l_json := format_json_clob(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
     
@@ -1320,7 +1303,7 @@ as
         where b.event_id = p_event_id;
     
         if p_formatted then
-            l_json := format_json_clob(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
     
@@ -1344,7 +1327,7 @@ as
         where b.event_series_id = p_event_series_id;
     
         if p_formatted then
-            l_json := format_json_clob(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
     
@@ -1368,7 +1351,7 @@ as
         where b.event_id = p_event_id;
     
         if p_formatted then
-            l_json := format_json_clob(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
         
@@ -1392,7 +1375,7 @@ as
         where b.event_id = p_event_id;
     
         if p_formatted then
-            l_json := format_json_clob(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
         
@@ -1419,7 +1402,7 @@ as
             and b.reseller_id = p_reseller_id;
     
         if p_formatted then
-            l_json := format_json_clob(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
     exception
@@ -1442,7 +1425,7 @@ as
         where b.event_series_id = p_event_series_id;
     
         if p_formatted then
-            l_json := format_json_clob(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
         
@@ -1466,7 +1449,7 @@ as
         where b.event_series_id = p_event_series_id;
     
         if p_formatted then
-            l_json := format_json_clob(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
         
@@ -1493,7 +1476,7 @@ as
             and b.reseller_id = p_reseller_id;
     
         if p_formatted then
-            l_json := format_json_clob(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
     exception
@@ -1846,7 +1829,7 @@ as
             and b.customer_id = p_customer_id;
     
         if p_formatted then
-            l_json := format_json_clob(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
     
@@ -1895,7 +1878,7 @@ as
             and b.customer_id = p_customer_id;
     
         if p_formatted then
-            l_json := format_json_clob(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
     
@@ -1944,7 +1927,7 @@ as
             and b.customer_id = p_customer_id;
     
         if p_formatted then
-            l_json := format_json_clob(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
     
@@ -1993,7 +1976,7 @@ as
             and b.customer_id = p_customer_id;
     
         if p_formatted then
-            l_json := format_json_clob(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
     
@@ -2038,7 +2021,7 @@ as
             and b.customer_id = p_customer_id;
     
         if p_formatted then
-            l_json := format_json_clob(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
     
@@ -2069,7 +2052,7 @@ as
             and b.customer_id = p_customer_id;
     
         if p_formatted then
-            l_json := format_json_clob(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
     
@@ -2118,7 +2101,7 @@ as
             and b.customer_id = p_customer_id;
     
         if p_formatted then
-            l_json := format_json_clob(l_json);
+            l_json := format_json(l_json);
         end if;
         return l_json;
     

@@ -174,6 +174,12 @@ as
         p_ticket_group_id in number
     ) return varchar2;
 
+    function get_ticket_group_id
+    (
+        p_event_id in number,
+        p_price_category in varchar2
+    ) return number;
+
     --show ticket groups and availability for this event and reseller
     --     tickets_in_group    tickets in group, 
     --     assigned_to_others  tickets assigned to other resellers, 
