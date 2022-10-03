@@ -3,6 +3,8 @@ set serveroutput on;
 declare
     l_json_template clob;
     l_json_doc clob;
+    l_json json;
+    
     l_venue_id number;
     l_venue_name venues.venue_name%type := 'City Stadium';    
     l_event_series_id number;
@@ -28,8 +30,9 @@ l_json_template :=
     l_json_doc := replace(l_json_doc, '$$NAME$$', l_event_name);
     l_json_doc := replace(l_json_doc, '$$TICKETS$$', l_tickets);
 
-   events_json_api.update_event_series(p_json_doc => l_json_doc);
-   dbms_output.put_line(events_json_api.format_json(l_json_doc));
+    l_json := json(l_json_doc);
+    events_json_api.update_event_series(p_json_doc => l_json);
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
 
     l_event_name := 'Monster Truck Smashup';
     l_tickets := 10000;
@@ -37,8 +40,9 @@ l_json_template :=
     l_json_doc := replace(l_json_doc, '$$NAME$$', l_event_name);
     l_json_doc := replace(l_json_doc, '$$TICKETS$$', l_tickets);
 
-   events_json_api.update_event_series(p_json_doc => l_json_doc);
-   dbms_output.put_line(events_json_api.format_json(l_json_doc));
+    l_json := json(l_json_doc);
+    events_json_api.update_event_series(p_json_doc => l_json);
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
 
 
 end;

@@ -2,8 +2,12 @@ create or replace package events_json_api
 authid definer
 as
 
---$if dbms_db_version.version >= 21 $then json $else clob $end
---$if dbms_db_version.version >= 21 $then json; $else clob; $end
+$if dbms_db_version.version >= 21 $then
+    function json_as_clob
+    (
+        p_json_doc in json
+    ) return clob;
+$end
 
     function format_json
     (

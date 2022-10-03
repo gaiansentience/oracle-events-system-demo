@@ -2,6 +2,8 @@
 set serveroutput on;
 declare
     l_json_doc clob;
+    l_json json;
+    
     l_venue_id number;
     l_venue_name venues.venue_name%type := 'City Stadium';
 begin
@@ -21,9 +23,10 @@ l_json_doc :=
 ';
 
     l_json_doc := replace(l_json_doc, '$$VENUE$$', l_venue_id);
-    
-    events_json_api.create_weekly_event(p_json_doc => l_json_doc);
-    dbms_output.put_line(events_json_api.format_json(l_json_doc));
+
+    l_json := json(l_json_doc);    
+    events_json_api.create_weekly_event(p_json_doc => l_json);
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
 
 end;
 

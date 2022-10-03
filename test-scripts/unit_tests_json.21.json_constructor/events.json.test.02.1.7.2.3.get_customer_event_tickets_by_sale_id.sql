@@ -1,7 +1,7 @@
 --get venue information as a json document
 set serveroutput on;
 declare
-    l_json_doc clob;
+    l_json json;
     l_venue_id number;
     l_venue_name venues.venue_name%type := 'Another Roadside Attraction';
     l_event_id number;
@@ -22,8 +22,8 @@ begin
         and customer_id = l_customer_id 
     fetch first 1 row only;
     
-    l_json_doc := events_json_api.get_customer_event_tickets_by_sale_id(p_customer_id => l_customer_id, p_ticket_sales_id => l_ticket_sales_id, p_formatted => true);
-    dbms_output.put_line(l_json_doc);
+    l_json := events_json_api.get_customer_event_tickets_by_sale_id(p_customer_id => l_customer_id, p_ticket_sales_id => l_ticket_sales_id, p_formatted => true);
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
 
  end;
 

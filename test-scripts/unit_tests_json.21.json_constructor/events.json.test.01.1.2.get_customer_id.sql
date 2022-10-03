@@ -2,12 +2,12 @@
 --use for update customer or purchase tickets
 set serveroutput on;
 declare
-    l_json_doc clob;
+    l_json json;
     l_customer_email customers.customer_email%type := 'Andi.Warenko@example.customer.com';
 begin
     
-    l_json_doc := events_json_api.get_customer_id(p_customer_email => l_customer_email, p_formatted => true);
-    dbms_output.put_line(l_json_doc);
+    l_json := events_json_api.get_customer_id(p_customer_email => l_customer_email, p_formatted => true);
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
 
  end;
 

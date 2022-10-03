@@ -3,6 +3,8 @@ set serveroutput on;
 declare
     l_json_template varchar2(4000);
     l_json_doc clob;
+    l_json json;
+    
     l_venue_name venues.venue_name%type := 'Another Roadside Attraction';
     l_event_name events.event_name%type := 'New Years Mischief';
     l_customer_email varchar2(50) := 'Maggie.Wayland@example.customer.com';
@@ -55,13 +57,14 @@ l_json_template :=
     for i in 1..l_tickets.count loop
         l_json_doc := replace(l_json_doc, '$$SERIAL' || i || '$$', l_tickets(i).serial_code);
     end loop;
-    events_json_api.ticket_assign_holder_batch(p_json_doc => l_json_doc);   
-    dbms_output.put_line(events_json_api.format_json(l_json_doc));
+    l_json := json(l_json_doc);
+    events_json_api.ticket_assign_holder_batch(p_json_doc => l_json);   
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
 
     dbms_output.put_line('view customer tickets with assigned names');
 
-    l_json_doc := events_json_api.get_customer_event_tickets(p_customer_id => l_customer_id, p_event_id => l_event_id, p_formatted => true);
-    dbms_output.put_line(l_json_doc);
+    l_json := events_json_api.get_customer_event_tickets(p_customer_id => l_customer_id, p_event_id => l_event_id, p_formatted => true);
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
 
 
 end;

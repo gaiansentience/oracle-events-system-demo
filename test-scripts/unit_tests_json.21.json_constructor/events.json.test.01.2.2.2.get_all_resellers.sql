@@ -1,11 +1,11 @@
 --get all resellers as a json document
 set serveroutput on;
 declare
-    l_json_doc clob;
+    l_json json;
 begin
 
-    l_json_doc := events_json_api.get_all_resellers(p_formatted => true);
-    dbms_output.put_line(l_json_doc);
+    l_json := events_json_api.get_all_resellers(p_formatted => true);
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
 
  end;
 

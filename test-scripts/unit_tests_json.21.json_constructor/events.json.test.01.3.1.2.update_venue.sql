@@ -2,6 +2,8 @@
 set serveroutput on;
 declare
     l_json_doc clob;
+    l_json json;
+    
     l_venue_name venues.venue_name%type := 'Another Roadside Attraction';
     l_organizer_name venues.organizer_name%type := 'Susan Brewer';
     l_organizer_email venues.organizer_email%type := 'Susan.Brewer@AnotherRoadsideAttraction.com';
@@ -27,8 +29,9 @@ begin
     l_json_doc := replace(l_json_doc,'$$ORGANIZER_EMAIL$$', l_organizer_email);
     l_json_doc := replace(l_json_doc,'$$CAPACITY$$', l_max_capacity);
 
-    events_json_api.update_venue(p_json_doc => l_json_doc);
-    dbms_output.put_line(events_json_api.format_json(l_json_doc));
+    l_json := json(l_json_doc);
+    events_json_api.update_venue(p_json_doc => l_json);
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
 
  end;
 

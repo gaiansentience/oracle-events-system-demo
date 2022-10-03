@@ -1,46 +1,70 @@
---create customer using a json document
---if customer email already exists customer id for that email will be returned
---if customer already exists customer name will be updated
+--create event using a json document
 set serveroutput on;
 declare
+    l_json_template clob;
     l_json_doc clob;
-    l_email customers.customer_email%type := 'Andi.Warenko@example.customer.com';
-    l_name customers.customer_name%type := 'Andi Warenkovna';    
+    l_json json;
+    
+    l_venue_id number;
+    l_venue_name venues.venue_name%type := 'City Stadium';    
+    l_event_series_id number;
+    l_event_name events.event_name%type := 'Monster Truck Smashup';
+    l_tickets number;
 begin
 
-l_json_doc := 
+    l_venue_id := venue_api.get_venue_id(p_venue_name => l_venue_name);
+    l_event_series_id := event_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
+    
+l_json_template := 
 '
 {
-  "customer_name" : "$$NAME$$",
-  "customer_email" : "$$EMAIL$$"
+  "event_series_id" : $$EVENT_SERIES$$,
+  "event_name" : "$$NAME$$",
+  "tickets_available" : $$TICKETS$$
 }
 ';
 
-    l_json_doc := replace(l_json_doc, '$$NAME$$', l_name);
-    l_json_doc := replace(l_json_doc, '$$EMAIL$$', l_email);
+    l_event_name := 'Monster Truck Festival';
+    l_tickets := 15000;
+    l_json_doc := replace(l_json_template, '$$EVENT_SERIES$$', l_event_series_id);
+    l_json_doc := replace(l_json_doc, '$$NAME$$', l_event_name);
+    l_json_doc := replace(l_json_doc, '$$TICKETS$$', l_tickets);
+
+    l_json := json(l_json_doc);
+    events_json_api.update_event_series(p_json_doc => l_json);
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
+
+    l_event_name := 'Monster Truck Smashup';
+    l_tickets := 10000;
+    l_json_doc := replace(l_json_template, '$$EVENT_SERIES$$', l_event_series_id);
+    l_json_doc := replace(l_json_doc, '$$NAME$$', l_event_name);
+    l_json_doc := replace(l_json_doc, '$$TICKETS$$', l_tickets);
+
+    l_json := json(l_json_doc);
+    events_json_api.update_event_series(p_json_doc => l_json);
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
 
 
-    events_json_api.create_customer(p_json_doc => l_json_doc);
-    dbms_output.put_line(events_json_api.format_json(l_json_doc));
-
- end;
+end;
 
 /*  reply document for success
 {
-  "customer_name" : "Andi Warenko",
-  "customer_email" : "Andi.Warenko@example.customer.com",
-  "customer_id" : 5041,
+  "event_series_id" : 81,
+  "event_name" : "Monster Truck Festival",
+  "tickets_available" : 15000,
   "status_code" : "SUCCESS",
-  "status_message" : "Created customer"
+  "status_message" : "All events in series that have not occurred have been updated."
 }
 
---if email exists then customer id is returned
---if existing customer and name is different name is updated
+
+
 {
-  "customer_name" : "Andi Warenkovna",
-  "customer_email" : "Andi.Warenko@example.customer.com",
-  "customer_id" : 5041,
+  "event_series_id" : 81,
+  "event_name" : "Monster Truck Smashup",
+  "tickets_available" : 10000,
   "status_code" : "SUCCESS",
-  "status_message" : "Created customer"
+  "status_message" : "All events in series that have not occurred have been updated."
 }
+
 */
+

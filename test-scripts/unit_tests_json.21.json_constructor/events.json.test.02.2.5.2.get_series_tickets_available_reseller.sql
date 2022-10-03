@@ -1,6 +1,6 @@
 set serveroutput on;
 declare
-    l_json_doc clob;
+    l_json json;
     l_reseller_name resellers.reseller_name%type := 'Maxtix';
     l_reseller_id number;
     l_venue_id number;
@@ -13,9 +13,8 @@ begin
     l_event_series_id := event_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
     l_reseller_id := reseller_api.get_reseller_id(p_reseller_name => l_reseller_name);
 
-    l_json_doc := events_json_api.get_event_series_tickets_available_reseller(p_event_series_id => l_event_series_id, p_reseller_id => l_reseller_id, p_formatted => true);
-
-    dbms_output.put_line(l_json_doc);
+    l_json := events_json_api.get_event_series_tickets_available_reseller(p_event_series_id => l_event_series_id, p_reseller_id => l_reseller_id, p_formatted => true);
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
 
 end;
 --reply format example

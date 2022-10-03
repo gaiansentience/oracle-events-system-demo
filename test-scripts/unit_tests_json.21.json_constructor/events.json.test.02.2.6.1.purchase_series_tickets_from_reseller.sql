@@ -1,6 +1,7 @@
 set serveroutput on;
 declare
     l_json_doc clob;
+    l_json json;
 
     l_customer_email varchar2(100) := 'Judy.Albright@example.customer.com';
     l_customer_id number;
@@ -51,9 +52,9 @@ l_json_doc := replace(l_json_doc, '$$RESELLER_ID$$', l_reseller_id);
 l_json_doc := replace(l_json_doc, '$$RESELLER$$', l_reseller_name);
 l_json_doc := replace(l_json_doc, '$$CUSTOMER_EMAIL$$', l_customer_email);
 
-    events_json_api.purchase_tickets_reseller_series(l_json_doc);
-    l_json_doc := events_json_api.format_json(l_json_doc);
-    dbms_output.put_line(l_json_doc);
+    l_json := json(l_json_doc);
+    events_json_api.purchase_tickets_reseller_series(l_json);
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
 
 end;
 

@@ -13,6 +13,7 @@ declare
     l_resellers t_names;
     l_groups t_names;    
     l_json_doc varchar2(4000);
+    l_json json;
 begin
 
     l_venue_id := venue_api.get_venue_id(p_venue_name => l_venue_name);
@@ -62,10 +63,9 @@ l_json_doc :=
     l_json_doc := replace(l_json_doc, '$$ID_VIP$$', l_groups('VIP'));
     l_json_doc := replace(l_json_doc, '$$ID_GA$$', l_groups('GENERAL ADMISSION'));
 
-
-    events_json_api.purchase_tickets_reseller(l_json_doc);
-    l_json_doc := events_json_api.format_json(l_json_doc);
-    dbms_output.put_line(l_json_doc);
+    l_json := json(l_json_doc);
+    events_json_api.purchase_tickets_reseller(l_json);
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
 
 end;
 

@@ -6,6 +6,8 @@ declare
     l_event_series_id number;
 
     l_json_doc clob;
+    l_json json;
+    
 begin
 
     l_venue_id := venue_api.get_venue_id(p_venue_name => l_venue_name);
@@ -40,8 +42,9 @@ l_json_doc :=
     l_json_doc := replace(l_json_doc, '$$SERIES$$', l_event_series_id);
     l_json_doc := replace(l_json_doc, '$$NAME$$', l_event_name);
     
-    events_json_api.update_ticket_groups_series(p_json_doc => l_json_doc);
-    dbms_output.put_line(events_json_api.format_json(l_json_doc));
+    l_json := json(l_json_doc);    
+    events_json_api.update_ticket_groups_series(p_json_doc => l_json);
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
 
 end;
 

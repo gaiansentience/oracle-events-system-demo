@@ -2,6 +2,8 @@ set serveroutput on;
 declare
     l_json_template varchar2(4000);
     l_json_doc clob;
+    l_json json;
+
     l_venue_id number;
     l_event_id number;    
     l_customer_email varchar2(50) := 'Maggie.Wayland@example.customer.com';
@@ -41,13 +43,17 @@ l_json_doc := replace(l_json_doc, '$$SERIAL$$', l_serial_code);
 
     dbms_output.put_line('force the ticket status to ISSUED to show ticket has not been used for event entry');
     event_tickets_api.update_ticket_status(p_serial_code => l_serial_code, p_status => event_tickets_api.c_ticket_status_issued, p_use_commit => true);
-    events_json_api.ticket_verify_restricted_access(p_json_doc => l_json_doc);
-    dbms_output.put_line(events_json_api.format_json(l_json_doc));
+
+    l_json := json(l_json_doc);        
+    events_json_api.ticket_verify_restricted_access(p_json_doc => l_json);
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
 
     dbms_output.put_line('force the ticket status to VALIDATED to show event entry');
     event_tickets_api.update_ticket_status(p_serial_code => l_serial_code, p_status => event_tickets_api.c_ticket_status_validated, p_use_commit => true);
-    events_json_api.ticket_verify_restricted_access(p_json_doc => l_json_doc);
-    dbms_output.put_line(events_json_api.format_json(l_json_doc));
+
+    l_json := json(l_json_doc);        
+    events_json_api.ticket_verify_restricted_access(p_json_doc => l_json);
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
 
 
 l_json_doc := replace(l_json_template, '$$GROUP$$', l_ticket_group_id);
@@ -55,8 +61,10 @@ l_json_doc := replace(l_json_doc, '$$CATEGORY$$', l_price_category);
 l_json_doc := replace(l_json_doc, '$$SERIAL$$', l_serial_code || 'xxxx');
 
     dbms_output.put_line('try to verify access for an invalid ticket serial code');
-    events_json_api.ticket_verify_restricted_access(p_json_doc => l_json_doc);
-    dbms_output.put_line(events_json_api.format_json(l_json_doc));
+
+    l_json := json(l_json_doc);    
+    events_json_api.ticket_verify_restricted_access(p_json_doc => l_json);
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
 
 
     select tg.ticket_group_id, tg.price_category
@@ -70,8 +78,10 @@ l_json_doc := replace(l_json_doc, '$$CATEGORY$$', l_other_price_category);
 l_json_doc := replace(l_json_doc, '$$SERIAL$$', l_serial_code);
 
     dbms_output.put_line('try to verify access for the wrong ticket group');
-    events_json_api.ticket_verify_restricted_access(p_json_doc => l_json_doc);
-    dbms_output.put_line(events_json_api.format_json(l_json_doc));
+
+    l_json := json(l_json_doc);
+    events_json_api.ticket_verify_restricted_access(p_json_doc => l_json);
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
     
     --reset the ticket status to ISSUED for other testing
     event_tickets_api.update_ticket_status(p_serial_code => l_serial_code, p_status => event_tickets_api.c_ticket_status_issued, p_use_commit => true);

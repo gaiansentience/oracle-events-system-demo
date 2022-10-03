@@ -3,6 +3,8 @@ set serveroutput on;
 declare
     l_json_template varchar2(4000);
     l_json_doc clob;
+    l_json json;
+    
     l_venue_id number;
     l_venue_name venues.venue_name%type := 'Another Roadside Attraction';
     l_event_id number;
@@ -60,8 +62,10 @@ l_json_template :=
         l_json_doc := replace(l_json_doc, '$$SERIAL' || i || '$$', l_tickets(i).serial_code);
         dbms_output.put_line('original serial code = ' || l_tickets(i).serial_code || ', status is ' || l_tickets(i).status);
     end loop;
-    events_json_api.ticket_reissue_batch(p_json_doc => l_json_doc);   
-    dbms_output.put_line(events_json_api.format_json(l_json_doc));
+    
+    l_json := json(l_json_doc);    
+    events_json_api.ticket_reissue_batch(p_json_doc => l_json);   
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
 
     --get the updated serial codes and statuses
     select t.ticket_id, t.serial_code, t.status
@@ -76,16 +80,20 @@ l_json_template :=
     for i in 1..l_tickets.count loop
         l_json_doc := replace(l_json_doc, '$$SERIAL' || i || '$$', l_updated_tickets(i).serial_code);
     end loop;
-    events_json_api.ticket_reissue_batch(p_json_doc => l_json_doc);   
-    dbms_output.put_line(events_json_api.format_json(l_json_doc));
+
+    l_json := json(l_json_doc);    
+    events_json_api.ticket_reissue_batch(p_json_doc => l_json);   
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
         
     dbms_output.put_line('try to reissue tickets using original serial code');
     l_json_doc := replace(l_json_template, '$$CUSTOMER$$', l_customer_id);
     for i in 1..3 loop
         l_json_doc := replace(l_json_doc, '$$SERIAL' || i || '$$', l_tickets(i).serial_code);
     end loop;
-    events_json_api.ticket_reissue_batch(p_json_doc => l_json_doc);   
-    dbms_output.put_line(events_json_api.format_json(l_json_doc));
+    
+    l_json := json(l_json_doc);    
+    events_json_api.ticket_reissue_batch(p_json_doc => l_json);   
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
 
     dbms_output.put_line('update tickets to ISSUED with original serial codes and try to update with a different customer');    
     forall i in 1..l_tickets.count 
@@ -97,8 +105,10 @@ l_json_template :=
     for i in 1..3 loop
         l_json_doc := replace(l_json_doc, '$$SERIAL' || i || '$$', l_tickets(i).serial_code);
     end loop;
-    events_json_api.ticket_reissue_batch(p_json_doc => l_json_doc);   
-    dbms_output.put_line(events_json_api.format_json(l_json_doc));
+    
+    l_json := json(l_json_doc);    
+    events_json_api.ticket_reissue_batch(p_json_doc => l_json);   
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
 
 end;
 

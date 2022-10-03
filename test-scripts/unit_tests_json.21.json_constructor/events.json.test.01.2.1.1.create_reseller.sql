@@ -2,6 +2,7 @@
 set serveroutput on;
 declare
     l_json_doc clob;
+    l_json json;
     l_name resellers.reseller_name%type := 'Ticket Factory';
     l_email resellers.reseller_email%type := 'ticket.sales@TicketFactory.com';
     l_commission resellers.commission_percent%type := 0.09;
@@ -20,8 +21,9 @@ l_json_doc :=
     l_json_doc := replace(l_json_doc,'$$EMAIL$$',l_email);
     l_json_doc := replace(l_json_doc,'$$COMMISSION$$',l_commission);
     
-    events_json_api.create_reseller(p_json_doc => l_json_doc);
-    dbms_output.put_line(events_json_api.format_json(l_json_doc));
+    l_json := json(l_json_doc);
+    events_json_api.create_reseller(p_json_doc => l_json);
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
 
  end;
 

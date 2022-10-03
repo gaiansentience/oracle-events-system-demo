@@ -1,10 +1,23 @@
 create or replace package body events_json_api
 as
 
---p_json_doc in $if dbms_db_version.version >= 21 $then json $else clob $end
---p_json_doc in out nocopy $if dbms_db_version.version >= 21 $then json $else clob $end
---return $if dbms_db_version.version >= 21 $then json $else clob $end
---l_json $if dbms_db_version.version >= 21 $then json; $else clob; $end
+$if dbms_db_version.version >= 21 $then
+    function json_as_clob
+    (
+        p_json_doc in json
+    ) return clob
+    is
+        l_json_clob clob;
+    begin
+
+        select json_serialize(p_json_doc returning clob pretty extended) 
+        into l_json_clob 
+        from dual;
+        
+        return l_json_clob;
+    end json_as_clob;
+$end
+
 
     function format_json
     (
@@ -14,9 +27,15 @@ as
         l_json $if dbms_db_version.version >= 21 $then json; $else clob; $end
     begin
     
-        select json_serialize(p_json_doc returning clob pretty) 
+$if dbms_db_version.version >= 21 $then
+        select json(json_serialize(p_json_doc returning clob pretty extended)) 
         into l_json 
         from dual;
+$else
+        select json_serialize(p_json_doc returning clob pretty) 
+        into l_json 
+        from dual;        
+$end
     
         return l_json;
     

@@ -1,7 +1,7 @@
 --get venue information as a json document
 set serveroutput on;
 declare
-    l_json_doc clob;
+    l_json json;
     l_customer_email varchar2(100) := 'Judy.Albright@example.customer.com';
     l_venue_id number;
     l_venue_name venues.venue_name%type := 'City Stadium';    
@@ -12,8 +12,8 @@ begin
     l_venue_id := venue_api.get_venue_id(p_venue_name => l_venue_name);
     l_event_series_id := event_api.get_event_series_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
 
-    l_json_doc := events_json_api.get_customer_event_series_purchases_by_email(p_customer_email => l_customer_email, p_event_series_id => l_event_series_id, p_formatted => true);
-    dbms_output.put_line(l_json_doc);
+    l_json := events_json_api.get_customer_event_series_purchases_by_email(p_customer_email => l_customer_email, p_event_series_id => l_event_series_id, p_formatted => true);
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
 
  end;
 

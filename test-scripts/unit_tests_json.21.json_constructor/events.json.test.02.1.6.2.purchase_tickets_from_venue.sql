@@ -11,14 +11,13 @@ declare
     l_resellers t_names;
     l_groups t_names;    
     l_json_doc clob;
+    l_json json;    
 begin
     l_venue_id := venue_api.get_venue_id(p_venue_name => l_venue_name);
     l_event_id := event_api.get_event_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
     l_customer_id := customer_api.get_customer_id(p_customer_email => l_customer_email);
     l_groups('VIP') := event_setup_api.get_ticket_group_id(p_event_id => l_event_id, p_price_category => 'VIP');
     l_groups('GENERAL ADMISSION') := event_setup_api.get_ticket_group_id(p_event_id => l_event_id, p_price_category => 'GENERAL ADMISSION');
-
-
 
     delete from tickets t where t.ticket_sales_id in (select ts.ticket_sales_id from ticket_sales ts where ts.customer_id = l_customer_id);
     delete from ticket_sales ts where ts.customer_id = l_customer_id;
@@ -54,9 +53,9 @@ l_json_doc :=
     l_json_doc := replace(l_json_doc, '$$ID_VIP$$', l_groups('VIP'));
     l_json_doc := replace(l_json_doc, '$$ID_GA$$', l_groups('GENERAL ADMISSION'));
 
-    events_json_api.purchase_tickets_venue(l_json_doc);
-    l_json_doc := events_json_api.format_json(l_json_doc);
-    dbms_output.put_line(l_json_doc);
+    l_json := json(l_json_doc);
+    events_json_api.purchase_tickets_venue(l_json);
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
 
 end;
 

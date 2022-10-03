@@ -9,6 +9,8 @@ declare
     l_resellers t_names;
     l_groups t_names;
     l_json_doc clob;
+    l_json json;
+    
 begin
     l_venue_id := venue_api.get_venue_id(p_venue_name => l_venue_name);
     l_event_id := event_api.get_event_id(p_venue_id => l_venue_id, p_event_name => l_event_name);
@@ -90,10 +92,9 @@ l_json_doc :=
     l_json_doc := replace(l_json_doc, '$$ID_GA$$', l_groups('GENERAL ADMISSION'));
     l_json_doc := replace(l_json_doc, '$$ID_SPONSOR$$', l_groups('SPONSOR'));
 
-
-    events_json_api.update_ticket_assignments(p_json_doc => l_json_doc);
-    dbms_output.put_line(events_json_api.format_json(l_json_doc));
-
+    l_json := json(l_json_doc);
+    events_json_api.update_ticket_assignments(p_json_doc => l_json);
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
 
 end;
 

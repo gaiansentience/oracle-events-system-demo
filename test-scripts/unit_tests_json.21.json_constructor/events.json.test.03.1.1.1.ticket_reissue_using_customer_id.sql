@@ -3,6 +3,8 @@ set serveroutput on;
 declare
     l_json_template varchar2(4000);
     l_json_doc clob;
+    l_json json;
+    
     l_venue_id number;
     l_venue_name venues.venue_name%type := 'Another Roadside Attraction';
     l_event_id number;
@@ -41,8 +43,11 @@ l_json_template :=
 l_json_doc := replace(l_json_template, '$$CUSTOMER$$', l_customer_id);
 l_json_doc := replace(l_json_doc, '$$SERIAL$$', l_original_serial_code);
     dbms_output.put_line('original serial code = ' || l_original_serial_code || ', status is ' || l_status);
-    events_json_api.ticket_reissue(p_json_doc => l_json_doc);   
-    dbms_output.put_line(events_json_api.format_json(l_json_doc));
+    
+    l_json := json(l_json_doc);    
+    events_json_api.ticket_reissue(p_json_doc => l_json);   
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
+
     select t.serial_code, t.status into l_new_serial_code, l_status
     from tickets t where t.ticket_id = l_ticket_id;
     dbms_output.put_line('after reissuing ticket serial code = ' || l_new_serial_code || ', status is ' || l_status);
@@ -50,27 +55,30 @@ l_json_doc := replace(l_json_doc, '$$SERIAL$$', l_original_serial_code);
     dbms_output.put_line('try to reissue the same ticket using the new serial code');
 l_json_doc := replace(l_json_template, '$$CUSTOMER$$', l_customer_id);
 l_json_doc := replace(l_json_doc, '$$SERIAL$$', l_new_serial_code);
-    events_json_api.ticket_reissue(p_json_doc => l_json_doc);   
-    dbms_output.put_line(events_json_api.format_json(l_json_doc));
-    
-    
+
+    l_json := json(l_json_doc);
+    events_json_api.ticket_reissue(p_json_doc => l_json);   
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
+        
     dbms_output.put_line('try to reissue the ticket using the original serial code');
 l_json_doc := replace(l_json_template, '$$CUSTOMER$$', l_customer_id);
 l_json_doc := replace(l_json_doc, '$$SERIAL$$', l_original_serial_code);
-    events_json_api.ticket_reissue(p_json_doc => l_json_doc);   
-    dbms_output.put_line(events_json_api.format_json(l_json_doc));
-    
 
+    l_json := json(l_json_doc);    
+    events_json_api.ticket_reissue(p_json_doc => l_json);   
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
+    
     update tickets t set t.status = 'ISSUED', t.serial_code = l_original_serial_code
     where t.ticket_id = l_ticket_id;
     commit;
     dbms_output.put_line('reset ticket to ISSUED with original serial number and try to reissue for a different customer');
 l_json_doc := replace(l_json_template, '$$CUSTOMER$$', l_customer_id + 1);
 l_json_doc := replace(l_json_doc, '$$SERIAL$$', l_original_serial_code);
-    events_json_api.ticket_reissue(p_json_doc => l_json_doc);   
-    dbms_output.put_line(events_json_api.format_json(l_json_doc));
-    
-    
+
+    l_json := json(l_json_doc);
+    events_json_api.ticket_reissue(p_json_doc => l_json);   
+    dbms_output.put_line(events_json_api.json_as_clob(l_json));
+        
 end;
 
 /*
