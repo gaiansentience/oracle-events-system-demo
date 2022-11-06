@@ -1,8 +1,12 @@
 set serveroutput on;
---grant table, view and package privileges to the apex user
+--grant table, view and package privileges to the apex user using a role
+--first create a role for the grants using a sufficiently privileged user
+--create role event_api_role;
+--then grant the role to the apex user using a sufficiently privileged user
+--grant event_api_role to obe;
 declare
    l_execute boolean := true;
-   l_user varchar2(30) := 'OBE';
+   l_user varchar2(30) := 'EVENT_API_ROLE';
    cursor c_tables is
       select table_name
       from user_tables;
@@ -10,7 +14,9 @@ declare
    cursor c_views is
       select object_name
       from user_objects 
-      where object_type = 'VIEW';
+      where object_type = 'VIEW'
+      and object_name not like '%XML%'
+      and object_name not like '%JSON%';
 
    cursor c_packages is
       select object_name 
