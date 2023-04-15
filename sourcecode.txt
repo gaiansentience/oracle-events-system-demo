@@ -2,7 +2,7 @@ SourceCode Branches
 
 master - primary branch.  updated when a release is closed.
 
-release-/022 -closed branch
+release/2022 -closed branch
 
 release/2023 -open for pull requests from feature-2023
 feature/2023 -current working branch
