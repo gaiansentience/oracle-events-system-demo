@@ -5,21 +5,23 @@ prompt creating error logging package
 @@util_error_api.spc;
 @@util_error_api.bdy;
 prompt creating core business logic api packages
-@@customer_api.spc;
-@@customer_api.bdy;
-@@reseller_api.spc;
-@@reseller_api.bdy;
-@@venue_api.spc;
-@@venue_api.bdy;
 
+@@customer_api.spc;
+@@reseller_api.spc;
+@@venue_api.spc;
 @@event_api.spc;
-@@event_api.bdy;
 @@event_setup_api.spc;
-@@event_setup_api.bdy;
 @@event_tickets_api.spc;
-@@event_tickets_api.bdy;
 @@event_sales_api.spc;
+
+@@customer_api.bdy;
+@@reseller_api.bdy;
+@@venue_api.bdy;
+@@event_api.bdy;
+@@event_setup_api.bdy;
+@@event_tickets_api.bdy;
 @@event_sales_api.bdy;
+
 
 prompt events system core api objects created
 prompt creating objects for json web services
