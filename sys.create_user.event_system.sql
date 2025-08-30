@@ -1,4 +1,4 @@
-create user event_system identified by demo;
+create user event_system identified by oracle;
 
 grant create session to event_system;
 grant resource to event_system;
